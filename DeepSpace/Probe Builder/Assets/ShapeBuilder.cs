@@ -58,4 +58,19 @@ public class ShapeBuilder : MonoBehaviour
             }
         }
     }
+
+    public GameObject CreateShape(GameObject shapePrefab, Vector3 position)
+    {
+        if (shapePrefab != null)
+        {
+            GameObject shapeInstance = Instantiate(shapePrefab, position, Quaternion.identity);
+            shapeInstance.transform.position = position; 
+            return shapeInstance; 
+        }
+        else
+        {
+            Debug.LogError("Shape prefab is null!"); 
+            return null;
+        }
+    }
 }
