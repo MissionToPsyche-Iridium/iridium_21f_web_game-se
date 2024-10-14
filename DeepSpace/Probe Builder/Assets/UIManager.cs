@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject[] availableShapes;  
 
     private GameObject selectedShape;    
+    public Transform spawnPoint;  
 
     void Start()
     {
@@ -18,9 +20,14 @@ public class UIManager : MonoBehaviour
     {
         foreach (var shape in availableShapes)
         {
-            GameObject button = Instantiate(shapeButton, buttonContainer);
-            button.GetComponentInChildren<Text>().text = shape.name;
-            button.GetComponent<Button>().onClick.AddListener(() => SelectShape(shape));
+        GameObject button = Instantiate(shapeButton, buttonContainer);
+        Debug.Log($"Created button for shape: {shape.name}");
+        
+        var textMeshPro = button.transform.Find("Button Text").GetComponent<TextMeshProUGUI>();
+        textMeshPro.text = shape.name;
+
+        var buttonComponent = button.GetComponent<Button>();
+        buttonComponent.onClick.AddListener(() => SelectShape(shape));
         }
     }
 
@@ -29,6 +36,15 @@ public class UIManager : MonoBehaviour
         selectedShape = shape;
         Debug.Log($"Selected shape: {shape.name}");
     }
+
+       void SpawnShape()
+    {
+        if (selectedShape != null)
+        {
+            Instantiate(selectedShape, spawnPoint.position, Quaternion.identity);
+        }
+    }
+
 
     public GameObject GetSelectedShape()
     {
