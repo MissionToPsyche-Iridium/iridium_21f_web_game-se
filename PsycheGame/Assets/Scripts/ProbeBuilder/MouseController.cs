@@ -12,18 +12,15 @@ public class MouseController : MonoBehaviour
         // Check if the left mouse button is clicked on the object
         if (Input.GetMouseButtonDown(0))
             CheckHitObject();
-            // Debug.Log("Mouse Clicked");
             Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
         if (Input.GetMouseButton(0) && objSelected != null)
         {
             DragObject();
-            // Debug.Log("Mouse Clicked1");
         }
         if (Input.GetMouseButtonUp(0) && objSelected != null)
         {
             DropObject();
-            // Debug.Log("Mouse Clicked2");
         }
 
     }
@@ -34,7 +31,6 @@ public class MouseController : MonoBehaviour
 
         if (hit.collider != null) {
             objSelected = hit.transform.gameObject;
-            //objSelected.GetComponent<Probe>().SetSelected(true);
             Debug.Log("collider");
         }
     }
