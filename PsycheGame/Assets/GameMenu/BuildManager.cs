@@ -4,24 +4,46 @@ using TMPro;
 
 public class BuildManager : MonoBehaviour
 {
-    public GameObject item1Prefab;   
-    public GameObject item2Prefab;
+    public GameObject buttonPrefab;   
+    public Transform buttonContainer;
+
+    public GameObject[] availableShapes; 
+    public Sprite[] partImages;
+    private GameObject selectedShape;
+
+
     public GameObject spawnPoint;
 
     public void Start(){
+        CreateInventoryButtons();
         spawnPoint = GameObject.Find("SpawnArea");
     }
 
-    public void SpawnItem1()
+
+    void CreateInventoryButtons()
     {
-        Debug.Log("Spawn Item 1");
-        SpawnShape(item1Prefab);
+           for (int i = 0; i < availableShapes.Length; i++)
+        {
+            GameObject button = Instantiate(buttonPrefab, buttonContainer);
+            
+            button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name;
+
+            Image buttonImage = button.transform.Find("Image").GetComponent<Image>();
+            buttonImage.sprite = partImages[i]; 
+            button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[i]));
+        }
     }
 
-    public void SpawnItem2()
+    void OnItemClick(string itemName)
     {
-        Debug.Log("Spawn Item 2");
-        SpawnShape(item2Prefab);
+        Debug.Log($"Item {itemName} clicked");
+    }
+
+    public void SelectShape(GameObject shape)
+    {
+        selectedShape = shape;
+        Debug.Log($"Selected shape: {shape.name}");
+        SpawnShape(shape);
     }
 
     void SpawnShape(GameObject shapePrefab)
