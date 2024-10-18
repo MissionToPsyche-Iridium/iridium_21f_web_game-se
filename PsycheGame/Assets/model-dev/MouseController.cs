@@ -5,7 +5,14 @@ using UnityEngine;
 public class MouseController : MonoBehaviour
 {
     Vector3 offset;
+    Collider2D col;
 
+    public string chassisTag = "Chassis";
+
+    void Awake()
+    {
+        col = GetComponent<Collider2D>();
+    }
     void Start()
     {
         Screen.SetResolution(1920, 1080, true);
@@ -18,58 +25,34 @@ public class MouseController : MonoBehaviour
 
     void OnMouseDrag()
     {
-        offset = transform.position = MouseWorldPosition();
+        if (gameObject.layer == 8)
+        {
+            transform.position = MouseWorldPosition() + offset;
+        }
     }
+
+    void OnMouseUp()
+    {
+        col.enabled = false;
+        var rayOrigin = Camera.main.transform.position;
+        var rayDirection = MouseWorldPosition() - Camera.main.transform.position;
+        RaycastHit2D hit;
+        
+        if (hit = Physics2D.Raycast(rayOrigin, rayDirection))
+        {
+            if (hit.transform.tag == chassisTag)
+            {
+                transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
+            }
+        }
+        col.enabled = true;
+    }
+
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;
         mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     } 
-
-
-    /*
-    GameObject objSelected = null;
-
-    // Update is called once per frame
-    void Update()
-    {
-        // Check if the left mouse button is clicked on the object
-        if (Input.GetMouseButtonDown(0))
-            CheckHitObject();
-            Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
-        if (Input.GetMouseButton(0) && objSelected != null)
-        {
-            DragObject();
-        }
-        if (Input.GetMouseButtonUp(0) && objSelected != null)
-        {
-            DropObject();
-        }
-
-    }
-
-    void CheckHitObject()
-    {
-        RaycastHit2D hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
-
-        if (hit.collider != null) {
-            objSelected = hit.transform.gameObject;
-            Debug.Log("collider");
-        }
-    }
-
-    void DragObject() 
-    {
-        objSelected.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 
-            Camera.main.nearClipPlane + 10.0f));
-    }
-
-    void DropObject() 
-    {
-        objSelected = null;
-    }
-    */
 
 }
