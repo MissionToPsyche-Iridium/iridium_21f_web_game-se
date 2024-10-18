@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class BuildManager : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class BuildManager : MonoBehaviour
 
     public GameObject[] availableShapes; 
     public Sprite[] partImages;
-    private GameObject selectedShape;
 
 
     public GameObject spawnPoint;
@@ -17,31 +17,25 @@ public class BuildManager : MonoBehaviour
     public void Start(){
         CreateInventoryButtons();
         spawnPoint = GameObject.Find("SpawnArea");
+        Debug.Log($"Build Manager Initialized");
     }
 
 
     void CreateInventoryButtons()
     {
-           for (int i = 0; i < availableShapes.Length; i++)
+        for (int i = 0; i < availableShapes.Length; i++)
         {
             GameObject button = Instantiate(buttonPrefab, buttonContainer);
-            
+            Debug.Log(availableShapes.Length);
             button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name;
-
-            Image buttonImage = button.transform.Find("Image").GetComponent<Image>();
-            buttonImage.sprite = partImages[i]; 
-            button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[i]));
+            int index = i;
+            Image probePartImage = button.transform.Find("ProbePartImage").GetComponent<Image>();
+            probePartImage.sprite = partImages[i];
+            button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[index]));
         }
     }
-
-    void OnItemClick(string itemName)
-    {
-        Debug.Log($"Item {itemName} clicked");
-    }
-
     public void SelectShape(GameObject shape)
     {
-        selectedShape = shape;
         Debug.Log($"Selected shape: {shape.name}");
         SpawnShape(shape);
     }
