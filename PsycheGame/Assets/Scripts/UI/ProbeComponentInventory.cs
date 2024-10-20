@@ -5,26 +5,19 @@ using UnityEngine.UI;
 
 public class ProbeComponentInventory : MonoBehaviour
 {
-    [SerializeField] private Transform panel; 
+    [SerializeField] private Transform content;
+    [SerializeField] private Image buttonPrefab;
 
     void Start()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             this.AddComponent(null);
         }
     }
 
-    void Update()
-    {
-
-    }
-
     public void AddComponent(Sprite sprite)
     {
-        GameObject component = new GameObject();
-        Image componentImage = component.AddComponent<Image>();
-        componentImage.sprite = sprite;
-        component.transform.SetParent(panel.transform);
+        Instantiate(buttonPrefab, content);
     }
 }
