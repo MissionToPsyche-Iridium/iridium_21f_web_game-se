@@ -57,8 +57,20 @@ public class BuildManager : MonoBehaviour
         Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
     }
 
-        public void ExitProbeBuilder(){
+    public void ExitProbeBuilder(){
         Debug.Log("Returning home!");
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void SaveProbe(){
+        Debug.Log("Saving probe!");
+    }
+
+    public void UndoOperation(){
+        Debug.Log("Undo operation");
+    }
+
+     public void RedoOperation(){
+        Debug.Log("Redo operation");
     }
 }
