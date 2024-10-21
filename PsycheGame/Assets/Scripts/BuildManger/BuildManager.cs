@@ -33,6 +33,7 @@ public class BuildManager : MonoBehaviour
             probePartImage.sprite = partImages[i];
             button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[index]));
         }
+        Debug.Log($"Created {availableShapes.Length +1} buttons");
     }
     public void SelectShape(GameObject shape)
     {
