@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement; 
+
 using Unity.VisualScripting;
 
 public class BuildManager : MonoBehaviour
@@ -33,6 +35,7 @@ public class BuildManager : MonoBehaviour
             probePartImage.sprite = partImages[i];
             button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[index]));
         }
+        Debug.Log($"Created {availableShapes.Length +1} buttons");
     }
     public void SelectShape(GameObject shape)
     {
@@ -52,5 +55,22 @@ public class BuildManager : MonoBehaviour
         shape.transform.localScale = Vector3.one;
 
         Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
+    }
+
+    public void ExitProbeBuilder(){
+        Debug.Log("Returning home!");
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void SaveProbe(){
+        Debug.Log("Saving probe!");
+    }
+
+    public void UndoOperation(){
+        Debug.Log("Undo operation");
+    }
+
+     public void RedoOperation(){
+        Debug.Log("Redo operation");
     }
 }
