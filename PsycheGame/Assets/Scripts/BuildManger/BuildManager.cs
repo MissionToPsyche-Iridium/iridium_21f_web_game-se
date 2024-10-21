@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement; 
+
 using Unity.VisualScripting;
 
 public class BuildManager : MonoBehaviour
@@ -53,5 +55,10 @@ public class BuildManager : MonoBehaviour
         shape.transform.localScale = Vector3.one;
 
         Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
+    }
+
+        public void ExitProbeBuilder(){
+        Debug.Log("Returning home!");
+        SceneManager.LoadScene("MainMenu");
     }
 }
