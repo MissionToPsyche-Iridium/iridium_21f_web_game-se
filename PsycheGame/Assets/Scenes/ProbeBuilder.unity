@@ -4370,9 +4370,9 @@ MonoBehaviour:
   width: 5
   height: 5
   tile: {fileID: 7184025590481895770, guid: 0209f2356071e5a4e9543f96268b3125, type: 3}
-  originX: 450
-  originY: 200
-  tileScale: 75
+  originX: 0
+  originY: 0
+  tileScale: 100
 --- !u!4 &1001679520
 Transform:
   m_ObjectHideFlags: 0
@@ -4399,6 +4399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1013910714}
   - component: {fileID: 1013910715}
+  - component: {fileID: 1013910716}
   m_Layer: 0
   m_Name: BuildManager
   m_TagString: Untagged
@@ -4481,6 +4482,24 @@ MonoBehaviour:
   - {fileID: -1886565077903930198, guid: d5429eb211763cb44bdd3f6e5238823b, type: 3}
   - {fileID: 4440374781377508353, guid: d5429eb211763cb44bdd3f6e5238823b, type: 3}
   spawnPoint: {fileID: 998425892}
+--- !u!114 &1013910716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013910713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd49b1fccc6225e49945356c7a593bf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 5
+  height: 5
+  tile: {fileID: 7184025590481895770, guid: 0209f2356071e5a4e9543f96268b3125, type: 3}
+  originX: 150
+  originY: 150
+  tileScale: 125
 --- !u!1 &1041631530
 GameObject:
   m_ObjectHideFlags: 0
@@ -4825,7 +4844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -730, y: 0.000061035156}
+  m_AnchoredPosition: {x: -730, y: 0}
   m_SizeDelta: {x: -1556.8893, y: -90.3312}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1184093144
@@ -5183,7 +5202,7 @@ Camera:
   near clip plane: 0.1
   far clip plane: 1000
   field of view: 140
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -5209,7 +5228,7 @@ Transform:
   m_GameObject: {fileID: 1332875754}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -2}
+  m_LocalPosition: {x: 800, y: 450, z: -300}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6492,7 +6511,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1954446705}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999881
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8018,7 +8037,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.9851685, y: -7.970398}
+  m_AnchoredPosition: {x: 3.9851074, y: -7.970337}
   m_SizeDelta: {x: -108.2072, y: -180.91089}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1946994414

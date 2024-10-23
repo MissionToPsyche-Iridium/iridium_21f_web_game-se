@@ -13,13 +13,21 @@ public class BuildManager : MonoBehaviour
     public GameObject[] availableShapes; 
     public Sprite[] partImages;
 
+    private ContainerManager containerManager;
 
     public GameObject spawnPoint;
 
     public void Start(){
         CreateInventoryButtons();
+        createContainer();
+
         spawnPoint = GameObject.Find("SpawnArea");
         Debug.Log($"Build Manager Initialized");
+    }
+
+    void createContainer(){
+        //get the tile prefabs from ProbeBuildingContainer folder
+        Tile tilePrefab = Resources.Load<Tile>("ProbeBuildingContainer");
     }
 
 
