@@ -19,15 +19,11 @@ public class BuildManager : MonoBehaviour
 
     public void Start(){
         CreateInventoryButtons();
-        createContainer();
+        // get container manager component attached to the BuildManager GameObject
+        ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
 
         spawnPoint = GameObject.Find("SpawnArea");
         Debug.Log($"Build Manager Initialized");
-    }
-
-    void createContainer(){
-        //get the tile prefabs from ProbeBuildingContainer folder
-        Tile tilePrefab = Resources.Load<Tile>("ProbeBuildingContainer");
     }
 
 
