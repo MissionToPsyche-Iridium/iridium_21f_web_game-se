@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,16 +9,12 @@ public class ProbeComponentInventory : MonoBehaviour
     [SerializeField] private Transform content;
     [SerializeField] private Image buttonPrefab;
 
-    void Start()
+    public ProbeComponentInventory(Inventory inventory)
     {
-        for (int i = 0; i < 20; i++)
+        foreach (Tuple<ProbeComponent, int> component in inventory.ProbeComponents)
         {
-            this.AddComponent(null);
+            Image button = Instantiate(buttonPrefab, content);
+            button.sprite = component.Item1.Sprite;
         }
-    }
-
-    public void AddComponent(Sprite sprite)
-    {
-        Instantiate(buttonPrefab, content);
     }
 }

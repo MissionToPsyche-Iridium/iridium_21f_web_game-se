@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory
 {
-    // Start is called before the first frame update
-    void Start()
+    public List<Tuple<ProbeComponent, int>> ProbeComponents { get; }
+
+    public Inventory()
     {
-        
+        ProbeComponents = new List<Tuple<ProbeComponent, int>>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddComponent(ProbeComponent probeComponent, int quantity)
     {
-        
+        ProbeComponents.Add(new Tuple<ProbeComponent, int>(probeComponent, quantity));
     }
 }
