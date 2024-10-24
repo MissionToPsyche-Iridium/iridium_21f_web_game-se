@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Asteroid
+  - Boundary
   - Part
   - Container
+  - Gas
+  - HUD
   layers:
   - Default
   - TransparentFX
@@ -13,6 +17,7 @@ TagManager:
   - 
   - Water
   - UI
+  - Scannable
   - 
   - 
   - 
@@ -37,8 +42,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - PlayerShip
   m_SortingLayers:
   - name: Default
     uniqueID: 0
