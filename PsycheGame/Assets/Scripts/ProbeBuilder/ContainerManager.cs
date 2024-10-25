@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
-using UnityEditor.iOS;
+//using UnityEditor.iOS;
 using UnityEngine;
 
 /* 
@@ -52,11 +52,12 @@ public class ContainerManager : MonoBehaviour
 
 	void Start()
 	{
-		this.width = 10;
-		this.height = 10;
-		this.tileScale = 100;
-		this.originX = 150;
-		this.originY = 0;
+		//these fields are entered in unity when you add this script to an object
+		// this.width = 10;
+		// this.height = 10;
+		// this.tileScale = 100;
+		// this.originX = 150;
+		// this.originY = 0;
 
 		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
 		// this container will handle tile interactions with the game shape object colliding with the tile

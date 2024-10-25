@@ -2,26 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement; 
+
 using Unity.VisualScripting;
 using System.Collections;
-
-
-/*
-    Application: Probe Builder
-    File: BuildManager.cs
-    Developer: Teague Hopkins
-    Date: 10/22/2021
-
-    Description: This script is responsible for managing the probe builder user interface.  The user interface will allow the user to select probe components
-
-    verion: 0.1
-
-    Update:
-    - 10/24: added new (probe component) class to hold probe component information, complemantary code in the ContainerManager script
-
-
-*/
-
 
 public class BuildManager : MonoBehaviour
 {
@@ -31,19 +14,16 @@ public class BuildManager : MonoBehaviour
     public GameObject[] availableShapes; 
     public Sprite[] partImages;
 
-    public GameObject spawnPoint;
-
+    private ContainerManager containerManager;
+    public GameObject spawnArea;
     public Stack spawnedPartsStack;
     [SerializeField] private int probePartScale;
 
-
-    // hold probe components as the parent GameObject
-    public ProbeComponent[] probeComponents;
-
     public void Start(){
         CreateInventoryButtons();
-
-        spawnPoint = GameObject.Find("SpawnArea");
+        // get container manager component attached to the BuildManager GameObject
+        //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
+        spawnArea = GameObject.Find("SpawnArea");
         spawnedPartsStack = new Stack();
         Debug.Log($"Build Manager Initialized");
     }
@@ -51,13 +31,14 @@ public class BuildManager : MonoBehaviour
 
     void CreateInventoryButtons()
     {
-        probeComponents = new ProbeComponent[availableShapes.Length];
         for (int i = 0; i < availableShapes.Length; i++)
         {
             GameObject button = Instantiate(buttonPrefab, buttonContainer);
             Debug.Log(availableShapes.Length);
-            button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name;
-            probeComponents[i] = new ProbeComponent(availableShapes[i].name, "This is a probe part", partImages[i]);  // add probe component to list
+            button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name.Substring(0, availableShapes[i].name.IndexOf("_"));
+            button.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+            button.GetComponentInChildren<TextMeshProUGUI>().fontSize = 14;
+
             int index = i;
             Image probePartImage = button.transform.Find("ProbePartImage").GetComponent<Image>();
             probePartImage.sprite = partImages[i];
@@ -78,14 +59,20 @@ public class BuildManager : MonoBehaviour
         //     Destroy(child.gameObject);
         // }
 
-        GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
-        shape.transform.localPosition = new Vector3(500, 200, 0);
+        GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
+        shape.transform.localPosition = new Vector3(1000, 600, 0);
         //shape.transform.localScale = Vector3.one;
         shape.transform.localScale = new Vector3(probePartScale, probePartScale, 0);
+        
+        shape.AddComponent<BoxCollider2D>().isTrigger = true;
+        shape.AddComponent<Rigidbody2D>().gravityScale = 0;
+        shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
+        
         shape.tag = "Part"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
 
-        Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
+        Debug.Log($"Spawned shape: {shapePrefab.name} at position {shapePrefab.transform.localPosition}");
+
     }
 
     public void ExitProbeBuilder(){
@@ -121,4 +108,6 @@ public class BuildManager : MonoBehaviour
         //Spawns a probe part that was just destroyed?
         Debug.Log("Redo operation");
     }
+
+    
 }
