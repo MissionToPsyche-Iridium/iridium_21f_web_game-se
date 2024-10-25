@@ -1439,17 +1439,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013910713}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd49b1fccc6225e49945356c7a593bf5, type: 3}
+  m_Script: {fileID: 11500000, guid: 37481f2ab00d1a747bf360c4bb4cf8a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 5
-  tile: {fileID: 7184025590481895770, guid: 0209f2356071e5a4e9543f96268b3125, type: 3}
-  originX: 150
-  originY: 150
-  tileScale: 125
+  content: {fileID: 0}
+  buttonPrefab: {fileID: 0}
 --- !u!1 &1029613590
 GameObject:
   m_ObjectHideFlags: 0
@@ -2301,10 +2297,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd49b1fccc6225e49945356c7a593bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 5
+  width: 10
+  height: 10
   tile: {fileID: 7184025590481895770, guid: 0209f2356071e5a4e9543f96268b3125, type: 3}
-  originX: 50
+  originX: 0
   originY: 0
   tileScale: 100
 --- !u!1 &1657864804

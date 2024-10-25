@@ -2,9 +2,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement; 
-
 using Unity.VisualScripting;
 using System.Collections;
+
+
+/*
+    Application: Probe Builder
+    File: BuildManager.cs
+    Developer: Teague Hopkins
+    Date: 10/22/2021
+
+    Description: This script is responsible for managing the probe builder user interface.  The user interface will allow the user to select probe components
+
+    verion: 0.1
+
+    Update:
+    - 10/24: added new (probe component) class to hold probe component information, complemantary code in the ContainerManager script
+
+
+*/
+
 
 public class BuildManager : MonoBehaviour
 {
@@ -14,18 +31,17 @@ public class BuildManager : MonoBehaviour
     public GameObject[] availableShapes; 
     public Sprite[] partImages;
 
-    private ContainerManager containerManager;
-
     public GameObject spawnPoint;
 
     public Stack spawnedPartsStack;
     [SerializeField] private int probePartScale;
 
 
+    // hold probe components as the parent GameObject
+    public ProbeComponent[] probeComponents;
+
     public void Start(){
         CreateInventoryButtons();
-        // get container manager component attached to the BuildManager GameObject
-        ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
 
         spawnPoint = GameObject.Find("SpawnArea");
         spawnedPartsStack = new Stack();
@@ -35,11 +51,13 @@ public class BuildManager : MonoBehaviour
 
     void CreateInventoryButtons()
     {
+        probeComponents = new ProbeComponent[availableShapes.Length];
         for (int i = 0; i < availableShapes.Length; i++)
         {
             GameObject button = Instantiate(buttonPrefab, buttonContainer);
             Debug.Log(availableShapes.Length);
             button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name;
+            probeComponents[i] = new ProbeComponent(availableShapes[i].name, "This is a probe part", partImages[i]);  // add probe component to list
             int index = i;
             Image probePartImage = button.transform.Find("ProbePartImage").GetComponent<Image>();
             probePartImage.sprite = partImages[i];

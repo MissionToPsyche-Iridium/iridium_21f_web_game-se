@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
+using UnityEditor.iOS;
 using UnityEngine;
 
 /* 
-	Script: containerManager 
+	Application: Probe builder
+	File: containerManager 
 	version: 0.1
 	Description: this script is responsible for generating the sandwich chassis that holds the probe components.  
 
@@ -25,8 +28,12 @@ public class ContainerManager : MonoBehaviour
 	[SerializeField] private Tile tile;
 	[SerializeField] private int originX, originY;
 	[SerializeField] private int tileScale;
+	
+	BuildManager buildManager;
+	
+	//[SerializeField] private int xOffset = 100;
 
-	/*
+    /*
 		to-do: read/write to access data structure of the probe that describes the following:
 			- the specific type of component installed
 			- the position of the component relative to the chassis (z, x, y)
@@ -40,44 +47,43 @@ public class ContainerManager : MonoBehaviour
 	*/
 
 
-	private int xOffset = 800;  // temporary fixed value between sandwiches -- to be dynamically calculated later
+	// probe will hold the components that are installed on the chassis
+	private  Dictionary<Vector2, ProbeComponent> container = new Dictionary<Vector2, ProbeComponent>();
 
 	void Start()
 	{
+		this.width = 10;
+		this.height = 10;
+		this.tileScale = 100;
+		this.originX = 150;
+		this.originY = 0;
+
+		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
+		// this container will handle tile interactions with the game shape object colliding with the tile
+		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
+		Debug.Log($"Container Manager Initialized: {this.buildManager}");
+
 		GenerateContainer();
 	}
 
 	void GenerateContainer()
 	{
-		//Debug.Log("Generating Container: Tile is" + tile.name);
-		for (int z = 0; z <3; z++)
+		for (int x = 0; x < width; x++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
-				for (int y = 0; y < height; y++)
+				// instantiate a new tile
+				if (tile != null)
 				{
-					// instantiate a new tile
-					if (tile != null)
-					{
-						var newTile = Instantiate(tile, new Vector3(originX + (tileScale * x) + xOffset * z, originY + (tileScale * y)), Quaternion.identity); //instantiates a new tile
-						newTile.name = $"Tile {z} {x} {y}"; //names new tile in hierarchy
-						var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-						newTile.Init(isOffset); //paints tile
-						newTile.transform.SetParent(transform); //sets parent of tile to container
-						newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
-					}
-					//save to Dictionary container
-					// container[new Vector2(x,y)] = newTile;
+					var newTile = Instantiate(tile, new Vector3(originX + (tileScale * x), originY + (tileScale * y)), Quaternion.identity); //instantiates a new tile
+					newTile.name = $"Tile {x} {y}"; //names new tile in hierarchy
+					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
+					newTile.Init(isOffset); //paints tile
+					newTile.transform.SetParent(transform); //sets parent of tile to container
+					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
 				}
 			}
 		}
 	}
-
-	//retreives a tile at a given position from container
-	// public Tile GetTile(Vector2 position) {
-	//     if(Container.TryGetValue(position, out var tile)) {
-	//         return tile;
-	//     }return null;
-	// }
 
 }
