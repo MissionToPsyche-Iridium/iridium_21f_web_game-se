@@ -6,10 +6,11 @@ public class ShipMovement : MonoBehaviour
 {
 
     public float moveSpeed = 5f; 
-
+    private Rigidbody2D rb;
+    private Vector2 movement;
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -20,5 +21,21 @@ public class ShipMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
         transform.position += movement * moveSpeed * Time.deltaTime;
+        
+        if (movement != Vector3.zero)
+        {
+            RotateShip(movement);
+        }
+    }
+      void FixedUpdate()
+    {
+        rb.velocity = movement * moveSpeed;
+    }
+
+    void RotateShip(Vector2 direction)
+    {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        rb.rotation = angle - 90f;
     }
 }
