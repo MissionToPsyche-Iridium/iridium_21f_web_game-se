@@ -21,12 +21,14 @@ public class ObjectSpawner : MonoBehaviour {
     public float DestroyRadius {get { return destoryRadius; }}
     
     private int objectCount = 0;
+    private Vector3 boundingAreaCenter;
 
     public void ChildDestroyed() {
         this.objectCount -= 1;
     }
 
     private void Start() {
+        boundingAreaCenter = boundingArea.GetComponent<Renderer>().bounds.center;
         InitialPopulation();
     }
 
@@ -40,6 +42,7 @@ public class ObjectSpawner : MonoBehaviour {
                 Vector3 pos = GetRandomPoisiton(false);
                 Spawnable newObj = AddObject(pos);
                 newObj.transform.Rotate(Vector3.forward * Random.Range(-45f, 45f));
+                newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
             }
         }
     }
@@ -56,7 +59,7 @@ public class ObjectSpawner : MonoBehaviour {
         GameObject newObject = Instantiate(
             objectToSpawn.gameObject,
             position,
-            Quaternion.FromToRotation(Vector3.up, boundingArea.transform.position - position),
+            Quaternion.FromToRotation(Vector3.up, boundingAreaCenter - position),
             this.gameObject.transform
         );
 
@@ -76,7 +79,7 @@ public class ObjectSpawner : MonoBehaviour {
         }
         pos = pos.normalized;
         pos *= spawnRadius;
-        pos += boundingArea.transform.position;
+        pos += boundingAreaCenter;
         return pos;
     }
 
@@ -86,10 +89,11 @@ public class ObjectSpawner : MonoBehaviour {
             redColor.a = 0.2f;
             Color greenColor = Color.green;
             greenColor.a = 0.2f;
+            Vector3 center = boundingArea.GetComponent<Renderer>().bounds.center;
             Gizmos.color = redColor;
-            Gizmos.DrawSphere(boundingArea.transform.position, destoryRadius);
+            Gizmos.DrawSphere(center, destoryRadius);
             Gizmos.color = greenColor;
-            Gizmos.DrawSphere(boundingArea.transform.position, spawnRadius);
+            Gizmos.DrawSphere(center, spawnRadius);
         }
     }
 }
