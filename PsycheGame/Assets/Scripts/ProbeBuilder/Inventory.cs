@@ -5,15 +5,48 @@ using UnityEngine;
 
 public class Inventory
 {
-    public List<Tuple<ProbeComponent, int>> ProbeComponents { get; }
+    private InventoryContainer<ProbeComponent> _probeComponents;
 
     public Inventory()
     {
-        ProbeComponents = new List<Tuple<ProbeComponent, int>>();
+        _probeComponents = new InventoryContainer<ProbeComponent>();
     }
 
-    public void AddComponent(ProbeComponent probeComponent, int quantity)
+    public List<Tuple<ProbeComponent, int>> GetProbeComponents()
     {
-        ProbeComponents.Add(new Tuple<ProbeComponent, int>(probeComponent, quantity));
+        List<Tuple<ProbeComponent, int>> probeComponents = new List<Tuple<ProbeComponent, int>>();
+        foreach (string id in _probeComponents.GetItemIds())
+        {
+            probeComponents.Add(new Tuple<ProbeComponent, int>(_probeComponents.GetItem(id), _probeComponents.GetItemQuantity(id)));
+        }
+        return probeComponents;
+    }
+
+    public void AddProbeComponent(ProbeComponent probeComponent, int quantity)
+    {
+        string id = probeComponent.Id;
+        if (_probeComponents.GetItem(id) != null)
+        {
+            _probeComponents.UpdateItemQuantity(id, _probeComponents.GetItemQuantity(id) + quantity);
+            return;
+        }
+        _probeComponents.AddItem(id, probeComponent, quantity);
+    }
+
+    public void AddProbeComponent(ProbeComponent probeComponent)
+    {
+        AddProbeComponent(probeComponent, 1);
+    }
+
+    public void RemoveProbeComponent(ProbeComponent probeComponent)
+    {
+        string id = probeComponent.Id;
+        int quantity = _probeComponents.GetItemQuantity(id);
+        if (quantity > 0)
+        {
+            _probeComponents.UpdateItemQuantity(id, quantity - 1);
+            return;
+        }
+        _probeComponents.RemoveItem(id);
     }
 }
