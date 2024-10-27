@@ -2,8 +2,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(Tilemap))]
-[RequireComponent(typeof(BoxCollider2D))]
 public class TilemapBoundaryBox : MonoBehaviour
 {
     private Tilemap tilemap;
@@ -38,6 +36,5 @@ public class TilemapBoundaryBox : MonoBehaviour
         boxCollider.size = size;
         boxCollider.isTrigger = false; 
         boundaryBox.transform.parent = this.transform; 
-        boundaryBox.layer = LayerMask.NameToLayer("TilemapLayer"); 
     }
 }

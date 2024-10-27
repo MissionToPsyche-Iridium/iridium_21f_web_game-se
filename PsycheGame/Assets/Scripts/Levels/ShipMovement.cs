@@ -7,12 +7,10 @@ public class ShipMovement : MonoBehaviour
 
     public float moveSpeed = 5f; 
     private Rigidbody2D rb;
-    public Vector3 initialSpawnPosition = new Vector3(0f, 0f, 0f);
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        transform.position = initialSpawnPosition; 
     }
 
     void Update()
@@ -20,7 +18,7 @@ public class ShipMovement : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal"); 
         float moveVertical = Input.GetAxis("Vertical");     
 
-        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
+        Vector3 movement = new Vector3(moveHorizontal, moveVertical, -1.0f);
 
         rb.velocity = movement * moveSpeed;
 
