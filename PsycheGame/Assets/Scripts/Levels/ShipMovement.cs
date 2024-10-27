@@ -7,9 +7,12 @@ public class ShipMovement : MonoBehaviour
 
     public float moveSpeed = 5f; 
     private Rigidbody2D rb;
+    public Vector3 initialSpawnPosition = new Vector3(0f, 0f, 0f);
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        transform.position = initialSpawnPosition; 
     }
 
     void Update()
@@ -32,5 +35,10 @@ public class ShipMovement : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         rb.rotation = angle - 90f;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collision Detected with: " + collision.gameObject.name);
     }
 }
