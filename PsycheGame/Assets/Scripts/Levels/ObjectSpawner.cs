@@ -39,7 +39,7 @@ public class ObjectSpawner : MonoBehaviour {
     private void MaintainPopulation() {
         if (objectCount < objectLimit) {
             for (int i = 0; i < spawnInterval; i++) {
-                Vector3 pos = GetRandomPoisiton(false);
+                Vector3 pos = GetRandomPosOnRadius();
                 Spawnable newObj = AddObject(pos);
                 newObj.transform.Rotate(Vector3.forward * Random.Range(-45f, 45f));
                 newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
@@ -49,7 +49,7 @@ public class ObjectSpawner : MonoBehaviour {
 
     private void InitialPopulation() {
         for (int i = 0; i < initialPopulation; i++) {
-            Vector3 pos = GetRandomPoisiton(true);
+            Vector3 pos = GetRandomPosCenter();
             Spawnable newObj = AddObject(pos);
             newObj.transform.Rotate(Vector3.forward * Random.Range(0.0f, 360f));
         }
@@ -72,11 +72,28 @@ public class ObjectSpawner : MonoBehaviour {
         return spawnableScript;
     }
 
-    private Vector3 GetRandomPoisiton(bool withinCamera) {
+    private Vector3 GetRandomPoisiton(bool inCenter) {
         Vector3 pos = Random.insideUnitCircle;
-        if (withinCamera) {
-            return pos;
+        if (inCenter) {
+            return pos.normalized + boundingAreaCenter;
         }
+        pos = pos.normalized;
+        pos *= spawnRadius;
+        pos += boundingAreaCenter;
+        return pos;
+    }
+
+    // Gets a random position act the center of the spawnning bounds
+    private Vector3 GetRandomPosCenter() {
+        Vector3 pos = Random.insideUnitCircle;
+        pos = pos.normalized;
+        pos += boundingAreaCenter;
+        return pos;
+    }
+
+    // Gets a random position along the radius of the spawning bounds
+    private Vector3 GetRandomPosOnRadius() {
+        Vector3 pos = Random.insideUnitCircle;
         pos = pos.normalized;
         pos *= spawnRadius;
         pos += boundingAreaCenter;
