@@ -60,9 +60,10 @@ public class BuildManager : MonoBehaviour
         // }
 
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
-        shape.transform.localPosition = new Vector3(1000, 600, 0);
+        shape.transform.localPosition = new Vector3(0, 600, 0);
         //shape.transform.localScale = Vector3.one;
         shape.transform.localScale = new Vector3(probePartScale, probePartScale, 0);
+        shape.layer = 8; //sets layer to "Part" layer
         
         shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
