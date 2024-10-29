@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:PsycheGame/Assets/Scripts/ProbeBuilder/InventoryContainer.cs.meta
+guid: ca1cf01a04636fb4597e6dff2d515236
+========
+guid: dd49b1fccc6225e49945356c7a593bf5
+>>>>>>>> US#1_Probe_Assembly:PsycheGame/Assets/Scripts/ProbeBuilder/ContainerManager.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
