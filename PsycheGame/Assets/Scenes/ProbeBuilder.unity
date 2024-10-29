@@ -383,6 +383,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 543106470}
   - {fileID: 184247469}
   - {fileID: 1893853947}
   - {fileID: 1981536910}
@@ -479,7 +480,6 @@ RectTransform:
   - {fileID: 1589895108}
   - {fileID: 1848694550}
   - {fileID: 1116875842}
-  - {fileID: 543106470}
   m_Father: {fileID: 967827067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -499,12 +499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd49b1fccc6225e49945356c7a593bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 10
-  height: 10
-  tile: {fileID: 7184025590481895770, guid: 0209f2356071e5a4e9543f96268b3125, type: 3}
-  originX: 0
-  originY: 0
-  tileScale: 100
 --- !u!1 &25452506
 GameObject:
   m_ObjectHideFlags: 0
@@ -12214,7 +12208,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1013910714}
   - component: {fileID: 1013910715}
-  - component: {fileID: 1013910716}
   m_Layer: 0
   m_Name: BuildManager
   m_TagString: Untagged
@@ -12253,10 +12246,10 @@ MonoBehaviour:
   buttonPrefab: {fileID: 6247685455360156453, guid: f90df45d911814fe5b2831a05dbfa8c6, type: 3}
   buttonContainer: {fileID: 385889574}
   availableShapes:
-  - {fileID: 6803490306282605282, guid: aeedb4c79278b2b4fa415f227792cbec, type: 3}
-  - {fileID: 5477543010480637251, guid: f2e78fac97137c3429fea3468c212ba6, type: 3}
+  - {fileID: 6803490306282605282, guid: 0ea4fc2a011d748eaabfcb7b0f6cc542, type: 3}
+  - {fileID: 5477543010480637251, guid: 37841a85974294f64936417a8d479600, type: 3}
   - {fileID: 5030326394527533961, guid: c502f2c14850fc94784c3a6fda4efafb, type: 3}
-  - {fileID: 5965715717562570814, guid: e8a0d686d56516147933fe5686b2fef6, type: 3}
+  - {fileID: 5965715717562570814, guid: ded42e65153934833afa1983426832e8, type: 3}
   partImages:
   - {fileID: 21300000, guid: 2d91d5036bd466947a51be3287624e11, type: 3}
   - {fileID: 21300000, guid: 50360318d1ad27d4191b312213192145, type: 3}
@@ -12264,20 +12257,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b3aa7c52c9ba8e846b31756f4a6e3ccd, type: 3}
   spawnArea: {fileID: 998425892}
   probePartScale: 15
---- !u!114 &1013910716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1013910713}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37481f2ab00d1a747bf360c4bb4cf8a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 0}
-  buttonPrefab: {fileID: 0}
 --- !u!1 &1017832077
 GameObject:
   m_ObjectHideFlags: 0
@@ -20374,7 +20353,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1686734568}
-  - component: {fileID: 1686734567}
   m_Layer: 0
   m_Name: ProbeComponentInventory
   m_TagString: Untagged
@@ -20382,20 +20360,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1686734567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1686734566}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37481f2ab00d1a747bf360c4bb4cf8a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 385889574}
-  buttonPrefab: {fileID: 6500874404060247832, guid: 2acc7545574c9eb4f881c26401d0843f, type: 3}
 --- !u!4 &1686734568
 Transform:
   m_ObjectHideFlags: 0
