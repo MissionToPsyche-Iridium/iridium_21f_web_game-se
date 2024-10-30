@@ -30,9 +30,13 @@ public class ProbeComponentInventory
         _inventory = inventory;
         _content = GameObject.Find(InventoryContentPath);
 
-        foreach (Tuple<ProbeComponent, int> probeComponent in _inventory.GetProbeComponents())
+        foreach (Tuple<ProbeComponent, int> probeComponentTuple in _inventory.GetProbeComponents())
         {
-            // TODO
+            GameObject button = new GameObject();
+            Image image = button.AddComponent<Image>();
+            image.preserveAspect = true;
+            image.sprite = probeComponentTuple.Item1.Sprite;
+            button.transform.SetParent(_content.transform);
         }
     }
 }
