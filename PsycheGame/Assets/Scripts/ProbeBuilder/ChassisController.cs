@@ -29,12 +29,11 @@ public class ChassisMap : MonoBehaviour
 
             GridLayout gridLayout = transform.parent.GetComponentInParent<GridLayout>();
             Vector3Int cellPosition = gridLayout.WorldToCell(tilePosition);
-            Debug.Log("--> cellPosition: " + cellPosition);
+            Debug.Log("[Tile Position: " + cellPosition + "]");
 
-            item.transform.position = cellPosition + new Vector3(0, 0, -0.01f);
+            item.transform.position = cellPosition + new Vector3(0, 0, 0);
 
             // transform.position = collision.transform.position + new Vector3(0, 0, -0.01f);
         }
-    }
-    
+    }    
 }
