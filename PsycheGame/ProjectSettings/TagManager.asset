@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ProbeMap
+  - ProbeItem
   layers:
   - Default
   - TransparentFX
@@ -43,4 +45,7 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 3440464053
+    locked: 0
+  - name: ProbeItem
+    uniqueID: 1270911029
     locked: 0

@@ -13,8 +13,11 @@ public class BuildManager : MonoBehaviour
     public GameObject[] availableShapes; 
     public Sprite[] partImages;
 
-
     public GameObject spawnPoint;
+
+    private int probeSize = 50;
+    private int spawnX = 550;
+    private int spawnY = 350;
 
     public void Start(){
         CreateInventoryButtons();
@@ -45,18 +48,11 @@ public class BuildManager : MonoBehaviour
 
     void SpawnShape(GameObject shapePrefab)
     {
-        // foreach (Transform child in shapeSpawnArea)
-        // {
-        //     Destroy(child.gameObject);
-        // }
-
         GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
     
-        shape.transform.localPosition = new Vector3(550, 350, 0); 
-        // change shape scale to 25
-        shape.transform.localScale = new Vector3(25, 25, 25);
-        // shape.transform.localScale = Vector3.one;
-
+        shape.transform.localPosition = new Vector3(spawnX, spawnY, 0); 
+        shape.transform.localScale = new Vector3(probeSize, probeSize * 0.9f, 0);
+        
         Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
     }
 
