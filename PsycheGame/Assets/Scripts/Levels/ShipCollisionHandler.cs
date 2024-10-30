@@ -3,11 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class ShipCollisionHandler : MonoBehaviour
 {
+    public GameObject modalPanel;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Asteroid"))
         {
-            //Need a pop up modal or text saying game over
             DestroyShip();
         }
     }
@@ -15,11 +16,8 @@ public class ShipCollisionHandler : MonoBehaviour
     private void DestroyShip()
     {
         Destroy(gameObject);
-        Invoke("RestartGame", 1f);
+        modalPanel.SetActive(true);
     }
 
-    private void RestartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+
 }
