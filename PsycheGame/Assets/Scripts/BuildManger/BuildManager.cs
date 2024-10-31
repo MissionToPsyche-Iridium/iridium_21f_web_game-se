@@ -52,7 +52,7 @@ public class BuildManager : MonoBehaviour
 
         GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
         shape.transform.localPosition = new Vector3(0, 0, 0); 
-        shape.transform.localScale = Vector3.one;
+        shape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         Debug.Log($"Spawned shape: {shape.name} at position {shape.transform.localPosition}");
     }
