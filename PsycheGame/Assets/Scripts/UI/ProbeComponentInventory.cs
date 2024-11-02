@@ -32,11 +32,21 @@ public class ProbeComponentInventory
 
         foreach (Tuple<ProbeComponent, int> probeComponentTuple in _inventory.GetProbeComponents())
         {
-            GameObject button = new GameObject();
-            Image image = button.AddComponent<Image>();
+            GameObject probeComponentButton = new GameObject();
+
+            Image image = probeComponentButton.AddComponent<Image>();
             image.preserveAspect = true;
             image.sprite = probeComponentTuple.Item1.Sprite;
-            button.transform.SetParent(_content.transform);
+
+            Button button = probeComponentButton.AddComponent<Button>();
+            button.onClick.AddListener(OnClick);
+
+            probeComponentButton.transform.SetParent(_content.transform);
         }
+    }
+
+    public void OnClick()
+    {
+
     }
 }
