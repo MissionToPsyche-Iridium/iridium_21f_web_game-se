@@ -16,8 +16,8 @@ public class BuildManager : MonoBehaviour
     public GameObject spawnPoint;
 
     private int probeSize = 50;
-    private int spawnX = 550;
-    private int spawnY = 350;
+    private int spawnX = 500;
+    private int spawnY = 300;
 
     public void Start(){
         CreateInventoryButtons();

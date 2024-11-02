@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ChassisMap : MonoBehaviour
@@ -27,11 +28,11 @@ public class ChassisMap : MonoBehaviour
             Vector3 tilePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             tilePosition.z = 0;
 
-            GridLayout gridLayout = transform.parent.GetComponentInParent<GridLayout>();
+            Grid gridLayout = transform.parent.GetComponentInParent<Grid>();
             Vector3Int cellPosition = gridLayout.WorldToCell(tilePosition);
             Debug.Log("[Tile Position: " + cellPosition + "]");
 
-            item.transform.position = cellPosition + new Vector3(0, 0, 0);
+            item.transform.position = cellPosition; 
 
             // transform.position = collision.transform.position + new Vector3(0, 0, -0.01f);
         }
