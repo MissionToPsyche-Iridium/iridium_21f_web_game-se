@@ -4,16 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
+  - Asteroid
+  - Boundary
   - Part
   - Container
-=======
-  - Asteroid
-<<<<<<< HEAD
->>>>>>> 18bb2908 (Tag Asteroid prefab for collision handler.)
-=======
-  - Boundary
->>>>>>> ec37f4b8 (Handle asteroid collisions with boundary by negating the collision.)
   layers:
   - Default
   - TransparentFX

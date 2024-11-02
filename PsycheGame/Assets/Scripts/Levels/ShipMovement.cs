@@ -6,6 +6,8 @@ public class ShipMovement : MonoBehaviour
 {
 
     public float moveSpeed = 5f; 
+    public float fuel = 150f;
+    public float fuelConsumptionRate = 1f;
     private Rigidbody2D rb;
     void Start()
     {
@@ -14,23 +16,27 @@ public class ShipMovement : MonoBehaviour
 
     void Update()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal"); 
-        float moveVertical = Input.GetAxis("Vertical");     
+            float moveHorizontal = Input.GetAxis("Horizontal"); 
+            float moveVertical = Input.GetAxis("Vertical");     
 
-        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
+            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
-        rb.velocity = movement * moveSpeed;
-
-        if (movement != Vector3.zero)
-        {
-            RotateShip(movement);
-        }
+            if (fuel > 0f && movement != Vector3.zero)
+            {
+                fuel -= fuelConsumptionRate * Time.deltaTime;
+                rb.velocity = movement * moveSpeed;
+                RotateShip(movement);
+                fuel = Mathf.Max(fuel, 0f);
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
     }
 
     void RotateShip(Vector2 direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
         rb.rotation = angle - 90f;
     }
 }
