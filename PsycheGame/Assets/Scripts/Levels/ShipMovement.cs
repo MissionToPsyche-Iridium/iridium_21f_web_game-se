@@ -20,16 +20,12 @@ public class ShipMovement : MonoBehaviour
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
-        transform.position += movement * moveSpeed * Time.deltaTime;
-        
+        rb.velocity = movement * moveSpeed;
+
         if (movement != Vector3.zero)
         {
             RotateShip(movement);
         }
-    }
-      void FixedUpdate()
-    {
-        rb.velocity = movement * moveSpeed;
     }
 
     void RotateShip(Vector2 direction)
