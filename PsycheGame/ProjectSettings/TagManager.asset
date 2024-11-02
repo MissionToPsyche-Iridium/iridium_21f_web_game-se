@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Part
   - Container
+=======
+  - Asteroid
+>>>>>>> 18bb2908 (Tag Asteroid prefab for collision handler.)
   layers:
   - Default
   - TransparentFX
