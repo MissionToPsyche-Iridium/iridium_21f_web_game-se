@@ -18,12 +18,13 @@ public class BuildManager : MonoBehaviour
     public GameObject spawnArea;
     public Stack spawnedPartsStack;
     [SerializeField] private int probePartScale;
+    private RectTransform chassisCanvas;
 
     public void Start(){
         CreateInventoryButtons();
         // get container manager component attached to the BuildManager GameObject
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
-        spawnArea = GameObject.Find("SpawnArea");
+        spawnArea = GameObject.Find("PartContainer");
         spawnedPartsStack = new Stack();
         Debug.Log($"Build Manager Initialized");
     }
@@ -54,20 +55,17 @@ public class BuildManager : MonoBehaviour
 
     void SpawnShape(GameObject shapePrefab)
     {
-        // foreach (Transform child in shapeSpawnArea)
-        // {
-        //     Destroy(child.gameObject);
-        // }
-
+    
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
-        shape.transform.localPosition = new Vector3(0, 600, 0);
-        //shape.transform.localScale = Vector3.one;
+        //shape.transform.localPosition = new Vector3(0, 600, 0);
         shape.transform.localScale = new Vector3(probePartScale, probePartScale, 0);
         shape.layer = 8; //sets layer to "Part" layer
         
         shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
         shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
+        shape.transform.SetParent(spawnArea.transform.parent);
+        shape.GetComponent<SpriteRenderer>().sortingOrder = 1;
         
         shape.tag = "Part"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
