@@ -8,6 +8,7 @@ TagManager:
   - Boundary
   - Part
   - Container
+  - Gas
   layers:
   - Default
   - TransparentFX
