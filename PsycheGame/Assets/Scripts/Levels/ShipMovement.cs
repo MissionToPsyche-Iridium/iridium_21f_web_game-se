@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
@@ -8,10 +10,12 @@ public class ShipMovement : MonoBehaviour {
     public float moveSpeed = 5f; 
     public float fuel = 150f;
     public float fuelConsumptionRate = 1f;
+    public TextMeshProUGUI fuelText; 
     private Rigidbody2D rb;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        UpdateFuelDisplay(); 
     }
 
     void Update()
@@ -27,6 +31,7 @@ public class ShipMovement : MonoBehaviour {
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
             fuel = Mathf.Max(fuel, 0f);
+            UpdateFuelDisplay(); 
         }
         else if (fuelEnabled)
         {
@@ -38,5 +43,10 @@ public class ShipMovement : MonoBehaviour {
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         rb.rotation = angle - 90f;
+    }
+
+      void UpdateFuelDisplay()
+    {
+        fuelText.text = "Fuel: " + fuel.ToString("F1");
     }
 }

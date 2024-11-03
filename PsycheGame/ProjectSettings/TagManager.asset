@@ -9,6 +9,7 @@ TagManager:
   - Part
   - Container
   - Gas
+  - HUD
   layers:
   - Default
   - TransparentFX
