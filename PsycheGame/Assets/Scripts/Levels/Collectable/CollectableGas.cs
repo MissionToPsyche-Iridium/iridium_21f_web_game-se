@@ -6,8 +6,15 @@ public abstract class CollectableGas : MonoBehaviour {
     private ParticleSystem ps;
     private List<ParticleSystem.Particle> particles = new();
 
-    private void Start() {
-        ps = this.GetComponent<ParticleSystem>(); 
+    [SerializeField] private Color gasColor = Color.white;
+
+    private void Awake() {
+        ps = this.GetComponent<ParticleSystem>();
+    }
+
+    private void OnValidate() {
+        ps = this.GetComponent<ParticleSystem>();
+        ps.GetComponent<ParticleSystemRenderer>().sharedMaterial.SetColor("_EmissionColor", gasColor);
     }
 
     private void FixedUpdate() {

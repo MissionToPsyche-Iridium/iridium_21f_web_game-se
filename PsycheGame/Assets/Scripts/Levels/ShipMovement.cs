@@ -4,29 +4,28 @@ using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
-    
+
     public float moveSpeed = 5f; 
-    public float fuel = 150f;
     public float fuelConsumptionRate = 1f;
     private Rigidbody2D rb;
-    void Start()
-    {
+
+    void Start() {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
-    {
+    void Update() {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
-        float moveVertical = Input.GetAxis("Vertical");     
+        float moveVertical = Input.GetAxis("Vertical");
+        float fuel = ShipManager.Fuel;
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
         if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
         {
-            fuel -= fuelConsumptionRate * Time.deltaTime;
+            ShipManager.Fuel -= fuelConsumptionRate * Time.deltaTime;
+            ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
-            fuel = Mathf.Max(fuel, 0f);
         }
         else if (fuelEnabled)
         {
