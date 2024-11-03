@@ -1,7 +1,8 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Collectable/Hydrogen Gas", fileName = "HydrogenGas")]
-public class HydrogenGas : CollectableSO {
-    public override void Collect(GameObject objectCollected) {
+public class HydrogenGas : CollectableGas {
+
+    public override void OnCollect(int particlesCollected) {
     }
+
 }
