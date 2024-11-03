@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,15 +11,16 @@ public class ProbeItemController : MonoBehaviour
     ChassisController TilemapController;
     public string probeTag = "ProbeMap";
 
+    public ChassisController TimeMapController { get; private set; }
 
     void Awake()
     {
         col = GetComponent<Collider2D>();
+        TilemapController = GameObject.Find("HappyTilemap").GetComponent<ChassisController>();
     }
     void Start()
     {
         //Screen.SetResolution(2560, 1440, true);
-        TilemapController = GameObject.Find("HappyTilemap").GetComponent<ChassisController>();
     }
 
     void OnMouseDown()
@@ -42,20 +44,28 @@ public class ProbeItemController : MonoBehaviour
 
         RaycastHit2D hit;
         
-        if (hit = Physics2D.Raycast(rayOrigin, rayDirection))
+        if (hit = Physics2D.Raycast(rayOrigin, rayDirection, Mathf.Infinity))
         {
             if (hit.transform.tag == probeTag)
             {
-                transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
-                Debug.Log("collider name: " + hit.transform.name + " position: " + hit.transform.position); 
+                // transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
+                Debug.Log("collider name: " + hit.transform.name + " position: " + hit.transform.position);
 
-                // pass the probe item to the tilemap controller and place it to the appropriate grid location
-                TilemapController.MoveProbeItemToGridPosition(this.gameObject, MouseWorldPosition());
+                GridLayout gridLayout = TilemapController.tilemap.GetComponentInParent<GridLayout>();
+                Vector3Int cellPosition = gridLayout.LocalToCell(transform.position);
+                transform.position = gridLayout.CellToLocalInterpolated(cellPosition);
+
+                Vector3Int cell = TilemapController.tilemap.LocalToCell(hit.point);
+                Vector3 tilepos = TilemapController.tilemap.GetCellCenterLocal(cell);
+
+                Debug.Log("Cell Position: " + cell + " tilemap get cell center to local: " + tilepos);
+                int x = cell.x;
+                int y = cell.y;
+                //Vector3Int gridPosition = TimeMapController.gridInformation[x, y].GridPosition;
             }
         }
     
         col.enabled = true;
-        // transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
 
