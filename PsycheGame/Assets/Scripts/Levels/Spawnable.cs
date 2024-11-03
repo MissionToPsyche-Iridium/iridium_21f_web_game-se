@@ -1,5 +1,12 @@
 using UnityEngine;
 
+// Any object that wishes to be spawned by the 'ObjectSpawner.cs' class should
+// extend this class and add its self to the 'Object To Spawn' field in the
+// unity editor. All spawned object specific behavior should be implemented in
+// the subclass.
+//
+// The lifetime of a 'Spawnable' object is controlled by the object spawner it
+// is attached to, all creation and destruction of objects is controled for you!
 public abstract class Spawnable : MonoBehaviour {
     public GameObject BoundingArea { get; set; }
     public ObjectSpawner Spawner { get; set; }
