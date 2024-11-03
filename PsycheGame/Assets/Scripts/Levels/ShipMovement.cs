@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipMovement : MonoBehaviour
-{
-
+public class ShipMovement : MonoBehaviour {
+    [SerializeField] private bool fuelEnabled = true;
+    
     public float moveSpeed = 5f; 
     public float fuel = 150f;
     public float fuelConsumptionRate = 1f;
@@ -16,22 +16,22 @@ public class ShipMovement : MonoBehaviour
 
     void Update()
     {
-            float moveHorizontal = Input.GetAxis("Horizontal"); 
-            float moveVertical = Input.GetAxis("Vertical");     
+        float moveHorizontal = Input.GetAxis("Horizontal"); 
+        float moveVertical = Input.GetAxis("Vertical");     
 
-            Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
+        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
-            if (fuel > 0f && movement != Vector3.zero)
-            {
-                fuel -= fuelConsumptionRate * Time.deltaTime;
-                rb.velocity = movement * moveSpeed;
-                RotateShip(movement);
-                fuel = Mathf.Max(fuel, 0f);
-            }
-            else
-            {
-                rb.velocity = Vector2.zero;
-            }
+        if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
+        {
+            fuel -= fuelConsumptionRate * Time.deltaTime;
+            rb.velocity = movement * moveSpeed;
+            RotateShip(movement);
+            fuel = Mathf.Max(fuel, 0f);
+        }
+        else if (fuelEnabled)
+        {
+            rb.velocity = Vector2.zero;
+        }
     }
 
     void RotateShip(Vector2 direction)
