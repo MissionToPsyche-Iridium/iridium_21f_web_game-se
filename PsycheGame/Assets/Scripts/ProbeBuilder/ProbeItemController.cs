@@ -7,7 +7,9 @@ public class ProbeItemController : MonoBehaviour
 {
     Vector3 offset;
     Collider2D col;
+    ChassisController TilemapController;
     public string probeTag = "ProbeMap";
+
 
     void Awake()
     {
@@ -16,6 +18,7 @@ public class ProbeItemController : MonoBehaviour
     void Start()
     {
         //Screen.SetResolution(2560, 1440, true);
+        TilemapController = GameObject.Find("HappyTilemap").GetComponent<ChassisController>();
     }
 
     void OnMouseDown()
@@ -29,33 +32,8 @@ public class ProbeItemController : MonoBehaviour
         // Debug.Log("Mouse Dragging - Position: " + transform.position);
     }
 
-    // The collision detection is being handled on the ChassisMap script -- to identify the placemen to the probe item
-    // against a tilemap grid location -- calculation needs to be done to determine the exact position of the probe item
-
-    /* this collision method may not be needed
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("<<Collision Enter>>");
-        if (collision.gameObject.tag == probeTag)
-        {
-            Vector3 tilePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            tilePosition.z = 0;
-
-            GridLayout gridLayout = transform.parent.GetComponentInParent<GridLayout>();
-            Vector3Int cellPosition = gridLayout.WorldToCell(tilePosition);
-            Debug.Log(">> cell Position: " + cellPosition);
-
-            transform.position = cellPosition + new Vector3(0, 0, -0.01f);
-
-            // transform.position = collision.transform.position + new Vector3(0, 0, -0.01f);
-        }
-    }
-    */
-
     void OnMouseUp()
     {
-
-        /*
         // debug raycast location
         col.enabled = false;
 
@@ -69,15 +47,15 @@ public class ProbeItemController : MonoBehaviour
             if (hit.transform.tag == probeTag)
             {
                 transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
-                Debug.Log("collider name: " + hit.transform.name);
+                Debug.Log("collider name: " + hit.transform.name + " position: " + hit.transform.position); 
+
+                // pass the probe item to the tilemap controller and place it to the appropriate grid location
+                TilemapController.MoveProbeItemToGridPosition(this.gameObject, MouseWorldPosition());
             }
         }
     
         col.enabled = true;
-        */
-
-
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        // transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
 
