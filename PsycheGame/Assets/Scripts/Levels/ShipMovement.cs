@@ -8,9 +8,9 @@ public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
     
     public float moveSpeed = 5f; 
-    public float fuel = 150f;
+    public float fuel = 100f;
     public float fuelConsumptionRate = 1f;
-    public TextMeshProUGUI fuelText; 
+    public Slider fuelBar; 
     private Rigidbody2D rb;
     void Start()
     {
@@ -45,8 +45,8 @@ public class ShipMovement : MonoBehaviour {
         rb.rotation = angle - 90f;
     }
 
-      void UpdateFuelDisplay()
+    public void UpdateFuelDisplay()
     {
-        fuelText.text = "Fuel: " + fuel.ToString("F1");
+        fuelBar.value = fuel;
     }
 }
