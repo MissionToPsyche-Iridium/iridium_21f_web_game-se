@@ -66,13 +66,12 @@ public class BuildManager : MonoBehaviour
         // }
 
         // get the master canvas rect transform and locate a relative position to spawn the shape
-        int spawnX = (int)(shapeSpawnArea.rect.width / 2 * 0.8 - 100);
+        int spawnX = (int)(shapeSpawnArea.rect.width * 0.22);
         int spawnY = (int)(shapeSpawnArea.rect.height / 2 * 0.8);
         float spawnSize = shapeSpawnArea.rect.width / 400.0f;
 
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
         shape.transform.localPosition = new Vector3(spawnX, spawnY, 0);
-        //shape.transform.localScale = Vector3.one;
         shape.transform.localScale = new Vector3(spawnSize, spawnSize, 0);
         shape.layer = 8; //sets layer to "Part" layer
 
