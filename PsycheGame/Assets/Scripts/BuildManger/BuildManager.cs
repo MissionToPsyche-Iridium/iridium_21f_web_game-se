@@ -82,9 +82,9 @@ public class BuildManager : MonoBehaviour
 
         shape.tag = "Part"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
-        GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
-        shape.transform.localPosition = new Vector3(0, 0, 0);
-        shape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        //GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
+        //shape.transform.localPosition = new Vector3(0, 0, 0);
+        //shape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         Debug.Log($"Spawned shape: {shapePrefab.name} at position {shapePrefab.transform.localPosition}");
 
