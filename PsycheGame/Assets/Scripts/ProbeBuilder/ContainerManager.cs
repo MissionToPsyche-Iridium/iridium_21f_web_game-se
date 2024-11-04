@@ -50,6 +50,18 @@ public class ContainerManager : MonoBehaviour
 	// probe will hold the components that are installed on the chassis
 	private  Dictionary<Vector2, ProbeComponent> container = new Dictionary<Vector2, ProbeComponent>();
 
+	void Awake() 
+	{
+		Reset();
+	}
+	
+	void Reset()
+	{		// get parent rect transform size
+		RectTransform parentRectTransform = GetComponent<RectTransform>();
+		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
+		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.8);
+	}
+
 	void Start()
 	{
 		//these fields are entered in unity when you add this script to an object
@@ -69,6 +81,15 @@ public class ContainerManager : MonoBehaviour
 
 	void GenerateContainer()
 	{
+		// dynamically generate the container based on the width and height
+		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
+		Debug.Log($"Parent rect transform: {parentRectTransform.rect.width} {parentRectTransform.rect.height}");
+		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
+		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
+
+		// set size proportionally to the parent rect transform -- need to adjust the spawn probe parts based on this also
+		this.tileScale = (int)(parentRectTransform.rect.width / 20);
+
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)

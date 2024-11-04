@@ -17,10 +17,16 @@ public class BuildManager : MonoBehaviour
     private ContainerManager containerManager;
     public GameObject spawnArea;
     public Stack spawnedPartsStack;
+
+    private RectTransform shapeSpawnArea;
     [SerializeField] private int probePartScale;
 
     public void Start(){
         CreateInventoryButtons();
+
+        // initialize master canvas to RectTransform
+        shapeSpawnArea = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
+
         // get container manager component attached to the BuildManager GameObject
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
         spawnArea = GameObject.Find("SpawnArea");
@@ -59,10 +65,15 @@ public class BuildManager : MonoBehaviour
         //     Destroy(child.gameObject);
         // }
 
+        // get the master canvas rect transform and locate a relative position to spawn the shape
+        int spawnX = (int)(shapeSpawnArea.rect.width / 2 * 0.8 - 100);
+        int spawnY = (int)(shapeSpawnArea.rect.height / 2 * 0.8);
+        float spawnSize = shapeSpawnArea.rect.width / 400.0f;
+
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
-        shape.transform.localPosition = new Vector3(0, 600, 0);
+        shape.transform.localPosition = new Vector3(spawnX, spawnY, 0);
         //shape.transform.localScale = Vector3.one;
-        shape.transform.localScale = new Vector3(probePartScale, probePartScale, 0);
+        shape.transform.localScale = new Vector3(spawnSize, spawnSize, 0);
         shape.layer = 8; //sets layer to "Part" layer
 
         shape.AddComponent<BoxCollider2D>().isTrigger = true;

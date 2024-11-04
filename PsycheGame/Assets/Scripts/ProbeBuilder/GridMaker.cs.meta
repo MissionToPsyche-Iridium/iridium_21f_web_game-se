@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:PsycheGame/Assets/Scripts/ProbeBuilder/InventoryItem.cs.meta
-guid: 087d9f0ff576d094d934df78e25e9a05
-========
 guid: a21e3449607ef44a99a6db09b4c3ae4b
->>>>>>>> US#1_Probe_Assembly:PsycheGame/Assets/Scripts/ProbeBuilder/GridMaker.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

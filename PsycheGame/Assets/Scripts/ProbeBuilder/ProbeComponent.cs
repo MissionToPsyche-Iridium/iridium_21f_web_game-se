@@ -4,23 +4,34 @@ using UnityEngine;
 
 public class ProbeComponent
 {
-    public string Id { get; private set; }
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public int Type { get; private set; }
-    public Sprite Sprite { get; private set; }
+    private string name;
+    private string description;
+    private Sprite sprite;
 
-    public ProbeComponent(string id, string name, string description, int type, Sprite sprite)
+    public ProbeComponent(string name, string description, Sprite sprite)
     {
-        Id = id;
-        Name = name;
-        Description = description;
-        Type = type;
-        Sprite = sprite;
+        this.name = name;
+        this.description = description;
+        this.sprite = sprite;
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public string GetDescription()
+    {
+        return description;
+    }
+
+    public Sprite GetSprite()
+    {
+        return sprite;
     }
 
     public ProbeComponent Clone()
     {
-        return new ProbeComponent(Id, Name, Description, Type, Sprite);
+        return new ProbeComponent(name, description, sprite);
     }
 }

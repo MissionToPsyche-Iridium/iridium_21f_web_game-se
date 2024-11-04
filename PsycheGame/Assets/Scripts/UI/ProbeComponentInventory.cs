@@ -1,38 +1,23 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class ProbeComponentInventory
+public class ProbeComponentInventory : MonoBehaviour
 {
-    private ProbeComponentInventory() { }
+    [SerializeField] private Transform content;
+    [SerializeField] private Image buttonPrefab;
 
-    private static ProbeComponentInventory _instance;
-
-    public static ProbeComponentInventory GetInstance()
+    void Start()
     {
-        if (_instance == null)
+        for (int i = 0; i < 20; i++)
         {
-            _instance = new ProbeComponentInventory();
+            this.AddComponent(null);
         }
-        return _instance;
     }
 
-    public const string InventoryContentPath = "/BuildManager/MasterCanvas/InventoryCanvas/BackgroundPanel/ComponentPanel/Viewport/Content";
-
-    private Inventory _inventory;
-    private GameObject _content;
-
-    public void Initialize(Inventory inventory)
+    public void AddComponent(Sprite sprite)
     {
-        _inventory = inventory;
-        _content = GameObject.Find(InventoryContentPath);
-
-        foreach (Tuple<ProbeComponent, int> probeComponent in _inventory.GetProbeComponents())
-        {
-            // TODO
-        }
+        Instantiate(buttonPrefab, content);
     }
 }
