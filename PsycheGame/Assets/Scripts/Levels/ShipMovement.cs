@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
+    [SerializeField] protected GameObject fuelBarColor;
     
     public float moveSpeed = 5f; 
     public float fuel = 100f;
@@ -15,6 +16,7 @@ public class ShipMovement : MonoBehaviour {
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        fuelBarColor = GameObject.Find("FuelBarFill");
         UpdateFuelDisplay(); 
     }
 
@@ -48,5 +50,12 @@ public class ShipMovement : MonoBehaviour {
     public void UpdateFuelDisplay()
     {
         fuelBar.value = fuel;
+        if(fuel < 25f){
+            fuelBarColor.GetComponent<Image>().color = Color.red;
+        } else if(fuel < 50f) {
+            fuelBarColor.GetComponent<Image>().color  = Color.yellow;
+        } else {
+            fuelBarColor.GetComponent<Image>().color = Color.green;
+        }
     }
 }
