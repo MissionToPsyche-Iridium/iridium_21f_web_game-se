@@ -10,7 +10,7 @@ public class ProbeComponent
     private Sprite sprite;
     private int id;
     private int quantity;
-    private readonly int max_quantity = 10;
+    public readonly int max_quantity = 10;
 
 
     public ProbeComponent(string name, string description, Sprite sprite)
@@ -46,20 +46,26 @@ public class ProbeComponent
     }
 
     public void setQuantity(int newQuantity) {
-        this.quantity = newQuantity;
+        if(quantity <= max_quantity) {
+            this.quantity = newQuantity;
+        }
     }
 
     public void incrementQuantity() {
-        this.quantity++;
+        if(quantity < max_quantity) {
+            this.quantity++;
+        }
     }
 
     public void decrementQuantity() {
-        this.quantity--;
+        if(quantity > 0) {
+            this.quantity--;
+        }
     }
 
-    public ProbeComponent Clone()
-    {
-        //TODO creat new id (get instance id?)
-        return new ProbeComponent(name, description, sprite);
-    }
+    // public ProbeComponent Clone()
+    // {
+    //     
+    //     return new ProbeComponent(name, description, sprite);
+    // }
 }

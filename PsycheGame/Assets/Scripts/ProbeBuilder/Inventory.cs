@@ -49,7 +49,9 @@ public class InventoryContainer<T>
 
     public void AddItem(ProbeComponent probeComponent)
     {
-        _container.Add(probeComponent);
+        if(probeComponent.getQuantity() < probeComponent.max_quantity) {
+            _container.Add(probeComponent);
+        }
     }
 
     public void UpdateItemQuantity(string id, int quantity)
@@ -58,6 +60,7 @@ public class InventoryContainer<T>
         {
             if (item.getId().Equals(id))
             {
+                if(item.getQuantity() < item.max_quantity) {
                 item.setQuantity(quantity);
                 break;
             }
