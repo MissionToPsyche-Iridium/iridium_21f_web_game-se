@@ -52,14 +52,13 @@ public class ContainerManager : MonoBehaviour
 
 	void Awake() 
 	{
-		Reset();
 	}
 	
 	void Reset()
-	{		// get parent rect transform size
-		RectTransform parentRectTransform = GetComponent<RectTransform>();
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
-		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.8);
+	{	 
+		//RectTransform parentRectTransform = GetComponent<RectTransform>();
+		//this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
+		//this.originY = (int)(parentRectTransform.rect.height / 2 * 0.8);
 	}
 
 	void Start()
@@ -84,8 +83,10 @@ public class ContainerManager : MonoBehaviour
 		// dynamically generate the container based on the width and height
 		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
 		Debug.Log($"Parent rect transform: {parentRectTransform.rect.width} {parentRectTransform.rect.height}");
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
+		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
 		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
+		this.width = 6;
+		this.height = 6;
 
 		// set size proportionally to the parent rect transform -- need to adjust the spawn probe parts based on this also
 		this.tileScale = (int)(parentRectTransform.rect.width / 20);
