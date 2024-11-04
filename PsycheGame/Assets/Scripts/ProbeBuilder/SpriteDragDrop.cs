@@ -37,8 +37,6 @@ public class SpriteDragDrop : MonoBehaviour
         transform.position = MouseWorldPosition() + offset;
         //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //transform.position = new UnityEngine.Vector2(mousePosition.x - offsetX, mousePosition.y - offsetY);
-
-        
     }
 
     private void OnMouseUp() {
@@ -63,6 +61,14 @@ public class SpriteDragDrop : MonoBehaviour
         col.enabled = true; 
         */
     }
+
+    public void OnColliderEnter2D(Collider2D collision) {
+        Debug.Log("ColliderEnter");
+        if (selected && collision.gameObject.tag == "Container") {
+            transform.position = collision.gameObject.transform.position;
+        }
+    }
+
 
     Vector3 MouseWorldPosition()
     {

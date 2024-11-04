@@ -19,6 +19,8 @@ using UnityEngine;
 
 
 	10/22 - Teague: data dictionary
+	11/02 - Shawn: added code to position calculation of the grid container and size based on the parent rect transform
+	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
 
 */
 
@@ -64,13 +66,6 @@ public class ContainerManager : MonoBehaviour
 
 	void Start()
 	{
-		//these fields are entered in unity when you add this script to an object
-		// this.width = 10;
-		// this.height = 10;
-		// this.tileScale = 100;
-		// this.originX = 150;
-		// this.originY = 0;
-
 		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
 		// this container will handle tile interactions with the game shape object colliding with the tile
 		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
@@ -97,10 +92,14 @@ public class ContainerManager : MonoBehaviour
 				// instantiate a new tile
 				if (tile != null)
 				{
-					var newTile = Instantiate(tile, new Vector3(originX + (tileScale * x), originY + (tileScale * y)), Quaternion.identity); //instantiates a new tile
-					newTile.name = $"Tile {x} {y}"; //names new tile in hierarchy
+					// calculate the target position of the tile
+					var targetX = originX + (tileScale * x);
+					var targetY = originY + (tileScale * y);
+					var newTile = Instantiate(tile, new Vector3(targetX, targetY), Quaternion.identity); //instantiates a new tile
+					newTile.name = $"Tile {x} {y}"; 		//names new tile in hierarchy
+					newTile.transform.tag = "tile"; 		//tags tile as tile
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-					newTile.Init(isOffset); //paints tile
+					newTile.Init(isOffset, x, y, targetX, targetY); //paints tile
 					newTile.transform.SetParent(transform); //sets parent of tile to container
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
 				}
