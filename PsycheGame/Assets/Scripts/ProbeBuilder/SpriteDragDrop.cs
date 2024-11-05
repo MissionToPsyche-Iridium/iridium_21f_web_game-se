@@ -26,7 +26,6 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseDrag() {
         //Debug.Log("MouseDrag");
-
         transform.position = MouseWorldPosition() + offset;
     }
 
@@ -34,7 +33,7 @@ public class SpriteDragDrop : MonoBehaviour
         selected = false;
         //Debug.Log("MouseUp");
     }
-    
+
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;

@@ -29,7 +29,7 @@ public class BuildManager : MonoBehaviour
 
         // get container manager component attached to the BuildManager GameObject
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
-        spawnArea = GameObject.Find("ContainerPanel");
+        spawnArea = GameObject.Find("SpawnArea");
         spawnedPartsStack = new Stack();
         Debug.Log($"Build Manager Initialized");
     }
@@ -68,7 +68,7 @@ public class BuildManager : MonoBehaviour
         // get the master canvas rect transform and locate a relative position to spawn the shape
         int spawnX = (int)(shapeSpawnArea.rect.width * 0.22);
         int spawnY = (int)(shapeSpawnArea.rect.height / 2 * 0.8);
-        float spawnSize = shapeSpawnArea.rect.width / 500.0f;
+        float spawnSize = shapeSpawnArea.rect.width / 400.0f;
 
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
         shape.transform.localPosition = new Vector3(spawnX, spawnY, 0);
