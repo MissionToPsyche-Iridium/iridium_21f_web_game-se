@@ -19,47 +19,22 @@ public class SpriteDragDrop : MonoBehaviour
     Vector3 offset;
     
     private void OnMouseDown() {
-        Debug.Log("MouseDown");
+        //Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
     }
 
     private void OnMouseDrag() {
-        Debug.Log("MouseDrag");
+        //Debug.Log("MouseDrag");
 
         transform.position = MouseWorldPosition() + offset;
     }
 
     private void OnMouseUp() {
         selected = false;
-        Debug.Log("MouseUp");
+        //Debug.Log("MouseUp");
     }
-
-    void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("TriggerEnter --------------------------");
-        if (selected && collision.gameObject.tag == "tile") {
-            float yPos = collision.gameObject.GetComponent<Tile>().GetYPosition();
-            float xPos = collision.gameObject.GetComponent<Tile>().GetXPosition();
-            Debug.Log("Float Collision, target position: " + xPos + ", " + yPos); 
-            transform.position = collision.gameObject.transform.position;
-        }
-    }
-
-    /*
-    void OnTriggerStay2D(Collider2D collision) {
-        if (selected && collision.gameObject.tag == "tile") {
-
-            // collision.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-            float yPos = collision.gameObject.GetComponent<Tile>().GetYPosition();
-            float xPos = collision.gameObject.GetComponent<Tile>().GetXPosition();
-            Debug.Log("Float Collision, target position: " + xPos + ", " + yPos); 
-            transform.position = collision.gameObject.transform.position;
-            // transform.position = collision.gameObject.transform.position;
-        }
-    }
-    */
-
-
+    
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;

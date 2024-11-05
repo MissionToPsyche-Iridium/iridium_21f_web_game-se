@@ -96,15 +96,16 @@ public class ContainerManager : MonoBehaviour
 					// calculate the target position of the tile
 					var targetX = originX + (tileScale * x);
 					var targetY = originY + (tileScale * y);
-					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 1), Quaternion.identity); //instantiates a new tile
+					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity); //instantiates a new tile
 					newTile.name = $"Tile {x} {y}"; 		//names new tile in hierarchy
 					newTile.transform.tag = "tile"; 		//tags tile as tile
 					newTile.AddComponent<Rigidbody2D>(); 	//adds rigidbody to tile
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0; //sets gravity scale to 0
-					newTile.GetComponent<BoxCollider2D>().includeLayers = 0;
+					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
 					newTile.Init(isOffset, x, y, targetX, targetY); //paints tile
 					newTile.transform.SetParent(transform); //sets parent of tile to container
+					// newTile.transform.localPosition = new Vector3(targetX, targetY, 0); //sets position of tile
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
 				}
 			}

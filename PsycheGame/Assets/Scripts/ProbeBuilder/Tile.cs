@@ -51,14 +51,36 @@ public class Tile : MonoBehaviour
         return yPosition;
     }
 
+    void OnTriggerEnter2D(Collider2D collision) {
+        Debug.Log("Collision detected");
+        if (collision.gameObject.tag == "ProbePart") {
+            Debug.Log("Probe part collision detected");
+            isOccupied = true;
+
+            Debug.Log("Probe part collided on the following: " + collision.gameObject.transform.position);
+            Debug.Log("Probe part collision detected on tile [" + cellX + ", " + cellY + "]");
+            Debug.Log("Probe target position is [" + xPosition + ", " + yPosition + "]");
+
+            collision.gameObject.transform.position = new Vector3(xPosition, yPosition, -0.01f);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision) {
+        Debug.Log("Collision exit");
+        if (collision.gameObject.tag == "ProbePart") {
+            //Debug.Log("Probe part collision detected");
+            isOccupied = false;
+        }
+    }
+
     //Highlights tile on hover
     void OnMouseEnter() {
-        Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
+        //Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
         highlight.SetActive(true);
     }
 
     void OnMouseExit() {
-        Debug.Log("tile inactive");
+        //Debug.Log("tile inactive");
         highlight.SetActive(false);
     }
 
