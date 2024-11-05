@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,31 +6,30 @@ public class ShipMovement : MonoBehaviour {
     [SerializeField] protected GameObject fuelBarColor;
     
     public float moveSpeed = 5f; 
-    public float fuel = 100f;
     public float fuelConsumptionRate = 1f;
     public Slider fuelBar; 
     private Rigidbody2D rb;
-    void Start()
-    {
+
+    void Start() {
         rb = GetComponent<Rigidbody2D>();
         fuelBarColor = GameObject.Find("FuelBarFill");
         UpdateFuelDisplay(); 
     }
 
-    void Update()
-    {
+    void Update() {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
-        float moveVertical = Input.GetAxis("Vertical");     
+        float moveVertical = Input.GetAxis("Vertical");
+        float fuel = ShipManager.Fuel;
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 
         if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
         {
-            fuel -= fuelConsumptionRate * Time.deltaTime;
+            ShipManager.Fuel -= fuelConsumptionRate * Time.deltaTime;
+            ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
-            fuel = Mathf.Max(fuel, 0f);
-            UpdateFuelDisplay(); 
+            UpdateFuelDisplay();
         }
         else if (fuelEnabled)
         {
@@ -47,8 +43,8 @@ public class ShipMovement : MonoBehaviour {
         rb.rotation = angle - 90f;
     }
 
-    public void UpdateFuelDisplay()
-    {
+    public void UpdateFuelDisplay() {
+        float fuel = ShipManager.Fuel;
         fuelBar.value = fuel;
         if(fuel < 25f){
             fuelBarColor.GetComponent<Image>().color = Color.red;
