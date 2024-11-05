@@ -5,8 +5,9 @@ using UnityEngine;
 public abstract class CollectableGas : MonoBehaviour {
     private ParticleSystem ps;
     private List<ParticleSystem.Particle> particles = new();
+    private bool collectStart = false;
 
-    [SerializeField] private Color gasColor = Color.white;
+    [SerializeField] protected Color gasColor = Color.white;
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
@@ -20,13 +21,18 @@ public abstract class CollectableGas : MonoBehaviour {
     private void FixedUpdate() {
         if (ps.particleCount <= 0) {
             Destroy(this.gameObject);
+            OnEndCollect();
         }
     }
 
     // Triggered when a gas particle collides with the probe
     private void OnParticleTrigger() {
-        int triggeredParticles = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles); 
+        if (!collectStart) {
+            OnStartCollect();
+            collectStart = true;
+        }
 
+        int triggeredParticles = ps.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles); 
         for (int i = 0; i < triggeredParticles; i++) {
             ParticleSystem.Particle p = particles[i];
             p.remainingLifetime = 0;
@@ -41,6 +47,15 @@ public abstract class CollectableGas : MonoBehaviour {
         this.OnCollect(triggeredParticles);
     }
 
-    public abstract void OnCollect(int particlesCollected);
+    // Called when the player picks up the first particle of this collectable
+    // gas
+    public abstract void OnStartCollect();
 
+    // Called when the player has collected every single particle of this
+    // collectable gas and the gas is now being despawned
+    public abstract void OnEndCollect();
+
+    // Called on update passing in the number of particles collected in that
+    // 'game tick'/update
+    public abstract void OnCollect(int particlesCollected);
 }
