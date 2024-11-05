@@ -11,6 +11,7 @@ public abstract class CollectableGas : MonoBehaviour {
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
+        ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
     }
 
     private void OnValidate() {
