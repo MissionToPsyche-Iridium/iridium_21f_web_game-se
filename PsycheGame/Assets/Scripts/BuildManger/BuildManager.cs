@@ -72,20 +72,23 @@ public class BuildManager : MonoBehaviour
 
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
         shape.transform.localPosition = new Vector3(spawnX, spawnY, 0);
-        shape.transform.localScale = new Vector3(spawnSize, spawnSize, 0);
-        shape.layer = 8; //sets layer to "Part" layer
+        shape.transform.localScale = new Vector3(spawnSize, spawnSize, 100);
+        //shape.layer = 8; //sets layer to "Part" layer
 
-        shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
+        shape.AddComponent<BoxCollider2D>().isTrigger = false;
         shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
 
-        shape.tag = "Part"; //used for UndoAllOperation()
+        shape.tag = "ProbePart"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
-        //GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
+
+        /* do not merge the following
+        //(dated code) GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
         //shape.transform.localPosition = new Vector3(0, 0, 0);
         //shape.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         Debug.Log($"Spawned shape: {shapePrefab.name} at position {shapePrefab.transform.localPosition}");
+        */
 
     }
 

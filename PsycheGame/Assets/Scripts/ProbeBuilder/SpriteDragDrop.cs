@@ -19,49 +19,19 @@ public class SpriteDragDrop : MonoBehaviour
     Vector3 offset;
     
     private void OnMouseDown() {
-        Debug.Log("MouseDown");
+        //Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
-
-        /*
-        initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offsetX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.position.x;
-        offsetY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
-        */
-
     }
 
     private void OnMouseDrag() {
-        Debug.Log("MouseDrag");
-
+        //Debug.Log("MouseDrag");
         transform.position = MouseWorldPosition() + offset;
-        //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //transform.position = new UnityEngine.Vector2(mousePosition.x - offsetX, mousePosition.y - offsetY);
-
-        
     }
 
     private void OnMouseUp() {
         selected = false;
-        Debug.Log("MouseUp");
-
-        /*  
-        col.enabled = false;
-        var rayOrigin = Camera.main.transform.position;
-        var rayDirection = MouseWorldPosition() - Camera.main.transform.position;
-        RaycastHit2D hit;
-        // String pattern = "(Square)(.*)";
-
-        if (hit = Physics2D.Raycast(rayOrigin, rayDirection))
-        {
-            if (hit.transform.tag == chassisTag)
-            {
-                transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
-                Debug.Log("collider name: " + hit.transform.name);
-            }
-        }
-        col.enabled = true; 
-        */
+        //Debug.Log("MouseUp");
     }
 
     Vector3 MouseWorldPosition()
