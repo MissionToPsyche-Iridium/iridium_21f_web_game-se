@@ -39,14 +39,9 @@ public class ProbeComponentInventory
             image.sprite = probeComponentTuple.Item1.Sprite;
 
             Button button = probeComponentButton.AddComponent<Button>();
-            button.onClick.AddListener(OnClick);
+            // button.onClick.AddListener(OnClick);
 
             probeComponentButton.transform.SetParent(_content.transform);
         }
-    }
-
-    public void OnClick()
-    {
-
     }
 }
