@@ -22,52 +22,42 @@ public class SpriteDragDrop : MonoBehaviour
         Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
-
-        /*
-        initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offsetX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.position.x;
-        offsetY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
-        */
-
     }
 
     private void OnMouseDrag() {
         Debug.Log("MouseDrag");
 
         transform.position = MouseWorldPosition() + offset;
-        //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //transform.position = new UnityEngine.Vector2(mousePosition.x - offsetX, mousePosition.y - offsetY);
     }
 
     private void OnMouseUp() {
         selected = false;
         Debug.Log("MouseUp");
-
-        /*  
-        col.enabled = false;
-        var rayOrigin = Camera.main.transform.position;
-        var rayDirection = MouseWorldPosition() - Camera.main.transform.position;
-        RaycastHit2D hit;
-        // String pattern = "(Square)(.*)";
-
-        if (hit = Physics2D.Raycast(rayOrigin, rayDirection))
-        {
-            if (hit.transform.tag == chassisTag)
-            {
-                transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
-                Debug.Log("collider name: " + hit.transform.name);
-            }
-        }
-        col.enabled = true; 
-        */
     }
 
-    public void OnColliderEnter2D(Collider2D collision) {
-        Debug.Log("ColliderEnter");
-        if (selected && collision.gameObject.tag == "Container") {
+    void OnTriggerEnter2D(Collider2D collision) {
+        Debug.Log("TriggerEnter --------------------------");
+        if (selected && collision.gameObject.tag == "tile") {
+            float yPos = collision.gameObject.GetComponent<Tile>().GetYPosition();
+            float xPos = collision.gameObject.GetComponent<Tile>().GetXPosition();
+            Debug.Log("Float Collision, target position: " + xPos + ", " + yPos); 
             transform.position = collision.gameObject.transform.position;
         }
     }
+
+    /*
+    void OnTriggerStay2D(Collider2D collision) {
+        if (selected && collision.gameObject.tag == "tile") {
+
+            // collision.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            float yPos = collision.gameObject.GetComponent<Tile>().GetYPosition();
+            float xPos = collision.gameObject.GetComponent<Tile>().GetXPosition();
+            Debug.Log("Float Collision, target position: " + xPos + ", " + yPos); 
+            transform.position = collision.gameObject.transform.position;
+            // transform.position = collision.gameObject.transform.position;
+        }
+    }
+    */
 
 
     Vector3 MouseWorldPosition()
