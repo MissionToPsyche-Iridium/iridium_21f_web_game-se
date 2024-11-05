@@ -77,6 +77,7 @@ public class BuildManager : MonoBehaviour
 
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
         shape.AddComponent<BoxCollider2D>().isTrigger = false;
+        shape.GetComponent<BoxCollider2D>().size = new Vector2(10,10);
         shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
 
         shape.tag = "ProbePart"; //used for UndoAllOperation()
