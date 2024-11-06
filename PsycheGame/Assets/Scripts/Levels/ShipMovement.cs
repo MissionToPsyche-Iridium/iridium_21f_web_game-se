@@ -58,7 +58,7 @@ public class ShipMovement : MonoBehaviour {
 
         if (fuel < 25f) {
             fuelBarColor.GetComponent<Image>().color = Color.red;
-            FlashLowFuel(fuel);
+            StartCoroutine(FlashLowFuel());
         } else if (fuel < 50f) { 
             fuelBarColor.GetComponent<Image>().color = Color.yellow;
         } else {
@@ -66,9 +66,9 @@ public class ShipMovement : MonoBehaviour {
         }
     }
 
-    IEnumerator FlashLowFuel(float fuel)
+    IEnumerator FlashLowFuel()
     {
-        while (fuel < fuelLowThreshold)
+        while (ShipManager.Fuel < fuelLowThreshold)
         {
             fuelBarPanel.GetComponent<Image>().color = Color.red;
             yield return new WaitForSeconds(0.5f);
