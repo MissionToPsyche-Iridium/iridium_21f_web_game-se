@@ -21,25 +21,25 @@ public class ProbeComponentInventory
     }
 
     public const string InventoryContentPath = "/BuildManager/MasterCanvas/InventoryCanvas/BackgroundPanel/ComponentPanel/Viewport/Content";
+    public const string ButtonResourcePath = "UI/ProbeComponentButton";
 
     private Inventory _inventory;
     private GameObject _content;
+    private GameObject _buttonPrefab;
 
     public void Initialize(Inventory inventory)
     {
         _inventory = inventory;
         _content = GameObject.Find(InventoryContentPath);
+        _buttonPrefab = Resources.Load<GameObject>(ButtonResourcePath);
 
         foreach (Tuple<ProbeComponent, int> probeComponentTuple in _inventory.GetProbeComponents())
         {
-            GameObject probeComponentButton = new GameObject();
+            GameObject probeComponentButton = GameObject.Instantiate(_buttonPrefab);
 
-            Image image = probeComponentButton.AddComponent<Image>();
+            Image image = probeComponentButton.GetComponent<Image>();
             image.preserveAspect = true;
             image.sprite = probeComponentTuple.Item1.Sprite;
-
-            Button button = probeComponentButton.AddComponent<Button>();
-            // button.onClick.AddListener(OnClick);
 
             probeComponentButton.transform.SetParent(_content.transform);
         }

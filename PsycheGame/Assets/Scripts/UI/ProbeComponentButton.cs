@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private GameObject _dragIcon;
+    private RectTransform _dragPlane;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -17,14 +18,18 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
 
-        _dragIcon.transform.SetParent(FindComponentInParents<Canvas>(gameObject).transform.parent);
+        Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
+        _dragIcon.transform.SetParent(canvasTransform);
+        _dragPlane = canvasTransform as RectTransform;
+
+        UpdateIconPosition(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (_dragIcon != null)
         {
-            // TODO
+            UpdateIconPosition(eventData);
         }
     }
 
@@ -36,22 +41,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         }
     }
 
-    public static T FindComponentInParents<T>(GameObject gameObject) where T : Component
+    public void UpdateIconPosition(PointerEventData eventData)
     {
-        if (gameObject == null)
+        RectTransform iconTransform = _dragIcon.GetComponent<RectTransform>();
+        Vector3 mousePosition;
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(iconTransform, eventData.position, eventData.pressEventCamera, out mousePosition))
         {
-            return null;
+            iconTransform.position = mousePosition;
+            iconTransform.rotation = _dragPlane.rotation;
         }
-
-        T component = gameObject.GetComponent<T>();
-        Transform parent = gameObject.transform.parent;
-
-        while (parent != null && component == null)
-        {
-            component = parent.gameObject.GetComponent<T>();
-            parent = parent.parent;
-        }
-
-        return component;
     }
 }
