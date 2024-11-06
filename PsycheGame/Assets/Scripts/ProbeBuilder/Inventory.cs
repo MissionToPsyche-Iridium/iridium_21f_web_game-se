@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class InventoryContainer<T>
+[Serializable]
+public class InventoryContainer : MonoBehaviour
 {
-    private List<ProbeComponent> _container;
+    public List<ProbeComponent> _container;
 
     public InventoryContainer()
     {
@@ -63,6 +64,7 @@ public class InventoryContainer<T>
                 if(item.getQuantity() < item.max_quantity) {
                 item.setQuantity(quantity);
                 break;
+                }
             }
         }
     }

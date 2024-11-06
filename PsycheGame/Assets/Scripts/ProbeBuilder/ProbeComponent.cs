@@ -1,30 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 
-public class ProbeComponent
+[Serializable]
+public class ProbeComponent : MonoBehaviour
 {
-    private string name;
-    private string description;
+    public string partName;
+    public string description;
     private Sprite sprite;
-    private int id;
+    public int id;
     private int quantity;
     public readonly int max_quantity = 10;
 
 
-    public ProbeComponent(string name, string description, Sprite sprite)
+    public ProbeComponent(string partName, string description, int id)
     {
-        this.name = name;
+        this.partName = partName;
         this.description = description;
-        this.sprite = sprite;
-        this.id = sprite.GetInstanceID();
+        //this.sprite = sprite;
+        this.id = id;
         this.quantity = 0;
     }
 
     public string GetName()
     {
-        return name;
+        return partName;
     }
 
     public string GetDescription()
@@ -63,9 +65,9 @@ public class ProbeComponent
         }
     }
 
-    // public ProbeComponent Clone()
-    // {
-    //     
-    //     return new ProbeComponent(name, description, sprite);
-    // }
+    public ProbeComponent Clone()
+    {
+        
+        return new ProbeComponent(partName, description, id);
+    }
 }

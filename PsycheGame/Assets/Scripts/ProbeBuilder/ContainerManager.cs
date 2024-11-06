@@ -6,6 +6,7 @@ using Unity.Collections;
 using Unity.VisualScripting;
 //using UnityEditor.iOS;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /* 
 	Application: Probe builder
@@ -19,6 +20,9 @@ using UnityEngine;
 
 
 	10/22 - Teague: data dictionary
+	11/02 - Shawn: added code to position calculation of the grid container and size based on the parent rect transform
+	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
+	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
 
 */
 
@@ -30,6 +34,12 @@ public class ContainerManager : MonoBehaviour
 	[SerializeField] private int tileScale;
 	
 	BuildManager buildManager;
+
+	// Temporary variables for storing the tile position --> (future: store in a data structure)
+	private int BeaconX, BeaconY;
+	private float PosX, PosY;
+	private bool triggered = false;
+
 	
 	//[SerializeField] private int xOffset = 100;
 
@@ -64,13 +74,6 @@ public class ContainerManager : MonoBehaviour
 
 	void Start()
 	{
-		//these fields are entered in unity when you add this script to an object
-		// this.width = 10;
-		// this.height = 10;
-		// this.tileScale = 100;
-		// this.originX = 150;
-		// this.originY = 0;
-
 		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
 		// this container will handle tile interactions with the game shape object colliding with the tile
 		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
@@ -97,15 +100,49 @@ public class ContainerManager : MonoBehaviour
 				// instantiate a new tile
 				if (tile != null)
 				{
-					var newTile = Instantiate(tile, new Vector3(originX + (tileScale * x), originY + (tileScale * y)), Quaternion.identity); //instantiates a new tile
-					newTile.name = $"Tile {x} {y}"; //names new tile in hierarchy
+					// calculate the target position of the tile
+					var targetX = originX + (tileScale * x);
+					var targetY = originY + (tileScale * y);
+					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity); //instantiates a new tile
+					newTile.name = $"Tile {x} {y}"; 		//names new tile in hierarchy
+					newTile.transform.tag = "tile"; 		//tags tile as tile
+					newTile.AddComponent<Rigidbody2D>(); 	//adds rigidbody to tile
+					newTile.GetComponent<Rigidbody2D>().gravityScale = 0; //sets gravity scale to 0
+					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-					newTile.Init(isOffset); //paints tile
+					newTile.Init(isOffset, x, y, targetX, targetY); //paints tile
 					newTile.transform.SetParent(transform); //sets parent of tile to container
+					// newTile.transform.localPosition = new Vector3(targetX, targetY, 0); //sets position of tile
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
 				}
 			}
 		}
+	}
+
+ 	// 	sets the last known collision grid position and floating point vector x,y position
+	public void setBeaconPosition(int x, int y, float PosX, float PosY)
+	{
+		this.BeaconX = x;
+		this.BeaconY = y;
+		this.PosX = PosX;
+		this.PosY = PosY;
+	}
+
+	public (float, float) GetBeaconPosition()
+	{
+		return (this.PosX, this.PosY);
+	}
+
+	// 	sets the trigger to true or false based on if a tile has been collided with
+	public void setTrigger(bool trigger)
+	{
+		this.triggered = trigger;
+	}
+
+	// for checking of a collision did occur
+	public bool getTrigger()
+	{
+		return this.triggered;
 	}
 
 }
