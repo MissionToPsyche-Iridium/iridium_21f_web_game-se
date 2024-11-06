@@ -45,8 +45,8 @@ public class SpriteDragDrop : MonoBehaviour
         // based on the last collision detection (on a particular grid x,y position), the target of the probe item will go there
         if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().getTrigger()) {
             Debug.Log("---Beacon location found---");
-            (float x, float y) posX= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
-            transform.position = new Vector3(posX.x, posX.y, 0);
+            (float x, float y) pos= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
+            transform.position = new Vector3(pos.x, pos.y, 0);
         }
     }
 
