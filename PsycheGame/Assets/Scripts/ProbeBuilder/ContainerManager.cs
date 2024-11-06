@@ -22,6 +22,7 @@ using UnityEngine.UIElements;
 	10/22 - Teague: data dictionary
 	11/02 - Shawn: added code to position calculation of the grid container and size based on the parent rect transform
 	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
+	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
 
 */
 
@@ -33,6 +34,12 @@ public class ContainerManager : MonoBehaviour
 	[SerializeField] private int tileScale;
 	
 	BuildManager buildManager;
+
+	// Temporary variables for storing the tile position --> (future: store in a data structure)
+	private int BeaconX, BeaconY;
+	private float PosX, PosY;
+	private bool triggered = false;
+
 	
 	//[SerializeField] private int xOffset = 100;
 
@@ -110,6 +117,32 @@ public class ContainerManager : MonoBehaviour
 				}
 			}
 		}
+	}
+
+ 	// 	sets the last known collision grid position and floating point vector x,y position
+	public void setBeaconPosition(int x, int y, float PosX, float PosY)
+	{
+		this.BeaconX = x;
+		this.BeaconY = y;
+		this.PosX = PosX;
+		this.PosY = PosY;
+	}
+
+	public (float, float) GetBeaconPosition()
+	{
+		return (this.PosX, this.PosY);
+	}
+
+	// 	sets the trigger to true or false based on if a tile has been collided with
+	public void setTrigger(bool trigger)
+	{
+		this.triggered = trigger;
+	}
+
+	// for checking of a collision did occur
+	public bool getTrigger()
+	{
+		return this.triggered;
 	}
 
 }

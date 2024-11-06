@@ -6,6 +6,16 @@ using System.Text.RegularExpressions;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
+/*
+    Author: Hannah M.
+    Date: 10/??/2024
+    Description: this script provides the drag-and-drop behavior for the probe parts.  It also contains the logic to snap the probe part 
+    to the grid tile when the probe part is in contact with the tile.
+
+    v 1.1 - Shawn (11/6)
+    - Updated MouseUp() method to take the tile position for placement of the game object (probe part)
+
+*/
 
 public class SpriteDragDrop : MonoBehaviour
 {
@@ -31,7 +41,13 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseUp() {
         selected = false;
-        //Debug.Log("MouseUp");
+
+        // based on the last collision detection (on a particular grid x,y position), the target of the probe item will go there
+        if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().getTrigger()) {
+            Debug.Log("---Beacon location found---");
+            (float x, float y) posX= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
+            transform.position = new Vector3(posX.x, posX.y, 0);
+        }
     }
 
     Vector3 MouseWorldPosition()
@@ -40,28 +56,5 @@ public class SpriteDragDrop : MonoBehaviour
         mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
-   
-
-    //This function snaps parts into their assigned containers 
-    // private void OnTriggerStay2D(Collider2D collision) {
-    //     string thisGameObjectName;
-    //     string thisGameObjectTag;
-    //     string collisionGameObjectName;
-    //     string collisionGameObjectTag;
-
-    //     thisGameObjectName = gameObject.name.Substring(0, name.IndexOf("_")); //i.e. GammaRaySpectrometer_Part -->GammaRaySpectrometer
-    //     thisGameObjectTag = gameObject.tag;
-    //     collisionGameObjectName = collision.gameObject.name.Substring(0, name.IndexOf("_")); //i.e. GammaRaySpectrometer_Container-->GammaRaySpectrometer
-    //     collisionGameObjectTag = collision.gameObject.tag;
-
-    //     if(mouseReleased && thisGameObjectTag == "Part" && collisionGameObjectTag == "Container" && thisGameObjectName == collisionGameObjectName) {
-    //         gameObject.SetActive(false); //snap gameObject into place
-    //         selected = false;
-
-    //     } else {
-    //        //return gameObject to original position
-    //        gameObject.transform.position = initialPos;
-    //     }
-    // }
 }
 

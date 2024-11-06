@@ -13,6 +13,9 @@ using UnityEngine;
     - Added cell and positional attributes purpose of optimizing identification of the cell, including in an 
     event of collision detection to associate with the probe item in contact with. 
 
+    v 1.2 - Shawn (11/6)
+    - Modified OnTriggerEnter2D to detect collision with probe part and set the tile as occupied --> used by the probe game object to position itself
+
 */
 
 
@@ -59,9 +62,11 @@ public class Tile : MonoBehaviour
 
             Debug.Log("Probe part collided on the following: " + collision.gameObject.transform.position);
             Debug.Log("Probe part collision detected on tile [" + cellX + ", " + cellY + "]");
-            Debug.Log("Probe target position is [" + xPosition + ", " + yPosition + "]");
-
-            collision.gameObject.transform.position = new Vector3(xPosition, yPosition, -0.01f);
+            
+            // beacon the last collision position to the container manager (temporary data structure for probe parts tracking)
+            this.gameObject.GetComponentInParent<ContainerManager>().setTrigger(true);
+            this.gameObject.GetComponentInParent<ContainerManager>().setBeaconPosition(cellX, cellY, xPosition, yPosition);
+            Debug.Log(">> Beaconing on tile [" + cellX + ", " + cellY + "]");
         }
     }
 
