@@ -21,4 +21,23 @@ public class ShipScanner : MonoBehaviour
             scanner.GetComponent<SpriteRenderer>().enabled = isScanning;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        ScannableObject scannable = other.GetComponent<ScannableObject>();
+        if (scannable != null && scannable.CompareTag("Scannable"))
+        {
+            Debug.Log("Scanning " + scannable.name);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        ScannableObject scannable = other.GetComponent<ScannableObject>();
+        if (scannable != null)
+        {
+            Debug.Log("Exiting scan of  " + scannable.name);
+
+        }
+    }
 }
