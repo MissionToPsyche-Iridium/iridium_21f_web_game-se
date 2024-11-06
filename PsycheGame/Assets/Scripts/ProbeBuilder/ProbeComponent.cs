@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using UnityEngine;
+using UnityEngine.U2D;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class ProbeComponent : MonoBehaviour
@@ -12,16 +14,20 @@ public class ProbeComponent : MonoBehaviour
     private Sprite sprite;
     public int id;
     private int quantity;
-    public readonly int max_quantity = 10;
+    private readonly int max_quantity = 10;
+    public Vector3 position;
+    private GameObject shape;
 
 
-    public ProbeComponent(string partName, string description, int id)
+    public ProbeComponent(GameObject shape)
     {
-        this.partName = partName;
-        this.description = description;
+        this.partName = shape.name;
+        this.description = "no description available";
         //this.sprite = sprite;
-        this.id = id;
-        this.quantity = 0;
+        this.id = shape.GetInstanceID();
+        this.quantity = 1;
+        this.position = shape.transform.localPosition;
+        this.shape = shape;
     }
 
     public string GetName()
@@ -65,9 +71,12 @@ public class ProbeComponent : MonoBehaviour
         }
     }
 
+    void Update() {
+        position = shape.transform.localPosition;
+    }
+
     public ProbeComponent Clone()
     {
-        
-        return new ProbeComponent(partName, description, id);
+        return new ProbeComponent(shape);
     }
 }

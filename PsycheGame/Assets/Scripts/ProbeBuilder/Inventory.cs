@@ -50,9 +50,9 @@ public class InventoryContainer : MonoBehaviour
 
     public void AddItem(ProbeComponent probeComponent)
     {
-        if(probeComponent.getQuantity() < probeComponent.max_quantity) {
+       
             _container.Add(probeComponent);
-        }
+        
     }
 
     public void UpdateItemQuantity(string id, int quantity)
@@ -61,10 +61,9 @@ public class InventoryContainer : MonoBehaviour
         {
             if (item.getId().Equals(id))
             {
-                if(item.getQuantity() < item.max_quantity) {
+                
                 item.setQuantity(quantity);
                 break;
-                }
             }
         }
     }

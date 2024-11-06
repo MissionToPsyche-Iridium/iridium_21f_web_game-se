@@ -86,7 +86,7 @@ public class BuildManager : MonoBehaviour
 
         shape.tag = "ProbePart"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
-        ProbeComponent newPart = new ProbeComponent(shapePrefab.name, "no description yet", shape.GetInstanceID());
+        ProbeComponent newPart = new ProbeComponent(shape);
         inventory.AddItem(newPart);
 
         /* do not merge the following
