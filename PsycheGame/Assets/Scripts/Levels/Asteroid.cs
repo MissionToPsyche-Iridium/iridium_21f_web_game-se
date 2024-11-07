@@ -17,8 +17,8 @@ public class Asteroid : Spawnable, ScannableObject {
     // In the future we implement scanning specific logic to the asteroid here 
     public void Scan() {
         Debug.Log("Scanned Asteroid with id: " + this.GetInstanceID());
-        IsScanned = true;
+        scanned = true;
     }
 
-    public bool IsScanned { get => scanned; private set => scanned = value; }
+    public bool IsScanned => scanned; 
 }

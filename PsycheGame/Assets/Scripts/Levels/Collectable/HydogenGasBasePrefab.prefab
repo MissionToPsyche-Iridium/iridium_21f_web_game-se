@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 5412671227401785163}
   - component: {fileID: 2198189322917144031}
   - component: {fileID: 5471302214028906177}
-  m_Layer: 0
+  - component: {fileID: 1076874044657982297}
+  m_Layer: 6
   m_Name: HydogenGasBasePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3793,7 +3794,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 0
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -4845,3 +4846,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gasColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!58 &1076874044657982297
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7119559092380717775}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 2147483680
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2.5

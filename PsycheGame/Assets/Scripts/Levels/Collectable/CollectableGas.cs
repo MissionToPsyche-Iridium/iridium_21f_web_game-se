@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
-public abstract class CollectableGas : MonoBehaviour {
+public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private ParticleSystem ps;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
@@ -59,4 +59,11 @@ public abstract class CollectableGas : MonoBehaviour {
     // Called on update passing in the number of particles collected in that
     // 'game tick'/update
     public abstract void OnCollect(int particlesCollected);
+
+    // Called when this collectable gas is scanned by the player probe
+    public abstract void Scan();
+
+    // Called by the probe to poll weather or not this gas clound should be
+    // scanned again if the probe is still scanning this gas cloud
+    public abstract bool IsScanned { get; }
 }
