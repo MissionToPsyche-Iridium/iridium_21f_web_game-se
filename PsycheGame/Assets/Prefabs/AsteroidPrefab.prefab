@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1685321266760462552}
   - component: {fileID: 1302779078398471801}
   - component: {fileID: 5771888816593832295}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AsteroidPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

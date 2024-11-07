@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
-
-
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
