@@ -54,6 +54,10 @@ public class Tile : MonoBehaviour
         return yPosition;
     }
 
+    public (int, int) GetCell() {
+        return (cellX, cellY);
+    }
+
     void OnTriggerEnter2D(Collider2D collision) {
         Debug.Log("Collision detected");
         if (collision.gameObject.tag == "ProbePart") {
@@ -64,8 +68,8 @@ public class Tile : MonoBehaviour
             Debug.Log("Probe part collision detected on tile [" + cellX + ", " + cellY + "]");
             
             // beacon the last collision position to the container manager (temporary data structure for probe parts tracking)
-            this.gameObject.GetComponentInParent<ContainerManager>().setTrigger(true);
-            this.gameObject.GetComponentInParent<ContainerManager>().setBeaconPosition(cellX, cellY, xPosition, yPosition);
+            this.gameObject.GetComponentInParent<ContainerManager>().SetTrigger(true);
+            this.gameObject.GetComponentInParent<ContainerManager>().SetBeaconPosition(cellX, cellY, xPosition, yPosition);
             Debug.Log(">> Beaconing on tile [" + cellX + ", " + cellY + "]");
         }
     }

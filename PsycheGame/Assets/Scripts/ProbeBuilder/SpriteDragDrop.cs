@@ -41,12 +41,19 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseUp() {
         selected = false;
+        Vector3 newPos = MouseWorldPosition();
 
         // based on the last collision detection (on a particular grid x,y position), the target of the probe item will go there
-        if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().getTrigger()) {
-            Debug.Log("---Beacon location found---");
-            (float x, float y) pos= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
-            transform.position = new Vector3(pos.x, pos.y, 0);
+        if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTrigger()) {
+
+            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+            Debug.Log("~~ Target Grid position: " + cellPos.cellX + ", " + cellPos.cellY + " ~~");
+            (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+            transform.position = new Vector3(cell.x, cell.y, 0);
+
+            // --v1.0 of the code -- keep until test of v1.1 is successful--
+            // (float x, float y) pos= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
+            // FindGridPosition by calling the ContainerManager script using the mouse position
         }
     }
 

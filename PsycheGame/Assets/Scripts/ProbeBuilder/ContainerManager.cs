@@ -40,6 +40,9 @@ public class ContainerManager : MonoBehaviour
 	private float PosX, PosY;
 	private bool triggered = false;
 
+	// 2D array to store the chassis grid - precursor to the singletone struct - 11/6** @Nick 
+	private (float x, float y)[,] chassisGrid;
+
 	
 	//[SerializeField] private int xOffset = 100;
 
@@ -79,6 +82,9 @@ public class ContainerManager : MonoBehaviour
 		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
 		Debug.Log($"Container Manager Initialized: {this.buildManager}");
 
+		// initialize the grid of 2D tuple of floats to store the grid position of the tiles
+		chassisGrid = new (float x, float y)[width, height];
+
 		GenerateContainer();
 	}
 
@@ -110,7 +116,9 @@ public class ContainerManager : MonoBehaviour
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0; //sets gravity scale to 0
 					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-					newTile.Init(isOffset, x, y, targetX, targetY); //paints tile
+					newTile.Init(isOffset, x, y, targetX, targetY);    //paints tile
+					chassisGrid[x, y].x = targetX; 	 
+					chassisGrid[x, y].y = targetY;  
 					newTile.transform.SetParent(transform); //sets parent of tile to container
 					// newTile.transform.localPosition = new Vector3(targetX, targetY, 0); //sets position of tile
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
@@ -119,8 +127,19 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
+	public (int, int) FindGridPosition(Vector3 position)
+	{
+		// find the grid position of the tile
+		Debug.Log($"FGP - Position: {position}");
+		Debug.Log($"FGP - Origin: {originX} {originY}");
+		var x = (int)((position.x - originX) / tileScale);
+		var y = (int)((position.y - originY) / tileScale);
+		Debug.Log($"FGP - Grid Position: {x} {y}");
+		return (x, y);
+	}
+
  	// 	sets the last known collision grid position and floating point vector x,y position
-	public void setBeaconPosition(int x, int y, float PosX, float PosY)
+	public void SetBeaconPosition(int x, int y, float PosX, float PosY)
 	{
 		this.BeaconX = x;
 		this.BeaconY = y;
@@ -133,14 +152,20 @@ public class ContainerManager : MonoBehaviour
 		return (this.PosX, this.PosY);
 	}
 
+	// use prestaged tuple of grid coordinates to get the floating point vector x,y position
+	public (float, float) GetBeaconPositionGrid(int x, int y)
+	{
+		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+	}
+
 	// 	sets the trigger to true or false based on if a tile has been collided with
-	public void setTrigger(bool trigger)
+	public void SetTrigger(bool trigger)
 	{
 		this.triggered = trigger;
 	}
 
 	// for checking of a collision did occur
-	public bool getTrigger()
+	public bool GetTrigger()
 	{
 		return this.triggered;
 	}
