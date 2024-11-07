@@ -59,18 +59,16 @@ public class Tile : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("Collision detected");
         if (collision.gameObject.tag == "ProbePart") {
-            Debug.Log("Probe part collision detected");
             isOccupied = true;
 
             Debug.Log("Probe part collided on the following: " + collision.gameObject.transform.position);
-            Debug.Log("Probe part collision detected on tile [" + cellX + ", " + cellY + "]");
+            Debug.Log(">> Probe part collision detected on tile [" + cellX + ", " + cellY + "] <<");
             
             // beacon the last collision position to the container manager (temporary data structure for probe parts tracking)
             this.gameObject.GetComponentInParent<ContainerManager>().SetTrigger(true);
             this.gameObject.GetComponentInParent<ContainerManager>().SetBeaconPosition(cellX, cellY, xPosition, yPosition);
-            Debug.Log(">> Beaconing on tile [" + cellX + ", " + cellY + "]");
+            Debug.Log(">> Beaconing on tile [" + cellX + ", " + cellY + "] <<");
         }
     }
 

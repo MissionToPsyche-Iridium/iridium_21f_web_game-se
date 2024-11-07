@@ -43,3 +43,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: ProbePart
+    uniqueID: 2414916577
+    locked: 0
+  - name: GridPlane
+    uniqueID: 38925935
+    locked: 0

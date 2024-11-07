@@ -117,8 +117,7 @@ public class ContainerManager : MonoBehaviour
 					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
 					newTile.Init(isOffset, x, y, targetX, targetY);    //paints tile
-					chassisGrid[x, y].x = targetX; 	 
-					chassisGrid[x, y].y = targetY;  
+					chassisGrid[x, y] = (targetX, targetY);
 					newTile.transform.SetParent(transform); //sets parent of tile to container
 					// newTile.transform.localPosition = new Vector3(targetX, targetY, 0); //sets position of tile
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
@@ -131,7 +130,7 @@ public class ContainerManager : MonoBehaviour
 	{
 		// find the grid position of the tile
 		Debug.Log($"FGP - Position: {position}");
-		Debug.Log($"FGP - Origin: {originX} {originY}");
+		Debug.Log($"FGP - Coordinate Origin: {originX} {originY}");
 		var x = (int)((position.x - originX) / tileScale);
 		var y = (int)((position.y - originY) / tileScale);
 		Debug.Log($"FGP - Grid Position: {x} {y}");
