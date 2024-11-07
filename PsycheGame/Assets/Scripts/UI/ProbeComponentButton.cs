@@ -18,6 +18,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
 
+        _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
+
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.transform.SetParent(canvasTransform);
         _dragPlane = canvasTransform as RectTransform;

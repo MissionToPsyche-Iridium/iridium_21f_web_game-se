@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,5 +23,15 @@ public class Utility
         }
 
         return component;
+    }
+
+    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+    {
+        T copy = destination.AddComponent<T>();
+        foreach (FieldInfo field in original.GetType().GetFields())
+        {
+            field.SetValue(copy, field.GetValue(original));
+        }
+        return copy;
     }
 }
