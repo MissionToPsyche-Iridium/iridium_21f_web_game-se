@@ -32,6 +32,13 @@ public class SpriteDragDrop : MonoBehaviour
         //Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
+
+        // if the tile is in the in place layer -- move into layer 9 (ProbePart)
+        if (this.gameObject.layer == 10) {
+            this.gameObject.layer = 9;
+            // code logic here to change the object's appearance to indicate it is not in place
+        }
+
     }
 
     private void OnMouseDrag() {
@@ -49,7 +56,13 @@ public class SpriteDragDrop : MonoBehaviour
             (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
             Debug.Log("~~ Target Grid position: " + cellPos.cellX + ", " + cellPos.cellY + " ~~");
             (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-            transform.position = new Vector3(cell.x, cell.y, 0);
+            transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+            // if the tile is in the initailized layer -- before in place -- move into layer 10 (ProbePartInPlace)
+            if (this.gameObject.layer <= 9) {
+                this.gameObject.layer = 10;
+                // code logic here to change the object's appearance to indicate it is in place
+            }
 
             /* 
             // Future direction - grid layout integration on the canvas panel for auto-responsive scaling -- sprint 3 or 4

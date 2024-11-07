@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,6 +24,7 @@ using UnityEngine.UIElements;
 	11/02 - Shawn: added code to position calculation of the grid container and size based on the parent rect transform
 	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
 	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
+	11/07 - Minor tweak to the positioning snap logic to improve accuracy.  (long-term: consider using built-in grid for responsive scaling - sprint3 or 4?)
 
 */
 
@@ -126,18 +128,15 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
+	// calculate the position of the tile to snap to and return the cell position
 	public (int, int) FindGridPosition(Vector3 position)
 	{
 		// find the grid position of the tile
-		Debug.Log($"FGP - Position: {position}");
-		Debug.Log($"FGP - Coordinate Origin: {originX} {originY}");
+		Debug.Log($"FGP - Using Position: {position}");
 
-
-		// the positioning code below affects the snapping positioning directly using the method of instantiated tile positioning
-		// --> Built-in method of using Unity grid could be more efficient and need to be explored where dynamic grid calculation
-		// --> is done by the engine
-		var x = (int)((position.x - originX) / tileScale);
-		var y = (int)((position.y - originY) / tileScale);
+		// incremental snapping logic update -- 11/7
+		var x = (int) Math.Round((position.x - originX) / tileScale);
+		var y = (int) Math.Round((position.y - originY) / tileScale);
 		Debug.Log($"FGP - Grid Position: {x} {y}");
 		return (x, y);
 	}

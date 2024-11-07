@@ -27,6 +27,7 @@ public class Tile : MonoBehaviour
 
     private int cellX, cellY;
     private float xPosition, yPosition;
+
     bool isOccupied;
 
     //paints tile
@@ -36,7 +37,7 @@ public class Tile : MonoBehaviour
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-       render.color = isOffset ? color1 : color2;
+        render.color = isOffset ? color1 : color2;
     }
 
     //setters and getters
