@@ -131,6 +131,11 @@ public class ContainerManager : MonoBehaviour
 		// find the grid position of the tile
 		Debug.Log($"FGP - Position: {position}");
 		Debug.Log($"FGP - Coordinate Origin: {originX} {originY}");
+
+
+		// the positioning code below affects the snapping positioning directly using the method of instantiated tile positioning
+		// --> Built-in method of using Unity grid could be more efficient and need to be explored where dynamic grid calculation
+		// --> is done by the engine
 		var x = (int)((position.x - originX) / tileScale);
 		var y = (int)((position.y - originY) / tileScale);
 		Debug.Log($"FGP - Grid Position: {x} {y}");

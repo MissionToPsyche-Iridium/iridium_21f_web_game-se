@@ -29,7 +29,7 @@ public class BuildManager : MonoBehaviour
 
         // get container manager component attached to the BuildManager GameObject
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
-        spawnArea = GameObject.Find("SpawnArea");
+        spawnArea = GameObject.Find("ContainerPanel");
         spawnedPartsStack = new Stack();
         Debug.Log($"Build Manager Initialized");
     }
