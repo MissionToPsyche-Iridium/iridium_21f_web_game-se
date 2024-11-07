@@ -17,7 +17,6 @@ public class ShipScanner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             isScanning = !isScanning;  
-            animator.SetBool("IsScanning", isScanning);
             scanner.GetComponent<SpriteRenderer>().enabled = isScanning;
         }
     }
