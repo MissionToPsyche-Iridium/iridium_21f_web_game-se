@@ -2,16 +2,16 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class ProximityAlert : MonoBehaviour
+public class AlertNotification : MonoBehaviour
 {
-    public TextMeshPro warningText;           
+    public GameObject alertPanel;           
     public float flashInterval = 0.5f;
     private int nearbyAsteroids = 0;
     private Coroutine flashCoroutine;
 
     void Start()
     {
-        warningText.gameObject.SetActive(false);
+        alertPanel.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -48,7 +48,7 @@ public class ProximityAlert : MonoBehaviour
                 StopCoroutine(flashCoroutine);
                 flashCoroutine = null;
             }
-            warningText.gameObject.SetActive(false);  
+            alertPanel.SetActive(false);  
         }
     }
 
@@ -56,7 +56,7 @@ public class ProximityAlert : MonoBehaviour
     {
         while (true)
         {
-            warningText.gameObject.SetActive(!warningText.gameObject.activeSelf);
+            alertPanel.SetActive(!alertPanel.activeSelf);
             yield return new WaitForSeconds(flashInterval);
         }
     }
