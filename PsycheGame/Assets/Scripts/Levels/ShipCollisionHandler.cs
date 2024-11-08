@@ -18,10 +18,7 @@ public class ShipCollisionHandler : MonoBehaviour
 
     private void DestroyShip()
     {
-
         modalPanel.SetActive(true);
-        modalPanel.gameObject.SetActive(true);
-
         Destroy(ship);
     }
 }

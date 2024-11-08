@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RestartGameHandler : MonoBehaviour
+public class PauseMenuHandler : MonoBehaviour
 {
-    public GameObject modalPanel;
+     [SerializeField] GameObject modalPanel;
 
-       private bool isPaused = false;
+    private bool isPaused = false;
 
     void Update()
     {
