@@ -18,6 +18,7 @@ public class AlertNotification : MonoBehaviour
     {
         if (other.CompareTag("Asteroid"))
         {
+            Debug.Log("Asteroid detected!");
             nearbyAsteroids++;
             UpdateWarningIndicator();
         }

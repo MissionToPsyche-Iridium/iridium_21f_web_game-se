@@ -3,21 +3,25 @@ using UnityEngine.SceneManagement;
 
 public class ShipCollisionHandler : MonoBehaviour
 {
-    public GameObject modalPanel;
+    [SerializeField] GameObject ship;
+    [SerializeField] GameObject modalPanel;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Asteroid"))
         {
+            Debug.Log("Ship hit by asteroid!");
             DestroyShip();
+
         }
     }
 
     private void DestroyShip()
     {
-        Destroy(gameObject);
+
         modalPanel.SetActive(true);
+        modalPanel.gameObject.SetActive(true);
+
+        Destroy(ship);
     }
-
-
 }
