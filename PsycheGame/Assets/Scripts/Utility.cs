@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Utility
 {
@@ -23,6 +24,39 @@ public class Utility
         }
 
         return component;
+    }
+
+    public static T FindComponentFromRoot<T>(GameObject root) where T : Component
+    {
+        T component = root.GetComponent<T>();
+        if (component != null)
+        {
+            return component;
+        }
+
+        foreach (Transform child in root.transform)
+        {
+            component = FindComponentFromRoot<T>(child.gameObject);
+            if (component != null)
+            {
+                return component;
+            }
+        }
+
+        return null;
+    }
+
+    public static T FindComponentInScene<T>(Scene scene) where T : Component
+    {
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            T component = FindComponentFromRoot<T>(root);
+            if (component != null)
+            {
+                return component;
+            }
+        }
+        return null;
     }
 
     public static T CopyComponent<T>(T original, GameObject destination) where T : Component

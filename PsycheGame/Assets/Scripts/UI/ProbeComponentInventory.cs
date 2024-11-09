@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ProbeComponentInventory
 {
@@ -40,6 +41,8 @@ public class ProbeComponentInventory
             Image image = probeComponentButton.GetComponent<Image>();
             image.preserveAspect = true;
             image.sprite = probeComponentTuple.Item1.Sprite;
+
+            probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = probeComponentTuple.Item2.ToString();
 
             probeComponentButton.transform.SetParent(_content.transform);
         }

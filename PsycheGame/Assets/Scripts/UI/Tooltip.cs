@@ -1,22 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Tooltip
 {
-    public Transform Parent { get; private set; }
+    private static GameObject _tooltipTemplate = Resources.Load<GameObject>("UI/Tooltip");
+
     public string Title { get; private set; }
     public string Description { get; private set; }
     public Vector2 Position { get; private set; }
 
     public Tooltip() { }
-
-    public Tooltip SetParent(Transform parent)
-    {
-        Parent = parent;
-        return this;
-    }
 
     public Tooltip SetTitle(string title)
     {
@@ -36,8 +33,17 @@ public class Tooltip
         return this;
     }
 
-    public void Draw()
+    public Tooltip Draw()
     {
+        Canvas masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
+        if (masterCanvas != null)
+        {
+            throw new Exception("Could not find master canvas");
+        }
 
+        GameObject tooltip = GameObject.Instantiate(_tooltipTemplate);
+        // TODO
+
+        return this;
     }
 }
