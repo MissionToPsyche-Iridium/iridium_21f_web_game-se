@@ -82,7 +82,8 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.IsScanned) {
             scannable.Scan();
-            scannedPopupColumn.AddEntry(null, "Item Scanned!", "Short item description here");
+            string description = scannable.Description;
+            scannedPopupColumn.AddEntry(null, "Item Scanned!", description);
         }
     }
 }

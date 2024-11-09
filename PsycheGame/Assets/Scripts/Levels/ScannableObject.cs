@@ -11,4 +11,8 @@ public interface ScannableObject {
     // [Scan] function no longer needs to be called
     public bool IsScanned { get; }
 
+    // Return a short string description of this scanned object
+    // upon scanning
+    public string Description { get; }
+
 }

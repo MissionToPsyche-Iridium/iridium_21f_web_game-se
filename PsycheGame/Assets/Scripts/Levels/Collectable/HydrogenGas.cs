@@ -22,4 +22,5 @@ public class HydrogenGas : CollectableGas {
     }
 
     public override bool IsScanned => scanned;
+    public override string Description => "Hydrogen gas used to refill a ships fuel tank";
 }

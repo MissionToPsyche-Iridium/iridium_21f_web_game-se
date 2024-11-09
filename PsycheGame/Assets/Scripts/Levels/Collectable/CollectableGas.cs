@@ -66,4 +66,7 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     // Called by the probe to poll weather or not this gas clound should be
     // scanned again if the probe is still scanning this gas cloud
     public abstract bool IsScanned { get; }
+
+    // Called by UI systems to display a description about this scannable gas
+    public abstract string Description { get; }
 }
