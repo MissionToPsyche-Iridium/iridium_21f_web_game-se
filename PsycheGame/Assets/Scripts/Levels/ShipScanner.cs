@@ -14,13 +14,20 @@ public class ShipScanBehavior : MonoBehaviour {
     [Header("Animation")]
     [SerializeField] private GameObject scanner;
 
-    [SerializeField] private RectTransform rect;
-    [SerializeField] private GameObject t;
-    [SerializeField] private Sprite image;
-    [SerializeField] private ScannedItemPopup popupPrefab;
-
     private RaycastHit2D hit;
     private bool isScanning = false;
+
+    // UI element displaying popups for items that have been scanned
+    // this is retrieved in 'Awake'
+    private ScannedColumn scannedPopupColumn;
+
+    private void Awake() {
+        // TODO
+        // there should be a better way to obtain an instance of the popup column
+        // to allow this class to add entires this feels a bit hackish but it works
+        // fine for now
+        scannedPopupColumn = (ScannedColumn)FindObjectOfType(typeof(ScannedColumn));
+    }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.F)) {
@@ -75,9 +82,7 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.IsScanned) {
             scannable.Scan();
-            var popup = Instantiate(popupPrefab, Vector3.zero, Quaternion.identity, t.transform);
-            popup.SetContent(image, "Item Scanned!", "Short item descritpion");
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            scannedPopupColumn.AddEntry(null, "Item Scanned!", "Short item description here");
         }
     }
 }
