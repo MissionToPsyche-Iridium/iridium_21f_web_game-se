@@ -4,16 +4,24 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class Tooltip
 {
     private static GameObject _tooltipTemplate = Resources.Load<GameObject>("UI/Tooltip");
 
+    private Canvas _masterCanvas;
+    private GameObject _tooltip;
+
     public string Title { get; private set; }
     public string Description { get; private set; }
-    public Vector2 Position { get; private set; }
+    public Vector3 Position { get; private set; }
 
-    public Tooltip() { }
+    public Tooltip()
+    {
+        _masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
+        _tooltip = null;
+    }
 
     public Tooltip SetTitle(string title)
     {
@@ -33,17 +41,31 @@ public class Tooltip
         return this;
     }
 
-    public Tooltip Draw()
+    public Tooltip SetPositionAtMouse()
     {
-        Canvas masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
-        if (masterCanvas != null)
-        {
-            throw new Exception("Could not find master canvas");
-        }
-
-        GameObject tooltip = GameObject.Instantiate(_tooltipTemplate);
-        // TODO
-
+        Vector3 mousePosition = Input.mousePosition;
+        Position = new Vector2(mousePosition.x, mousePosition.y);
         return this;
+    }
+
+    public void Draw()
+    {
+        _tooltip = GameObject.Instantiate(_tooltipTemplate);
+        Transform contentTransform = _tooltip.transform.GetChild(0).GetChild(0);
+        GameObject title = contentTransform.GetChild(0).gameObject;
+        GameObject description = contentTransform.GetChild(1).gameObject;
+
+        title.GetComponent<TextMeshProUGUI>().text = Title;
+        description.GetComponent<TextMeshProUGUI>().text = Description;
+        RectTransform rect = _tooltip.GetComponent<RectTransform>();
+        _tooltip.transform.position = new Vector3(Position.x, Position.y, 10);
+
+        _tooltip.transform.SetParent(_masterCanvas.transform);
+    }
+
+    public void Clear()
+    {
+        GameObject.Destroy(_tooltip);
+        _tooltip = null;
     }
 }

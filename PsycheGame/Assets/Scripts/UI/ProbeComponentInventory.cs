@@ -28,23 +28,41 @@ public class ProbeComponentInventory
     private GameObject _content;
     private GameObject _buttonPrefab;
 
+    private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
+
     public void Initialize(Inventory inventory)
     {
         _inventory = inventory;
         _content = GameObject.Find(InventoryContentPath);
         _buttonPrefab = Resources.Load<GameObject>(ButtonResourcePath);
 
-        foreach (Tuple<ProbeComponent, int> probeComponentTuple in _inventory.GetProbeComponents())
+        _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
+
+        foreach (Tuple<ProbeComponent, int> tuple in _inventory.GetProbeComponents())
         {
             GameObject probeComponentButton = GameObject.Instantiate(_buttonPrefab);
 
             Image image = probeComponentButton.GetComponent<Image>();
             image.preserveAspect = true;
-            image.sprite = probeComponentTuple.Item1.Sprite;
+            image.sprite = tuple.Item1.Sprite;
 
-            probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = probeComponentTuple.Item2.ToString();
+            probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tuple.Item2.ToString();
 
             probeComponentButton.transform.SetParent(_content.transform);
+
+            _componentButtons.Add(new Tuple<ProbeComponent, GameObject>(tuple.Item1, probeComponentButton));
         }
+    }
+
+    public ProbeComponent GetProbeComponent(GameObject button)
+    {
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+        {
+            if (tuple.Item2 == button)
+            {
+                return tuple.Item1;
+            }
+        }
+        return null;
     }
 }

@@ -5,10 +5,24 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private ProbeComponent _probeComponent;
+
     private GameObject _dragIcon;
     private RectTransform _dragPlane;
+
+    private Tooltip _tooltip;
+
+    public void Start()
+    {
+        _probeComponent = ProbeComponentInventory.GetInstance().GetProbeComponent(gameObject);
+
+        _dragIcon = null;
+        _dragPlane = null;
+
+        _tooltip = null;
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -40,6 +54,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             Destroy(_dragIcon);
+            _dragIcon = null;
         }
     }
 
@@ -52,5 +67,31 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             iconTransform.position = mousePosition;
             iconTransform.rotation = _dragPlane.rotation;
         }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (_tooltip != null)
+        {
+            return;
+        }
+
+        _tooltip = new Tooltip()
+                    .SetTitle(_probeComponent.Name)
+                    .SetDescription(_probeComponent.Description)
+                    .SetPositionAtMouse();
+
+        // _tooltip.Draw(); FIX
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (_tooltip == null)
+        {
+            return;
+        }
+
+        // _tooltip.Clear();
+        _tooltip = null;
     }
 }
