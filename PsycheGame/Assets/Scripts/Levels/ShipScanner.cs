@@ -13,6 +13,10 @@ public class ShipScanBehavior : MonoBehaviour {
     [Header("Animation")]
     [SerializeField] private GameObject scanner;
 
+    [SerializeField] private GameObject t;
+    [SerializeField] private Sprite image;
+    [SerializeField] private ScannedItemPopup popupPrefab;
+
     private RaycastHit2D hit;
     private bool isScanning = false;
 
@@ -69,6 +73,9 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.IsScanned) {
             scannable.Scan();
+            var popup = Instantiate(popupPrefab, Vector3.zero, Quaternion.identity, t.transform);
+            t.SetActive(true);
+            popup.SetContent(image, "Item Scanned!", "Short item descritpion");
         }
     }
 }
