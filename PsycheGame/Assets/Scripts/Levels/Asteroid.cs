@@ -1,10 +1,13 @@
 using UnityEngine;
 
 public class Asteroid : Spawnable, ScannableObject {
+    [SerializeField] private Sprite displayImage;
+
     private bool scanned = false;
 
     public bool IsScanned => scanned;
     public string Description => "A space asteroid that would wipe out your probe on contact.";
+    public Sprite Image => displayImage;
 
     // For now just as a demo we print the instance id of the scanned asteroid
     // and then set 'IsScanned' to true telling the probe that this object no

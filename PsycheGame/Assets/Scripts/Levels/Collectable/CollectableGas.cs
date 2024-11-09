@@ -69,4 +69,7 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
     // Called by UI systems to display a description about this scannable gas
     public abstract string Description { get; }
+
+    // Called by UI systems to display the image of this scannable gas
+    public abstract Sprite Image { get; }
 }

@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class HydrogenGas : CollectableGas {
+    [SerializeField] private Sprite displayImage;
+
     private bool scanned = false;
 
     public override void OnStartCollect() { /* on first collect logic here */ }
@@ -23,4 +25,5 @@ public class HydrogenGas : CollectableGas {
 
     public override bool IsScanned => scanned;
     public override string Description => "Hydrogen gas used to refill a ships fuel tank";
+    public override Sprite Image => displayImage;
 }
