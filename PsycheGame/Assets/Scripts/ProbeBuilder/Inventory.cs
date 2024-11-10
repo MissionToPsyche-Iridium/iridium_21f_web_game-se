@@ -1,82 +1,52 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-[Serializable]
-public class InventoryContainer : MonoBehaviour
+public class Inventory
 {
-    public List<ProbeComponent> _container;
+    private InventoryContainer<ProbeComponent> _probeComponents;
 
-    public InventoryContainer()
+    public Inventory()
     {
-        _container = new List<ProbeComponent>();
+        _probeComponents = new InventoryContainer<ProbeComponent>();
     }
 
-    public ProbeComponent GetItem(string id)
+    public List<Tuple<ProbeComponent, int>> GetProbeComponents()
     {
-        foreach (ProbeComponent item in _container)
+        List<Tuple<ProbeComponent, int>> probeComponents = new List<Tuple<ProbeComponent, int>>();
+        foreach (string id in _probeComponents.GetItemIds())
         {
-            if (item.getId().Equals(id))
-            {
-                return item;
-            }
+            probeComponents.Add(new Tuple<ProbeComponent, int>(_probeComponents.GetItem(id), _probeComponents.GetItemQuantity(id)));
         }
-        return null;
+        return probeComponents;
     }
 
-    public int GetItemQuantity(string id)
+    public void AddProbeComponent(ProbeComponent probeComponent, int quantity)
     {
-        foreach (ProbeComponent item in _container)
+        string id = probeComponent.Id;
+        if (_probeComponents.GetItem(id) != null)
         {
-            if (item.getId().Equals(id))
-            {
-                return item.getQuantity();
-            }
+            _probeComponents.UpdateItemQuantity(id, _probeComponents.GetItemQuantity(id) + quantity);
+            return;
         }
-        return 0;
+        _probeComponents.AddItem(id, probeComponent, quantity);
     }
 
-    public List<int> GetItemIds()
+    public void AddProbeComponent(ProbeComponent probeComponent)
     {
-        List<int> ids = new List<int>();
-        foreach (ProbeComponent item in _container)
+        AddProbeComponent(probeComponent, 1);
+    }
+
+    public void RemoveProbeComponent(ProbeComponent probeComponent)
+    {
+        string id = probeComponent.Id;
+        int quantity = _probeComponents.GetItemQuantity(id);
+        if (quantity > 0)
         {
-            ids.Add(item.getId());
+            _probeComponents.UpdateItemQuantity(id, quantity - 1);
+            return;
         }
-        return ids;
-    }
-
-    public void AddItem(ProbeComponent probeComponent)
-    {
-       
-            _container.Add(probeComponent);
-        
-    }
-
-    public void UpdateItemQuantity(string id, int quantity)
-    {
-        foreach (ProbeComponent item in _container)
-        {
-            if (item.getId().Equals(id))
-            {
-                
-                item.setQuantity(quantity);
-                break;
-            }
-        }
-    }
-
-    public void RemoveItem(ProbeComponent probeComponent)
-    {
-        for (int index = 0; index < _container.Count; index++)
-        {
-            if (_container[index].getId().Equals(probeComponent.getId()))
-            {
-                _container.RemoveAt(index);
-                break;
-            }
-        }
+        _probeComponents.RemoveItem(id);
     }
 }

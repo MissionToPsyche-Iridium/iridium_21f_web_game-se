@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SaveData : MonoBehaviour
 {
+    /* TODO: make this class work with current inventory setup
     public InventoryContainer inventory;
     public void ToJson(InventoryContainer inventory) {
         //ProbeComponent part = new ProbeComponent("testPart", "description", 1234);
@@ -22,4 +23,5 @@ public class SaveData : MonoBehaviour
     {
         return JsonUtility.FromJson<List<ProbeComponent>>(a_Json);
     }
+    */
 }
