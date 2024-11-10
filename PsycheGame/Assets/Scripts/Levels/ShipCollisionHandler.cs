@@ -6,27 +6,16 @@ public class ShipCollisionHandler : MonoBehaviour
 {
     [SerializeField] GameObject ship;
     [SerializeField] GameObject modalPanel;
-    [SerializeField] Slider healthSlider; 
-    [SerializeField] private int shipHealth;
-    private int maxHealth = 100;
-    private void Start()
-    {
-        shipHealth = maxHealth;
-        
-        healthSlider.maxValue = shipHealth;
-        healthSlider.value = maxHealth;
-        
-        UpdateHealth();
-    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Asteroid"))
         {
             Debug.Log("Ship hit by asteroid!");
-            shipHealth -= CalculateDamage(collision);
-            Debug.Log("Ship health at " + shipHealth);
+            ShipManager.Health -= CalculateDamage(collision);
+            Debug.Log("Ship health at " + ShipManager.Health);
             UpdateHealth();
-            if (shipHealth <= 0)
+            if (ShipManager.Health <= 0)
             {
                 DestroyShip();
             }
@@ -57,10 +46,5 @@ public class ShipCollisionHandler : MonoBehaviour
     {
         modalPanel.SetActive(true);
         Destroy(ship);
-    }
-
-    private void UpdateHealth()
-    {
-        healthSlider.value = shipHealth;
     }
 }

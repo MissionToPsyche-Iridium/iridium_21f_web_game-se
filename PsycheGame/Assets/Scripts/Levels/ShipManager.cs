@@ -19,9 +19,12 @@ public class ShipManager : MonoBehaviour {
 
     private static GameObject _obj; 
     private static float fuel = 150f;
+    private static float health = 100f;
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }
+    
+    public static float Health {get {return health; } set {health = value; }}
 
     // This function must be called outside of the 'awake' function
     // otherwise a value of null will be returned
