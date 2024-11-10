@@ -1,8 +1,9 @@
 using System.Collections;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FuelBarUI : MonoBehaviour {
+public class FuelBar : MonoBehaviour {
     [SerializeField] private GameObject fuelBarColor;
     [SerializeField] private GameObject fuelBarPanel;
     [SerializeField] private Slider fuelBar;
@@ -19,10 +20,8 @@ public class FuelBarUI : MonoBehaviour {
         this.fuelBarPanelImage = fuelBarPanel.GetComponent<Image>();
     }
 
-    private void Update() {
-        float fuel = ShipManager.Fuel;
+    public void UpdateIndicator(float fuel) {
         fuelBar.value = fuel;
-
         if (fuel < FUEL_LOW_LEVEL) {
             fuelBarImage.color = Color.red;
             StartCoroutine(FlashLowFuel());

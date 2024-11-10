@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
+    [SerializeField] private FuelBar fuelBarUI;
 
     public float moveSpeed = 5f; 
     public float fuelConsumptionRate = 1f;
@@ -25,6 +26,7 @@ public class ShipMovement : MonoBehaviour {
             ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
+            fuelBarUI.UpdateIndicator(fuel);
         }
         else if (fuelEnabled)
         {
