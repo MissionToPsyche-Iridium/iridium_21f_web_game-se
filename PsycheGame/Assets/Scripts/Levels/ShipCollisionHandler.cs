@@ -1,16 +1,31 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ShipCollisionHandler : MonoBehaviour
 {
     [SerializeField] GameObject ship;
     [SerializeField] GameObject modalPanel;
-    [SerializeField] private int shipHealth = 100;
+    [SerializeField] Slider healthSlider; 
+    [SerializeField] private int shipHealth;
+    private int maxHealth = 100;
+    private void Start()
+    {
+        shipHealth = maxHealth;
+        
+        healthSlider.maxValue = shipHealth;
+        healthSlider.value = maxHealth;
+        
+        UpdateHealth();
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Asteroid"))
         {
             Debug.Log("Ship hit by asteroid!");
+            shipHealth -= CalculateDamage(collision);
+            Debug.Log("Ship health at " + shipHealth);
+            UpdateHealth();
             if (shipHealth <= 0)
             {
                 DestroyShip();
@@ -19,7 +34,7 @@ public class ShipCollisionHandler : MonoBehaviour
         }
     }
 
-       private int CalculateDamage(Collision2D collision)
+    private int CalculateDamage(Collision2D collision)
     {
         Vector2 asteroidVelocity = collision.relativeVelocity.normalized;
         Vector2 collisionNormal = collision.contacts[0].normal;
@@ -42,5 +57,10 @@ public class ShipCollisionHandler : MonoBehaviour
     {
         modalPanel.SetActive(true);
         Destroy(ship);
+    }
+
+    private void UpdateHealth()
+    {
+        healthSlider.value = shipHealth;
     }
 }
