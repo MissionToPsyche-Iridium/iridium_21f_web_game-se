@@ -14,7 +14,6 @@ public class ShipCollisionHandler : MonoBehaviour
             Debug.Log("Ship hit by asteroid!");
             ShipManager.Health -= CalculateDamage(collision);
             Debug.Log("Ship health at " + ShipManager.Health);
-            UpdateHealth();
             if (ShipManager.Health <= 0)
             {
                 DestroyShip();
