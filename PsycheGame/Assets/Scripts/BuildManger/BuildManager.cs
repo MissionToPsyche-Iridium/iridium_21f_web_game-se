@@ -20,6 +20,8 @@ public class BuildManager : MonoBehaviour
 
     private RectTransform shapeSpawnArea;
     [SerializeField] private int probePartScale;
+    private SaveData saveData;
+    public InventoryContainer inventory;
 
     public void Start(){
         CreateInventoryButtons();
@@ -31,6 +33,8 @@ public class BuildManager : MonoBehaviour
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
         spawnArea = GameObject.Find("SpawnArea");
         spawnedPartsStack = new Stack();
+        saveData = new SaveData();
+        inventory = new InventoryContainer();
         Debug.Log($"Build Manager Initialized");
     }
 
@@ -75,6 +79,7 @@ public class BuildManager : MonoBehaviour
         shape.transform.localScale = new Vector3(spawnSize, spawnSize, 100);
         //shape.layer = 8; //sets layer to "Part" layer
 
+        shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
         shape.AddComponent<BoxCollider2D>().isTrigger = false;
         shape.GetComponent<BoxCollider2D>().size = new Vector2(10,10);
@@ -82,6 +87,8 @@ public class BuildManager : MonoBehaviour
 
         shape.tag = "ProbePart"; //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
+        ProbeComponent newPart = new ProbeComponent(shape);
+        inventory.AddItem(newPart);
 
         /* do not merge the following
         //(dated code) GameObject shape = Instantiate(shapePrefab, spawnPoint.transform);
@@ -101,6 +108,7 @@ public class BuildManager : MonoBehaviour
 
     public void SaveProbe(){
         Debug.Log("Saving probe!");
+        saveData.ToJson(inventory);
         //saves all currently spawned and snapped probe parts to a persistant game object
     }
 

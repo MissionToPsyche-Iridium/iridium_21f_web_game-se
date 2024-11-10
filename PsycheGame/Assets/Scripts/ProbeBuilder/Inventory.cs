@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class InventoryContainer<T>
+[Serializable]
+public class InventoryContainer : MonoBehaviour
 {
-    private List<ProbeComponent> _container;
+    public List<ProbeComponent> _container;
 
     public InventoryContainer()
     {
@@ -49,7 +50,9 @@ public class InventoryContainer<T>
 
     public void AddItem(ProbeComponent probeComponent)
     {
-        _container.Add(probeComponent);
+       
+            _container.Add(probeComponent);
+        
     }
 
     public void UpdateItemQuantity(string id, int quantity)
@@ -58,6 +61,7 @@ public class InventoryContainer<T>
         {
             if (item.getId().Equals(id))
             {
+                
                 item.setQuantity(quantity);
                 break;
             }

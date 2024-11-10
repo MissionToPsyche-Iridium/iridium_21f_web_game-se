@@ -1,30 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using UnityEngine;
+using UnityEngine.U2D;
+using UnityEngine.UIElements;
 
-public class ProbeComponent
+[Serializable]
+public class ProbeComponent : MonoBehaviour
 {
-    private string name;
-    private string description;
+    public string partName;
+    public string description;
     private Sprite sprite;
-    private int id;
+    public int id;
     private int quantity;
     private readonly int max_quantity = 10;
+    public Vector3 position;
+    private GameObject shape;
 
 
-    public ProbeComponent(string name, string description, Sprite sprite)
+    public ProbeComponent(GameObject shape)
     {
-        this.name = name;
-        this.description = description;
-        this.sprite = sprite;
-        this.id = sprite.GetInstanceID();
-        this.quantity = 0;
+        this.partName = shape.name;
+        this.description = "no description available";
+        //this.sprite = sprite;
+        this.id = shape.GetInstanceID();
+        this.quantity = 1;
+        this.position = shape.transform.localPosition;
+        this.shape = shape;
     }
 
     public string GetName()
     {
-        return name;
+        return partName;
     }
 
     public string GetDescription()
@@ -46,20 +54,29 @@ public class ProbeComponent
     }
 
     public void setQuantity(int newQuantity) {
-        this.quantity = newQuantity;
+        if(quantity <= max_quantity) {
+            this.quantity = newQuantity;
+        }
     }
 
     public void incrementQuantity() {
-        this.quantity++;
+        if(quantity < max_quantity) {
+            this.quantity++;
+        }
     }
 
     public void decrementQuantity() {
-        this.quantity--;
+        if(quantity > 0) {
+            this.quantity--;
+        }
+    }
+
+    void Update() {
+        position = shape.transform.localPosition;
     }
 
     public ProbeComponent Clone()
     {
-        //TODO creat new id (get instance id?)
-        return new ProbeComponent(name, description, sprite);
+        return new ProbeComponent(shape);
     }
 }
