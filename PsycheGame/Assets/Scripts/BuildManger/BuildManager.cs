@@ -79,6 +79,7 @@ public class BuildManager : MonoBehaviour
         shape.transform.localScale = new Vector3(spawnSize, spawnSize, 100);
         //shape.layer = 8; //sets layer to "Part" layer
 
+        shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
         shape.AddComponent<BoxCollider2D>().isTrigger = false;
         shape.GetComponent<BoxCollider2D>().size = new Vector2(10,10);
