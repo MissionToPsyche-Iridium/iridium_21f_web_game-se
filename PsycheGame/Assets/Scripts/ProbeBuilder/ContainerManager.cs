@@ -137,6 +137,13 @@ public class ContainerManager : MonoBehaviour
 		// incremental snapping logic update -- 11/7
 		var x = (int) Math.Round((position.x - originX) / tileScale);
 		var y = (int) Math.Round((position.y - originY) / tileScale);
+
+		if (x < 0 || x > width || y < 0 || y > height) 
+		{
+			// grid position out of bounds, signal error
+			return (-1, -1);
+		}
+
 		Debug.Log($"FGP - Grid Position: {x} {y}");
 		return (x, y);
 	}

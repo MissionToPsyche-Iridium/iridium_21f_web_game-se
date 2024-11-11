@@ -50,10 +50,11 @@ public class SpriteDragDrop : MonoBehaviour
         selected = false;
         Vector3 newPos = MouseWorldPosition();
 
+        // last refactor - 11/10: Shawn -- fix index out of bounds error <> additionally clean up the Tile collision detection logic
         // based on the last collision detection (on a particular grid x,y position), the target of the probe item will go there
-        if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTrigger()) 
-        {
-            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+        (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+
+        if (cellPos.cellX != -1 && cellPos.cellY != -1) {
             Debug.Log("~~ Target Grid position: " + cellPos.cellX + ", " + cellPos.cellY + " ~~");
             (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
             transform.position = new Vector3(cell.x, cell.y, -0.01f);
@@ -77,10 +78,6 @@ public class SpriteDragDrop : MonoBehaviour
                 transform.position = gridLayout.CellToWorld(cellPosition);
             }
             */
-
-            // --v1.0 of the code -- keep until test of v1.1 is successful--
-            // (float x, float y) pos= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
-            // FindGridPosition by calling the ContainerManager script using the mouse position
         }
     }
 
