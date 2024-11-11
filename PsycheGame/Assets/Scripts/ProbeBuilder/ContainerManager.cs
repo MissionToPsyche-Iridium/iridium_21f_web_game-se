@@ -25,6 +25,7 @@ using UnityEngine.UIElements;
 	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
 	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
 	11/07 - Minor tweak to the positioning snap logic to improve accuracy.  (long-term: consider using built-in grid for responsive scaling - sprint3 or 4?)
+	11/10 - Added boundary detection logic to FindGridPosition method -- basic validation of the grid position
 
 */
 
@@ -40,7 +41,6 @@ public class ContainerManager : MonoBehaviour
 	// Temporary variables for storing the tile position --> (future: store in a data structure)
 	private int BeaconX, BeaconY;
 	private float PosX, PosY;
-	private bool triggered = false;
 
 	// 2D array to store the chassis grid - precursor to the singletone struct - 11/6** @Nick 
 	private (float x, float y)[,] chassisGrid;
@@ -61,21 +61,8 @@ public class ContainerManager : MonoBehaviour
 
 	*/
 
-
 	// probe will hold the components that are installed on the chassis
 	private  Dictionary<Vector2, ProbeComponent> container = new Dictionary<Vector2, ProbeComponent>();
-
-	void Awake() 
-	{
-		Reset();
-	}
-	
-	void Reset()
-	{		// get parent rect transform size
-		RectTransform parentRectTransform = GetComponent<RectTransform>();
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
-		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.8);
-	}
 
 	void Start()
 	{
@@ -138,23 +125,15 @@ public class ContainerManager : MonoBehaviour
 		var x = (int) Math.Round((position.x - originX) / tileScale);
 		var y = (int) Math.Round((position.y - originY) / tileScale);
 
+		// boundary detection logic 
 		if (x < 0 || x > width || y < 0 || y > height) 
 		{
 			// grid position out of bounds, signal error
 			return (-1, -1);
 		}
 
-		Debug.Log($"FGP - Grid Position: {x} {y}");
+		Debug.Log($"FGP: enact placement - Grid Position: {x} {y}");
 		return (x, y);
-	}
-
- 	// 	sets the last known collision grid position and floating point vector x,y position
-	public void SetBeaconPosition(int x, int y, float PosX, float PosY)
-	{
-		this.BeaconX = x;
-		this.BeaconY = y;
-		this.PosX = PosX;
-		this.PosY = PosY;
 	}
 
 	public (float, float) GetBeaconPosition()
@@ -166,18 +145,6 @@ public class ContainerManager : MonoBehaviour
 	public (float, float) GetBeaconPositionGrid(int x, int y)
 	{
 		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
-	}
-
-	// 	sets the trigger to true or false based on if a tile has been collided with
-	public void SetTrigger(bool trigger)
-	{
-		this.triggered = trigger;
-	}
-
-	// for checking of a collision did occur
-	public bool GetTrigger()
-	{
-		return this.triggered;
 	}
 
 }

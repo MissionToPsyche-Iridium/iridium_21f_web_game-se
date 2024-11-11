@@ -15,6 +15,9 @@ using UnityEngine;
     v 1.1 - Shawn (11/6)
     - Updated MouseUp() method to take the tile position for placement of the game object (probe part)
 
+    v 1.2 - Shawn (11/10)
+    - Refactored OnMouseUp method to simplify the probe item placement check logic, including validation of grid position
+
 */
 
 public class SpriteDragDrop : MonoBehaviour

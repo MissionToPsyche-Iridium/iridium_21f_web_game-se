@@ -10,7 +10,7 @@ public class ProbeComponent
     private Sprite sprite;
     private int id;
     private int quantity;
-    private readonly int max_quantity = 10;
+    // private readonly int max_quantity = 10;
 
 
     public ProbeComponent(string name, string description, Sprite sprite)

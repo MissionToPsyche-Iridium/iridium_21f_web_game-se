@@ -30,11 +30,9 @@ public class Tile : MonoBehaviour
     private int cellX, cellY;
     private float xPosition, yPosition;
 
-    bool isOccupied;
 
     //paints tile
     public void Init(bool isOffset, int x, int y, float xP, float yP) {
-        isOccupied = false;
         cellX = x;
         cellY = y;
         xPosition = xP;
@@ -62,16 +60,16 @@ public class Tile : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.tag == "ProbePart") {
-            isOccupied = true;
+        if (collision.gameObject.tag == "ProbePart") 
+        {
+            // any tile specific action may be added here
         }
     }
 
     void OnTriggerExit2D(Collider2D collision) {
-        Debug.Log("Collision exit");
-        if (collision.gameObject.tag == "ProbePart") {
-            //Debug.Log("Probe part collision detected");
-            isOccupied = false;
+        if (collision.gameObject.tag == "ProbePart") 
+        {
+            // any tile specific action may be added here
         }
     }
 
