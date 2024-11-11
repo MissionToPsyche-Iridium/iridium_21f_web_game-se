@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
 public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private ParticleSystem ps;
+    private Material psMaterial;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
 
@@ -11,6 +13,7 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
+        psMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
         ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
     }
 
@@ -47,6 +50,25 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
         this.OnCollect(triggeredParticles);
     }
+
+/*--Inherited Functionality--------------------------------------------------------------------------*/
+
+    protected Coroutine FadeColors(Color endColor, float duration) {
+        Color start = psMaterial.color;
+        IEnumerator changeCorutine = ColorChangeCoroutine(start, endColor, duration);
+        return StartCoroutine(changeCorutine);
+    }
+
+    private IEnumerator ColorChangeCoroutine(Color start, Color end, float duration) {
+        float tick = 0f;
+        while (psMaterial.color != end) {
+            tick += Time.deltaTime * duration;
+            psMaterial.color = Color.Lerp(start, end, tick);
+            yield return null;
+        }
+    }
+
+/*--Abstract Interface-------------------------------------------------------------------------------*/
 
     // Called when the player picks up the first particle of this collectable
     // gas
