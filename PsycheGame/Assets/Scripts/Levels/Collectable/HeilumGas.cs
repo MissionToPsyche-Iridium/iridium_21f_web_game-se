@@ -1,23 +1,26 @@
 using UnityEngine;
 
 public class HeilumGas : CollectableGas {
-    public override bool IsScanned => throw new System.NotImplementedException();
-    public override string Description => throw new System.NotImplementedException();
-    public override Sprite Image => throw new System.NotImplementedException();
+    private bool scanned = false;
+    [SerializeField] private Sprite displayImage;
+
+    public override bool IsScanned => scanned;
+    public override string Description => "Heilum gas which emptys the probes fuel tank";
+    public override Sprite Image => displayImage;
 
     public override void OnCollect(int particlesCollected) {
-        throw new System.NotImplementedException();
-    }
-
-    public override void OnEndCollect() {
-        throw new System.NotImplementedException();
+        ShipManager.Fuel -= particlesCollected / 2; // scale this so fuel does not go
+                                                    // down so severly
     }
 
     public override void OnStartCollect() {
-        throw new System.NotImplementedException();
+        this.FadeColors(Color.red, 0.1f);
     }
 
     public override void Scan() {
-        throw new System.NotImplementedException();
+        Debug.Log("Scanning Heilum collectable gas with id: " + gameObject.GetInstanceID());
+        scanned = true;
     }
+
+    public override void OnEndCollect() { }
 }

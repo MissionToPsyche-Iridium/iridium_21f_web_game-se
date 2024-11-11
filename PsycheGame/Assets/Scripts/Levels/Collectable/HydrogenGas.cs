@@ -19,7 +19,7 @@ public class HydrogenGas : CollectableGas {
     // in the future we implement scanning specific logic to this gas type
     // here
     public override void Scan() {
-        Debug.Log("Currently scanning Hydrogen collectable gas with id: " + gameObject.GetInstanceID());
+        Debug.Log("Scanning Hydrogen collectable gas with id: " + gameObject.GetInstanceID());
         scanned = true;
     }
 

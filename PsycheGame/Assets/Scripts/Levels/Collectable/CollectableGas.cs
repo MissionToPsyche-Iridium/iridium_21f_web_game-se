@@ -14,12 +14,14 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
         psMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+        psMaterial.SetColor("_EmissionColor", gasColor); 
         ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
     }
 
     private void OnValidate() {
         ps = this.GetComponent<ParticleSystem>();
-        ps.GetComponent<ParticleSystemRenderer>().sharedMaterial.SetColor("_EmissionColor", gasColor);
+        psMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+        psMaterial.SetColor("_EmissionColor", gasColor); 
     }
 
     private void FixedUpdate() {
@@ -53,6 +55,8 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
 /*--Inherited Functionality--------------------------------------------------------------------------*/
 
+    // Fade from the current color to the specified [endColor] using a linear interpolation over the
+    // given [duration] where duration is a divisor, so 0.1 will take longer that 1
     protected Coroutine FadeColors(Color endColor, float duration) {
         Color start = psMaterial.color;
         IEnumerator changeCorutine = ColorChangeCoroutine(start, endColor, duration);
@@ -63,7 +67,7 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         float tick = 0f;
         while (psMaterial.color != end) {
             tick += Time.deltaTime * duration;
-            psMaterial.color = Color.Lerp(start, end, tick);
+            psMaterial.SetColor("_EmissionColor", Color.Lerp(start, end, tick));
             yield return null;
         }
     }
