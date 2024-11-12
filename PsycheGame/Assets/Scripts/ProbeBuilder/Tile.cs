@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
     Author: Hannah M.
@@ -30,6 +32,9 @@ public class Tile : MonoBehaviour
     private int cellX, cellY;
     private float xPosition, yPosition;
 
+    private Color defaultColor;
+
+    private bool occupied;
 
     //paints tile
     public void Init(bool isOffset, int x, int y, float xP, float yP) {
@@ -37,7 +42,9 @@ public class Tile : MonoBehaviour
         cellY = y;
         xPosition = xP;
         yPosition = yP;
+        occupied = false;
         render.color = isOffset ? color1 : color2;
+        defaultColor = render.color;
     }
 
     //setters and getters
@@ -63,6 +70,7 @@ public class Tile : MonoBehaviour
         if (collision.gameObject.tag == "ProbePart") 
         {
             // any tile specific action may be added here
+            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
@@ -70,18 +78,29 @@ public class Tile : MonoBehaviour
         if (collision.gameObject.tag == "ProbePart") 
         {
             // any tile specific action may be added here
+            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
     //Highlights tile on hover
     void OnMouseEnter() {
-        //Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
-        highlight.SetActive(true);
+        // Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
+        // highlight.SetActive(true);  - temporarily disabled
+        bool occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
+        if (occupied) {
+            //Debug.Log("Tile is occupied");
+            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        } else {
+            //Debug.Log("Tile is not occupied");
+            gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+        }
     }
 
     void OnMouseExit() {
-        //Debug.Log("tile inactive");
-        highlight.SetActive(false);
+        // Debug.Log("tile inactive");
+        // highlight.SetActive(false);
+
+        gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }
 
 }

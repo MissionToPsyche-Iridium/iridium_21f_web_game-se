@@ -7,7 +7,7 @@ using Unity.Collections;
 using Unity.VisualScripting;
 //using UnityEditor.iOS;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 /* 
 	Application: Probe builder
@@ -44,6 +44,9 @@ public class ContainerManager : MonoBehaviour
 
 	// 2D array to store the chassis grid - precursor to the singletone struct - 11/6** @Nick 
 	private (float x, float y)[,] chassisGrid;
+	private bool [,] occupiedGrid;
+
+	private bool probePartDragged = false;     // flag to signal if a probe part is being dragged
 
 	
 	//[SerializeField] private int xOffset = 100;
@@ -73,6 +76,16 @@ public class ContainerManager : MonoBehaviour
 
 		// initialize the grid of 2D tuple of floats to store the grid position of the tiles
 		chassisGrid = new (float x, float y)[width, height];
+
+		// create a 2D array to store the occupied status of the grid
+		occupiedGrid = new bool[width, height];
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				occupiedGrid[i, j] = false;
+			}
+		}
 
 		GenerateContainer();
 	}
@@ -104,6 +117,13 @@ public class ContainerManager : MonoBehaviour
 					newTile.AddComponent<Rigidbody2D>(); 	//adds rigidbody to tile
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0; //sets gravity scale to 0
 					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
+					
+					// add new outline component to tile for highlighting
+					newTile.AddComponent<Outline>().enabled = false; 					//adds outline to tile and deactivates it
+					newTile.GetComponent<Outline>().effectColor = Color.yellow; 		//sets outline color to yellow
+					newTile.GetComponent<Outline>().effectDistance = new Vector2(2,2); 	//sets outline width to 5
+					newTile.GetComponent<Outline>().useGraphicAlpha = true; 			 
+
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
 					newTile.Init(isOffset, x, y, targetX, targetY);    //paints tile
 					chassisGrid[x, y] = (targetX, targetY);
@@ -115,11 +135,46 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
+	// setter and getter for the user mouse status
+	public void SetProbePartDragged(bool status)
+	{
+		this.probePartDragged = status;
+	}
+
+	public bool GetProbePartDragged()
+	{
+		return this.probePartDragged;
+	}
+
+
+
+	// code stub --> for Inventory Manager to implement: 
+	public bool CheckGridOccupied(int x, int y)
+	{
+		// check if the grid position is occupied
+		if (occupiedGrid[x, y] == true)
+		{
+			// grid position is not occupied, signal true
+			return true;
+		}
+		else
+		{
+			// grid position is occupied, signal false
+			return false;
+		}
+	}
+
+	public void ReleaseGridPosition(int x, int y)
+	{
+		// release the grid position
+		occupiedGrid[x, y] = false;
+	}
+
 	// calculate the position of the tile to snap to and return the cell position
 	public (int, int) FindGridPosition(Vector3 position)
 	{
 		// find the grid position of the tile
-		Debug.Log($"FGP - Using Position: {position}");
+		Debug.Log($"---FGP - Using Coord Position: {position}---");
 
 		// incremental snapping logic update -- 11/7
 		var x = (int) Math.Round((position.x - originX) / tileScale);
@@ -128,12 +183,26 @@ public class ContainerManager : MonoBehaviour
 		// boundary detection logic 
 		if (x < 0 || x > width || y < 0 || y > height) 
 		{
+			Debug.Log($"FGP: out of bounds - Grid Position: {x} {y}");
 			// grid position out of bounds, signal error
 			return (-1, -1);
 		}
 
-		Debug.Log($"FGP: enact placement - Grid Position: {x} {y}");
-		return (x, y);
+		// call stub to insert component into the container
+		bool isGridOccupied = CheckGridOccupied(x, y);
+		if (!isGridOccupied)
+		{
+			Debug.Log($"+++FGP: enact placement - Grid Position: {x} {y}+++");
+			occupiedGrid[x, y] = true;
+			return (x, y);
+			// grid position is valid, signal the grid position
+		}
+		else
+		{
+			occupiedGrid[x, y] = false;
+			// grid position is occupied, signal error
+			return (-1, -1);
+		}
 	}
 
 	public (float, float) GetBeaconPosition()
