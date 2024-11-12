@@ -34,15 +34,12 @@ public class Tile : MonoBehaviour
 
     private Color defaultColor;
 
-    private bool occupied;
-
     //paints tile
     public void Init(bool isOffset, int x, int y, float xP, float yP) {
         cellX = x;
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-        occupied = false;
         render.color = isOffset ? color1 : color2;
         defaultColor = render.color;
     }

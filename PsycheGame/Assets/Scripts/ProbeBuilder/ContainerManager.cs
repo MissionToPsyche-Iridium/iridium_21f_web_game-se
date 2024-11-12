@@ -26,6 +26,7 @@ using UnityEngine.UI;
 	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
 	11/07 - Minor tweak to the positioning snap logic to improve accuracy.  (long-term: consider using built-in grid for responsive scaling - sprint3 or 4?)
 	11/10 - Added boundary detection logic to FindGridPosition method -- basic validation of the grid position
+	11/11 - Added helper methods to check grid status and release grid position -- stubs called by the SpriteDragDrop.cs script -- to be implemented by Inventory Manager
 
 */
 
@@ -47,6 +48,27 @@ public class ContainerManager : MonoBehaviour
 	private bool [,] occupiedGrid;
 
 	private bool probePartDragged = false;     // flag to signal if a probe part is being dragged
+
+
+	/* 
+		11/11 - Shawn: pre-sync outline of the required probe container attributes and methods -- to be sync'd with the UML diagram
+
+		Probe container - ideally a singleton class that 'is' and is accessible by allowed classes
+
+		probe container attributes:
+			- designId: int
+			- chassisWidth: int
+			- chassisHeight: int
+			- struct chassisGrid {
+				- posId: int  // may be optional if not referenced
+				- xPos: float
+				- yPos: float
+				- occupied: bool
+				- component: ComponentTyp
+			}
+
+	*/
+
 
 	
 	//[SerializeField] private int xOffset = 100;

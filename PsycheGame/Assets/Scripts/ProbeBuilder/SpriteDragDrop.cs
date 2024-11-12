@@ -18,6 +18,8 @@ using UnityEngine;
     v 1.2 - Shawn (11/10)
     - Refactored OnMouseUp method to simplify the probe item placement check logic, including validation of grid position
 
+    v [1.3] - Shawn (11/11) in process to add logic to handle removal and update of grid status and visual indicator
+
 */
 
 public class SpriteDragDrop : MonoBehaviour
@@ -55,6 +57,11 @@ public class SpriteDragDrop : MonoBehaviour
             {
                 GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseGridPosition(cellPos.cellX, cellPos.cellY);
                 Debug.Log("---Released Grid position: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+
+                // 11/12 the current release of object is insufficient to release a grid from the occupied status.  the check logic
+                // needs to evaluate if any other object is occupying the grid position.  If not, then the grid position should be released.
+                // suggestion: implement a method to evaluate if the grid position is occupied by any other object. 
+
             }
         }
     }
