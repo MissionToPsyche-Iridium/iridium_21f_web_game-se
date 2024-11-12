@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private ParticleSystem ps;
     private Material psMaterial;
+    private Material psSharedMaterial;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
 
@@ -13,15 +14,19 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
-        psMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+
+        psMaterial = ps.GetComponent<ParticleSystemRenderer>().material;
+        psSharedMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+
         psMaterial.SetColor("_EmissionColor", gasColor); 
+        psSharedMaterial.SetColor("_EmissionColor", gasColor); 
         ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
     }
 
     private void OnValidate() {
         ps = this.GetComponent<ParticleSystem>();
-        psMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
-        psMaterial.SetColor("_EmissionColor", gasColor); 
+        psSharedMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+        psSharedMaterial.SetColor("_EmissionColor", gasColor); 
     }
 
     private void FixedUpdate() {
