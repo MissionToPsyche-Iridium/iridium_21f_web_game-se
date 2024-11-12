@@ -31,7 +31,7 @@ public class BuildManager : MonoBehaviour
 
         // get container manager component attached to the BuildManager GameObject
         //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
-        spawnArea = GameObject.Find("SpawnArea");
+        spawnArea = GameObject.Find("ContainerPanel");
         spawnedPartsStack = new Stack();
         saveData = new SaveData();
         // inventory = new InventoryContainer();
@@ -77,15 +77,14 @@ public class BuildManager : MonoBehaviour
         GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
         shape.transform.localPosition = new Vector3(spawnX, spawnY, 0);
         shape.transform.localScale = new Vector3(spawnSize, spawnSize, 100);
-        //shape.layer = 8; //sets layer to "Part" layer
 
         shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.AddComponent<Rigidbody2D>().gravityScale = 0;
-        shape.AddComponent<BoxCollider2D>().isTrigger = false;
+        shape.AddComponent<BoxCollider2D>().isTrigger = true;
         shape.GetComponent<BoxCollider2D>().size = new Vector2(10,10);
         shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
-
-        shape.tag = "ProbePart"; //used for UndoAllOperation()
+        shape.layer = 9;            //sets layer to 8 - equivalent to "ProbePart"
+        shape.tag = "ProbePart";    //used for UndoAllOperation()
         spawnedPartsStack.Push(shape); //used for UndoOperation()
         // ProbeComponent newPart = new ProbeComponent(shape);
         // inventory.AddItem(newPart);

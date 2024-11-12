@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,7 +7,7 @@ using Unity.Collections;
 using Unity.VisualScripting;
 //using UnityEditor.iOS;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 /* 
 	Application: Probe builder
@@ -23,6 +24,9 @@ using UnityEngine.UIElements;
 	11/02 - Shawn: added code to position calculation of the grid container and size based on the parent rect transform
 	11/04 - Added insertion of additional tile attributes during instantiaion -- [x,y] grid position and the target position on the canvas
 	11/06 - **Collision snap probe part to tile logic implementation -- SpriteDaragDrop.cs and Tile.cs code updated in tandem
+	11/07 - Minor tweak to the positioning snap logic to improve accuracy.  (long-term: consider using built-in grid for responsive scaling - sprint3 or 4?)
+	11/10 - Added boundary detection logic to FindGridPosition method -- basic validation of the grid position
+	11/11 - Added helper methods to check grid status and release grid position -- stubs called by the SpriteDragDrop.cs script -- to be implemented by Inventory Manager
 
 */
 
@@ -38,7 +42,33 @@ public class ContainerManager : MonoBehaviour
 	// Temporary variables for storing the tile position --> (future: store in a data structure)
 	private int BeaconX, BeaconY;
 	private float PosX, PosY;
-	private bool triggered = false;
+
+	// 2D array to store the chassis grid - precursor to the singletone struct - 11/6** @Nick 
+	private (float x, float y)[,] chassisGrid;
+	private bool [,] occupiedGrid;
+
+	private bool probePartDragged = false;     // flag to signal if a probe part is being dragged
+
+
+	/* 
+		11/11 - Shawn: pre-sync outline of the required probe container attributes and methods -- to be sync'd with the UML diagram
+
+		Probe container - ideally a singleton class that 'is' and is accessible by allowed classes
+
+		probe container attributes:
+			- designId: int
+			- chassisWidth: int
+			- chassisHeight: int
+			- struct chassisGrid {
+				- posId: int  // may be optional if not referenced
+				- xPos: float
+				- yPos: float
+				- occupied: bool
+				- component: ComponentTyp
+			}
+
+	*/
+
 
 	
 	//[SerializeField] private int xOffset = 100;
@@ -56,21 +86,8 @@ public class ContainerManager : MonoBehaviour
 
 	*/
 
-
 	// probe will hold the components that are installed on the chassis
 	private  Dictionary<Vector2, ProbeComponent> container = new Dictionary<Vector2, ProbeComponent>();
-
-	void Awake() 
-	{
-		Reset();
-	}
-	
-	void Reset()
-	{		// get parent rect transform size
-		RectTransform parentRectTransform = GetComponent<RectTransform>();
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.8);
-		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.8);
-	}
 
 	void Start()
 	{
@@ -78,6 +95,19 @@ public class ContainerManager : MonoBehaviour
 		// this container will handle tile interactions with the game shape object colliding with the tile
 		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
 		Debug.Log($"Container Manager Initialized: {this.buildManager}");
+
+		// initialize the grid of 2D tuple of floats to store the grid position of the tiles
+		chassisGrid = new (float x, float y)[width, height];
+
+		// create a 2D array to store the occupied status of the grid
+		occupiedGrid = new bool[width, height];
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				occupiedGrid[i, j] = false;
+			}
+		}
 
 		GenerateContainer();
 	}
@@ -109,8 +139,16 @@ public class ContainerManager : MonoBehaviour
 					newTile.AddComponent<Rigidbody2D>(); 	//adds rigidbody to tile
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0; //sets gravity scale to 0
 					newTile.GetComponent<BoxCollider2D>().isTrigger = true; //sets box collider to trigger
+					
+					// add new outline component to tile for highlighting
+					newTile.AddComponent<Outline>().enabled = false; 					//adds outline to tile and deactivates it
+					newTile.GetComponent<Outline>().effectColor = Color.yellow; 		//sets outline color to yellow
+					newTile.GetComponent<Outline>().effectDistance = new Vector2(2,2); 	//sets outline width to 5
+					newTile.GetComponent<Outline>().useGraphicAlpha = true; 			 
+
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-					newTile.Init(isOffset, x, y, targetX, targetY); //paints tile
+					newTile.Init(isOffset, x, y, targetX, targetY);    //paints tile
+					chassisGrid[x, y] = (targetX, targetY);
 					newTile.transform.SetParent(transform); //sets parent of tile to container
 					// newTile.transform.localPosition = new Vector3(targetX, targetY, 0); //sets position of tile
 					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
@@ -119,13 +157,74 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
- 	// 	sets the last known collision grid position and floating point vector x,y position
-	public void setBeaconPosition(int x, int y, float PosX, float PosY)
+	// setter and getter for the user mouse status
+	public void SetProbePartDragged(bool status)
 	{
-		this.BeaconX = x;
-		this.BeaconY = y;
-		this.PosX = PosX;
-		this.PosY = PosY;
+		this.probePartDragged = status;
+	}
+
+	public bool GetProbePartDragged()
+	{
+		return this.probePartDragged;
+	}
+
+
+
+	// code stub --> for Inventory Manager to implement: 
+	public bool CheckGridOccupied(int x, int y)
+	{
+		// check if the grid position is occupied
+		if (occupiedGrid[x, y] == true)
+		{
+			// grid position is not occupied, signal true
+			return true;
+		}
+		else
+		{
+			// grid position is occupied, signal false
+			return false;
+		}
+	}
+
+	public void ReleaseGridPosition(int x, int y)
+	{
+		// release the grid position
+		occupiedGrid[x, y] = false;
+	}
+
+	// calculate the position of the tile to snap to and return the cell position
+	public (int, int) FindGridPosition(Vector3 position)
+	{
+		// find the grid position of the tile
+		Debug.Log($"---FGP - Using Coord Position: {position}---");
+
+		// incremental snapping logic update -- 11/7
+		var x = (int) Math.Round((position.x - originX) / tileScale);
+		var y = (int) Math.Round((position.y - originY) / tileScale);
+
+		// boundary detection logic 
+		if (x < 0 || x > width || y < 0 || y > height) 
+		{
+			Debug.Log($"FGP: out of bounds - Grid Position: {x} {y}");
+			// grid position out of bounds, signal error
+			return (-1, -1);
+		}
+
+		// call stub to insert component into the container
+		bool isGridOccupied = CheckGridOccupied(x, y);
+		if (!isGridOccupied)
+		{
+			Debug.Log($"+++FGP: enact placement - Grid Position: {x} {y}+++");
+			occupiedGrid[x, y] = true;
+			return (x, y);
+			// grid position is valid, signal the grid position
+		}
+		else
+		{
+			occupiedGrid[x, y] = false;
+			// grid position is occupied, signal error
+			return (-1, -1);
+		}
 	}
 
 	public (float, float) GetBeaconPosition()
@@ -133,16 +232,10 @@ public class ContainerManager : MonoBehaviour
 		return (this.PosX, this.PosY);
 	}
 
-	// 	sets the trigger to true or false based on if a tile has been collided with
-	public void setTrigger(bool trigger)
+	// use prestaged tuple of grid coordinates to get the floating point vector x,y position
+	public (float, float) GetBeaconPositionGrid(int x, int y)
 	{
-		this.triggered = trigger;
-	}
-
-	// for checking of a collision did occur
-	public bool getTrigger()
-	{
-		return this.triggered;
+		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
 	}
 
 }
