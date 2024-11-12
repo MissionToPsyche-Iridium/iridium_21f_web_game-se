@@ -19,7 +19,7 @@ public class HealthBar : MonoBehaviour {
         this.healthBarPanelImage = healthBarPanel.GetComponent<Image>();
     }
 
-    private void Update() {
+    public void UpdateIndicator() {
         float health = ShipManager.Health;
         healthBar.value = health;
 

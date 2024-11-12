@@ -6,6 +6,7 @@ public class ShipCollisionHandler : MonoBehaviour
 {
     [SerializeField] GameObject ship;
     [SerializeField] GameObject modalPanel;
+    [SerializeField] private HealthBar healthBarUI;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -14,6 +15,7 @@ public class ShipCollisionHandler : MonoBehaviour
             Debug.Log("Ship hit by asteroid!");
             ShipManager.Health -= CalculateDamage(collision);
             Debug.Log("Ship health at " + ShipManager.Health);
+            healthBarUI.UpdateIndicator();
             if (ShipManager.Health <= 0)
             {
                 DestroyShip();
