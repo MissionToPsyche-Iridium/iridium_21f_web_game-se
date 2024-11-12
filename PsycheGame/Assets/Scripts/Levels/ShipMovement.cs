@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
@@ -6,7 +7,10 @@ public class ShipMovement : MonoBehaviour {
 
     public float moveSpeed = 5f; 
     public float fuelConsumptionRate = 1f;
-
+    public float boostMultiplier = 2f;
+    public float boostSpeedChangeRate = 2f;
+    private Coroutine boostCoroutine;
+    private bool isBoosting = false;
     private Rigidbody2D rb;
 
     void Start() {
@@ -38,5 +42,31 @@ public class ShipMovement : MonoBehaviour {
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         rb.rotation = angle - 90f;
+    }
+
+    void HandleBoostInput() {
+        if (Input.GetKeyDown(KeyCode.Space) && boostCoroutine == null) {
+            boostCoroutine = StartCoroutine(BoostSpeed(boostMultiplier));
+            isBoosting = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) && isBoosting) {
+            if (boostCoroutine != null) {
+                StopCoroutine(boostCoroutine);
+            }
+            boostCoroutine = StartCoroutine(BoostSpeed(1f / boostMultiplier));
+            isBoosting = false;
+        }
+    }
+
+    IEnumerator BoostSpeed(float targetMultiplier) {
+        float targetSpeed = moveSpeed * targetMultiplier;
+
+        while (Mathf.Abs(moveSpeed - targetSpeed) > 0.01f) {
+            moveSpeed = Mathf.MoveTowards(moveSpeed, targetSpeed, boostSpeedChangeRate * Time.deltaTime);
+            yield return null;
+        }
+
+        moveSpeed = targetSpeed; 
+        boostCoroutine = null;
     }
 }
