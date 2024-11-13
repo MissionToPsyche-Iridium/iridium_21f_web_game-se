@@ -20,7 +20,7 @@ public class HeilumGas : CollectableGas {
     }
 
     public override void Scan() {
-        scanProgress = scanProgress.incr(progressIncr);
+        scanProgress = scanProgress.incr(progressIncr * Time.deltaTime);
         Debug.Log("[" + this.GetInstanceID() + "] Scanned Heilum with progress: " + scanProgress.Value + "/100");
     }
 

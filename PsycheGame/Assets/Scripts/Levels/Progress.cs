@@ -9,9 +9,9 @@ public record Progress(float Value) {
     public static readonly float NO_PROGRESS = 0;
     public static readonly float COMPLETE_PROGRESS = 100;
 
-    public Progress incr(float n) { return new Progress(Value + n); }
+    public Progress incr(float n) { return new Progress(Value + n); } // In MOST cases its advisable to multiply 'n' by [Time.deltaTime]
     public float Value { get; } = Math.Clamp(Value, 0, 100);
-    public bool isComplete = Value == 100;
+    public bool isComplete = Value == COMPLETE_PROGRESS;
     public override string ToString() => $"{Value}%";
 
 }

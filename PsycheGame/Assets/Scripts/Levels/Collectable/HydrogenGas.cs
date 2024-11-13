@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class HydrogenGas : CollectableGas {
-    [SerializeField] private float progressIncr = 0.5f; // ammount of progress to gain each scan
+    [SerializeField] private float progressIncr = 0.1f; // ammount of progress to gain each scan
     [SerializeField] private Sprite displayImage;
 
     private Progress scanProgress = new(Progress.NO_PROGRESS);
@@ -20,7 +20,7 @@ public class HydrogenGas : CollectableGas {
     // in the future we implement scanning specific logic to this gas type
     // here
     public override void Scan() {
-        scanProgress = scanProgress.incr(progressIncr);
+        scanProgress = scanProgress.incr(progressIncr * Time.deltaTime);
         Debug.Log("[" + this.GetInstanceID() + "] Scanned Hydrogen gas with progress: " + scanProgress.Value + "/100");
     }
 

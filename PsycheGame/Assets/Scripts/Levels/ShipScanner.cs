@@ -82,6 +82,7 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.ScanProgress.isComplete) {
             scannable.Scan();
+        } else {
             var description = scannable.Description;
             var image = scannable.Image;
             scannedPopupColumn.AddEntry(image, "Item Scanned!", description);

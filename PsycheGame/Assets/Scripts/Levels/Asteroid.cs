@@ -16,7 +16,7 @@ public class Asteroid : Spawnable, ScannableObject {
     //
     // In the future we implement scanning specific logic to the asteroid here 
     public void Scan() {
-        scanProgress = scanProgress.incr(progressIncr);
+        scanProgress = scanProgress.incr(progressIncr * Time.deltaTime);
         Debug.Log("[" + this.GetInstanceID() + "] Scanned Asteroid with progress: " + scanProgress.Value + "/100");
     }
 
