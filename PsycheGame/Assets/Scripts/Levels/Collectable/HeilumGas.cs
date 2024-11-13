@@ -1,12 +1,14 @@
 using UnityEngine;
 
 public class HeilumGas : CollectableGas {
-    private bool scanned = false;
+    [SerializeField] private float progressIncr = 0.5f; // ammount of progress to gain each scan
     [SerializeField] private Sprite displayImage;
 
-    public override bool IsScanned => scanned;
+    private Progress scanProgress = new(Progress.NO_PROGRESS);
+
     public override string Description => "Heilum gas which emptys the probes fuel tank";
     public override Sprite Image => displayImage;
+    public override Progress ScanProgress => scanProgress;
 
     public override void OnCollect(int particlesCollected) {
         ShipManager.Fuel -= particlesCollected / 2; // scale this so fuel does not go
@@ -18,8 +20,8 @@ public class HeilumGas : CollectableGas {
     }
 
     public override void Scan() {
-        Debug.Log("Scanning Heilum collectable gas with id: " + gameObject.GetInstanceID());
-        scanned = true;
+        scanProgress = scanProgress.incr(progressIncr);
+        Debug.Log("[" + this.GetInstanceID() + "] Scanned Heilum with progress: " + scanProgress.Value + "/100");
     }
 
     public override void OnEndCollect() { }

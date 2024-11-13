@@ -1,9 +1,10 @@
 using UnityEngine;
 
 public class HydrogenGas : CollectableGas {
+    [SerializeField] private float progressIncr = 0.5f; // ammount of progress to gain each scan
     [SerializeField] private Sprite displayImage;
 
-    private bool scanned = false;
+    private Progress scanProgress = new(Progress.NO_PROGRESS);
 
     public override void OnStartCollect() { /* on first collect logic here */ }
     public override void OnEndCollect() { /* on end collect logic here */ }
@@ -19,11 +20,11 @@ public class HydrogenGas : CollectableGas {
     // in the future we implement scanning specific logic to this gas type
     // here
     public override void Scan() {
-        Debug.Log("Scanning Hydrogen collectable gas with id: " + gameObject.GetInstanceID());
-        scanned = true;
+        scanProgress = scanProgress.incr(progressIncr);
+        Debug.Log("[" + this.GetInstanceID() + "] Scanned Hydrogen gas with progress: " + scanProgress.Value + "/100");
     }
 
-    public override bool IsScanned => scanned;
     public override string Description => "Hydrogen gas used to refill a ships fuel tank";
     public override Sprite Image => displayImage;
+    public override Progress ScanProgress => scanProgress;
 }

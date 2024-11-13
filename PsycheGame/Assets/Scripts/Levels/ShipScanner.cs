@@ -80,7 +80,7 @@ public class ShipScanBehavior : MonoBehaviour {
             return;
         }
 
-        if (!scannable.IsScanned) {
+        if (!scannable.ScanProgress.isComplete) {
             scannable.Scan();
             var description = scannable.Description;
             var image = scannable.Image;

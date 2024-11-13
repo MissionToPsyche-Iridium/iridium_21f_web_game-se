@@ -8,10 +8,10 @@ public interface ScannableObject {
     // until the function [IsScanned] returns true
     public void Scan();
 
-    // When this function returns a value of [true] it indicates to the
-    // probe that the object has been successfully scanned and the
-    // [Scan] function no longer needs to be called
-    public bool IsScanned { get; }
+    // Function returning the progress of a scan on this scannable object
+    // if this scan progress is completed it indicates to the probe that
+    // the objects [Scan] function no longer needs to be called
+    public Progress ScanProgress { get; }
 
 /*----------------------------------------------------------------------------*/
 // The following functions are used by UI to display info about this scannable//
