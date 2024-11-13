@@ -1,9 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
 public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private ParticleSystem ps;
+    private Material psMaterial;
+    private Material psSharedMaterial;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
 
@@ -11,12 +14,19 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
+
+        psMaterial = ps.GetComponent<ParticleSystemRenderer>().material;
+        psSharedMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+
+        psMaterial.SetColor("_EmissionColor", gasColor); 
+        psSharedMaterial.SetColor("_EmissionColor", gasColor); 
         ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
     }
 
     private void OnValidate() {
         ps = this.GetComponent<ParticleSystem>();
-        ps.GetComponent<ParticleSystemRenderer>().sharedMaterial.SetColor("_EmissionColor", gasColor);
+        psSharedMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+        psSharedMaterial.SetColor("_EmissionColor", gasColor); 
     }
 
     private void FixedUpdate() {
@@ -47,6 +57,27 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
         this.OnCollect(triggeredParticles);
     }
+
+/*--Inherited Functionality--------------------------------------------------------------------------*/
+
+    // Fade from the current color to the specified [endColor] using a linear interpolation over the
+    // given [duration] where duration is a divisor, so 0.1 will take longer that 1
+    protected Coroutine FadeColors(Color endColor, float duration) {
+        Color start = psMaterial.color;
+        IEnumerator changeCorutine = ColorChangeCoroutine(start, endColor, duration);
+        return StartCoroutine(changeCorutine);
+    }
+
+    private IEnumerator ColorChangeCoroutine(Color start, Color end, float duration) {
+        float tick = 0f;
+        while (psMaterial.color != end) {
+            tick += Time.deltaTime * duration;
+            psMaterial.SetColor("_EmissionColor", Color.Lerp(start, end, tick));
+            yield return null;
+        }
+    }
+
+/*--Abstract Interface-------------------------------------------------------------------------------*/
 
     // Called when the player picks up the first particle of this collectable
     // gas
