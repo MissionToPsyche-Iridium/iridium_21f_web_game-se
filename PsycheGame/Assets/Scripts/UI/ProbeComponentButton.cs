@@ -30,6 +30,13 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         _dragIcon = new GameObject();
 
+        _dragIcon.AddComponent<BoxCollider2D>().isTrigger = true;
+        _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
+        _dragIcon.GetComponent<BoxCollider2D>().size = new Vector2(10, 10);
+        _dragIcon.AddComponent<SpriteDragDrop>();
+        _dragIcon.layer = 9;
+        _dragIcon.tag = "ProbePart";
+
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
@@ -37,7 +44,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
 
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
-        _dragIcon.transform.SetParent(canvasTransform);
+        _dragIcon.name = "ProbePart";
+        _dragIcon.transform.SetParent(canvasTransform.GetChild(3));
         _dragPlane = canvasTransform as RectTransform;
 
         UpdateIconPosition(eventData);
@@ -55,7 +63,23 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (_dragIcon != null)
         {
-            Destroy(_dragIcon);
+            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            if (cellPos.cellX != -1 && cellPos.cellY != -1)
+            {
+                ProbeComponentInventory.GetInstance().ProbeComponentUsed(_probeComponent);
+
+                (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+
+                _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                if (_dragIcon.layer <= 9)
+                {
+                    _dragIcon.layer = 10;
+                }
+            } else
+            {
+                Destroy(_dragIcon);
+            }
             _dragIcon = null;
         }
     }

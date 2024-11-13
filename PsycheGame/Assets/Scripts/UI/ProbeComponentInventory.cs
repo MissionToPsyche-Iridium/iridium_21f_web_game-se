@@ -38,7 +38,7 @@ public class ProbeComponentInventory
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
-        foreach (Tuple<ProbeComponent, int> tuple in _inventory.GetProbeComponents())
+        foreach (Tuple<ProbeComponent, int> tuple in _inventory.GetProbeComponentQuantities())
         {
             GameObject probeComponentButton = GameObject.Instantiate(_buttonPrefab);
 
@@ -46,7 +46,7 @@ public class ProbeComponentInventory
             image.preserveAspect = true;
             image.sprite = tuple.Item1.Sprite;
 
-            probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tuple.Item2.ToString();
+            probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tuple.Item2.ToString() + "x";
 
             probeComponentButton.transform.SetParent(_content.transform);
 
@@ -58,11 +58,32 @@ public class ProbeComponentInventory
     {
         foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
         {
-            if (tuple.Item2 == button)
+            if (tuple.Item2.Equals(button))
             {
                 return tuple.Item1;
             }
         }
         return null;
+    }
+
+    public void ProbeComponentUsed(ProbeComponent probeComponent)
+    {
+        _inventory.RemoveProbeComponent(probeComponent);
+
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+        {
+            if (tuple.Item1.Equals(probeComponent))
+            {
+                int quantity = _inventory.GetProbeComponentQuantity(probeComponent);
+                if (quantity < 1)
+                {
+                    tuple.Item2.SetActive(false);
+                }
+
+                tuple.Item2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
+
+                break;
+            }
+        }
     }
 }

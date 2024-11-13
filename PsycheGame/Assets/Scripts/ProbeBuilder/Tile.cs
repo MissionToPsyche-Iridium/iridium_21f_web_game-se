@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
     Author: Hannah M.
@@ -16,6 +18,8 @@ using UnityEngine;
     v 1.2 - Shawn (11/6)
     - Modified OnTriggerEnter2D to detect collision with probe part and set the tile as occupied --> used by the probe game object to position itself
 
+    v 1.3 - Shawn (11/10)
+    - Reactored OnTriggerEnter2D - elimiated the collision logic that's no longer needed -- SpriteDragDrop.cs now handles the collision exclusively
 */
 
 
@@ -27,16 +31,17 @@ public class Tile : MonoBehaviour
 
     private int cellX, cellY;
     private float xPosition, yPosition;
-    bool isOccupied;
+
+    private Color defaultColor;
 
     //paints tile
     public void Init(bool isOffset, int x, int y, float xP, float yP) {
-        isOccupied = false;
         cellX = x;
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-       render.color = isOffset ? color1 : color2;
+        render.color = isOffset ? color1 : color2;
+        defaultColor = render.color;
     }
 
     //setters and getters
@@ -54,39 +59,45 @@ public class Tile : MonoBehaviour
         return yPosition;
     }
 
-    void OnTriggerEnter2D(Collider2D collision) {
-        Debug.Log("Collision detected");
-        if (collision.gameObject.tag == "ProbePart") {
-            Debug.Log("Probe part collision detected");
-            isOccupied = true;
+    public (int, int) GetCell() {
+        return (cellX, cellY);
+    }
 
-            Debug.Log("Probe part collided on the following: " + collision.gameObject.transform.position);
-            Debug.Log("Probe part collision detected on tile [" + cellX + ", " + cellY + "]");
-            
-            // beacon the last collision position to the container manager (temporary data structure for probe parts tracking)
-            this.gameObject.GetComponentInParent<ContainerManager>().setTrigger(true);
-            this.gameObject.GetComponentInParent<ContainerManager>().setBeaconPosition(cellX, cellY, xPosition, yPosition);
-            Debug.Log(">> Beaconing on tile [" + cellX + ", " + cellY + "]");
+    void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.tag == "ProbePart") 
+        {
+            // any tile specific action may be added here
+            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
     void OnTriggerExit2D(Collider2D collision) {
-        Debug.Log("Collision exit");
-        if (collision.gameObject.tag == "ProbePart") {
-            //Debug.Log("Probe part collision detected");
-            isOccupied = false;
+        if (collision.gameObject.tag == "ProbePart") 
+        {
+            // any tile specific action may be added here
+            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
     //Highlights tile on hover
     void OnMouseEnter() {
-        //Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
-        highlight.SetActive(true);
+        // Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
+        // highlight.SetActive(true);  - temporarily disabled
+        bool occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
+        if (occupied) {
+            //Debug.Log("Tile is occupied");
+            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+        } else {
+            //Debug.Log("Tile is not occupied");
+            gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+        }
     }
 
     void OnMouseExit() {
-        //Debug.Log("tile inactive");
-        highlight.SetActive(false);
+        // Debug.Log("tile inactive");
+        // highlight.SetActive(false);
+
+        gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }
 
 }

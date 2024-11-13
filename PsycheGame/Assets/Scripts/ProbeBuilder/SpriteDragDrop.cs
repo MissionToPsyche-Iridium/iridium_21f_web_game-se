@@ -15,6 +15,11 @@ using UnityEngine;
     v 1.1 - Shawn (11/6)
     - Updated MouseUp() method to take the tile position for placement of the game object (probe part)
 
+    v 1.2 - Shawn (11/10)
+    - Refactored OnMouseUp method to simplify the probe item placement check logic, including validation of grid position
+
+    v [1.3] - Shawn (11/11) in process to add logic to handle removal and update of grid status and visual indicator
+
 */
 
 public class SpriteDragDrop : MonoBehaviour
@@ -27,27 +32,84 @@ public class SpriteDragDrop : MonoBehaviour
     Collider2D col;
 
     Vector3 offset;
-    
-    private void OnMouseDown() {
+
+    private void OnMouseDown()
+    {
         //Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
+
+        // if the tile is in the in place layer -- move into layer 9 (ProbePart)
+        if (this.gameObject.layer == 10)
+        {
+            this.gameObject.layer = 9;
+            // code logic here to change the object's appearance to indicate it is not in place
+        }
+
+        // check if the mouse down is over an existing object
+        Vector3 newPos = MouseWorldPosition();
+        (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+
+        if (cellPos.cellX != -1 && cellPos.cellY != -1)
+        {
+            Debug.Log("---Target Grid position to release: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
+            {
+                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseGridPosition(cellPos.cellX, cellPos.cellY);
+                Debug.Log("---Released Grid position: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+
+                // 11/12 the current release of object is insufficient to release a grid from the occupied status.  the check logic
+                // needs to evaluate if any other object is occupying the grid position.  If not, then the grid position should be released.
+                // suggestion: implement a method to evaluate if the grid position is occupied by any other object. 
+
+            }
+        }
     }
 
-    private void OnMouseDrag() {
+    private void OnMouseDrag()
+    {
         //Debug.Log("MouseDrag");
         transform.position = MouseWorldPosition() + offset;
     }
 
-    private void OnMouseUp() {
-        selected = false;
+    private void OnMouseUp()
+    {
+        // check if a probe part is being dragged
+        if (selected)
+        {
+            Vector3 newPos = MouseWorldPosition();
+            // last refactor - 11/10: Shawn -- fix index out of bounds error <> additionally clean up the Tile collision detection logic
+            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
 
-        // based on the last collision detection (on a particular grid x,y position), the target of the probe item will go there
-        if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().getTrigger()) {
-            Debug.Log("---Beacon location found---");
-            (float x, float y) posX= GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPosition();
-            transform.position = new Vector3(posX.x, posX.y, 0);
+            if (cellPos.cellX != -1 && cellPos.cellY != -1)
+            {
+                Debug.Log("~~ Target Grid position: " + cellPos.cellX + ", " + cellPos.cellY + " ~~");
+                (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                // if the tile is in the initailized layer -- before in place -- move into layer 10 (ProbePartInPlace)
+                if (this.gameObject.layer <= 9)
+                {
+                    this.gameObject.layer = 10;
+                    // code logic here to change the object's appearance to indicate it is in place
+                }
+
+                /* 
+                // Future direction - grid layout integration on the canvas panel for auto-responsive scaling -- sprint 3 or 4
+                Debug.Log("~~ Targeting center of grid position ~~");
+                GridLayout gridLayout = transform.parent.GetComponent<GridLayout>();
+                Vector3Int cellPosition = gridLayout.WorldToCell(transform.position);
+                if (cellPosition.x < 0 || cellPosition.y < 0) {
+                    Debug.Log("Invalid grid position");
+                    return;
+                } else {
+                    Debug.Log("~ Asserting object to grid position: [" + cellPosition.x + ", " + cellPosition.y + "]");
+                    transform.position = gridLayout.CellToWorld(cellPosition);
+                }
+                */
+            }
         }
+        selected = false;
     }
 
     Vector3 MouseWorldPosition()
