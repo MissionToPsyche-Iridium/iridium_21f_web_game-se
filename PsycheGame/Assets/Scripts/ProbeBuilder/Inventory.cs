@@ -12,7 +12,7 @@ public class Inventory
         _probeComponents = new InventoryContainer<ProbeComponent>();
     }
 
-    public List<Tuple<ProbeComponent, int>> GetProbeComponents()
+    public List<Tuple<ProbeComponent, int>> GetProbeComponentQuantities()
     {
         List<Tuple<ProbeComponent, int>> probeComponents = new List<Tuple<ProbeComponent, int>>();
         foreach (string id in _probeComponents.GetItemIds())
@@ -20,6 +20,11 @@ public class Inventory
             probeComponents.Add(new Tuple<ProbeComponent, int>(_probeComponents.GetItem(id), _probeComponents.GetItemQuantity(id)));
         }
         return probeComponents;
+    }
+
+    public int GetProbeComponentQuantity(ProbeComponent probeComponent)
+    {
+        return _probeComponents.GetItemQuantity(probeComponent.Id);
     }
 
     public void AddProbeComponent(ProbeComponent probeComponent, int quantity)
@@ -42,7 +47,7 @@ public class Inventory
     {
         string id = probeComponent.Id;
         int quantity = _probeComponents.GetItemQuantity(id);
-        if (quantity > 0)
+        if (quantity > 1)
         {
             _probeComponents.UpdateItemQuantity(id, quantity - 1);
             return;
