@@ -4,6 +4,7 @@ using UnityEngine;
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private bool fuelEnabled = true;
     [SerializeField] private FuelBar fuelBarUI;
+    [SerializeField] GameObject boost;
 
     public float moveSpeed = 5f; 
     public float fuelConsumptionRate = 1f;
@@ -48,6 +49,7 @@ public class ShipMovement : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space) && boostCoroutine == null) {
             boostCoroutine = StartCoroutine(BoostSpeed(boostMultiplier));
             isBoosting = true;
+            boost.SetActive(true);
         }
         else if (Input.GetKeyUp(KeyCode.Space) && isBoosting) {
             if (boostCoroutine != null) {
@@ -55,6 +57,7 @@ public class ShipMovement : MonoBehaviour {
             }
             boostCoroutine = StartCoroutine(BoostSpeed(1f / boostMultiplier));
             isBoosting = false;
+            boost.SetActive(false);
         }
     }
 
