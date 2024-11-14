@@ -1710,7 +1710,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1013910714}
   - component: {fileID: 1013910715}
-  - component: {fileID: 1013910716}
   m_Layer: 0
   m_Name: BuildManager
   m_TagString: Untagged
@@ -1760,18 +1759,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b3aa7c52c9ba8e846b31756f4a6e3ccd, type: 3}
   spawnArea: {fileID: 998425892}
   probePartScale: 15
---- !u!114 &1013910716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1013910713}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37481f2ab00d1a747bf360c4bb4cf8a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1029613590
 GameObject:
   m_ObjectHideFlags: 0
