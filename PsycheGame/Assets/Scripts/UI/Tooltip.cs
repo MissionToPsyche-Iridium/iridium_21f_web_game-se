@@ -1,70 +1,47 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using UnityEditor.Playables;
+using UnityEngine.UIElements;
 
 public class Tooltip
 {
     private static GameObject _tooltipTemplate = Resources.Load<GameObject>("UI/Tooltip");
 
-    private Canvas _masterCanvas;
     private GameObject _tooltip;
 
-    public string Title { get; private set; }
-    public string Description { get; private set; }
-    public Vector3 Position { get; private set; }
-
-    public Tooltip()
-    {
-        _masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
-        _tooltip = null;
-    }
-
-    public Tooltip SetTitle(string title)
-    {
-        Title = title;
-        return this;
-    }
-
-    public Tooltip SetDescription(string description)
-    {
-        Description = description;
-        return this;
-    }
-
-    public Tooltip SetPosition(float positionX, float positionY)
-    {
-        Position = new Vector2(positionX, positionY);
-        return this;
-    }
-
-    public Tooltip SetPositionAtMouse()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        Position = new Vector2(mousePosition.x, mousePosition.y);
-        return this;
-    }
-
-    public void Draw()
+    public Tooltip(string title, string description, Vector3 position)
     {
         _tooltip = GameObject.Instantiate(_tooltipTemplate);
+
+        _tooltip.SetActive(false);
+
         Transform contentTransform = _tooltip.transform.GetChild(0).GetChild(0);
-        GameObject title = contentTransform.GetChild(0).gameObject;
-        GameObject description = contentTransform.GetChild(1).gameObject;
+        contentTransform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = title;
+        contentTransform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = description;
 
-        title.GetComponent<TextMeshProUGUI>().text = Title;
-        description.GetComponent<TextMeshProUGUI>().text = Description;
-        RectTransform rect = _tooltip.GetComponent<RectTransform>();
-        _tooltip.transform.position = new Vector3(Position.x, Position.y, 10);
+        Canvas masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
+        _tooltip.transform.SetParent(masterCanvas.transform);
 
-        _tooltip.transform.SetParent(_masterCanvas.transform);
+        RectTransform tooltipRect = _tooltip.GetComponent<RectTransform>();
+        tooltipRect.pivot = new Vector2(0.0f, 1.0f);
+        tooltipRect.sizeDelta = new Vector2(150.0f, 300.0f);
+        tooltipRect.anchoredPosition = position / masterCanvas.scaleFactor;
     }
 
-    public void Clear()
+    public void Enable()
+    {
+        _tooltip.SetActive(true);
+    }
+
+    public void Disable()
+    {
+        _tooltip.SetActive(false);
+    }
+
+    public void Destroy()
     {
         GameObject.Destroy(_tooltip);
         _tooltip = null;

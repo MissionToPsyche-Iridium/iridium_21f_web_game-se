@@ -102,12 +102,15 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        _tooltip = new Tooltip()
+        Debug.Log(Input.mousePosition);
+
+        _tooltip = new TooltipBuilder()
                     .SetTitle(_probeComponent.Name)
                     .SetDescription(_probeComponent.Description)
-                    .SetPositionAtMouse();
+                    .SetPositionAtMouse()
+                    .Build();
 
-        // _tooltip.Draw(); FIX
+        _tooltip.Enable();
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -117,7 +120,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        // _tooltip.Clear();
+        _tooltip.Destroy();
         _tooltip = null;
     }
 }
