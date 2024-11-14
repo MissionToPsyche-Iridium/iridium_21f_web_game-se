@@ -45,6 +45,7 @@ public class ProbeComponentInventory
             Image image = probeComponentButton.GetComponent<Image>();
             image.preserveAspect = true;
             image.sprite = tuple.Item1.Sprite;
+            image.material = Resources.Load<Material>("default-particle");
 
             probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = tuple.Item2.ToString() + "x";
 

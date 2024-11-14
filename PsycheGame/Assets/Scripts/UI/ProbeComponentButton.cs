@@ -12,6 +12,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     private ProbeComponent _probeComponent;
 
     private GameObject _dragIcon;
+    private Color originalColor;
     private RectTransform _dragPlane;
 
     private Tooltip _tooltip;
@@ -40,6 +41,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
+        originalColor = image.color;
+        _dragIcon.AddComponent<PulseColor>();
 
         _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
 
@@ -76,6 +79,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 {
                     _dragIcon.layer = 10;
                 }
+
+                _dragIcon.GetComponent<PulseColor>().enabled = false;
+                _dragIcon.GetComponent<Image>().color = originalColor;
+               
             } else
             {
                 Destroy(_dragIcon);
