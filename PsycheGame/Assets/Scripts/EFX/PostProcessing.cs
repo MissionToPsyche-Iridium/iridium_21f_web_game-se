@@ -12,45 +12,25 @@ using UnityEngine;
 
 */
 
+//[ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class PostProcessing : MonoBehaviour
 {
-    Camera BuildCamera;
-    Camera TempCam;
-    public Shader PostProcessingShader;
-    public Shader Post_Outline;
-    Material PostMaterial;
-
-
-    void Start()
-    {
-        BuildCamera = GetComponent<Camera>();
-        // BuildCamera.SetReplacementShader(PostProcessingShader, "RenderType");
-        TempCam = new GameObject().AddComponent<Camera>();
-        TempCam.enabled = false;
-        PostMaterial = new Material(Post_Outline);
-    }
-
+    // need shader and material to apply post processing effects
+    public Shader postShader;
+    Material postMaterial;
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        // temp cam setup
-        TempCam.CopyFrom(BuildCamera);
-        TempCam.clearFlags = CameraClearFlags.Color;
-        TempCam.backgroundColor = Color.black;
+        // if no material declared, create a new material
+        if (postMaterial == null)
+        {
+            postMaterial = new Material(postShader);
+        }
 
-        TempCam.cullingMask = 1 << LayerMask.NameToLayer("Outline");
+        RenderTexture renderTexture = RenderTexture.GetTemporary(src.width, src.height, 0, src.format);
+        
+        Graphics.Blit(src, renderTexture, postMaterial);
+        Graphics.Blit(renderTexture, dest);
 
-        // create a new render texture
-        RenderTexture TempRT = new RenderTexture(src.width, src.height, 0, RenderTextureFormat.R8);
-        TempRT.Create();
-
-        // set the temp cam's target texture
-        TempCam.targetTexture = TempRT;
-
-        // render all objects
-        TempCam.RenderWithShader(PostProcessingShader, "");
-
-        Graphics.Blit(TempRT, dest);
-
-        TempRT.Release();
+        RenderTexture.ReleaseTemporary(renderTexture);
     }
 }

@@ -80,6 +80,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             {
                 Destroy(_dragIcon);
             }
+            // _dragIcon.GetComponent<PostProcessing>().enabled = false;
             _dragIcon = null;
         }
     }
