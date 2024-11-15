@@ -11,7 +11,7 @@ public record Progress(float Value) {
 
     public Progress incr(float n) { return new Progress(Value + n); } // In MOST cases its advisable to multiply 'n' by [Time.deltaTime]
     public float Value { get; } = Math.Clamp(Value, 0, 100);
-    public bool isComplete = Value == COMPLETE_PROGRESS;
+    public bool isComplete = Value >= COMPLETE_PROGRESS;
     public override string ToString() => $"{Value}%";
 
 }
