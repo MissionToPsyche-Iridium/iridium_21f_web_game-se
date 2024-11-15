@@ -93,8 +93,8 @@ public class ContainerManager : MonoBehaviour
 	{
 		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
 		// this container will handle tile interactions with the game shape object colliding with the tile
-		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
-		Debug.Log($"Container Manager Initialized: {this.buildManager}");
+		buildManager = BuildManager.GetInstance();
+		Debug.Log("Container Manager Initialized");
 
 		// initialize the grid of 2D tuple of floats to store the grid position of the tiles
 		chassisGrid = new (float x, float y)[width, height];

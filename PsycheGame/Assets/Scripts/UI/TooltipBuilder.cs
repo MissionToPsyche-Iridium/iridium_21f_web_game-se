@@ -10,10 +10,24 @@ using System.Runtime.CompilerServices;
 
 public class TooltipBuilder
 {
-    private string _title, _description;
-    private Vector3 _position;
+    public const float OffsetXFromMouse = 2.0f;
+    public const float OffsetYFromMouse = -2.0f;
 
-    public TooltipBuilder() { }
+    private Canvas _canvas;
+    private string _title, _description;
+    private Vector3? _position;
+
+    public TooltipBuilder()
+    {
+        _canvas = null;
+        _position = null;
+    }
+
+    public TooltipBuilder SetParentCanvas(Canvas canvas)
+    {
+        _canvas = canvas;
+        return this;
+    }
 
     public TooltipBuilder SetTitle(string title)
     {
@@ -33,14 +47,18 @@ public class TooltipBuilder
         return this;
     }
 
-    public TooltipBuilder SetPositionAtMouse()
-    {
-        _position = Input.mousePosition + new Vector3(1.0f, -1.0f, 0.0f);
-        return this;
-    }
-
     public Tooltip Build()
     {
-        return new Tooltip(_title, _description, _position);
+        if (_canvas == null)
+        {
+            _canvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
+        }
+
+        if (_position == null)
+        {
+            _position = (Input.mousePosition + new Vector3(OffsetXFromMouse, OffsetYFromMouse, 0.0f)) / _canvas.scaleFactor;
+        }
+
+        return new Tooltip(_canvas.transform, _title, _description, (Vector3) _position);
     }
 }

@@ -21,7 +21,7 @@ public class ProbeComponentInventory
         return _instance;
     }
 
-    public const string InventoryContentPath = "/BuildManager/MasterCanvas/InventoryCanvas/BackgroundPanel/ComponentPanel/Viewport/Content";
+    public const string InventoryContentPath = "/MasterCanvas/InventoryCanvas/BackgroundPanel/ComponentPanel/Viewport/Content";
     public const string ButtonResourcePath = "UI/ProbeComponentButton";
 
     private Inventory _inventory;

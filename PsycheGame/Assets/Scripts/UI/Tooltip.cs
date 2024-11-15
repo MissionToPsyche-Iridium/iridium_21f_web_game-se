@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -12,23 +13,31 @@ public class Tooltip
 
     private GameObject _tooltip;
 
-    public Tooltip(string title, string description, Vector3 position)
+    public Tooltip(Transform parent, string title, string description, Vector3 position)
     {
         _tooltip = GameObject.Instantiate(_tooltipTemplate);
 
         _tooltip.SetActive(false);
+        _tooltip.transform.SetParent(parent);
 
-        Transform contentTransform = _tooltip.transform.GetChild(0).GetChild(0);
-        contentTransform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = title;
-        contentTransform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = description;
+        RectTransform contentRect = _tooltip.transform.GetChild(0).GetChild(0).gameObject.transform as RectTransform;
+        RectTransform titleRect = contentRect.GetChild(0) as RectTransform;
+        RectTransform descriptionRect = contentRect.GetChild(1) as RectTransform;
 
-        Canvas masterCanvas = Utility.FindComponentInScene<Canvas>(SceneManager.GetActiveScene());
-        _tooltip.transform.SetParent(masterCanvas.transform);
+        TextMeshProUGUI titleMesh = titleRect.gameObject.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI descriptionMesh = descriptionRect.gameObject.GetComponent<TextMeshProUGUI>();
+
+        titleMesh.text = title;
+        descriptionMesh.text = description;
+
+        titleRect.sizeDelta = new Vector2(titleRect.rect.width, titleMesh.GetPreferredValues().y);
+        descriptionRect.sizeDelta = new Vector2(descriptionRect.rect.width, descriptionMesh.GetPreferredValues().y);
+        contentRect.sizeDelta = new Vector2(contentRect.rect.width, titleRect.rect.height + descriptionRect.rect.height + 10.0f);
 
         RectTransform tooltipRect = _tooltip.GetComponent<RectTransform>();
         tooltipRect.pivot = new Vector2(0.0f, 1.0f);
-        tooltipRect.sizeDelta = new Vector2(150.0f, 300.0f);
-        tooltipRect.anchoredPosition = position / masterCanvas.scaleFactor;
+        tooltipRect.sizeDelta = new Vector3(150.0f, contentRect.rect.height + 50.0f);
+        tooltipRect.anchoredPosition = position;
     }
 
     public void Enable()
