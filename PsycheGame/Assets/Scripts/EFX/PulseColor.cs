@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PulseColor : MonoBehaviour
 {
-    public float fadeDuration = 3f;
+    public float fadeDuration = 1f;
     public Color color1 = Color.gray;
     public Color color2 = new Color(0.22f, 1f, 0.08f);
 
