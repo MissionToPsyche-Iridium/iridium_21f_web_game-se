@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class SaveData : MonoBehaviour
 {
-    /* TODO: make this class work with current inventory setup
-    public InventoryContainer inventory;
-    public void ToJson(InventoryContainer inventory) {
-        //ProbeComponent part = new ProbeComponent("testPart", "description", 1234);
+    //TODO 11/12 this class has not been tested yet as it depends on ContainerGameData being connected to the ContainerManager and the spawned parts
+    public List<GameObject> spawnedParts;
+    public void ToJson(List<GameObject> spawnedParts) {
         string json = "";
-        foreach (var part in inventory._container) {
+        
+        foreach (var part in spawnedParts) {
             json += JsonUtility.ToJson(part);
         }
-         
-         Debug.Log(json);
-         using(StreamWriter writer = new StreamWriter(Application.dataPath + Path.AltDirectorySeparatorChar + "InventoryData.json")) {
+        
+         //Debug.Log(json);
+
+         using(StreamWriter writer = new StreamWriter(Application.dataPath + Path.AltDirectorySeparatorChar + "ContainerGameData.json")) {
             writer.Write(json);
          }
     }
 
-    public static List<ProbeComponent> LoadFromJson(string a_Json)
+    public static List<GameObject> LoadFromJson(string a_Json)
     {
-        return JsonUtility.FromJson<List<ProbeComponent>>(a_Json);
+        return JsonUtility.FromJson<List<GameObject>>(a_Json);
     }
-    */
+    
 }

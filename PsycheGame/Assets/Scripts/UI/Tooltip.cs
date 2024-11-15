@@ -1,16 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using TMPro;
+using UnityEditor.Playables;
 
 public class Tooltip
 {
     private static GameObject _tooltipTemplate = Resources.Load<GameObject>("UI/Tooltip");
 
+    private Canvas _masterCanvas;
     private GameObject _tooltip;
 
     public Tooltip(Transform parent, string title, string description, Vector3 position)
@@ -40,17 +42,15 @@ public class Tooltip
         tooltipRect.anchoredPosition = position;
     }
 
-    public void Enable()
-    {
-        _tooltip.SetActive(true);
+        title.GetComponent<TextMeshProUGUI>().text = Title;
+        description.GetComponent<TextMeshProUGUI>().text = Description;
+        RectTransform rect = _tooltip.GetComponent<RectTransform>();
+        _tooltip.transform.position = new Vector3(Position.x, Position.y, 10);
+
+        _tooltip.transform.SetParent(_masterCanvas.transform);
     }
 
-    public void Disable()
-    {
-        _tooltip.SetActive(false);
-    }
-
-    public void Destroy()
+    public void Clear()
     {
         GameObject.Destroy(_tooltip);
         _tooltip = null;
