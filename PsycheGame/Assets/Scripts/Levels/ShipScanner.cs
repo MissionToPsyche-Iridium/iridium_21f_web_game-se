@@ -80,11 +80,13 @@ public class ShipScanBehavior : MonoBehaviour {
             return;
         }
 
-        if (!scannable.IsScanned) {
+        if (!scannable.ScanProgress.isComplete) {
             scannable.Scan();
+        } else {
             var description = scannable.Description;
             var image = scannable.Image;
-            scannedPopupColumn.AddEntry(image, "Item Scanned!", description);
+            var id = scannable.GetHashCode();
+            scannedPopupColumn.AddEntry(image, "Item Scanned!", description, id);
         }
     }
 }

@@ -1,13 +1,14 @@
 using UnityEngine;
 
 public class Asteroid : Spawnable, ScannableObject {
+    [SerializeField] private float progressIncr = 0.5f; // ammount of progress to gain each scan
     [SerializeField] private Sprite displayImage;
 
-    private bool scanned = false;
+    private Progress scanProgress = new(Progress.NO_PROGRESS);
 
-    public bool IsScanned => scanned;
     public string Description => "A space asteroid that would wipe out your probe on contact.";
     public Sprite Image => displayImage;
+    public Progress ScanProgress => scanProgress;
 
     // For now just as a demo we print the instance id of the scanned asteroid
     // and then set 'IsScanned' to true telling the probe that this object no
@@ -15,8 +16,8 @@ public class Asteroid : Spawnable, ScannableObject {
     //
     // In the future we implement scanning specific logic to the asteroid here 
     public void Scan() {
-        Debug.Log("Scanned Asteroid with id: " + this.GetInstanceID());
-        scanned = true;
+        scanProgress = scanProgress.incr(progressIncr * Time.deltaTime);
+        Debug.Log("[" + this.GetInstanceID() + "] Scanned Asteroid with progress: " + scanProgress.Value + "/100");
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
