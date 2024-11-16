@@ -23,7 +23,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public void Start()
     {
         _probeComponent = ProbeComponentInventory.GetInstance().GetProbeComponent(gameObject);
-        _material = Resources.Load<Material>("EFX/GraphMaterial");
+        _material = Resources.Load<Material>("EFX/GraphMaterial2");
 
         _dragIcon = null;
         _dragPlane = null;
