@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ public class MissionTimer : MonoBehaviour
 {
     [SerializeField] private float missionDuration = 120f;
     [SerializeField] private GameObject modalPanel; 
-    [SerializeField] private Text timerText; 
+    [SerializeField] private GameObject timerText; 
 
     private float timeRemaining;
     private bool isTimerRunning = false;
@@ -40,7 +41,7 @@ public class MissionTimer : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
-            timerText.text = $"{minutes:00}:{seconds:00}";
+            timerText.GetComponent<TextMeshPro>().text = $"{minutes:00}:{seconds:00}";
         }
     }
 
