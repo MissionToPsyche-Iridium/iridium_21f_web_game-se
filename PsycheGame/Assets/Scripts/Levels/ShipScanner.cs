@@ -67,6 +67,8 @@ public class ShipScanBehavior : MonoBehaviour {
         }
     }
 
+    [SerializeField] private ProgressBarUI ui;
+
     // called when a raycast hits an object in the 'scannable' layer
     private void OnRaycastHit() {
         GameObject scannedObj = hit.transform.gameObject;
@@ -81,6 +83,7 @@ public class ShipScanBehavior : MonoBehaviour {
         }
 
         if (!scannable.ScanProgress.isComplete) {
+            ui.progress = scannable.ScanProgress;
             scannable.Scan();
         } else {
             var description = scannable.Description;

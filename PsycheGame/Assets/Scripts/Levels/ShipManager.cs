@@ -23,7 +23,6 @@ public class ShipManager : MonoBehaviour {
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }
-    
     public static float Health {get {return health; } set {health = value; }}
 
     // This function must be called outside of the 'awake' function
