@@ -117,10 +117,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        _tooltip = new Tooltip()
+        _tooltip = new TooltipBuilder()
                     .SetTitle(_probeComponent.Name)
                     .SetDescription(_probeComponent.Description)
-                    .SetPositionAtMouse();
+                    .Build();
 
         // _tooltip.Draw(); FIX
     }
