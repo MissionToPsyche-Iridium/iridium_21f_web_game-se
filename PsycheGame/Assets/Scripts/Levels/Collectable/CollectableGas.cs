@@ -9,6 +9,8 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private Material psSharedMaterial;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
+    private MissionState missionState;
+
 
     [SerializeField] protected Color gasColor = Color.white;
 
@@ -55,6 +57,11 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         }
 
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+
+        if (missionState != null)
+        {
+            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, triggeredParticles);
+        }
         this.OnCollect(triggeredParticles);
     }
 

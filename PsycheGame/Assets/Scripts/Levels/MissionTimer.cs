@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MissionTimer : MonoBehaviour
 {
@@ -14,7 +13,14 @@ public class MissionTimer : MonoBehaviour
     void Start()
     {
         timeRemaining = missionDuration;
+        isTimerRunning = false; 
+    }
+
+    public void StartMissionTimer()
+    {
+        timeRemaining = missionDuration;
         isTimerRunning = true;
+        Debug.Log("Mission Timer Started!");
     }
 
     void Update()
@@ -37,11 +43,14 @@ public class MissionTimer : MonoBehaviour
 
     private void UpdateTimerUI()
     {
-        if (timerText != null)
+        
+        TextMeshProUGUI textMeshPro = timerText.GetComponent<TextMeshProUGUI>();
+        if (textMeshPro != null)
         {
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
-            timerText.GetComponent<TextMeshPro>().text = $"{minutes:00}:{seconds:00}";
+            textMeshPro.text = $"{minutes:00}:{seconds:00}";
+            //Debug.Log($"{minutes:00}:{seconds:00}");
         }
     }
 

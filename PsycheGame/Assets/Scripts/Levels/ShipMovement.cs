@@ -23,6 +23,12 @@ public class ShipMovement : MonoBehaviour {
         float moveVertical = Input.GetAxis("Vertical");
         float fuel = ShipManager.Fuel;
 
+         if (LevelManager.IsGamePaused)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
         
         if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
@@ -31,6 +37,7 @@ public class ShipMovement : MonoBehaviour {
             ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
+            HandleBoostInput();
             fuelBarUI.UpdateIndicator(fuel);
         }
         else if (fuelEnabled)
