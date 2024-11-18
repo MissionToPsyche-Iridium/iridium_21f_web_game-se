@@ -83,9 +83,12 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.ScanProgress.isComplete) {
             if (scannable.ScanProgress.Value == 0) {
-                float scale_y = scannable.GameObject.transform.localScale.y;
-                Vector3 pos = scannable.GameObject.transform.position;
-                pos.y += scale_y * 2;
+
+                // A scannables should have a collider to allow scanning so its
+                // safe to attempt to grab that here
+                Bounds bounds = scannable.GameObject.GetComponent<Collider2D>().bounds;
+                Vector3 pos = bounds.center + bounds.size;
+
 
                 GameObject uiObj = Instantiate(scanProgressBarPrefab, 
                                                pos,
