@@ -80,4 +80,9 @@ public class MissionObjectiveHandler : MonoBehaviour
             Debug.Log("Mission Complete! All objectives achieved.");
         }
     }
+
+    public void TrackGasCollection(int collectedAmount)
+    {
+        UpdateObjectiveProgress(ObjectiveType.CollectResource, collectedAmount);
+    }
 }
