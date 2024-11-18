@@ -87,14 +87,21 @@ public class ShipScanBehavior : MonoBehaviour {
                 // A scannables should have a collider to allow scanning so its
                 // safe to attempt to grab that here
                 Bounds bounds = scannable.GameObject.GetComponent<Collider2D>().bounds;
-                Vector3 pos = bounds.center + bounds.size;
+
+                float pos_x = bounds.center.x;
+                float pos_y = bounds.size.y + bounds.center.y;
+                Vector3 pos = new Vector3(pos_x, pos_y, 1);
 
 
                 GameObject uiObj = Instantiate(scanProgressBarPrefab, 
                                                pos,
                                                Quaternion.identity, 
                                                scannable.GameObject.transform);
-                uiObj.transform.localScale = Vector3.one;
+
+                //uiObj.transform.localScale = 0f * bounds.size;
+
+                // tell the ui object what it's scanning so it can actually display
+                // progress
                 uiObj.GetComponentInChildren<ProgressBarUI>().scanning = scannable;
             }
             scannable.Scan();
