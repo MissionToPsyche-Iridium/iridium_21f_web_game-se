@@ -2,6 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// This is a stub class attached to a prefab object in the editor
+// the prefab object polls this class for its values. Maybe unity
+// has a better way to represent pure data classes like this?
 public class ScannedItemPopup : MonoBehaviour {
     [Header("UI Elements")]
     [SerializeField] private Image imageField;

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 // In the future this could be extended to support other kinds of popups
 // in the same manor as scannable popups
 public class ScannedColumn : MonoBehaviour {
+    [SerializeField] private float popupLifetimeSeconds = 5f;
     [SerializeField] private ScannedItemPopup popupPrefab = null;
 
     private RectTransform rectTransform;
@@ -37,7 +38,7 @@ public class ScannedColumn : MonoBehaviour {
     }
 
     private IEnumerator DestroyEntry(int id) {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(popupLifetimeSeconds);
         bag.TryRemove(id, out ScannedItemPopup entry);
         Destroy(entry.gameObject);
     }

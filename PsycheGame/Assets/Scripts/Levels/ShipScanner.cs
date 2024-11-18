@@ -13,6 +13,7 @@ public class ShipScanBehavior : MonoBehaviour {
 
     [Header("Animation")]
     [SerializeField] private GameObject scanner;
+    [SerializeField] private GameObject scanProgressBarPrefab;
 
     private RaycastHit2D hit;
     private bool isScanning = false;
@@ -81,6 +82,18 @@ public class ShipScanBehavior : MonoBehaviour {
         }
 
         if (!scannable.ScanProgress.isComplete) {
+            if (scannable.ScanProgress.Value == 0) {
+                float scale_y = scannable.GameObject.transform.localScale.y;
+                Vector3 pos = scannable.GameObject.transform.position;
+                pos.y += scale_y * 2;
+
+                GameObject uiObj = Instantiate(scanProgressBarPrefab, 
+                                               pos,
+                                               Quaternion.identity, 
+                                               scannable.GameObject.transform);
+                uiObj.transform.localScale = Vector3.one;
+                uiObj.GetComponentInChildren<ProgressBarUI>().scanning = scannable;
+            }
             scannable.Scan();
         } else {
             var description = scannable.Description;

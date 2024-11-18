@@ -79,6 +79,9 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
 
 /*--Abstract Interface-------------------------------------------------------------------------------*/
 
+    // Called to bridge the gap between monobehavior and scannable object
+    public GameObject GameObject => this.gameObject;
+
     // Called when the player picks up the first particle of this collectable
     // gas
     public abstract void OnStartCollect();
