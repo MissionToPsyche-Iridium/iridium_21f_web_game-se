@@ -13,6 +13,7 @@ public class ShipScanBehavior : MonoBehaviour {
 
     [Header("Animation")]
     [SerializeField] private GameObject scanner;
+    [SerializeField] private GameObject scanProgressBarPrefab;
 
     private RaycastHit2D hit;
     private bool isScanning = false;
@@ -67,8 +68,6 @@ public class ShipScanBehavior : MonoBehaviour {
         }
     }
 
-    [SerializeField] private ProgressBarUI ui;
-
     // called when a raycast hits an object in the 'scannable' layer
     private void OnRaycastHit() {
         GameObject scannedObj = hit.transform.gameObject;
@@ -83,7 +82,13 @@ public class ShipScanBehavior : MonoBehaviour {
         }
 
         if (!scannable.ScanProgress.isComplete) {
-            ui.progress = scannable.ScanProgress;
+            if (scannable.ScanProgress.Value == 0) {
+                GameObject uiObj = Instantiate(scanProgressBarPrefab, 
+                                               scannable.GameObject.transform.position,
+                                               Quaternion.identity, 
+                                               scannable.GameObject.transform);
+                uiObj.GetComponentInChildren<ProgressBarUI>().scanning = scannable;
+            }
             scannable.Scan();
         } else {
             var description = scannable.Description;

@@ -13,6 +13,11 @@ public interface ScannableObject {
     // the objects [Scan] function no longer needs to be called
     public Progress ScanProgress { get; }
 
+    // This bridges the gap between the scannable object interface and
+    // the unity monobehavoir class allowing an intsance of a scannable
+    // object to be treated like a GameObject
+    public GameObject GameObject { get; }
+
 /*----------------------------------------------------------------------------*/
 // The following functions are used by UI to display info about this scannable//
 // object, at some point it may be best to move this to its own interface     //

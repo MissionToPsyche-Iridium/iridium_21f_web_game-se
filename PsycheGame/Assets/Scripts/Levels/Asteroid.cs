@@ -9,6 +9,7 @@ public class Asteroid : Spawnable, ScannableObject {
     public string Description => "A space asteroid that would wipe out your probe on contact.";
     public Sprite Image => displayImage;
     public Progress ScanProgress => scanProgress;
+    public GameObject GameObject => this.gameObject;
 
     // For now just as a demo we print the instance id of the scanned asteroid
     // and then set 'IsScanned' to true telling the probe that this object no
