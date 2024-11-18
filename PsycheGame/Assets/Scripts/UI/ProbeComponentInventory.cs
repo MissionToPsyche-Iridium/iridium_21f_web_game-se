@@ -6,41 +6,28 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class ProbeComponentInventory
+public class ProbeComponentInventory : MonoBehaviour
 {
-    private ProbeComponentInventory() { }
-
-    private static ProbeComponentInventory _instance;
-
-    public static ProbeComponentInventory GetInstance()
-    {
-        if (_instance == null)
-        {
-            _instance = new ProbeComponentInventory();
-        }
-        return _instance;
-    }
-
-    public const string InventoryContentPath = "/MasterCanvas/InventoryCanvas/BackgroundPanel/ComponentPanel/Viewport/Content";
-    public const string ButtonResourcePath = "UI/ProbeComponentButton";
+    [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _content;
+    [SerializeField] private GameObject _buttonPrefab;
+    [SerializeField] private GameObject _spawnArea;
 
     private Inventory _inventory;
-    private GameObject _content;
-    private GameObject _buttonPrefab;
-
     private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
 
-    public void Initialize(Inventory inventory)
+    public void Start()
     {
-        _inventory = inventory;
-        _content = GameObject.Find(InventoryContentPath);
-        _buttonPrefab = Resources.Load<GameObject>(ButtonResourcePath);
+        _inventory = _player.GetComponent<Player>().Inventory;
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
         foreach (Tuple<ProbeComponent, int> tuple in _inventory.GetProbeComponentQuantities())
         {
             GameObject probeComponentButton = GameObject.Instantiate(_buttonPrefab);
+            ProbeComponentButton button = probeComponentButton.GetComponent<ProbeComponentButton>();
+            button.ProbeComponentInventory = this;
+            button.SpawnArea = _spawnArea;
 
             Image image = probeComponentButton.GetComponent<Image>();
             image.preserveAspect = true;
@@ -68,8 +55,6 @@ public class ProbeComponentInventory
 
     public void ProbeComponentUsed(ProbeComponent probeComponent)
     {
-        _inventory.RemoveProbeComponent(probeComponent);
-
         foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
         {
             if (tuple.Item1.Equals(probeComponent))

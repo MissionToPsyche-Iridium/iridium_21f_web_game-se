@@ -1,25 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    private ProbeComponent _probeComponent;
+    public ProbeComponentInventory ProbeComponentInventory { get; set; }
+    public GameObject SpawnArea { get; set; }
 
     private GameObject _dragIcon;
     private RectTransform _dragPlane;
 
     private Tooltip _tooltip;
 
-    public void Start()
+    public void Awake()
     {
-        _probeComponent = ProbeComponentInventory.GetInstance().GetProbeComponent(gameObject);
-
         _dragIcon = null;
         _dragPlane = null;
 
@@ -45,7 +46,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.name = "ProbePart";
-        _dragIcon.transform.SetParent(canvasTransform.GetChild(3));
+        _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
 
         UpdateIconPosition(eventData);
@@ -66,7 +67,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                ProbeComponentInventory.GetInstance().ProbeComponentUsed(_probeComponent);
+                ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
+
+                BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(probeComponent, _dragIcon));
+                ProbeComponentInventory.ProbeComponentUsed(probeComponent);
 
                 (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
 
@@ -102,12 +106,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
+        ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
+
         _tooltip = new TooltipBuilder()
-                    .SetTitle(_probeComponent.Name)
-                    .SetDescription(_probeComponent.Description)
+                    .SetTitle(probeComponent.Name)
+                    .SetDescription(probeComponent.Description)
                     .Build();
 
-        // _tooltip.Draw(); FIX
+        _tooltip.Enable();
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -117,7 +123,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        // _tooltip.Clear();
+        _tooltip.Destroy();
+
         _tooltip = null;
     }
 }
