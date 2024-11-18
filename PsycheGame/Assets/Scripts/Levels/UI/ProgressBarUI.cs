@@ -29,7 +29,7 @@ public class ProgressBarUI : MonoBehaviour {
     // once this progress bar ui element has been filled this coroutine
     // is dispatched to destory itself after a peroid of waiting
     private IEnumerator DestorySelf() {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);
     }
 }
