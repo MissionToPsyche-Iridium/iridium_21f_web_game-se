@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.iOS;
 using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,6 +16,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject SpawnArea { get; set; }
 
     private GameObject _dragIcon;
+    private Color originalColor;
     private RectTransform _dragPlane;
 
     private Tooltip _tooltip;
@@ -41,6 +43,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
+        originalColor = image.color;
+
+        // pulse color while dragging the probe part - 11/15: shawn updated
+        _dragIcon.AddComponent<PulseColor>();
 
         _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
 
@@ -80,10 +86,16 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 {
                     _dragIcon.layer = 10;
                 }
+
+                // disable pulsing and replace material with the new material
+                _dragIcon.GetComponent<PulseColor>().enabled = false;
+                _dragIcon.GetComponent<Image>().material = _material;
+               
             } else
             {
                 Destroy(_dragIcon);
             }
+            // _dragIcon.GetComponent<PostProcessing>().enabled = false;
             _dragIcon = null;
         }
     }
