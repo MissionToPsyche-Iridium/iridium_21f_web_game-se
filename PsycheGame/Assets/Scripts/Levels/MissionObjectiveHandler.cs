@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MissionObjectiveHandler : MonoBehaviour
+public class MissionState : MonoBehaviour
 {
     public enum ObjectiveType
     {
@@ -15,74 +15,49 @@ public class MissionObjectiveHandler : MonoBehaviour
         public ObjectiveType objectiveType;
         public string description; 
         public int targetAmount;  
-        public int currentProgress;
-        public bool isCompleted;  
+        public int currentProgress = 0;
+        public bool isCompleted => currentProgress >= targetAmount;
+
+        public void IncrementProgress(int amount)
+        {
+            currentProgress = Mathf.Min(currentProgress + amount, targetAmount);
+        }
     }
 
     public List<MissionObjective> objectives; 
-    public bool missionComplete = false;
+    public bool IsMissionComplete = false;
 
-    public delegate void OnMissionProgress();
-    public static event OnMissionProgress MissionProgressUpdated;
+    public delegate void MissionStateUpdated();
+    public static event MissionStateUpdated OnMissionStateChanged;
 
-    void Start()
+    private void Awake()
     {
-        InitializeObjectives();
+        ResetObjectives();
     }
-
-    void Update()
+    private void Update()
     {
-        CheckMissionStatus();
-    }
-
-    void InitializeObjectives()
-    {
-        foreach (var objective in objectives)
-        {
-            objective.currentProgress = 0;
-            objective.isCompleted = false;
-        }
-    }
-
-    public void UpdateObjectiveProgress(ObjectiveType type, int amount = 1)
-    {
-        foreach (var objective in objectives)
-        {
-            if (objective.objectiveType == type && !objective.isCompleted)
-            {
-                objective.currentProgress += amount;
-                if (objective.currentProgress >= objective.targetAmount)
-                {
-                    objective.currentProgress = objective.targetAmount;
-                    objective.isCompleted = true;
-                    Debug.Log($"Objective Completed: {objective.description}");
-                }
-
-                MissionProgressUpdated?.Invoke();
-            }
-        }
-    }
-
-    void CheckMissionStatus()
-    {
-        missionComplete = true;
-        foreach (var objective in objectives)
-        {
-            if (!objective.isCompleted)
-            {
-                missionComplete = false;
-                break;
-            }
-        }
-
-        if (missionComplete)
+        if (IsMissionComplete)
         {
             Debug.Log("Mission Complete! All objectives achieved.");
         }
     }
 
-    public void TrackGasCollection(int collectedAmount)
+    public void ResetObjectives()
     {
-        UpdateObjectiveProgress(ObjectiveType.CollectResource, collectedAmount);
+        foreach (var objective in objectives)
+        {
+            objective.currentProgress = 0;
+        }
+    }
+
+    public void UpdateObjectiveProgress(ObjectiveType type, int amount)
+    {
+        var targetObjective = objectives.Find(obj => obj.objectiveType == type && !obj.isCompleted);
+        if (targetObjective != null)
+        {
+            targetObjective.IncrementProgress(amount);
+            Debug.Log($"Updated Objective: {targetObjective.description} ({targetObjective.currentProgress}/{targetObjective.targetAmount})");
+            OnMissionStateChanged?.Invoke();
+        }
     }
 }

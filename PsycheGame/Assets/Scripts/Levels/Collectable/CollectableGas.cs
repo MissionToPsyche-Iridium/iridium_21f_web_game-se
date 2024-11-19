@@ -9,7 +9,8 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
     private Material psSharedMaterial;
     private List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
-    private MissionObjectiveHandler missionHandler;
+    private MissionState missionState;
+
 
     [SerializeField] protected Color gasColor = Color.white;
 
@@ -37,14 +38,6 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         }
     }
 
-    public void UpdateMissionObjective(int particlesCollected)
-    {
-        if (missionHandler != null)
-        {
-            missionHandler.TrackGasCollection(particlesCollected);
-        }
-    }
-
     // Triggered when a gas particle collides with the probe
     private void OnParticleTrigger() {
         if (!collectStart) {
@@ -64,8 +57,12 @@ public abstract class CollectableGas : MonoBehaviour, ScannableObject {
         }
 
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+
+        if (missionState != null)
+        {
+            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, triggeredParticles);
+        }
         this.OnCollect(triggeredParticles);
-        this.UpdateMissionObjective(triggeredParticles);
     }
 
 /*--Inherited Functionality--------------------------------------------------------------------------*/
