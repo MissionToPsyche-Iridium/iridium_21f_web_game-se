@@ -83,22 +83,28 @@ public class ShipScanBehavior : MonoBehaviour {
 
         if (!scannable.ScanProgress.isComplete) {
             if (scannable.ScanProgress.Value == 0) {
-
                 // A scannables should have a collider to allow scanning so its
                 // safe to attempt to grab that here
                 Bounds bounds = scannable.GameObject.GetComponent<Collider2D>().bounds;
-
                 float pos_x = bounds.center.x;
                 float pos_y = bounds.size.y + bounds.center.y;
                 Vector3 pos = new Vector3(pos_x, pos_y, 1);
 
-
-                GameObject uiObj = Instantiate(scanProgressBarPrefab, 
+                GameObject empty = new GameObject();
+                GameObject uiObj = Instantiate(scanProgressBarPrefab,
                                                pos,
-                                               Quaternion.identity, 
-                                               scannable.GameObject.transform);
+                                               Quaternion.identity,
+                                               empty.transform);
 
-                //uiObj.transform.localScale = 0f * bounds.size;
+                // weird hack here!
+                // for some reason adding a ui object to a scannable was
+                // changing the size of the ui depending on the size of the
+                // scannable, to get around this we make the following 
+                // hierarchy:
+                //    scannableObject
+                //        emptyObject
+                //            scanUIElement
+                empty.transform.parent = scannable.GameObject.transform;
 
                 // tell the ui object what it's scanning so it can actually display
                 // progress
