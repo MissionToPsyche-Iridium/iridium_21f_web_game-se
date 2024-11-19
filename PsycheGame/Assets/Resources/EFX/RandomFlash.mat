@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GraphMaterial
+  m_Name: RandomFlash
   m_Shader: {fileID: -6465566751694194690, guid: 4a6f11e53053641b1a6405fc815d3914, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
