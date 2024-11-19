@@ -26,13 +26,40 @@ public class BuildManager
         return _instance;
     }
 
-    private List<Tuple<ProbeComponent, GameObject>> spawnedProbeComponents;
+    private Inventory _inventory;
+    private List<Tuple<ProbeComponent, GameObject>> spawned;
 
-    public void Initialize()
+    public void Initialize(Inventory inventory)
     {
-        // TODO:
-        // Fetch different navigation menu buttons
-        // Attach functionality to OnClick events (e.g. the exit button loads the MainMenu scene)
-        // Get important references (ContainerManager?)
+        _inventory = inventory;
+        spawned = new List<Tuple<ProbeComponent, GameObject>>();
+    }
+
+    public List<GameObject> GetSpawnedProbeComponents()
+    {
+        List<GameObject> probeComponents = new List<GameObject>();
+        foreach (Tuple<ProbeComponent, GameObject> tuple in spawned)
+        {
+            probeComponents.Add(tuple.Item2);
+        }
+        return probeComponents;
+    }
+
+    public ProbeComponent GetProbeComponentInfo(GameObject probeComponent)
+    {
+        foreach (Tuple<ProbeComponent, GameObject> tuple in spawned)
+        {
+            if (tuple.Item2.Equals(probeComponent))
+            {
+                return tuple.Item1;
+            }
+        }
+        return null;
+    }
+
+    public void SpawnProbeComponent(Tuple<ProbeComponent, GameObject> probeComponentTuple)
+    {
+        _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
+        spawned.Add(probeComponentTuple);
     }
 }

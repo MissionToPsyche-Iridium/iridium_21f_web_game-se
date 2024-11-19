@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Inventory inventory;
+    [SerializeField] private Sprite[] _probeSprites;
 
-    void Start()
+    public Inventory Inventory { get; private set; }
+
+    public void Awake()
     {
-        inventory = new Inventory();
-        foreach (Sprite sprite in Resources.LoadAll("ProbeSprites", typeof(Sprite)))
+        Inventory = new Inventory();
+        foreach (Sprite sprite in _probeSprites)
         {
-            inventory.AddProbeComponent(
+            Inventory.AddProbeComponent(
                 new ProbeComponent(
                     "name",
                     "description",
@@ -19,6 +21,10 @@ public class Player : MonoBehaviour
                 )
             );
         }
-        ProbeComponentInventory.GetInstance().Initialize(inventory);
+    }
+
+    public void Start()
+    {
+        BuildManager.GetInstance().Initialize(Inventory);
     }
 }
