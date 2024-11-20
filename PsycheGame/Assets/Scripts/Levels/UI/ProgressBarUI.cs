@@ -2,6 +2,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Progress bar UI that is currently being used for scan duration display
+// This progress bar deletes its self if progress has been completed and
+// otherwise hides its self if no progress has been made within a given
+// duration
 public class ProgressBarUI : MonoBehaviour {
     [SerializeField] private Image fill;
     [SerializeField] private Image mask;
