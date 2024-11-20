@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -32,11 +33,11 @@ public class Tooltip
 
         titleRect.sizeDelta = new Vector2(titleRect.rect.width, titleMesh.GetPreferredValues().y);
         descriptionRect.sizeDelta = new Vector2(descriptionRect.rect.width, descriptionMesh.GetPreferredValues().y);
-        contentRect.sizeDelta = new Vector2(contentRect.rect.width, titleRect.rect.height + descriptionRect.rect.height + 10.0f);
+        contentRect.sizeDelta = new Vector2(Math.Max(titleRect.rect.width, descriptionRect.rect.width), titleRect.rect.height + descriptionRect.rect.height + 10.0f);
 
         RectTransform tooltipRect = _tooltip.GetComponent<RectTransform>();
         tooltipRect.pivot = new Vector2(0.0f, 1.0f);
-        tooltipRect.sizeDelta = new Vector3(150.0f, contentRect.rect.height + 50.0f);
+        tooltipRect.sizeDelta = new Vector3(contentRect.rect.width + 30.0f, contentRect.rect.height + 30.0f);
         tooltipRect.anchoredPosition = position;
     }
 

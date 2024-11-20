@@ -30,6 +30,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public void OnBeginDrag(PointerEventData eventData)
     {
         _dragIcon = new GameObject();
+        _dragIcon.name = ProbeComponentInventory.GetProbeComponent(gameObject).Name;
 
         _dragIcon.AddComponent<BoxCollider2D>().isTrigger = true;
         _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
@@ -45,7 +46,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
 
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
-        _dragIcon.name = "ProbePart";
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
 
@@ -70,7 +70,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
 
                 BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(probeComponent, _dragIcon));
-                ProbeComponentInventory.ProbeComponentUsed(probeComponent);
 
                 (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
 
