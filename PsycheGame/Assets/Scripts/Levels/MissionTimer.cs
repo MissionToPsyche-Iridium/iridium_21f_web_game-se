@@ -6,13 +6,14 @@ public class MissionTimer : MonoBehaviour
 {
     [SerializeField] private float missionDuration = 120f;
     [SerializeField] private GameObject modalPanel; 
-    [SerializeField] private GameObject timerText; 
+    [SerializeField] private GameObject timerTextObject; 
 
     private float timeRemaining;
     private bool isTimerRunning = false;
 
     void Start()
     {
+    
         timeRemaining = missionDuration;
         isTimerRunning = true;
     }
@@ -37,11 +38,11 @@ public class MissionTimer : MonoBehaviour
 
     private void UpdateTimerUI()
     {
-        if (timerText != null)
+        if (timerTextObject != null)
         {
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
-            timerText.GetComponent<TextMeshPro>().text = $"{minutes:00}:{seconds:00}";
+            timerTextObject.GetComponent<TextMeshPro>().text = $"{minutes:00}:{seconds:00}";
         }
     }
 
