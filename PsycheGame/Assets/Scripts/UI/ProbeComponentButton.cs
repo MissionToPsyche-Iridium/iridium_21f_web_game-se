@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.iOS;
 using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
+[RequireComponent(typeof(AudioSource))]
 public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
@@ -18,13 +20,22 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     private RectTransform _dragPlane;
 
     private Tooltip _tooltip;
+    private AudioClip _snapSound;
+    private Material _boundMaterial;
+
+    public void Start()
+    {
+
+    }
 
     public void Awake()
     {
         _dragIcon = null;
         _dragPlane = null;
-
         _tooltip = null;
+
+        _snapSound = Resources.Load<AudioClip>("Audio/SnapSound");
+        _boundMaterial = Resources.Load<Material>("EFX/CloudBubble");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -35,12 +46,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
         _dragIcon.GetComponent<BoxCollider2D>().size = new Vector2(10, 10);
         _dragIcon.AddComponent<SpriteDragDrop>();
+        _dragIcon.AddComponent<AudioSource>();
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
+        image.material = _boundMaterial;
 
         _dragIcon.GetComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
 
@@ -75,6 +88,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
 
                 _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
 
                 if (_dragIcon.layer <= 9)
                 {
