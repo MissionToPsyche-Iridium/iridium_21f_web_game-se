@@ -24,7 +24,7 @@ public class ShipMovement : MonoBehaviour {
         float fuel = ShipManager.Fuel;
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
-
+        
         if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
         {
             ShipManager.Fuel -= fuelConsumptionRate * Time.deltaTime;
