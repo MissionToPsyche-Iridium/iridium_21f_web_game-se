@@ -23,19 +23,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     private AudioClip _snapSound;
     private Material _boundMaterial;
 
-    public void Start()
-    {
-
-    }
-
     public void Awake()
     {
         _dragIcon = null;
         _dragPlane = null;
         _tooltip = null;
 
-        _snapSound = Resources.Load<AudioClip>("Audio/SnapSound");
-        _boundMaterial = Resources.Load<Material>("EFX/CloudBubble");
+        _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
+        _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
