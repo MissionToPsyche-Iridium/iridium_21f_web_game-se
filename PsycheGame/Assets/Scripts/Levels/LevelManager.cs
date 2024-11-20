@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] GameObject  missionObjectiveModalPanel;
     [SerializeField] GameObject pauseModalPanel;
+    MissionState missionState;
 
     private bool isPaused = false;
 
