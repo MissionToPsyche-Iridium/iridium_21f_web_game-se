@@ -1,4 +1,6 @@
 
+using Microsoft.Unity.VisualStudio.Editor;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,7 +8,6 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] GameObject  missionObjectiveModalPanel;
     [SerializeField] GameObject pauseModalPanel;
-    MissionState missionState;
 
     private bool isPaused = false;
 
@@ -38,14 +39,15 @@ public class LevelManager : MonoBehaviour
 
     public void PauseGame()
     {
-        pauseModalPanel.SetActive(true);
-        Time.timeScale = 0f;
         isPaused = true;
+        UpdateButtonText(isPaused);
+        Time.timeScale = 0f;
+        missionObjectiveModalPanel.SetActive(true);
     }
 
     public void ResumeGame()
     {
-        pauseModalPanel.SetActive(false);
+        missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -54,5 +56,24 @@ public class LevelManager : MonoBehaviour
     {
         pauseModalPanel.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    public void UpdateButtonText(bool isPaused)
+    {
+        Transform textTransform = missionObjectiveModalPanel.transform.Find("BeginResumeText");
+
+        if (textTransform != null)
+        {
+            TextMeshProUGUI textComponent = textTransform.GetComponent<TextMeshProUGUI>();
+            if (textComponent != null)
+            {
+                textComponent.text = isPaused ? "Resume" : "Begin";
+            }
+        }
+        else
+        {
+            Debug.LogError("BeginResumeText object not found under the MissionObjectiveModalPanel.");
+        }
     }
 }
