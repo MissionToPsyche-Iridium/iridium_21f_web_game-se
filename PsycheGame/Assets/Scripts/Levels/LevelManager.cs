@@ -4,8 +4,25 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-     [SerializeField] GameObject  missionObjectiveModalPanel;
+    [SerializeField] GameObject  missionObjectiveModalPanel;
+    [SerializeField] GameObject pauseModalPanel;
 
+    private bool isPaused = false;
+
+   void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+            }
+        }
+    }
     public void QuitGame()
     {
         SceneManager.LoadScene("MainMenu");
@@ -15,5 +32,26 @@ public class LevelManager : MonoBehaviour
     {
         missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+
+    public void PauseGame()
+    {
+        pauseModalPanel.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    public void ResumeGame()
+    {
+        pauseModalPanel.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
+
+    public void RestartGame()
+    {
+        pauseModalPanel.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
