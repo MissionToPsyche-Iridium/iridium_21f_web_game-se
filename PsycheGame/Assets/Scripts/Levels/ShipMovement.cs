@@ -37,6 +37,7 @@ public class ShipMovement : MonoBehaviour {
             ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
+            HandleBoostInput();
             fuelBarUI.UpdateIndicator(fuel);
         }
         else if (fuelEnabled)
