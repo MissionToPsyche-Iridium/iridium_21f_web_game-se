@@ -8,14 +8,16 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] GameObject  missionObjectiveModalPanel;
     [SerializeField] GameObject pauseModalPanel;
+    [SerializeField] MissionTimer missionTimer;
 
-    private bool isPaused = false;
+    public static bool IsGamePaused { get; private set; } = false;
+
 
    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if (IsGamePaused)
             {
                 ResumeGame();
             }
@@ -34,13 +36,14 @@ public class LevelManager : MonoBehaviour
     {
         missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
+        missionTimer.StartMissionTimer();
     }
 
 
     public void PauseGame()
     {
-        isPaused = true;
-        UpdateButtonText(isPaused);
+        IsGamePaused = true;
+        UpdateButtonText(IsGamePaused);
         Time.timeScale = 0f;
         missionObjectiveModalPanel.SetActive(true);
     }
@@ -49,7 +52,7 @@ public class LevelManager : MonoBehaviour
     {
         missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;
+        IsGamePaused = false;
     }
 
     public void RestartGame()

@@ -6,7 +6,7 @@ public class MissionTimer : MonoBehaviour
 {
     [SerializeField] private float missionDuration = 120f;
     [SerializeField] private GameObject modalPanel; 
-    [SerializeField] private GameObject timerObject; 
+    [SerializeField] private GameObject timerText; 
 
     private float timeRemaining;
     private bool isTimerRunning = false;
@@ -14,7 +14,14 @@ public class MissionTimer : MonoBehaviour
     void Start()
     {
         timeRemaining = missionDuration;
+        isTimerRunning = false; 
+    }
+
+    public void StartMissionTimer()
+    {
+        timeRemaining = missionDuration;
         isTimerRunning = true;
+        Debug.Log("Mission Timer Started!");
     }
 
     void Update()
@@ -37,11 +44,20 @@ public class MissionTimer : MonoBehaviour
 
     private void UpdateTimerUI()
     {
-        if (timerObject != null)
+        
+        TextMeshPro textMeshPro = timerText.GetComponentInChildren<TextMeshPro>();
+         if (textMeshPro == null)
+        {
+            Debug.LogError("No TextMeshPro component found on timerText!");
+            return;
+        }
+
+        if (textMeshPro != null)
         {
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
-            timerObject.GetComponent<TextMeshPro>().text = $"{minutes:00}:{seconds:00}";
+            textMeshPro.text = $"{minutes:00}:{seconds:00}";
+            Debug.Log($"{minutes:00}:{seconds:00}");
         }
     }
 
