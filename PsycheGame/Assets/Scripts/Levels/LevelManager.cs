@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject pauseModalPanel;
     [SerializeField] MissionTimer missionTimer;
 
-    public static bool IsGamePaused { get; private set; } = false;
+    public static bool IsGamePaused { get; private set; } = true;
 
 
    void Update()
@@ -36,6 +36,7 @@ public class LevelManager : MonoBehaviour
     {
         missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
+        IsGamePaused = false;
         missionTimer.StartMissionTimer();
     }
 
