@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -83,9 +84,9 @@ public class Tile : MonoBehaviour
     void OnMouseEnter() {
         // Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
         // highlight.SetActive(true);  - temporarily disabled
-        bool occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
-        Debug.Log("Tile [" + cellX + ", " + cellY + "] is occupied: " + occupied);
-        if (occupied) {
+        String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
+        Debug.Log("Tile [" + cellX + ", " + cellY + "] is occupied by: [" + occupied + "]");
+        if (occupied == "ProbePart") {
             //Debug.Log("Tile is occupied");
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         } else {

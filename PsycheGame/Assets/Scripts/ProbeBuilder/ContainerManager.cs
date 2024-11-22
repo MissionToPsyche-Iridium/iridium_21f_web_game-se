@@ -21,12 +21,12 @@ using UnityEngine.UI;
 
 class GridPositionData {
 	public bool is_occupied;
-	public GameObject occupant;
+	public String occupant;
 
 	public GridPositionData()
 	{
 		this.is_occupied = false;
-		this.occupant = null;
+		this.occupant = "";
 	}
 }
 
@@ -94,7 +94,7 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
-	public GameObject CheckGridOccupied(int x, int y)
+	public String CheckGridOccupied(int x, int y)
 	{
 		if (gridData[x, y].is_occupied)
 		{
@@ -106,13 +106,12 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
-	public bool ReleaseFromGridPosition(int x, int y, GameObject obj)
+	public bool ReleaseFromGridPosition(int x, int y, String objTag)
 	{
-		if (gridData[x, y].occupant == obj)
+		if (gridData[x, y].occupant == objTag)
 		{
-			Debug.Log($"RFGP: releasing {obj.name} from grid position {x} {y}");
 			gridData[x, y].is_occupied = false;
-			gridData[x, y].occupant = null;
+			gridData[x, y].occupant = "";
 			return true;
 		}
 		else
@@ -121,12 +120,12 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
-	public bool AssignToGridPosition(int x, int y, GameObject obj)
+	public bool AssignToGridPosition(int x, int y, String objTag)
 	{
 		if (gridData[x, y].is_occupied == false)
 		{
 			gridData[x, y].is_occupied = true;
-			gridData[x, y].occupant = obj;
+			gridData[x, y].occupant = objTag;
 			return true;
 		}
 		else

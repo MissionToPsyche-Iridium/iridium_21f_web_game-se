@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using System.Text.RegularExpressions;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using TMPro;
 
 /*
     Author: Hannah M.
@@ -38,28 +39,25 @@ public class SpriteDragDrop : MonoBehaviour
         selected = true;
         offset = transform.position - MouseWorldPosition();
         Vector3 newPos = MouseWorldPosition();
-        (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
 
+        (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+        Debug.Log(" <SDD> Selected Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
         {
-            Debug.Log("This game object reference: " + this.gameObject);
-            GameObject otherobj = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY);
-            if (this.gameObject == otherobj)
+            Debug.Log(" <SDD> Selected Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
+            Debug.Log(" <SDD> GameObject layer: " + this.gameObject.layer + "~~~"); 
+            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "ProbePart")
             {
-                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
-                Debug.Log("~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
+                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, "ProbePart");
+                Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
 
-                if (this.gameObject.layer >= 10)
-                {
-                    this.gameObject.layer = 9;
-                }
+                this.gameObject.layer = 9;
             }
         }
     }
 
     private void OnMouseDrag()
     {
-        //Debug.Log("MouseDrag");
         transform.position = MouseWorldPosition() + offset;
     }
 
@@ -73,10 +71,10 @@ public class SpriteDragDrop : MonoBehaviour
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (!GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
+                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == null)
                 {
-                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
-                    Debug.Log("+++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.tag);
+                    Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);
                                     
@@ -87,7 +85,7 @@ public class SpriteDragDrop : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+                    Debug.Log(" <SDD> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
                 }
             }
         }
