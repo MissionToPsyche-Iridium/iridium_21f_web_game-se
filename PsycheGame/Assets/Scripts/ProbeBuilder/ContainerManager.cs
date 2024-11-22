@@ -41,12 +41,11 @@ public class ContainerManager : MonoBehaviour
 	private float PosX, PosY;
 
 	private (float x, float y)[,] chassisGrid;
-	private GridPositionData[,] gridData;
-	private bool probePartDragged = false;     
+	private GridPositionData[,] gridData;  
 
 	void Start()
 	{
-		Debug.Log("Container Manager Initialized");
+		Debug.Log("*** Container Manager Initialized ***");
 
 		chassisGrid = new (float x, float y)[width, height];
 		gridData = new GridPositionData[width, height];

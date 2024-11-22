@@ -53,13 +53,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
+        
         _dragIcon.AddComponent<SpriteDragDrop>();
         _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
         _dragIcon.GetComponent<SpriteDragDrop>().internalId = _itemSeed;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
-
-        Debug.Log(" <PCB> +++Begin Drag: " + ProbeComponent.Name + "+++");
 
         UpdateIconPosition(eventData);
     }
@@ -90,7 +89,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     if (this.gameObject.layer <= 9)
                     {
                         this.gameObject.layer = 10;
-                        Debug.Log(" <PCB> +++Assigned layer: " + this.gameObject.layer + "+++");
                     }
                 }
                 else
