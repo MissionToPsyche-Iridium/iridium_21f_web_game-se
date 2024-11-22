@@ -84,6 +84,7 @@ public class Tile : MonoBehaviour
         // Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
         // highlight.SetActive(true);  - temporarily disabled
         bool occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
+        Debug.Log("Tile [" + cellX + ", " + cellY + "] is occupied: " + occupied);
         if (occupied) {
             //Debug.Log("Tile is occupied");
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;

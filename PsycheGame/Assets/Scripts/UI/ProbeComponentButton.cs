@@ -80,7 +80,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
                     Debug.Log("+++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-                    transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
                                     
                     if (this.gameObject.layer <= 9)
                     {

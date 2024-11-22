@@ -110,6 +110,7 @@ public class ContainerManager : MonoBehaviour
 	{
 		if (gridData[x, y].occupant == obj)
 		{
+			Debug.Log($"RFGP: releasing {obj.name} from grid position {x} {y}");
 			gridData[x, y].is_occupied = false;
 			gridData[x, y].occupant = null;
 			return true;

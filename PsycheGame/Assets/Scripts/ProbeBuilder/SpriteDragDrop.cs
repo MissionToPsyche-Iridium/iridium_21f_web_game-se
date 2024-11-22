@@ -42,7 +42,9 @@ public class SpriteDragDrop : MonoBehaviour
 
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
         {
-            if (this.gameObject == GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
+            Debug.Log("This game object reference: " + this.gameObject);
+            GameObject otherobj = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY);
+            if (this.gameObject == otherobj)
             {
                 GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
                 Debug.Log("~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
