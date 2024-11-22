@@ -20,11 +20,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     private Tooltip _tooltip;
 
+    private String _itemSeed;
+
     public void Awake()
     {
         _dragIcon = null;
         _dragPlane = null;
-
         _tooltip = null;
     }
 
@@ -41,8 +42,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.AddComponent<BoxCollider2D>().isTrigger = true;
         _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
         _dragIcon.GetComponent<BoxCollider2D>().size = new Vector2(10, 10);
-        _dragIcon.layer = 9;
-        _dragIcon.tag = "ProbePart";
 
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
@@ -54,6 +53,11 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
+        _dragIcon.AddComponent<SpriteDragDrop>();
+        _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
+        _dragIcon.GetComponent<SpriteDragDrop>().internalId = _itemSeed;
+        _dragIcon.layer = 9;
+        _dragIcon.tag = "ProbePart";
 
         Debug.Log(" <PCB> +++Begin Drag: " + ProbeComponent.Name + "+++");
 
@@ -76,13 +80,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == null)
+                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, "ProbePart");
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
                     Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
-                    _dragIcon.AddComponent<SpriteDragDrop>();
                     
                     if (this.gameObject.layer <= 9)
                     {

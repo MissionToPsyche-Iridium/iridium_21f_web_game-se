@@ -21,6 +21,9 @@ using TMPro;
 
     v [1.3] - Shawn (11/11) in process to add logic to handle removal and update of grid status and visual indicator
 
+    v [2] - Shawn (11/22) updated snap logic to add and remove from a grid position.  still need to associate each occupying grid position
+    - with a unique probe item id to differentiate between the probe items
+       
 */
 
 public class SpriteDragDrop : MonoBehaviour
@@ -30,9 +33,17 @@ public class SpriteDragDrop : MonoBehaviour
     private UnityEngine.Vector2 initialPos;
     public static bool selected;
 
+    public String internalId;
+
     Collider2D col;
 
     Vector3 offset;
+
+    private void Start()
+    {
+        selected = false;
+        Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
+    }
 
     private void OnMouseDown()
     {
@@ -45,10 +56,10 @@ public class SpriteDragDrop : MonoBehaviour
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
         {
             Debug.Log(" <SDD> Selected Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
-            Debug.Log(" <SDD> GameObject layer: " + this.gameObject.layer + "~~~"); 
-            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "ProbePart")
+            Debug.Log(" <SDD> GameObject internalId: " + internalId + "~~~"); 
+            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == internalId)
             {
-                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, "ProbePart");
+                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                 Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
 
                 this.gameObject.layer = 9;
@@ -71,9 +82,9 @@ public class SpriteDragDrop : MonoBehaviour
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == null)
+                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.tag);
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                     Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);

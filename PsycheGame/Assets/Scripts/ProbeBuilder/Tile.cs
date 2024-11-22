@@ -28,14 +28,12 @@ public class Tile : MonoBehaviour
 {
     [SerializeField] private Color color1, color2;
     [SerializeField] private SpriteRenderer render;
-    [SerializeField] private GameObject highlight;
 
     private int cellX, cellY;
     private float xPosition, yPosition;
 
     private Color defaultColor;
 
-    //paints tile
     public void Init(bool isOffset, int x, int y, float xP, float yP) {
         cellX = x;
         cellY = y;
@@ -45,7 +43,6 @@ public class Tile : MonoBehaviour
         defaultColor = render.color;
     }
 
-    //setters and getters
     public int GetCellX() {
         return cellX;
     }
@@ -67,37 +64,26 @@ public class Tile : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.tag == "ProbePart") 
         {
-            // any tile specific action may be added here
-            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
     void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.tag == "ProbePart") 
         {
-            // any tile specific action may be added here
-            // gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
-    //Highlights tile on hover
     void OnMouseEnter() {
-        // Debug.Log("tile active: [" + cellX + ", " + cellY + "]");
-        // highlight.SetActive(true);  - temporarily disabled
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
         Debug.Log("Tile [" + cellX + ", " + cellY + "] is occupied by: [" + occupied + "]");
-        if (occupied == "ProbePart") {
-            //Debug.Log("Tile is occupied");
+        if (occupied != "") {
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         } else {
-            //Debug.Log("Tile is not occupied");
             gameObject.GetComponent<SpriteRenderer>().color = Color.green;
         }
     }
 
     void OnMouseExit() {
-        // Debug.Log("tile inactive");
-        // highlight.SetActive(false);
 
         gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }

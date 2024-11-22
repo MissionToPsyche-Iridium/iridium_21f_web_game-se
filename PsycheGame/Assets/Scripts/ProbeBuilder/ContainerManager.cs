@@ -102,9 +102,11 @@ public class ContainerManager : MonoBehaviour
 		}
 		else
 		{
-			return null;
+			return "";
 		}
 	}
+
+
 
 	public bool ReleaseFromGridPosition(int x, int y, String objTag)
 	{
@@ -155,6 +157,20 @@ public class ContainerManager : MonoBehaviour
 	public (float, float) GetBeaconPositionGrid(int x, int y)
 	{
 		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+	}
+
+	public String SeedUniquId()
+	{
+		Time time = new Time();
+
+		TimeSpan timeSpan = TimeSpan.FromSeconds(Time.time); 
+		string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+
+		int seedExt = UnityEngine.Random.Range(0, 100);
+		String seedValue = timeText + seedExt.ToString();
+		Debug.Log(" <CM> +++Seed Value: " + seedValue + "+++");
+
+		return seedValue;
 	}
 
 }
