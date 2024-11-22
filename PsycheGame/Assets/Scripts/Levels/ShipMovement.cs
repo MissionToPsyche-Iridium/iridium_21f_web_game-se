@@ -70,13 +70,16 @@ public class ShipMovement : MonoBehaviour {
 
     IEnumerator BoostSpeed(float targetMultiplier) {
         float targetSpeed = moveSpeed * targetMultiplier;
+        Debug.Log($"Boosting to target speed: {targetSpeed}");
 
         while (Mathf.Abs(moveSpeed - targetSpeed) > 0.01f) {
             moveSpeed = Mathf.MoveTowards(moveSpeed, targetSpeed, boostSpeedChangeRate * Time.deltaTime);
+            Debug.Log($"Current speed: {moveSpeed}");
             yield return null;
         }
 
         moveSpeed = targetSpeed; 
         boostCoroutine = null;
+        Debug.Log($"Boost complete. Final speed: {moveSpeed}");
     }
 }
