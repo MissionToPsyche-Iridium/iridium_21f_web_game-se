@@ -33,7 +33,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     {
         foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
         {
-            if (tuple.Item2.Equals(button))
+            if (tuple.Item2.transform.GetChild(0).gameObject.Equals(button))
             {
                 return tuple.Item1;
             }
@@ -46,15 +46,24 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         GameObject probeComponentButton = GameObject.Instantiate(_buttonPrefab);
         probeComponentButton.name = probeComponent.Name;
 
-        ProbeComponentButton button = probeComponentButton.GetComponent<ProbeComponentButton>();
-        button.ProbeComponentInventory = this;
-        button.SpawnArea = _spawnArea;
+        GameObject button = probeComponentButton.transform.GetChild(0).gameObject;
 
-        Image image = probeComponentButton.GetComponent<Image>();
+        ProbeComponentButton buttonScript = button.GetComponent<ProbeComponentButton>();
+        buttonScript.ProbeComponent = probeComponent;
+        buttonScript.ProbeComponentInventory = this;
+        buttonScript.SpawnArea = _spawnArea;
+
+        Image image = button.GetComponent<Image>();
         image.preserveAspect = true;
         image.sprite = probeComponent.Sprite;
 
-        probeComponentButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
+        if (quantity < 1)
+        {
+            button.tag = "Inactive";
+            image.color = new Color(255, 255, 255, 0.5f);
+        }
+
+        probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
 
         probeComponentButton.transform.SetParent(_content.transform);
 
@@ -70,19 +79,22 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
             {
                 if (tuple.Item1.Equals(probeComponent))
                 {
-                    if (tuple.Item2.activeSelf)
+                    GameObject button = tuple.Item2.transform.GetChild(0).gameObject;
+                    if (!button.tag.Equals("Inactive"))
                     {
                         if (quantity < 1)
                         {
-                            tuple.Item2.SetActive(false);
+                            button.tag = "Inactive";
+                            button.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
                         }
                     }
                     else if (quantity > 0)
                     {
-                        tuple.Item2.SetActive(true);
+                        button.tag = "Untagged";
+                        button.GetComponent<Image>().color = new Color(255, 255, 255, 1.0f);
                     }
 
-                    tuple.Item2.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
+                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
 
                     return;
                 }

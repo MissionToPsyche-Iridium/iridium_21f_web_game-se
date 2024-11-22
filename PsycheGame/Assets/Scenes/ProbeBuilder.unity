@@ -623,15 +623,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 30
-    m_Right: 40
+    m_Left: 10
+    m_Right: 20
     m_Top: 10
     m_Bottom: 10
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 80, y: 80}
-  m_Spacing: {x: 50, y: 50}
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 40, y: 40}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &385889577
@@ -2232,7 +2232,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: 745557211
   m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!224 &1123035915
@@ -2372,7 +2372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 786653833}
   _content: {fileID: 385889573}
-  _buttonPrefab: {fileID: 9048762827807761782, guid: 9d6285ff219d0b8469100049c86b9667, type: 3}
+  _buttonPrefab: {fileID: 3426248820051524260, guid: e8e3732af200392408a03367eeb3c5dc, type: 3}
   _spawnArea: {fileID: 998425892}
 --- !u!1 &1205565827
 GameObject:
