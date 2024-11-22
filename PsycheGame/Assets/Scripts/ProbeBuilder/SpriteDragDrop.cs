@@ -35,33 +35,22 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //Debug.Log("MouseDown");
         selected = true;
         offset = transform.position - MouseWorldPosition();
-
-        // if the tile is in the in place layer -- move into layer 9 (ProbePart)
-        if (this.gameObject.layer == 10)
-        {
-            this.gameObject.layer = 9;
-            // code logic here to change the object's appearance to indicate it is not in place
-        }
-
-        // check if the mouse down is over an existing object
         Vector3 newPos = MouseWorldPosition();
         (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
 
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
         {
-            Debug.Log("---Target Grid position to release: " + cellPos.cellX + ", " + cellPos.cellY + "---");
-            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
+            if (this.gameObject == GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
             {
-                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseGridPosition(cellPos.cellX, cellPos.cellY);
-                Debug.Log("---Released Grid position: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
+                Debug.Log("~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]~~~");
 
-                // 11/12 the current release of object is insufficient to release a grid from the occupied status.  the check logic
-                // needs to evaluate if any other object is occupying the grid position.  If not, then the grid position should be released.
-                // suggestion: implement a method to evaluate if the grid position is occupied by any other object. 
-
+                if (this.gameObject.layer >= 10)
+                {
+                    this.gameObject.layer = 9;
+                }
             }
         }
     }
@@ -78,35 +67,26 @@ public class SpriteDragDrop : MonoBehaviour
         if (selected)
         {
             Vector3 newPos = MouseWorldPosition();
-            // last refactor - 11/10: Shawn -- fix index out of bounds error <> additionally clean up the Tile collision detection logic
             (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                Debug.Log("~~ Target Grid position: " + cellPos.cellX + ", " + cellPos.cellY + " ~~");
-                (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-                transform.position = new Vector3(cell.x, cell.y, -0.01f);
-
-                // if the tile is in the initailized layer -- before in place -- move into layer 10 (ProbePartInPlace)
-                if (this.gameObject.layer <= 9)
+                if (!GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
                 {
-                    this.gameObject.layer = 10;
-                    // code logic here to change the object's appearance to indicate it is in place
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
+                    Debug.Log("+++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
+                    (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                    transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                                    
+                    if (this.gameObject.layer <= 9)
+                    {
+                        this.gameObject.layer = 10;
+                    }
                 }
-
-                /* 
-                // Future direction - grid layout integration on the canvas panel for auto-responsive scaling -- sprint 3 or 4
-                Debug.Log("~~ Targeting center of grid position ~~");
-                GridLayout gridLayout = transform.parent.GetComponent<GridLayout>();
-                Vector3Int cellPosition = gridLayout.WorldToCell(transform.position);
-                if (cellPosition.x < 0 || cellPosition.y < 0) {
-                    Debug.Log("Invalid grid position");
-                    return;
-                } else {
-                    Debug.Log("~ Asserting object to grid position: [" + cellPosition.x + ", " + cellPosition.y + "]");
-                    transform.position = gridLayout.CellToWorld(cellPosition);
+                else
+                {
+                    Debug.Log("---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
                 }
-                */
             }
         }
         selected = false;

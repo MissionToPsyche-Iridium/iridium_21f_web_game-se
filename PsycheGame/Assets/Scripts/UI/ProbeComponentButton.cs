@@ -72,21 +72,26 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
-
-                (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-
-                _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
-
-                if (_dragIcon.layer <= 9)
+                if (!GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY))
                 {
-                    _dragIcon.layer = 10;
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, this.gameObject);
+                    Debug.Log("+++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
+                    (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                    transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                                    
+                    if (this.gameObject.layer <= 9)
+                    {
+                        this.gameObject.layer = 10;
+                    }
                 }
-            } else
-            {
-                Destroy(_dragIcon);
+                else
+                {
+                    Debug.Log("---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+                    Destroy(_dragIcon);
+                }
             }
             _dragIcon = null;
         }
