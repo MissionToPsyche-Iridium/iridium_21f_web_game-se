@@ -16,16 +16,23 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject SpawnArea { get; set; }
 
     private GameObject _dragIcon;
+    private Material _boundMaterial;
     private RectTransform _dragPlane;
 
+    private AudioClip _snapSound;
+
     private Tooltip _tooltip;
+
+    private String _itemSeed;
 
     public void Awake()
     {
         _dragIcon = null;
         _dragPlane = null;
-
         _tooltip = null;
+
+        _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
+        _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -41,13 +48,13 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.AddComponent<BoxCollider2D>().isTrigger = true;
         _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
         _dragIcon.GetComponent<BoxCollider2D>().size = new Vector2(10, 10);
-        _dragIcon.AddComponent<SpriteDragDrop>();
-        _dragIcon.layer = 9;
-        _dragIcon.tag = "ProbePart";
 
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
+        image.material = _boundMaterial;
+
+        _dragIcon.AddComponent<AudioSource>();
 
         RectTransform rect = (RectTransform) transform;
         _dragIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.rect.width, rect.rect.height);
@@ -55,6 +62,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
+        
+        _dragIcon.AddComponent<SpriteDragDrop>();
+        _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
+        _dragIcon.GetComponent<SpriteDragDrop>().internalId = _itemSeed;
+        _dragIcon.layer = 9;
+        _dragIcon.tag = "ProbePart";
 
         UpdateIconPosition(eventData);
     }
@@ -72,21 +85,29 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
-
-                (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-
-                _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
-
-                if (_dragIcon.layer <= 9)
+                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    _dragIcon.layer = 10;
+                    BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
+
+                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
+                    Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
+                    (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                    _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
+                    
+                    if (this.gameObject.layer <= 9)
+                    {
+                        this.gameObject.layer = 10;
+                    }
                 }
-            } else
-            {
-                Destroy(_dragIcon);
+                else
+                {
+                    Debug.Log(" <PCB> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
+                    Destroy(_dragIcon);
+                }
             }
             _dragIcon = null;
         }
