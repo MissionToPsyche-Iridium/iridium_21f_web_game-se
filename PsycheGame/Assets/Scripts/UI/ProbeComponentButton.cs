@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.Playables;
 using UnityEngine;
@@ -133,10 +134,16 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _tooltip = new TooltipBuilder()
                     .SetTitle(ProbeComponent.Name)
-                    .SetDescription(ProbeComponent.Description)
                     .Build();
 
         _tooltip.Enable();
+
+         //set info panel
+                ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
+
+                GameObject.Find("PartName").GetComponentInChildren<TMP_Text>().text = probeComponent.Name;
+                GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = InfoPanelData.getDescription(probeComponent.Name);
+                GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = probeComponent.Sprite;
     }
 
     public void OnPointerExit(PointerEventData eventData)

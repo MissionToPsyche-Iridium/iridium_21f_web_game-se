@@ -1191,39 +1191,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _probeSprites:
-  - {fileID: 21300000, guid: 49f5ac88507e8f542840469379cfa94a, type: 3}
-  - {fileID: 21300000, guid: 95331e0824aeb2547bbb490082c51b19, type: 3}
-  - {fileID: 21300000, guid: 130fbacca2dd7fc44bdb41bfc7273c4a, type: 3}
-  - {fileID: 21300000, guid: c5e526e80c47f964a9e5ff653bbb09c5, type: 3}
-  - {fileID: 21300000, guid: 653c81ea861e83345b6df13d67fc2925, type: 3}
-  - {fileID: 21300000, guid: c67283b3200a94e439d63f4f262207f6, type: 3}
-  - {fileID: 21300000, guid: 8ba5e952cdd937f4495b7fcb257ddeac, type: 3}
-  - {fileID: 21300000, guid: 8c480467ffb02f84084bb6ba51ff6ea7, type: 3}
-  - {fileID: 21300000, guid: 0696f4aa8c9bb08459c0c9917ae6341f, type: 3}
-  - {fileID: 21300000, guid: 27dec8a476cdb43468cf26e037b87445, type: 3}
-  - {fileID: 21300000, guid: b7104946be54f364ea526c1b6094d54c, type: 3}
-  - {fileID: 21300000, guid: b2891e58d25118145aeafdcf2a919e8b, type: 3}
-  - {fileID: 21300000, guid: b4071435151bd914193dcb94f828a522, type: 3}
-  - {fileID: 21300000, guid: 6544b4b616d7f8841a4528728d3e1545, type: 3}
-  - {fileID: 21300000, guid: 1e988c392daa25f489fd25de32a3943a, type: 3}
-  - {fileID: 21300000, guid: 6b01213ddecb29547a162455cebfc0bd, type: 3}
-  - {fileID: 21300000, guid: 4b3d344ca1739ae44af0bb0a05d47bd0, type: 3}
-  - {fileID: 21300000, guid: 09744bef3ed434d4898c081edaee5200, type: 3}
-  - {fileID: 21300000, guid: 33440af63f1d6d44daacaff53e70ba15, type: 3}
-  - {fileID: 21300000, guid: fc8cd7b28269ddf40bd314a2d2098cbf, type: 3}
-  - {fileID: 21300000, guid: 48c6417c6da86ad479b0e8ffb22b810d, type: 3}
-  - {fileID: 21300000, guid: 8201e8ce732aa584ca85664472f0454e, type: 3}
-  - {fileID: 21300000, guid: 413ebc0611740214984d0e7705f841c6, type: 3}
-  - {fileID: 21300000, guid: e3d8a4f1fe4db7d4b9818279dc6b23ea, type: 3}
-  - {fileID: 21300000, guid: e17fefb25e13fac4b9a5de0f0265e4d1, type: 3}
-  - {fileID: 21300000, guid: 3ed2fd553627ed345afba64bea89324c, type: 3}
-  - {fileID: 21300000, guid: 1215e40f8e4aca243872747295250e82, type: 3}
-  - {fileID: 21300000, guid: a12796fd8b1a4224f9ad11dcf9099128, type: 3}
-  - {fileID: 21300000, guid: 27d98db18846add4b9cc019ef60287d6, type: 3}
-  - {fileID: 21300000, guid: 7a4d8b2ad0557934e93e0434a896aad3, type: 3}
-  - {fileID: 21300000, guid: 499c532dec6ce494eb2dfd8cf44ce14a, type: 3}
-  - {fileID: 21300000, guid: 67879544965054b40920e7806353cbc8, type: 3}
-  - {fileID: 21300000, guid: f70635ee78b81554f8c5f7197c27ab1f, type: 3}
+  - {fileID: 21300000, guid: 177bb62886693694b8b9ae1334fc213e, type: 3}
+  - {fileID: 21300000, guid: c7046c31ef502534d8a0f5891b6f4a44, type: 3}
+  - {fileID: 21300000, guid: f692d2bebe274484ca02295635d063ef, type: 3}
+  - {fileID: 21300000, guid: 5560cd8eba1684e44973a43940a888ac, type: 3}
+  - {fileID: 21300000, guid: 80780d9a2e4b3724794cc8349477a96d, type: 3}
+  - {fileID: 21300000, guid: c642b0ff257ca4e42b8d18ce36b1e045, type: 3}
+  - {fileID: 21300000, guid: 33846b8f665bc154aa7358b24ec316f1, type: 3}
+  - {fileID: 21300000, guid: 69d8cfaa95c320e4b90296a08989f588, type: 3}
+  - {fileID: 21300000, guid: 0ebab2951d37ef64bb6b756634fc3d00, type: 3}
 --- !u!4 &786653835
 Transform:
   m_ObjectHideFlags: 0
@@ -2128,7 +2104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2636,10 +2612,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 4900000, guid: 40b264744b8ccb949b3016353c769432, type: 3}
-  parts:
-    part: []
-  spritesArr:
-  - {fileID: 21300000, guid: c5b3ba05ea9efef4292317c1f7a7d149, type: 3}
 --- !u!1 &1241803968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2697,7 +2669,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: part name
+  m_text: Part Info Panel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2832,7 +2804,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: description
+  m_text: Hover over a part in the inventory to get a description of it.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

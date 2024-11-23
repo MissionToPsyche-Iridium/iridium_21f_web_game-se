@@ -10,15 +10,11 @@
     },
     {
       "name": "Hull-effect Thruster",
-      "description": "this instrument uses a magnetic field to ionize the propellent and produce thrust."
+      "description": "This instrument uses a magnetic field to ionize the propellent and produce thrust."
     },
     {
-      "name": "Nitrogen Propellant",
-      "description": "This type of propellant is used often in space because it is a fire suppressant."
-    },
-    {
-      "name": "Xenon Propellant",
-      "description": "This type of propellant is the most common used for ion propulsion."
+      "name": "Propellant",
+      "description": "This type of propellant uses xenon and is the most common used for ion propulsion."
     },
     {
       "name": "Multispectral Imager",
@@ -37,11 +33,11 @@
       "description": "This instrument uses microwaves in the range of 8-12 GHz and offer higher data rates and accuracy than other bands."
     },
     {
-      "name": "Deep Space Optical Communication",
-      "description": "This instrument consists of a flight laser transceiver, ground laser transmitter and ground laser receiver. It is a new technology for increasing bandwidth, and still being tested."
+      "name": "DCOS",
+      "description": "The Deep Space Optical Communication experiment uses a flight laser transceiver and ground laser transmitter and receiver. It is a new technology for increasing bandwidth."
     },
     {
-      "name": "Multilayer-Insulation",
+      "name": "Multilayer Insulation",
       "description": "This is thermal material reduces heat loss by thermal radiation."
     }
   ]
