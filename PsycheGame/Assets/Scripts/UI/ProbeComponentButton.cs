@@ -16,7 +16,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject SpawnArea { get; set; }
 
     private GameObject _dragIcon;
+    private Material _boundMaterial;
     private RectTransform _dragPlane;
+
+    private AudioClip _snapSound;
 
     private Tooltip _tooltip;
 
@@ -27,6 +30,9 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon = null;
         _dragPlane = null;
         _tooltip = null;
+
+        _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
+        _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -46,6 +52,9 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
+        image.material = _boundMaterial;
+
+        _dragIcon.AddComponent<AudioSource>();
 
         RectTransform rect = (RectTransform) transform;
         _dragIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.rect.width, rect.rect.height);
@@ -85,6 +94,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     
                     if (this.gameObject.layer <= 9)
                     {
