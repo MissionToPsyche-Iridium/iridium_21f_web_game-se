@@ -35,13 +35,15 @@ public class SpriteDragDrop : MonoBehaviour
 
     public String internalId;
 
-    Collider2D col;
+    private AudioClip snapSound;
 
     Vector3 offset;
 
     private void Start()
     {
         selected = false;
+        snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
+        this.AddComponent<AudioSource>();
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
 
@@ -85,6 +87,7 @@ public class SpriteDragDrop : MonoBehaviour
                     Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] with {" + internalId + "} +++");
                     (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
                                     
                     if (this.gameObject.layer <= 9)
                     {
