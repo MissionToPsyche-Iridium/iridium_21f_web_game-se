@@ -29,8 +29,9 @@ using TMPro;
 public class SpriteDragDrop : MonoBehaviour
 {
     private UnityEngine.Vector2 mousePosition;
-    private float offsetX, offsetY;
     private UnityEngine.Vector2 initialPos;
+    private ContainerManager containerManager;
+    private float offsetX, offsetY;
     public static bool selected;
 
     public String internalId;
@@ -42,6 +43,7 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
+        containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
@@ -53,12 +55,12 @@ public class SpriteDragDrop : MonoBehaviour
         offset = transform.position - MouseWorldPosition();
         Vector3 newPos = MouseWorldPosition();
 
-        (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+        (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
         {
-            if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == internalId)
+            if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == internalId)
             {
-                GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
+                containerManager.ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                 Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]  id: {" + internalId +"}~~~");
 
                 this.gameObject.layer = 9;
@@ -77,15 +79,15 @@ public class SpriteDragDrop : MonoBehaviour
         if (selected)
         {
             Vector3 newPos = MouseWorldPosition();
-            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(newPos);
+            (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
+                if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, internalId);
+                    containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                     Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] with {" + internalId + "} +++");
-                    (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                    (float x, float y) cell = containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
                                     

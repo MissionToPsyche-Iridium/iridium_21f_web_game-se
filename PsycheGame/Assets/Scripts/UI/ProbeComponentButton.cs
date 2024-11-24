@@ -16,6 +16,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
     public GameObject SpawnArea { get; set; }
 
+    private ContainerManager _containerManager;
     private GameObject _dragIcon;
     private Material _boundMaterial;
     private RectTransform _dragPlane;
@@ -32,6 +33,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragPlane = null;
         _tooltip = null;
 
+        _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
     }
@@ -85,17 +87,17 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (_dragIcon != null)
         {
-            (int cellX, int cellY) cellPos = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            (int cellX, int cellY) cellPos = _containerManager.FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
+                if (_containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
                     BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 
-                    GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
+                    _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
                     Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
-                    (float x, float y) cell = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
+                    (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     
