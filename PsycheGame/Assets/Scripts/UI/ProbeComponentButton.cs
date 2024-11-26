@@ -88,7 +88,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = _containerManager.FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
                 if (_containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
@@ -99,6 +98,9 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                    _dragIcon.GetComponent<SpriteDragDrop>().cellPos = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     
                     if (this.gameObject.layer <= 9)
@@ -111,6 +113,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     Debug.Log(" <PCB> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
                     Destroy(_dragIcon);
                 }
+            }
+            else
+            {
+                Destroy(_dragIcon);
             }
             _dragIcon = null;
         }

@@ -27,19 +27,21 @@ public class BuildManager
     }
 
     private Inventory _inventory;
-    private List<Tuple<ProbeComponent, GameObject>> spawned, undone;
+    private ContainerManager _containerManager;
+    private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
     public void Initialize(Inventory inventory)
     {
         _inventory = inventory;
-        spawned = new List<Tuple<ProbeComponent, GameObject>>();
-        undone = new List<Tuple<ProbeComponent, GameObject>>();
+        _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
+        _spawned = new List<Tuple<ProbeComponent, GameObject>>();
+        _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
 
     public List<GameObject> GetSpawnedProbeComponents()
     {
         List<GameObject> probeComponents = new List<GameObject>();
-        foreach (Tuple<ProbeComponent, GameObject> tuple in spawned)
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
         {
             probeComponents.Add(tuple.Item2);
         }
@@ -48,7 +50,7 @@ public class BuildManager
 
     public ProbeComponent GetProbeComponentInfo(GameObject probeComponent)
     {
-        foreach (Tuple<ProbeComponent, GameObject> tuple in spawned)
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
         {
             if (tuple.Item2.Equals(probeComponent))
             {
@@ -61,17 +63,19 @@ public class BuildManager
     public void SpawnProbeComponent(Tuple<ProbeComponent, GameObject> probeComponentTuple)
     {
         _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
-        spawned.Add(probeComponentTuple);
+        _spawned.Add(probeComponentTuple);
     }
 
     public void Undo()
     {
-        if (spawned.Count > 0)
+        if (_spawned.Count > 0)
         {
-            Tuple<ProbeComponent, GameObject> probeComponentTuple = spawned[spawned.Count - 1];
+            Tuple<ProbeComponent, GameObject> probeComponentTuple = _spawned[_spawned.Count - 1];
 
-            spawned.RemoveAt(spawned.Count - 1);
-            undone.Add(probeComponentTuple);
+            probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToRelease();
+
+            _spawned.RemoveAt(_spawned.Count - 1);
+            _undone.Add(probeComponentTuple);
 
             probeComponentTuple.Item2.SetActive(false);
 
@@ -81,30 +85,23 @@ public class BuildManager
 
     public void UndoAll()
     {
-        for (int i = spawned.Count - 1; i >= 0; i--)
+        for (int i = _spawned.Count - 1; i >= 0; i--)
         {
-            Tuple<ProbeComponent, GameObject> probeComponentTuple = spawned[i];
-
-            spawned.RemoveAt(i);
-            undone.Add(probeComponentTuple);
-
-            probeComponentTuple.Item2.SetActive(false);
-
-            _inventory.AddProbeComponent(probeComponentTuple.Item1);
+            Undo();
         }
     }
 
     public void Redo()
     {
-        for (int i = undone.Count - 1; i >= 0; i--)
+        for (int i = _undone.Count - 1; i >= 0; i--)
         {
-            Tuple<ProbeComponent, GameObject> probeComponentTuple = undone[i];
-            if (_inventory.GetProbeComponentQuantity(probeComponentTuple.Item1) > 0)
+            Tuple<ProbeComponent, GameObject> probeComponentTuple = _undone[i];
+            if (_inventory.GetProbeComponentQuantity(probeComponentTuple.Item1) > 0 && probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToReoccupy())
             {
                 _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
 
-                undone.RemoveAt(i);
-                spawned.Add(probeComponentTuple);
+                _undone.RemoveAt(i);
+                _spawned.Add(probeComponentTuple);
 
                 probeComponentTuple.Item2.SetActive(true);
 
@@ -112,7 +109,7 @@ public class BuildManager
             }
             else
             {
-                undone.RemoveAt(i);
+                _undone.RemoveAt(i);
 
                 GameObject.Destroy(probeComponentTuple.Item2);
             }

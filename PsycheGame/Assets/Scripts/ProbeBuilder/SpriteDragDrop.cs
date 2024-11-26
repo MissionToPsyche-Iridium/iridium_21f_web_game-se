@@ -31,10 +31,10 @@ public class SpriteDragDrop : MonoBehaviour
     private UnityEngine.Vector2 mousePosition;
     private UnityEngine.Vector2 initialPos;
     private ContainerManager containerManager;
-    private float offsetX, offsetY;
-    public static bool selected;
+    public bool selected;
 
     public String internalId;
+    public Tuple<int, int> cellPos;
 
     private AudioClip snapSound;
 
@@ -63,6 +63,8 @@ public class SpriteDragDrop : MonoBehaviour
                 containerManager.ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                 Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]  id: {" + internalId +"}~~~");
 
+                this.cellPos = null;
+
                 this.gameObject.layer = 9;
             }
         }
@@ -89,6 +91,9 @@ public class SpriteDragDrop : MonoBehaviour
                     Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] with {" + internalId + "} +++");
                     (float x, float y) cell = containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                    this.cellPos = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
                                     
                     if (this.gameObject.layer <= 9)
@@ -103,6 +108,26 @@ public class SpriteDragDrop : MonoBehaviour
             }
         }
         selected = false;
+    }
+
+    public bool AttemptToRelease()
+    {
+        if (containerManager.CheckGridOccupied(cellPos.Item1, cellPos.Item2) == internalId)
+        {
+            containerManager.ReleaseFromGridPosition(cellPos.Item1, cellPos.Item2, internalId);
+            return true;
+        }
+        return false;
+    }
+
+    public bool AttemptToReoccupy()
+    {
+        if (containerManager.CheckGridOccupied(cellPos.Item1, cellPos.Item2) == "")
+        {
+            containerManager.AssignToGridPosition(cellPos.Item1, cellPos.Item2, internalId);
+            return true;
+        }
+        return false;
     }
 
     Vector3 MouseWorldPosition()
