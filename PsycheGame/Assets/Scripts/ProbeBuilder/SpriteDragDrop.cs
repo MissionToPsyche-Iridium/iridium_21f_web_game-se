@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Text.RegularExpressions;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
+using Microsoft.Unity.VisualStudio.Editor;
 
 /*
     Author: Hannah M.
@@ -37,6 +36,8 @@ public class SpriteDragDrop : MonoBehaviour
     public String internalId;
 
     private AudioClip snapSound;
+    private Material originalMaterial;
+    private Material sparkMaterial;
 
     Vector3 offset;
 
@@ -46,6 +47,9 @@ public class SpriteDragDrop : MonoBehaviour
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
+        UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+        originalMaterial = image.material;
+        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial");
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
 
@@ -62,6 +66,8 @@ public class SpriteDragDrop : MonoBehaviour
             {
                 containerManager.ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
                 Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]  id: {" + internalId +"}~~~");
+                UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+                image.material = originalMaterial;
 
                 this.gameObject.layer = 9;
             }
@@ -90,6 +96,8 @@ public class SpriteDragDrop : MonoBehaviour
                     (float x, float y) cell = containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     transform.position = new Vector3(cell.x, cell.y, -0.01f);
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
+                    UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+                    image.material = sparkMaterial;
                                     
                     if (this.gameObject.layer <= 9)
                     {

@@ -19,6 +19,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
     private Material _boundMaterial;
+    private Material _sparkMaterial;
     private RectTransform _dragPlane;
 
     private AudioClip _snapSound;
@@ -36,6 +37,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
+        _sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -100,6 +102,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
+                    Image image = _dragIcon.GetComponent<Image>();
+                    image.material = _sparkMaterial;
                     
                     if (this.gameObject.layer <= 9)
                     {
