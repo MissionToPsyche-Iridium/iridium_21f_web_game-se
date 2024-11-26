@@ -37,7 +37,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
-        _sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial");
+        _sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
     }
 
     public void OnBeginDrag(PointerEventData eventData)

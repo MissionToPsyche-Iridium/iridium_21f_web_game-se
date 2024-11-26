@@ -49,7 +49,7 @@ public class SpriteDragDrop : MonoBehaviour
         this.AddComponent<AudioSource>();
         UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
         originalMaterial = image.material;
-        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial");
+        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
 
