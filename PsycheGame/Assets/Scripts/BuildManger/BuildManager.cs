@@ -27,13 +27,11 @@ public class BuildManager
     }
 
     private Inventory _inventory;
-    private ContainerManager _containerManager;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
     public void Initialize(Inventory inventory)
     {
         _inventory = inventory;
-        _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();
         _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
