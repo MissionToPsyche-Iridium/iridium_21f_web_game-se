@@ -10,6 +10,7 @@ TagManager:
   - Container
   - Gas
   - HUD
+  - Mineral
   layers:
   - Default
   - TransparentFX
