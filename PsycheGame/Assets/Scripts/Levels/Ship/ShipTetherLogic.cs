@@ -19,8 +19,8 @@ public class ShipTetherLogic : MonoBehaviour {
 
     private Rigidbody2D rb;
     private SpringJoint2D springJoint;
-    private Vector2 tetherPoint;
-    private Vector2 tetherDistVec;
+    [HideInInspector] public Vector2 tetherPoint;
+    [HideInInspector] public Vector2 tetherDistVec;
 
     private void Start() {
         rb = this.GetComponent<Rigidbody2D>();
