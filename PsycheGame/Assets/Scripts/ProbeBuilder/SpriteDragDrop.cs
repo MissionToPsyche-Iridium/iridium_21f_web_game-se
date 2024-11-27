@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.Unity.VisualStudio.Editor;
+using System.Net.Sockets;
 
 /*
     Author: Hannah M.
@@ -32,7 +33,10 @@ public class SpriteDragDrop : MonoBehaviour
     private ContainerManager containerManager;
     private float offsetX, offsetY;
     public static bool selected;
-
+    public float activeTime;
+    public float refreshRate = 0.1f;
+    private bool isDragging;
+    private SkinnedMeshRenderer[] meshRenderer;
     public String internalId;
 
     private AudioClip snapSound;
@@ -44,6 +48,7 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
+        activeTime = 2.0f;
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
@@ -53,11 +58,40 @@ public class SpriteDragDrop : MonoBehaviour
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
 
+    IEnumerator TrailRoutine(float activeTime)
+    {
+        while (activeTime > 0)
+        {
+            activeTime -= refreshRate;
+
+            if (meshRenderer == null)
+            {
+                meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+                Debug.Log(" <SDD> ~~~Generating Skin Mesh Renderer - timer :" + activeTime + "~~~");
+                for (int i = 0; i < meshRenderer.Length; i++)
+                {
+                    GameObject sObj = new GameObject();
+
+                    MeshRenderer mr = sObj.AddComponent<MeshRenderer>();
+                    MeshFilter mf = sObj.AddComponent<MeshFilter>();
+
+                    mf.mesh = new Mesh();
+                    meshRenderer[i].BakeMesh(mf.mesh);
+                }
+            }
+            yield return new WaitForSeconds(refreshRate);
+        }
+        isDragging = false;
+    }
+
     private void OnMouseDown()
     {
         selected = true;
         offset = transform.position - MouseWorldPosition();
         Vector3 newPos = MouseWorldPosition();
+
+        StartCoroutine(TrailRoutine(activeTime));
 
         (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
         if (cellPos.cellX != -1 && cellPos.cellY != -1)
