@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpringJoint2D))]
 public class ShipTetherLogic : MonoBehaviour {
     [Header("General Refrences")]
-    [SerializeField] private Tether tether;
+    [SerializeField] private TetherRenderer tether;
     [SerializeField] private Camera mCamera;
     [SerializeField] private LayerMask tetherableLayers;
 
@@ -24,22 +24,25 @@ public class ShipTetherLogic : MonoBehaviour {
 
     private void Start() {
         rb = this.GetComponent<Rigidbody2D>();
-        springJoint = this.GetComponent<SpringJoint2D>();
-
         tether.enabled = false;
+
+        springJoint = this.GetComponent<SpringJoint2D>();
         springJoint.enabled = false;
+        springJoint.dampingRatio = 1.0f;
     }
 
     private void Update() {
+        Debug.Log(tetherPoint);
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            SetTetherPoint();
-            tether.enabled = true;
+            if (SetTetherPoint()) {
+                tether.enabled = true;
+            }
         }
         else if (Input.GetKey(KeyCode.Mouse0)) {
 
             if (launchToPoint && tether.isTething) {
-                Vector2 targetPos = tetherPoint - (Vector2)this.transform.position;
-                this.transform.position = Vector2.Lerp(this.transform.position, targetPos, Time.deltaTime * launchSpeed);
+                //Vector2 targetPos = tetherPoint - (Vector2)this.transform.position;
+                this.transform.position = Vector2.Lerp(this.transform.position, tetherPoint, Time.deltaTime * launchSpeed);
             } 
 
         }
@@ -47,9 +50,13 @@ public class ShipTetherLogic : MonoBehaviour {
             tether.enabled = false;
             springJoint.enabled = false;
         }
+
+        if (springJoint.connectedBody != null) {
+            tetherPoint = springJoint.connectedBody.position;
+        }
     }
 
-    private void SetTetherPoint() {
+    private bool SetTetherPoint() {
         Vector3 pos = this.transform.position;
         Vector3 worldPoint = mCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector3 distanceVec = worldPoint - pos;
@@ -62,9 +69,13 @@ public class ShipTetherLogic : MonoBehaviour {
         );
 
         if (hit.collider != null) {
+            springJoint.connectedBody = hit.rigidbody;
             tetherPoint = hit.point;
             tetherDistVec = tetherPoint - (Vector2)this.transform.position;
+            return true;
         }
+
+        return false;
     }
 
     public void Tether() {
@@ -81,7 +92,7 @@ public class ShipTetherLogic : MonoBehaviour {
                 springJoint.frequency = 0;
             }
 
-            springJoint.connectedAnchor = tetherPoint;
+            //springJoint.connectedAnchor = tetherPoint;
             springJoint.enabled = true;
         } else {
             rb.velocity = Vector2.zero;

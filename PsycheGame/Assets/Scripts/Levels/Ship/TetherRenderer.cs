@@ -1,10 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
-public class Tether : MonoBehaviour {
+public class TetherRenderer : MonoBehaviour {
     [Header("General Refrences")]
     [SerializeField] private ShipTetherLogic logic;
-    [SerializeField] private LineRenderer lineRenderer;
 
     [Header("Settings")]
     [SerializeField] private int percision = 40;
@@ -22,6 +21,14 @@ public class Tether : MonoBehaviour {
     private float moveTime = 0;
     private bool strightLine = true;
     private bool tethering = true;
+    private LineRenderer lineRenderer;
+
+    private void Start() {
+        lineRenderer = this.GetComponent<LineRenderer>();
+        lineRenderer.numCornerVertices = 1;
+        lineRenderer.numCapVertices = 10;
+        lineRenderer.positionCount = percision;
+    }
 
     private void OnEnable() {
         moveTime = 0;
