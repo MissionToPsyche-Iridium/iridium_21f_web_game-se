@@ -30,15 +30,31 @@
     },
     {
       "name": "X-Band Radio",
-      "description": "This instrument uses microwaves in the range of 8-12 GHz and offer higher data rates and accuracy than other bands."
+      "description": "This instrument uses microwaves in the range of 8-12 GHz and is more accurate than other bands."
     },
     {
       "name": "DCOS",
-      "description": "The Deep Space Optical Communication experiment uses a flight laser transceiver and ground laser transmitter and receiver. It is a new technology for increasing bandwidth."
+      "description": "The Deep Space Optical Communication experiment uses a flight laser and ground laser to increase bandwidth."
     },
     {
       "name": "Multilayer Insulation",
       "description": "This is thermal material reduces heat loss by thermal radiation."
+    },
+    {
+      "name": "Battery",
+      "description": "A place to store the energy collected by your solar panels."
+    },
+    {
+      "name": "Repair Kit",
+      "description": "This kit repairs the damage from one collision."
+    },
+    {
+      "name": "Gas Tank",
+      "description": "Use this to store gas collected, other than your propellant."
+    },
+    {
+      "name": "Asteroid Detector",
+      "description": "This sensor detects asteroids before potential collision."
     }
   ]
 }
