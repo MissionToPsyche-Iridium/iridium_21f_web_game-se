@@ -3,21 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class MineralCollection : MonoBehaviour, ScannableObject {
-    [System.Serializable]
-    public class Mineral {
-        public string Name;
-        public Color Color;
-        public int Amount;
-    }
+public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
-    [SerializeField] private List<Mineral> minerals = new();
+    [SerializeField] private List<RareMineral> minerals = new();
     [SerializeField] private int maxMineralTypes = 3;
     [SerializeField] private int maxTotalAmount = 100;
     [SerializeField] private float drillRate = 5f;
     [SerializeField] private ParticleSystem fragmentParticles;
     [SerializeField] private Progress scanProgress;
-    [SerializeField] private string description = "An asteroid containing valuable minerals.";
+    [SerializeField] private string description;
     [SerializeField] private Sprite image;
 
     public Progress ScanProgress => scanProgress;
@@ -41,22 +35,25 @@ public class MineralCollection : MonoBehaviour, ScannableObject {
         }
     }
 
-    private void GenerateMinerals() {
+    protected virtual void GenerateMinerals() {
         minerals.Clear();
         int mineralCount = Random.Range(1, maxMineralTypes + 1);
 
         for (int i = 0; i < mineralCount; i++) {
-            Mineral mineral = new() {
-                Name = "Mineral" + (i + 1),
-                Color = Random.ColorHSV(),
+            RareMineral mineral = new() {
+                Name = GenerateMineralName(i),
+                Color = GenerateMineralColor(i),
                 Amount = Random.Range(10, maxTotalAmount / mineralCount + 1)
             };
             minerals.Add(mineral);
         }
     }
 
+    protected abstract string GenerateMineralName(int index);
+    protected abstract Color GenerateMineralColor(int index);
+
     private void Drill() {
-        foreach (Mineral mineral in minerals) {
+        foreach (RareMineral mineral in minerals) {
             if (mineral.Amount > 0) {
                 int minedAmount = Mathf.FloorToInt(drillRate * Time.deltaTime);
                 mineral.Amount -= minedAmount;
@@ -86,7 +83,7 @@ public class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private bool IsDepleted() {
-        foreach (Mineral mineral in minerals) {
+        foreach (RareMineral mineral in minerals) {
             if (mineral.Amount > 0) {
                 return false;
             }
