@@ -34,7 +34,7 @@ public class SpriteDragDrop : MonoBehaviour
     public bool selected;
 
     public String internalId;
-    public Tuple<int, int> cellPos;
+    public Tuple<int, int> currentCell;
 
     private AudioClip snapSound;
 
@@ -46,28 +46,13 @@ public class SpriteDragDrop : MonoBehaviour
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
-        Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
 
     private void OnMouseDown()
     {
         selected = true;
         offset = transform.position - MouseWorldPosition();
-        Vector3 newPos = MouseWorldPosition();
-
-        (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
-        if (cellPos.cellX != -1 && cellPos.cellY != -1)
-        {
-            if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == internalId)
-            {
-                containerManager.ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
-                Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]  id: {" + internalId +"}~~~");
-
-                this.cellPos = null;
-
-                this.gameObject.layer = 9;
-            }
-        }
+        this.gameObject.layer = 9;
     }
 
     private void OnMouseDrag()
@@ -77,7 +62,6 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseUp()
     {
-        // check if a probe part is being dragged
         if (selected)
         {
             Vector3 newPos = MouseWorldPosition();
@@ -87,12 +71,14 @@ public class SpriteDragDrop : MonoBehaviour
             {
                 if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, internalId);
-                    Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] with {" + internalId + "} +++");
-                    (float x, float y) cell = containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-                    transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
+                    {
+                        containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+                    }
 
-                    this.cellPos = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+                    currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
+                    containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
 
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
                                     
@@ -101,20 +87,20 @@ public class SpriteDragDrop : MonoBehaviour
                         this.gameObject.layer = 10;
                     }
                 }
-                else
-                {
-                    Debug.Log(" <SDD> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
-                }
             }
+
+            (float x, float y) cell = containerManager.GetBeaconPositionGrid(currentCell.Item1, currentCell.Item2);
+            transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+            selected = false;
         }
-        selected = false;
     }
 
     public bool AttemptToRelease()
     {
-        if (containerManager.CheckGridOccupied(cellPos.Item1, cellPos.Item2) == internalId)
+        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
         {
-            containerManager.ReleaseFromGridPosition(cellPos.Item1, cellPos.Item2, internalId);
+            containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
             return true;
         }
         return false;
@@ -122,9 +108,9 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToReoccupy()
     {
-        if (containerManager.CheckGridOccupied(cellPos.Item1, cellPos.Item2) == "")
+        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == "")
         {
-            containerManager.AssignToGridPosition(cellPos.Item1, cellPos.Item2, internalId);
+            containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
             return true;
         }
         return false;
