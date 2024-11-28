@@ -23,7 +23,7 @@ public class TetherRenderer : MonoBehaviour {
     private bool tethering = true;
     private LineRenderer lineRenderer;
 
-    private void Start() {
+    private void Awake() {
         lineRenderer = this.GetComponent<LineRenderer>();
         lineRenderer.numCornerVertices = 1;
         lineRenderer.numCapVertices = 10;

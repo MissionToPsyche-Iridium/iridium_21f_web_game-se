@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -32,7 +33,6 @@ public class ShipTetherLogic : MonoBehaviour {
     }
 
     private void Update() {
-        Debug.Log(tetherPoint);
         if (Input.GetKeyDown(KeyCode.Mouse0)) {
             if (SetTetherPoint()) {
                 tether.enabled = true;
@@ -41,7 +41,8 @@ public class ShipTetherLogic : MonoBehaviour {
         else if (Input.GetKey(KeyCode.Mouse0)) {
 
             if (launchToPoint && tether.isTething) {
-                //Vector2 targetPos = tetherPoint - (Vector2)this.transform.position;
+                // translate the ships position closer to the thering object
+                // over time at the given launch speed
                 this.transform.position = Vector2.Lerp(this.transform.position, tetherPoint, Time.deltaTime * launchSpeed);
             } 
 
@@ -64,7 +65,7 @@ public class ShipTetherLogic : MonoBehaviour {
         RaycastHit2D hit = Physics2D.Raycast(
             origin:    pos,
             direction: distanceVec.normalized,
-            distance:  Mathf.Infinity,
+            distance:  distanceVec.magnitude,
             layerMask: tetherableLayers
         );
 
