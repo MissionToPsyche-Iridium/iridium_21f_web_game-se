@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Text.RegularExpressions;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
+using Microsoft.Unity.VisualStudio.Editor;
+using System.Net.Sockets;
 
 /*
     Author: Hannah M.
@@ -32,20 +32,53 @@ public class SpriteDragDrop : MonoBehaviour
     private UnityEngine.Vector2 initialPos;
     private ContainerManager containerManager;
     public bool selected;
-
     public String internalId;
     public Tuple<int, int> currentCell;
 
     private AudioClip snapSound;
+    private Material originalMaterial;
+    private Material sparkMaterial;
 
     Vector3 offset;
 
     private void Start()
     {
         selected = false;
+        activeTime = 2.0f;
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
+        UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+        originalMaterial = image.material;
+        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
+        Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
+    }
+    
+    IEnumerator TrailRoutine(float activeTime)
+    {
+        while (activeTime > 0)
+        {
+            activeTime -= refreshRate;
+
+            if (meshRenderer == null)
+            {
+                meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+                Debug.Log(" <SDD> ~~~Generating Skin Mesh Renderer - timer :" + activeTime + "~~~");
+                for (int i = 0; i < meshRenderer.Length; i++)
+                {
+                    GameObject sObj = new GameObject();
+
+                    MeshRenderer mr = sObj.AddComponent<MeshRenderer>();
+                    MeshFilter mf = sObj.AddComponent<MeshFilter>();
+
+                    mf.mesh = new Mesh();
+                    meshRenderer[i].BakeMesh(mf.mesh);
+                }
+            }
+            yield return new WaitForSeconds(refreshRate);
+        }
+        isDragging = false;
     }
 
     private void OnMouseDown()
@@ -81,6 +114,8 @@ public class SpriteDragDrop : MonoBehaviour
                     containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
 
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
+                    UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+                    image.material = sparkMaterial;
                                     
                     if (this.gameObject.layer <= 9)
                     {
