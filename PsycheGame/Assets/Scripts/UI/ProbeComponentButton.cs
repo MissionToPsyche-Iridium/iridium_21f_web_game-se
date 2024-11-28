@@ -82,7 +82,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _dragIcon.AddComponent<BoxCollider2D>().isTrigger = true;
         _dragIcon.AddComponent<Rigidbody2D>().gravityScale = 0;
-        _dragIcon.GetComponent<BoxCollider2D>().size = new Vector2(10, 10);
 
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
@@ -92,7 +91,9 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.AddComponent<AudioSource>();
 
         RectTransform rect = (RectTransform) transform;
-        _dragIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.rect.width, rect.rect.height);
+        Vector2 size = new Vector2(rect.rect.width, rect.rect.height);
+        _dragIcon.GetComponent<RectTransform>().sizeDelta = size;
+        _dragIcon.GetComponent<BoxCollider2D>().size = size;
 
         Transform canvasTransform = Utility.FindComponentInParents<Canvas>(gameObject).transform.parent;
         _dragIcon.transform.SetParent(SpawnArea.transform);
@@ -124,7 +125,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = _containerManager.FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
                 if (_containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
@@ -132,9 +132,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 
                     _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
-                    Debug.Log(" <PCB> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] +++");
+                    
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                    _dragIcon.GetComponent<SpriteDragDrop>().currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     Image image = _dragIcon.GetComponent<Image>();
                     image.material = _sparkMaterial;
@@ -146,9 +149,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 }
                 else
                 {
-                    Debug.Log(" <PCB> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
                     Destroy(_dragIcon);
                 }
+            }
+            else
+            {
+                Destroy(_dragIcon);
             }
             _dragIcon = null;
         }

@@ -31,13 +31,9 @@ public class SpriteDragDrop : MonoBehaviour
     private UnityEngine.Vector2 mousePosition;
     private UnityEngine.Vector2 initialPos;
     private ContainerManager containerManager;
-    private float offsetX, offsetY;
-    public static bool selected;
-    public float activeTime;
-    public float refreshRate = 0.1f;
-    private bool isDragging;
-    private SkinnedMeshRenderer[] meshRenderer;
+    public bool selected;
     public String internalId;
+    public Tuple<int, int> currentCell;
 
     private AudioClip snapSound;
     private Material originalMaterial;
@@ -57,7 +53,7 @@ public class SpriteDragDrop : MonoBehaviour
         sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
-
+    
     IEnumerator TrailRoutine(float activeTime)
     {
         while (activeTime > 0)
@@ -89,23 +85,7 @@ public class SpriteDragDrop : MonoBehaviour
     {
         selected = true;
         offset = transform.position - MouseWorldPosition();
-        Vector3 newPos = MouseWorldPosition();
-
-        StartCoroutine(TrailRoutine(activeTime));
-
-        (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
-        if (cellPos.cellX != -1 && cellPos.cellY != -1)
-        {
-            if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == internalId)
-            {
-                containerManager.ReleaseFromGridPosition(cellPos.cellX, cellPos.cellY, internalId);
-                Debug.Log(" <SDD> ~~~Released Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "]  id: {" + internalId +"}~~~");
-                UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
-                image.material = originalMaterial;
-
-                this.gameObject.layer = 9;
-            }
-        }
+        this.gameObject.layer = 9;
     }
 
     private void OnMouseDrag()
@@ -115,7 +95,6 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseUp()
     {
-        // check if a probe part is being dragged
         if (selected)
         {
             Vector3 newPos = MouseWorldPosition();
@@ -125,10 +104,15 @@ public class SpriteDragDrop : MonoBehaviour
             {
                 if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, internalId);
-                    Debug.Log(" <SDD> +++Assigned Grid position: [" + cellPos.cellX + ", " + cellPos.cellY + "] with {" + internalId + "} +++");
-                    (float x, float y) cell = containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
-                    transform.position = new Vector3(cell.x, cell.y, -0.01f);
+                    if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
+                    {
+                        containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+                    }
+
+                    currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
+                    containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+
                     GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
                     UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
                     image.material = sparkMaterial;
@@ -138,13 +122,33 @@ public class SpriteDragDrop : MonoBehaviour
                         this.gameObject.layer = 10;
                     }
                 }
-                else
-                {
-                    Debug.Log(" <SDD> ---Grid position is occupied: " + cellPos.cellX + ", " + cellPos.cellY + "---");
-                }
             }
+
+            (float x, float y) cell = containerManager.GetBeaconPositionGrid(currentCell.Item1, currentCell.Item2);
+            transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+            selected = false;
         }
-        selected = false;
+    }
+
+    public bool AttemptToRelease()
+    {
+        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
+        {
+            containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+            return true;
+        }
+        return false;
+    }
+
+    public bool AttemptToReoccupy()
+    {
+        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == "")
+        {
+            containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+            return true;
+        }
+        return false;
     }
 
     Vector3 MouseWorldPosition()

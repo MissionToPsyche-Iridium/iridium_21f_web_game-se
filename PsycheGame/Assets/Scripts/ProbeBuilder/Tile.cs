@@ -75,7 +75,6 @@ public class Tile : MonoBehaviour
 
     void OnMouseEnter() {
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
-        Debug.Log("Tile [" + cellX + ", " + cellY + "] is occupied by: [" + occupied + "]");
         if (occupied != "") {
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
         } else {

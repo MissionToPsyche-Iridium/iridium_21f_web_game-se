@@ -85,7 +85,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
                         if (quantity < 1)
                         {
                             button.tag = "Inactive";
-                            button.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+                            button.GetComponent<Image>().color = new Color(255, 255, 255, 0.25f);
                         }
                     }
                     else if (quantity > 0)

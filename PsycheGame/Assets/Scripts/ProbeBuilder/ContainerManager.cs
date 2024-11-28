@@ -45,8 +45,6 @@ public class ContainerManager : MonoBehaviour
 
 	void Start()
 	{
-		Debug.Log("*** Container Manager Initialized ***");
-
 		chassisGrid = new (float x, float y)[width, height];
 		gridData = new GridPositionData[width, height];
 		for (int i = 0; i < width; i++)
@@ -63,7 +61,7 @@ public class ContainerManager : MonoBehaviour
 	void GenerateContainer()
 	{
 		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
-		Debug.Log($"Parent rect transform: {parentRectTransform.rect.width} {parentRectTransform.rect.height}");
+		
 		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
 		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
 		this.tileScale = (int)(parentRectTransform.rect.width / 20);
@@ -142,7 +140,6 @@ public class ContainerManager : MonoBehaviour
 
 		if (x < 0 || x > width || y < 0 || y > height) 
 		{
-			Debug.Log($"FGP: out of bounds - Grid Position: {x} {y}");
 			return (-1, -1);
 		}
 		return (x, y);
@@ -167,7 +164,6 @@ public class ContainerManager : MonoBehaviour
 
 		int seedExt = UnityEngine.Random.Range(0, 100);
 		String seedValue = timeText + seedExt.ToString();
-		Debug.Log(" <CM> +++Seed Value: " + seedValue + "+++");
 
 		return seedValue;
 	}
