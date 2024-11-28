@@ -16,6 +16,13 @@ public class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] private int maxTotalAmount = 100;
     [SerializeField] private float drillRate = 5f;
     [SerializeField] private ParticleSystem fragmentParticles;
+    [SerializeField] private Progress scanProgress;
+    [SerializeField] private string description = "An asteroid containing valuable minerals.";
+    [SerializeField] private Sprite image;
+
+    public Progress ScanProgress => scanProgress;
+    public string Description => description;
+    public Sprite Image => image;
 
     private bool isDrilling = false;
     private MissionState missionState;
@@ -93,26 +100,21 @@ public class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Ship")) {
+        if (other.CompareTag("Player")) {
             isDrilling = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Ship")) {
+        if (other.CompareTag("Player")) {
             isDrilling = false;
         }
     }
 
     public GameObject GameObject => this.gameObject;
 
-    public Progress ScanProgress { get; }
-
-    public string Description { get; }
-
-    public  Sprite Image { get; }
-
     public void Scan() {
-        Debug.Log($"Scanning asteroid. Composition: {string.Join(", ", minerals.ConvertAll(m => m.Name))}");
+        scanProgress.incr(1);
+        Debug.Log($"Scanning asteroid. Composition: {string.Join(", ", minerals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
     }
 }

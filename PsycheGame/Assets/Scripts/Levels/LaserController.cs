@@ -2,9 +2,9 @@ using System.Collections;
 using UnityEngine;
 
 public class LaserController : MonoBehaviour {
-    [SerializeField] private GameObject laserEffect; // The laser animation GameObject
-    [SerializeField] private float laserRange = 5f;  // The maximum range of the laser
-    [SerializeField] private LayerMask asteroidLayer; // The layer of the target asteroids
+    [SerializeField] private GameObject laserEffect;
+    [SerializeField] private float laserRange = 5f;
+    [SerializeField] private LayerMask scannableLayer = 6;
 
     private MineralCollection currentAsteroid;
 
@@ -27,7 +27,7 @@ public class LaserController : MonoBehaviour {
     private void ActivateLaser() {
         laserEffect.SetActive(true);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, laserRange, asteroidLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, laserRange);
         if (hit.collider != null) {
             currentAsteroid = hit.collider.GetComponent<MineralCollection>();
             if (currentAsteroid != null) {
@@ -45,8 +45,7 @@ public class LaserController : MonoBehaviour {
     private void DrillAsteroid() {
         if (currentAsteroid != null) {
             Debug.Log($"Drilling asteroid: {currentAsteroid.name}");
-            // Enable drilling in the asteroid
-            currentAsteroid.Scan(); // Optional: Trigger scanning if needed
+            currentAsteroid.Scan();
         }
     }
 
