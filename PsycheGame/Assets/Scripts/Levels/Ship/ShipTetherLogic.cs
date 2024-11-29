@@ -9,17 +9,18 @@ public class ShipTetherLogic : MonoBehaviour {
     [SerializeField] private Camera mCamera;
     [SerializeField] private LayerMask tetherableLayers;
 
-    [Header("Launching")]
-    [SerializeField] private bool launchToPoint = true;
+    [Header("Probe To Object")]
     [SerializeField] private float launchSpeed = 1.0f;
+    [SerializeField] private float probeObjectDistance = 10f;
 
-    [Header("No Launching")]
-    [SerializeField] private bool autoConfigureDist = false;
-    [SerializeField] private float targetDistance = 3.0f;
-    [SerializeField] private float targetFrequency = 1.0f;
+    [Header("Object To Probe")]
+    [SerializeField] private float objectProbeDistance = 20f;
+    //[SerializeField] private float targetDistance = 3.0f;
+    //[SerializeField] private float targetFrequency = 1.0f;
 
     private Rigidbody2D rb;
     private SpringJoint2D springJoint;
+    private bool probeToObject = false;
     [HideInInspector] public Vector2 tetherPoint;
     [HideInInspector] public Vector2 tetherDistVec;
 
@@ -33,27 +34,29 @@ public class ShipTetherLogic : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Mouse0)) {
-            if (SetTetherPoint()) {
-                tether.enabled = true;
-            }
+        if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1)) {
+            tether.enabled = SetTetherPoint();
         }
-        else if (Input.GetKey(KeyCode.Mouse0)) {
-
-            if (launchToPoint && tether.isTething) {
-                // translate the ships position closer to the thering object
-                // over time at the given launch speed
-                this.transform.position = Vector2.Lerp(this.transform.position, tetherPoint, Time.deltaTime * launchSpeed);
-            } 
-
+        else if(Input.GetKey(KeyCode.Mouse0) && tether.isTething) {
+            // translate the ships position closer to the thering object
+            // over time at the given launch speed
+            probeToObject = true;
+            transform.position = Vector2.Lerp(transform.position, tetherPoint, Time.deltaTime * launchSpeed);
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse0)) {
+        else if(Input.GetKeyUp(KeyCode.Mouse0)) {
             tether.enabled = false;
             springJoint.enabled = false;
         }
+        else if(Input.GetKeyUp(KeyCode.Mouse1)) {
+            tether.enabled = false;
+            springJoint.enabled = false;
+        }
+        else {
+            probeToObject = false;
+        }
 
         if (springJoint.connectedBody != null) {
-            tetherPoint = springJoint.connectedBody.position;
+            tetherPoint = springJoint.connectedBody.position; 
         }
     }
 
@@ -80,23 +83,14 @@ public class ShipTetherLogic : MonoBehaviour {
     }
 
     public void Tether() {
-        springJoint.autoConfigureDistance = false;
+        springJoint.enabled = true;
+        rb.velocity = Vector2.zero;
 
-        if (!launchToPoint && !autoConfigureDist) {
-            springJoint.distance = targetDistance;
-            springJoint.frequency = targetFrequency;
-        }
-
-        if (!launchToPoint) {
-            if (autoConfigureDist) {
-                springJoint.autoConfigureDistance = true;
-                springJoint.frequency = 0;
-            }
-
-            //springJoint.connectedAnchor = tetherPoint;
-            springJoint.enabled = true;
+        // depending on the drag type set distance and frequency parameters of spring joint
+        if (probeToObject) {
+            springJoint.distance = probeObjectDistance;
         } else {
-            rb.velocity = Vector2.zero;
+            springJoint.distance = objectProbeDistance;
         }
     }
 }
