@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -13,14 +12,8 @@ public class ShipTetherLogic : MonoBehaviour {
     [SerializeField] private float launchSpeed = 1.0f;
     [SerializeField] private float probeObjectDistance = 10f;
 
-    [Header("Object To Probe")]
-    [SerializeField] private float objectProbeDistance = 20f;
-    //[SerializeField] private float targetDistance = 3.0f;
-    //[SerializeField] private float targetFrequency = 1.0f;
-
     private Rigidbody2D rb;
     private SpringJoint2D springJoint;
-    private bool probeToObject = false;
     [HideInInspector] public Vector2 tetherPoint;
     [HideInInspector] public Vector2 tetherDistVec;
 
@@ -40,7 +33,6 @@ public class ShipTetherLogic : MonoBehaviour {
         else if(Input.GetKey(KeyCode.Mouse0) && tether.isTething) {
             // translate the ships position closer to the thering object
             // over time at the given launch speed
-            probeToObject = true;
             transform.position = Vector2.Lerp(transform.position, tetherPoint, Time.deltaTime * launchSpeed);
         }
         else if(Input.GetKeyUp(KeyCode.Mouse0)) {
@@ -50,9 +42,6 @@ public class ShipTetherLogic : MonoBehaviour {
         else if(Input.GetKeyUp(KeyCode.Mouse1)) {
             tether.enabled = false;
             springJoint.enabled = false;
-        }
-        else {
-            probeToObject = false;
         }
 
         if (springJoint.connectedBody != null) {
@@ -83,14 +72,8 @@ public class ShipTetherLogic : MonoBehaviour {
     }
 
     public void Tether() {
+        springJoint.distance = probeObjectDistance;
         springJoint.enabled = true;
         rb.velocity = Vector2.zero;
-
-        // depending on the drag type set distance and frequency parameters of spring joint
-        if (probeToObject) {
-            springJoint.distance = probeObjectDistance;
-        } else {
-            springJoint.distance = objectProbeDistance;
-        }
     }
 }
