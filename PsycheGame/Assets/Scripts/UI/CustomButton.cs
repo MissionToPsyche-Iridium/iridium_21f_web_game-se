@@ -30,11 +30,13 @@ public class CustomButton : MonoBehaviour, IPointerDownHandler
     }
 
     private AudioClip _swooshSound;
+    const int NUM_PROFILES = 4;
 
-    private ColorProfile[] colorProfiles = new ColorProfile[3]
+    private ColorProfile[] colorProfiles = new ColorProfile[NUM_PROFILES]
     {
         new ColorProfile { color = new Color(1.0f, 1.0f, 1.0f, 1.0f), exposure = 0.0f },
         new ColorProfile { color = new Color(0.0f, 1.37f, 0f, 1.0f), exposure = -0.5f },
+        new ColorProfile { color = new Color(0.73f, 0.06f, 0f, 1.0f), exposure = 0.25f },
         new ColorProfile { color = new Color(0.95f, 0.87f, 1.47f, 1.0f), exposure = -0.5f }
     };
     private int toggleState;
@@ -53,7 +55,7 @@ public class CustomButton : MonoBehaviour, IPointerDownHandler
     {
         // GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
 
-        if (toggleState == 2)
+        if (toggleState == NUM_PROFILES - 1)
         {
             toggleState = 0;
         }

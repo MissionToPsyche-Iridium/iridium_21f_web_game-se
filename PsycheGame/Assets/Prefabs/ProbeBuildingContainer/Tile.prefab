@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &7184025590481895770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +102,6 @@ MonoBehaviour:
   color1: {r: 0.764151, g: 0.764151, b: 0.764151, a: 0.39215687}
   color2: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 0.39215687}
   render: {fileID: 7726198588433985175}
-  highlight: {fileID: 7343791406814374542}
 --- !u!61 &7517413410247515831
 BoxCollider2D:
   m_ObjectHideFlags: 0

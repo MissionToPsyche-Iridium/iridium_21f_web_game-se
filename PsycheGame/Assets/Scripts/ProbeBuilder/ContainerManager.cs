@@ -61,10 +61,10 @@ public class ContainerManager : MonoBehaviour
 	void GenerateContainer()
 	{
 		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
-		
 		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
 		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
-		this.tileScale = (int)(parentRectTransform.rect.width / 20);
+		this.tileScale = (int)(parentRectTransform.rect.width / 19);
+		Vector3 tileTransformScale = new Vector3(tileScale/10, tileScale/10, 10);
 
 		for (int x = 0; x < width; x++)
 		{
@@ -72,20 +72,19 @@ public class ContainerManager : MonoBehaviour
 			{
 				if (tile != null)
 				{
-					var targetX = originX + (tileScale * x);
-					var targetY = originY + (tileScale * y);
+					var targetX = originX + (tileScale * x * 0.928f);
+					var targetY = originY + (tileScale * y * 0.928f);
 					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);  
 					newTile.name = $"Tile {x} {y}"; 		 
-					newTile.transform.tag = "tile"; 	 
+					newTile.transform.tag = "tile";
 					newTile.AddComponent<Rigidbody2D>(); 	 
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0;  
-					newTile.GetComponent<BoxCollider2D>().isTrigger = true; 
-						 
+					newTile.GetComponent<BoxCollider2D>().isTrigger = true;
+					newTile.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
 					newTile.Init(isOffset, x, y, targetX, targetY);    
 					chassisGrid[x, y] = (targetX, targetY);
-					newTile.transform.SetParent(transform);  
-					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);  
+					newTile.transform.localScale = tileTransformScale;
 				}
 			}
 		}
