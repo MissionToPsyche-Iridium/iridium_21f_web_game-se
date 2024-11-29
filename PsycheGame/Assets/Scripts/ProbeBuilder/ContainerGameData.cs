@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Rendering.Universal.Internal;
@@ -10,7 +12,7 @@ public sealed class ContainerGameData
     private static readonly object padlock = new object();
     private List<Tile> tiles = new List<Tile>();
     private List<GameObject> spawnedParts; //TODO choose part type (GameObject, ProbeComponent, something else?)
-    private List<List<GameObject>> probeDesigns = new List<List<GameObject>>();
+    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>(); //TODO send to DesignInventory class
     private SaveData saveData = new SaveData();
     
     private ContainerGameData() {}
@@ -58,8 +60,11 @@ public sealed class ContainerGameData
 
     public void saveProbeDesign() {
         List<GameObject> parts = BuildManager.GetInstance().GetSpawnedProbeComponents(); //get current spawned parts
-        probeDesigns.Add(parts); //Adds current design to list of designs
-        saveData.ToJson(parts); //saves current design to json; could be improved to save all designs to json but that would require changing SaveData to take in a List<List<>> type
+        Sprite sprite = GameObject.Find("ContainerPanel").GetComponent<Sprite>();
+        String name = "Design " + probeDesigns.Count;
+        String json = saveData.ToJson(parts); //saves current design to json; could be improved to save all designs to json but that would require changing SaveData to take in a List<List<>> type
+        ProbeDesign design = new ProbeDesign(sprite, "Design" + "", json, parts);
+        probeDesigns.Add(design); //Adds current design to list of designs
     }
 
 }
