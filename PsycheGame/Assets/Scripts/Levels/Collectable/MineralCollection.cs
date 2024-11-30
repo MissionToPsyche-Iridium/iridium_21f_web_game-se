@@ -2,11 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public abstract class RareMetal {
+    public string Name { get; protected set; }
+    public Color Color { get; protected set; }
+    public int Amount { get; set; }
+    public string Description { get; protected set; }
+
+    protected RareMetal(string name, Color color, string description, int amount) {
+        Name = name;
+        Color = color;
+        Description = description;
+        Amount = amount;
+    }
+}
+
+public class Titanium : RareMetal {
+    public Titanium(int amount) : base(
+        "Titanium",
+        Color.gray,
+        "A strong and lightweight metal.",
+        amount
+    ) { }
+}
+
+public class Palladium : RareMetal {
+    public Palladium(int amount) : base(
+        "Palladium",
+        Color.cyan,
+        "A rare and precious metal used in electronics.",
+        amount
+    ) { }
+}
+
+public class Iridium : RareMetal {
+    public Iridium(int amount) : base(
+        "Iridium",
+        Color.yellow,
+        "One of the densest and most corrosion-resistant metals.",
+        amount
+    ) { }
+}
+
 [RequireComponent(typeof(Collider2D))]
 public abstract class MineralCollection : MonoBehaviour, ScannableObject {
-
-    [SerializeField] private List<RareMineral> minerals = new();
-    [SerializeField] private int maxMineralTypes = 3;
+    [SerializeField] private List<RareMetal> metals = new();
+    [SerializeField] private int maxMetalTypes = 3;
     [SerializeField] private int maxTotalAmount = 100;
     [SerializeField] private float drillRate = 5f;
     [SerializeField] private ParticleSystem fragmentParticles;
@@ -22,7 +62,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     private MissionState missionState;
 
     private void Awake() {
-        GenerateMinerals();
+        GenerateMetals();
     }
 
     private void Update() {
@@ -35,33 +75,35 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
     }
 
-    protected virtual void GenerateMinerals() {
-        minerals.Clear();
-        int mineralCount = Random.Range(1, maxMineralTypes + 1);
+    private void GenerateMetals() {
+        metals.Clear();
+        int metalCount = Random.Range(1, maxMetalTypes + 1);
+        List<System.Func<int, RareMetal>> metalGenerators = new() {
+            amount => new Titanium(amount),
+            amount => new Palladium(amount),
+            amount => new Iridium(amount)
+        };
 
-        for (int i = 0; i < mineralCount; i++) {
-            RareMineral mineral = new() {
-                Name = GenerateMineralName(i),
-                Color = GenerateMineralColor(i),
-                Amount = Random.Range(10, maxTotalAmount / mineralCount + 1)
-            };
-            minerals.Add(mineral);
+        for (int i = 0; i < metalCount; i++) {
+            int randomIndex = Random.Range(0, metalGenerators.Count);
+            RareMetal metal = metalGenerators[randomIndex](
+                Random.Range(10, maxTotalAmount / metalCount + 1)
+            );
+            metals.Add(metal);
+            metalGenerators.RemoveAt(randomIndex); // Ensure unique metal types
         }
     }
 
-    protected abstract string GenerateMineralName(int index);
-    protected abstract Color GenerateMineralColor(int index);
-
     private void Drill() {
-        foreach (RareMineral mineral in minerals) {
-            if (mineral.Amount > 0) {
+        foreach (RareMetal metal in metals) {
+            if (metal.Amount > 0) {
                 int minedAmount = Mathf.FloorToInt(drillRate * Time.deltaTime);
-                mineral.Amount -= minedAmount;
+                metal.Amount -= minedAmount;
 
-                SpawnFragments(mineral.Color, minedAmount);
-                UpdateMissionProgress(minedAmount, mineral.Name);
+                SpawnFragments(metal.Color, minedAmount);
+                UpdateMissionProgress(minedAmount, metal.Name);
 
-                break; 
+                break;
             }
         }
     }
@@ -75,16 +117,16 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
     }
 
-    private void UpdateMissionProgress(int minedAmount, string mineralName) {
+    private void UpdateMissionProgress(int minedAmount, string metalName) {
         if (missionState != null) {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, minedAmount);
         }
-        Debug.Log($"Collected {minedAmount} of {mineralName}");
+        Debug.Log($"Collected {minedAmount} of {metalName}");
     }
 
     private bool IsDepleted() {
-        foreach (RareMineral mineral in minerals) {
-            if (mineral.Amount > 0) {
+        foreach (RareMetal metal in metals) {
+            if (metal.Amount > 0) {
                 return false;
             }
         }
@@ -112,6 +154,6 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
     public void Scan() {
         scanProgress.incr(1);
-        Debug.Log($"Scanning asteroid. Composition: {string.Join(", ", minerals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
+        Debug.Log($"Scanning asteroid. Composition: {string.Join(", ", metals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
     }
 }
