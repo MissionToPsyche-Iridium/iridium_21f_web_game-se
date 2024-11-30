@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 676848425909450083}
   - component: {fileID: 227840903667996995}
   - component: {fileID: 203278589172174077}
-  - component: {fileID: 5432457610077840274}
+  - component: {fileID: 4640519139533701783}
   m_Layer: 6
   m_Name: RareMineralsAsteroid
   m_TagString: Untagged
@@ -121,7 +121,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &5432457610077840274
+--- !u!114 &4640519139533701783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,14 +130,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7658400657464203286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 773eb7b99056b430b97dd18cd8b18a44, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e8e67b7b7e3d41978d60e97c3fc0026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minerals:
-  - Name: Pladium
-    Color: {r: 0.6226415, g: 0.37887147, b: 0.37887147, a: 0}
-    Amount: 20
-  maxMineralTypes: 3
+  maxMetalTypes: 3
   maxTotalAmount: 100
   drillRate: 5
   fragmentParticles: {fileID: 0}
+  description: 
+  image: {fileID: -2111077428, guid: 629bed3a0f6ae73418d657508e500479, type: 3}
+  minTotalAmount: 20
+  maxTotalAmount: 100
+  minMetalTypes: 1
+  maxMetalTypes: 3

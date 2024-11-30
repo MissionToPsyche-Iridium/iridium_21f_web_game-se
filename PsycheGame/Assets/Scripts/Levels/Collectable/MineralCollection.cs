@@ -45,10 +45,14 @@ public class Iridium : RareMetal {
 
 [RequireComponent(typeof(Collider2D))]
 public abstract class MineralCollection : MonoBehaviour, ScannableObject {
-    [SerializeField] private List<RareMetal> metals = new();
-    [SerializeField] private int maxMetalTypes = 3;
-    [SerializeField] private int maxTotalAmount = 100;
-    [SerializeField] private float drillRate = 5f;
+    [Header("Metal Properties")]
+    [SerializeField] protected List<RareMetal> metals = new();
+    [SerializeField] protected int maxMetalTypes = 3;
+    [SerializeField] protected int maxTotalAmount = 100;
+    [SerializeField] protected int minMetalTypes = 1;
+    [SerializeField] protected int minTotalAmount = 100;
+    [SerializeField] protected float drillRate = 5f;
+    [Header("Visual & Progession")]
     [SerializeField] private ParticleSystem fragmentParticles;
     [SerializeField] private Progress scanProgress;
     [SerializeField] private string description;
@@ -90,7 +94,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
                 Random.Range(10, maxTotalAmount / metalCount + 1)
             );
             metals.Add(metal);
-            metalGenerators.RemoveAt(randomIndex); // Ensure unique metal types
+            metalGenerators.RemoveAt(randomIndex);
         }
     }
 
