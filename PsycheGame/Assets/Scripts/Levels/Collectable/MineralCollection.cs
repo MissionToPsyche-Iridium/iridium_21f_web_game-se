@@ -47,15 +47,15 @@ public class Iridium : RareMetal {
 [RequireComponent(typeof(Collider2D))]
 public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [Header("Metal Properties")]
-    [SerializeField] protected List<RareMetal> metals = new();
+    [SerializeField] public List<RareMetal> metals = new();
     [SerializeField] protected int maxMetalTypes = 3;
     [SerializeField] protected int maxTotalAmount = 100;
     [SerializeField] protected int minMetalTypes = 1;
     [SerializeField] protected int minTotalAmount = 100;
-    [SerializeField] protected float drillRate = 5f;
+    [SerializeField] public float drillRate = 5f;
     [Header("Visual & Progession")]
     [SerializeField] private ParticleSystem fragmentParticles;
-    [SerializeField] private Progress scanProgress = new Progress(0);
+    [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
 
@@ -129,7 +129,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         Debug.Log($"Collected {minedAmount} of {metalName}");
     }
 
-    private bool IsDepleted() {
+    public bool IsDepleted() {
         foreach (RareMetal metal in metals) {
             if (metal.Amount > 0) {
                 return false;

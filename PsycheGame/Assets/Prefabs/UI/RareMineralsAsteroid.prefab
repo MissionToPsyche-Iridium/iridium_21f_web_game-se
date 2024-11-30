@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 676848425909450083}
   - component: {fileID: 227840903667996995}
   - component: {fileID: 203278589172174077}
-  - component: {fileID: 4640519139533701783}
+  - component: {fileID: 6018018357191059708}
   m_Layer: 6
   m_Name: RareMineralsAsteroid
-  m_TagString: Untagged
+  m_TagString: Mineral
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,7 +121,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &4640519139533701783
+--- !u!114 &6018018357191059708
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,11 +135,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxMetalTypes: 3
   maxTotalAmount: 100
+  minMetalTypes: 1
+  minTotalAmount: 100
   drillRate: 5
   fragmentParticles: {fileID: 0}
   description: 
   image: {fileID: -2111077428, guid: 629bed3a0f6ae73418d657508e500479, type: 3}
-  minTotalAmount: 20
-  maxTotalAmount: 100
-  minMetalTypes: 1
-  maxMetalTypes: 3

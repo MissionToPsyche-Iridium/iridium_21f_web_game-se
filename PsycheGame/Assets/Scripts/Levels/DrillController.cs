@@ -1,11 +1,19 @@
-using System.Collections;
 using UnityEngine;
 
-public class LaserController : MonoBehaviour {
-    [SerializeField] private GameObject laserEffect;
-    [SerializeField] private float laserRange = 5f;
-    [SerializeField] private LayerMask scannableLayer = 6;
+public class DrillController : MonoBehaviour {
+    [Header("Debug Options")]
+    [SerializeField] private bool debugDrawLaserRaycasts = false;
 
+    [Header("Laser Raycast Parameters")]
+    [SerializeField] private float laserRange = 5f; 
+    [SerializeField] private float laserArcAngle = 15f;     
+    [SerializeField] private int rayCount = 10;
+    [SerializeField] private LayerMask drillableMask = 6;
+
+    [Header("Laser Animation")]
+    [SerializeField] private GameObject laserEffect;
+
+    private RaycastHit2D hit;
     private MineralCollection currentAsteroid;
 
     private void Update() {
@@ -26,31 +34,29 @@ public class LaserController : MonoBehaviour {
 
     private void ActivateLaser() {
         laserEffect.SetActive(true);
+    }
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, laserRange);
-        if (hit.collider != null) {
-            currentAsteroid = hit.collider.GetComponent<MineralCollection>();
-            if (currentAsteroid != null) {
-                Debug.Log($"Laser activated. Targeting: {currentAsteroid.name}");
-            }
+    private void OnTriggerEnter2D(Collider2D other) {
+        MineralCollection asteroid = other.GetComponent<MineralCollection>();
+        Debug.Log(asteroid);
+        if (asteroid != null) {
+            currentAsteroid = asteroid;
+            DrillAsteroid();
+            Debug.Log($"Drill activated on: {currentAsteroid.name}");
         }
     }
+
 
     private void DeactivateLaser() {
         laserEffect.SetActive(false);
         currentAsteroid = null;
         Debug.Log("Laser deactivated.");
     }
-
     private void DrillAsteroid() {
-        if (currentAsteroid != null) {
-            Debug.Log($"Drilling asteroid: {currentAsteroid.name}");
-            currentAsteroid.Scan();
-        }
+        Debug.Log("Drilling initatied");
     }
 
     private void OnDrawGizmosSelected() {
-        // Visualize the laser range in the editor
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + transform.up * laserRange);
     }
