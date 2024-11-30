@@ -41,7 +41,10 @@ public class ContainerManager : MonoBehaviour
 	private float PosX, PosY;
 
 	private (float x, float y)[,] chassisGrid;
-	private GridPositionData[,] gridData;  
+	private GridPositionData[,] gridData;
+	public Material tileMaterial;
+	private Sprite tileSprite;
+
 
 	void Start()
 	{
@@ -54,6 +57,8 @@ public class ContainerManager : MonoBehaviour
 				gridData[i, j] = new GridPositionData();
 			}
 		}
+
+		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
 		GenerateContainer();
 	}
@@ -79,7 +84,8 @@ public class ContainerManager : MonoBehaviour
 					newTile.transform.tag = "tile"; 	 
 					newTile.AddComponent<Rigidbody2D>(); 	 
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0;  
-					newTile.GetComponent<BoxCollider2D>().isTrigger = true; 
+					newTile.GetComponent<BoxCollider2D>().isTrigger = true;
+					newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
 						 
 					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
 					newTile.Init(isOffset, x, y, targetX, targetY);    
