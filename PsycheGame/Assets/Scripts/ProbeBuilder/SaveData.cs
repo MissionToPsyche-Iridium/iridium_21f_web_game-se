@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class SaveData : MonoBehaviour
+public class SaveData
 {
     //TODO 11/12 this class has not been tested yet as it depends on ContainerGameData being connected to the ContainerManager and the spawned parts
     public List<GameObject> spawnedParts;

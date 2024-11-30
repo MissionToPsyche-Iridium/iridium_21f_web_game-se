@@ -67,4 +67,8 @@ public sealed class ContainerGameData
         probeDesigns.Add(design); //Adds current design to list of designs
     }
 
+    public List<ProbeDesign> getDesigns() {
+        return probeDesigns;
+    }
+
 }
