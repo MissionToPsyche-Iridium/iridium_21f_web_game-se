@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class RareMetal {
     public string Name { get; protected set; }
@@ -54,7 +55,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] protected float drillRate = 5f;
     [Header("Visual & Progession")]
     [SerializeField] private ParticleSystem fragmentParticles;
-    [SerializeField] private Progress scanProgress;
+    [SerializeField] private Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
 
@@ -157,7 +158,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     public GameObject GameObject => this.gameObject;
 
     public void Scan() {
-        scanProgress.incr(1);
+        scanProgress = scanProgress.incr(1 * Time.deltaTime);
         Debug.Log($"Scanning asteroid. Composition: {string.Join(", ", metals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
     }
 }
