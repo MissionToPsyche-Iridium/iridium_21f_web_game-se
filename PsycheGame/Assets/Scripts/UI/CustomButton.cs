@@ -30,13 +30,11 @@ public class CustomButton : MonoBehaviour, IPointerDownHandler
     }
 
     private AudioClip _swooshSound;
-    const int NUM_PROFILES = 4;
+    const int NUM_PROFILES = 2;
 
     private ColorProfile[] colorProfiles = new ColorProfile[NUM_PROFILES]
     {
         new ColorProfile { color = new Color(1.0f, 1.0f, 1.0f, 1.0f), exposure = 0.0f },
-        new ColorProfile { color = new Color(0.0f, 1.37f, 0f, 1.0f), exposure = -0.5f },
-        new ColorProfile { color = new Color(0.73f, 0.06f, 0f, 1.0f), exposure = 0.25f },
         new ColorProfile { color = new Color(0.95f, 0.87f, 1.47f, 1.0f), exposure = -0.5f }
     };
     private int toggleState;
@@ -68,7 +66,5 @@ public class CustomButton : MonoBehaviour, IPointerDownHandler
         colorAdjustments.postExposure.overrideState = true;
         colorAdjustments.postExposure.value = colorProfiles[toggleState].exposure;
         colorAdjustments.colorFilter.value = colorProfiles[toggleState].color;
-
-        // Debug.Log("Color Adjustments: " + colorAdjustments.colorFilter.value);
     }
 }

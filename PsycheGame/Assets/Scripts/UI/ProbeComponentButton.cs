@@ -17,9 +17,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject SpawnArea { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
-    public float _activeTime;
-    public float _refreshRate = 0.1f;
-    private bool _isDragging;
     private SkinnedMeshRenderer[] _meshRenderer;
     private Material _boundMaterial;
     private Material _sparkMaterial;
@@ -38,36 +35,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
         _sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
-
-        _activeTime = 2.0f;
-    }
-
-    IEnumerator TrailRoutine(float activeTime)
-    {
-        while (activeTime > 0)
-        {
-            Debug.Log(" <PCB> +++Trail Routine+++");
-            activeTime -= _refreshRate;
-
-            if (_meshRenderer == null)
-            {
-                _meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
-
-                Debug.Log(" <PCB> ~~~Generating Skin Mesh Renderer - timer :" + activeTime + "~~~");
-                for (int i = 0; i < _meshRenderer.Length; i++)
-                {
-                    GameObject sObj = new GameObject();
-
-                    MeshRenderer mr = sObj.AddComponent<MeshRenderer>();
-                    MeshFilter mf = sObj.AddComponent<MeshFilter>();
-
-                    mf.mesh = new Mesh();
-                    _meshRenderer[i].BakeMesh(mf.mesh);
-                }
-            }
-            yield return new WaitForSeconds(_refreshRate);
-        }
-        _isDragging = false;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -116,7 +83,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             UpdateIconPosition(eventData);
             Debug.Log(" <PCB> +++Dragging Probe Component: " + ProbeComponent.Name + "+++");
-            StartCoroutine(TrailRoutine(3.0f));
         }
     }
 
