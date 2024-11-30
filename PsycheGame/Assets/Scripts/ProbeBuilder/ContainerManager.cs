@@ -81,7 +81,7 @@ public class ContainerManager : MonoBehaviour
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0;  
 					newTile.GetComponent<BoxCollider2D>().isTrigger = true;
 					newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
-					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
+                    var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
 					newTile.Init(isOffset, x, y, targetX, targetY);    
 					chassisGrid[x, y] = (targetX, targetY);
 					newTile.transform.SetParent(transform);  
