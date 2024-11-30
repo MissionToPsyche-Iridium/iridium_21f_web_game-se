@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using Microsoft.Unity.VisualStudio.Editor;
-using System.Net.Sockets;
 
 /*
     Author: Hannah M.
@@ -28,8 +23,6 @@ using System.Net.Sockets;
 
 public class SpriteDragDrop : MonoBehaviour
 {
-    private UnityEngine.Vector2 mousePosition;
-    private UnityEngine.Vector2 initialPos;
     private ContainerManager containerManager;
     public bool selected;
     public String internalId;
@@ -44,7 +37,6 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
-        activeTime = 2.0f;
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
@@ -54,33 +46,7 @@ public class SpriteDragDrop : MonoBehaviour
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
     
-    IEnumerator TrailRoutine(float activeTime)
-    {
-        while (activeTime > 0)
-        {
-            activeTime -= refreshRate;
-
-            if (meshRenderer == null)
-            {
-                meshRenderer = GetComponentsInChildren<SkinnedMeshRenderer>();
-
-                Debug.Log(" <SDD> ~~~Generating Skin Mesh Renderer - timer :" + activeTime + "~~~");
-                for (int i = 0; i < meshRenderer.Length; i++)
-                {
-                    GameObject sObj = new GameObject();
-
-                    MeshRenderer mr = sObj.AddComponent<MeshRenderer>();
-                    MeshFilter mf = sObj.AddComponent<MeshFilter>();
-
-                    mf.mesh = new Mesh();
-                    meshRenderer[i].BakeMesh(mf.mesh);
-                }
-            }
-            yield return new WaitForSeconds(refreshRate);
-        }
-        isDragging = false;
-    }
-
+    
     private void OnMouseDown()
     {
         selected = true;
