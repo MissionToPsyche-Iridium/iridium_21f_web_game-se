@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
-    Tile.cs
+    Probe Builder:: Tile.cs
     
-    Date: 10/??/2024
+    Date: Oct. 2024
     Description: this script is a stereotype for the specific tile instantiated.  Including the coordinate
     and cell index attributes on the grid.
 */

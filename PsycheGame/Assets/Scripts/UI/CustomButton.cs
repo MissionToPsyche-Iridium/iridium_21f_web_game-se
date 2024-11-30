@@ -17,9 +17,6 @@ using System.Runtime.CompilerServices;
 
     Description: this script provides the behavior for the custom button.  Specifically, toggling
     between a preset profile of color settings.
-
-    v 1.0 - Shawn - initial implementation of the custom button behavior with preset and handle to the Volume component.
-
 */
 public class CustomButton : MonoBehaviour, IPointerDownHandler
 {

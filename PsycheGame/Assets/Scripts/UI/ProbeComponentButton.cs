@@ -17,7 +17,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject SpawnArea { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
-    private SkinnedMeshRenderer[] _meshRenderer;
     private Material _boundMaterial;
     private Material _sparkMaterial;
     private RectTransform _dragPlane;
@@ -66,8 +65,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
 
-        _dragIcon.AddComponent<SkinnedMeshRenderer>();
-        
         _dragIcon.AddComponent<SpriteDragDrop>();
         _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
         _dragIcon.GetComponent<SpriteDragDrop>().internalId = _itemSeed;
