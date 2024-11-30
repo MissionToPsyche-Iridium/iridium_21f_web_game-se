@@ -64,7 +64,7 @@ public class ContainerManager : MonoBehaviour
 		
 		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
 		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
-		this.tileScale = (int)(parentRectTransform.rect.width / 20);
+		this.tileScale = (int)(parentRectTransform.rect.width / 19.5);
 
 		for (int x = 0; x < width; x++)
 		{
@@ -72,8 +72,8 @@ public class ContainerManager : MonoBehaviour
 			{
 				if (tile != null)
 				{
-					var targetX = originX + (tileScale * x);
-					var targetY = originY + (tileScale * y);
+					var targetX = originX + (tileScale * x * 0.93f);
+					var targetY = originY + (tileScale * y * 0.93f);
 					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);  
 					newTile.name = $"Tile {x} {y}"; 		 
 					newTile.transform.tag = "tile"; 	 
