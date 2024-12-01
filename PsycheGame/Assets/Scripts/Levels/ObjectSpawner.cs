@@ -1,8 +1,8 @@
 using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour {
-    [SerializeField] private Spawnable objectToSpawn;
-    [SerializeField] private GameObject boundingArea;
+    [SerializeField] protected Spawnable objectToSpawn;
+    [SerializeField] protected GameObject boundingArea;
     [SerializeField] private int spawnInterval = 1;
     [SerializeField, Min(0)] private int objectLimit = 200;
     [SerializeField] private int initialPopulation = 0;
@@ -21,7 +21,7 @@ public class ObjectSpawner : MonoBehaviour {
     public float DestroyRadius {get { return destoryRadius; }}
     
     private int objectCount = 0;
-    private Vector3 boundingAreaCenter;
+    protected Vector3 boundingAreaCenter;
 
     public void ChildDestroyed() {
         this.objectCount -= 1;
@@ -72,7 +72,7 @@ public class ObjectSpawner : MonoBehaviour {
         return spawnableScript;
     }
 
-    private Vector3 GetRandomPoisiton(bool withinCamera) {
+    protected Vector3 GetRandomPoisiton(bool withinCamera) {
         Vector3 pos = Random.insideUnitCircle;
         if (withinCamera) {
             return pos;
