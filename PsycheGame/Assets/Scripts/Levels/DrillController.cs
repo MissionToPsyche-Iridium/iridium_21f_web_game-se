@@ -1,20 +1,14 @@
 using UnityEngine;
 
 public class DrillController : MonoBehaviour {
-    [Header("Debug Options")]
-    [SerializeField] private bool debugDrawLaserRaycasts = false;
-
     [Header("Laser Raycast Parameters")]
     [SerializeField] private float laserRange = 5f; 
-    [SerializeField] private float laserArcAngle = 15f;     
-    [SerializeField] private int rayCount = 10;
-    [SerializeField] private LayerMask drillableMask = 6;
-
     [Header("Laser Animation")]
     [SerializeField] private GameObject laserEffect;
 
-    private RaycastHit2D hit;
     private MineralCollection currentAsteroid;
+    private const float drillDuration = 2f;
+    private float drillTimer = 0f;
 
     private void Update() {
         HandleLaserActivation();
@@ -41,7 +35,6 @@ public class DrillController : MonoBehaviour {
         Debug.Log(asteroid);
         if (asteroid != null) {
             currentAsteroid = asteroid;
-            DrillAsteroid();
             Debug.Log($"Drill activated on: {currentAsteroid.name}");
         }
     }
@@ -49,11 +42,16 @@ public class DrillController : MonoBehaviour {
 
     private void DeactivateLaser() {
         laserEffect.SetActive(false);
+        drillTimer = 0f;
         currentAsteroid = null;
         Debug.Log("Laser deactivated.");
     }
     private void DrillAsteroid() {
-        Debug.Log("Drilling initatied");
+        drillTimer += Time.deltaTime;
+        if (drillTimer >= drillDuration) {
+            currentAsteroid.Drill();
+            drillTimer = 0f; 
+        }
     }
 
     private void OnDrawGizmosSelected() {

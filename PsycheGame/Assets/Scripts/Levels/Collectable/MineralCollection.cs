@@ -52,7 +52,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] protected int maxTotalAmount = 100;
     [SerializeField] protected int minMetalTypes = 1;
     [SerializeField] protected int minTotalAmount = 100;
-    [SerializeField] public float drillRate = 5f;
+    [SerializeField] public float drillRate = 15f;
     [Header("Visual & Progession")]
     [SerializeField] private ParticleSystem fragmentParticles;
     [SerializeField] public Progress scanProgress = new Progress(0);
@@ -65,6 +65,8 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
     private bool isDrilling = false;
     private MissionState missionState;
+    public GameObject GameObject => this.gameObject;
+
 
     private void Awake() {
         GenerateMetals();
@@ -99,12 +101,18 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
     }
 
-    private void Drill() {
+    public void Drill() {
+        fragmentParticles.gameObject.SetActive(true);
+         if (fragmentParticles != null && !fragmentParticles.isPlaying) {
+            Debug.Log("Activating fragment particle system.");
+            fragmentParticles.Play();
+        }
         foreach (RareMetal metal in metals) {
             if (metal.Amount > 0) {
-                int minedAmount = Mathf.FloorToInt(drillRate * Time.deltaTime);
+                Debug.Log("Amount " + metal.Amount);
+                int minedAmount = Mathf.CeilToInt(drillRate * Time.deltaTime);
                 metal.Amount -= minedAmount;
-
+                Debug.Log("Mined amount" + minedAmount);
                 SpawnFragments(metal.Color, minedAmount);
                 UpdateMissionProgress(minedAmount, metal.Name);
 
@@ -140,22 +148,8 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
     private void OnAsteroidDepleted() {
         Debug.Log("Asteroid fully mined!");
-        Destroy(this.gameObject);
+        Destroy(this.gameObject); 
     }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            isDrilling = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            isDrilling = false;
-        }
-    }
-
-    public GameObject GameObject => this.gameObject;
 
     public void Scan() {
         scanProgress = scanProgress.incr(1 * Time.deltaTime);
