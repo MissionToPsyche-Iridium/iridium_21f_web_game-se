@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
             Inventory.AddProbeComponent(
                 new ProbeComponent(
                     sprite.name,
+                    ProbeComponentType.Custom,
                     "description",
                     sprite
                 )

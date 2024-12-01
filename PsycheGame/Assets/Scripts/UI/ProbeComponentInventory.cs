@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Runtime.CompilerServices;
 
 public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
@@ -12,14 +13,25 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _spawnArea;
+    [SerializeField] private GameObject _filter;
+
+    private enum FilterType
+    {
+        All,
+        Standard,
+        Custom
+    }
 
     private Inventory _inventory;
+    private FilterType _currentFilter;
     private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
 
     public void Start()
     {
         _inventory = _player.GetComponent<Player>().Inventory;
         _inventory.AddObserver(this);
+
+        _currentFilter = FilterType.All;
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
@@ -60,7 +72,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         if (quantity < 1)
         {
             button.tag = "Inactive";
-            image.color = new Color(255, 255, 255, 0.5f);
+            image.color = new Color(255, 255, 255, 0.25f);
         }
 
         probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
@@ -68,6 +80,58 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         probeComponentButton.transform.SetParent(_content.transform);
 
         _componentButtons.Add(new Tuple<ProbeComponent, GameObject>(probeComponent, probeComponentButton));
+    }
+
+    private void Filter()
+    {
+        if (_currentFilter == FilterType.All)
+        {
+            _filter.GetComponent<TextMeshProUGUI>().text = "All";
+            foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+            {
+                tuple.Item2.SetActive(true);
+            }
+        }
+        else
+        {
+            ProbeComponentType type;
+            switch (_currentFilter)
+            {
+                case FilterType.Custom:
+                    type = ProbeComponentType.Custom;
+                    _filter.GetComponent<TextMeshProUGUI>().text = "Custom";
+                    break;
+
+                default:
+                    type = ProbeComponentType.Standard;
+                    _filter.GetComponent<TextMeshProUGUI>().text = "Standard";
+                    break;
+            }
+
+            foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+            {
+                if (tuple.Item1.Type == type)
+                {
+                    tuple.Item2.SetActive(true);
+                }
+                else
+                {
+                    tuple.Item2.SetActive(false);
+                }
+            }
+        }
+    }
+
+    public void PreviousFilter()
+    {
+        _currentFilter = _currentFilter == FilterType.All ? FilterType.Custom : _currentFilter - 1;
+        Filter();
+    }
+
+    public void NextFilter()
+    {
+        _currentFilter = _currentFilter == FilterType.Custom ? FilterType.All : _currentFilter + 1;
+        Filter();
     }
 
     public void ItemUpdated(object item, int quantity)
