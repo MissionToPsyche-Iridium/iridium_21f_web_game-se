@@ -110,9 +110,10 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         foreach (RareMetal metal in metals) {
             if (metal.Amount > 0) {
                 Debug.Log("Amount " + metal.Amount);
-                int minedAmount = Mathf.CeilToInt(drillRate * Time.deltaTime);
+                int minedAmount = Random.Range(15, 26);
+                minedAmount = Mathf.Min(minedAmount, metal.Amount);
                 metal.Amount -= minedAmount;
-                Debug.Log("Mined amount" + minedAmount);
+                Debug.Log("Mined amount " + minedAmount);
                 SpawnFragments(metal.Color, minedAmount);
                 UpdateMissionProgress(minedAmount, metal.Name);
 
@@ -147,6 +148,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void OnAsteroidDepleted() {
+        fragmentParticles.gameObject.SetActive(false);
         Debug.Log("Asteroid fully mined!");
         Destroy(this.gameObject); 
     }
