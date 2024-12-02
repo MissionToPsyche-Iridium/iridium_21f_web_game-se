@@ -13,7 +13,7 @@ public class RedoButton : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         _buildManager = BuildManager.GetInstance();
-        _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
+        _swooshSound = Resources.Load<AudioClip>("Audio/light-beam-hit-01");
         this.AddComponent<AudioSource>();
 
     }
