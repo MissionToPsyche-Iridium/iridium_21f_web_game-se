@@ -2715,7 +2715,7 @@ MonoBehaviour:
   _content: {fileID: 385889573}
   _buttonPrefab: {fileID: 3426248820051524260, guid: e8e3732af200392408a03367eeb3c5dc, type: 3}
   _spawnArea: {fileID: 998425892}
-  _filter: {fileID: 760245041}
+  _filter: {fileID: 0}
 --- !u!1 &1205565827
 GameObject:
   m_ObjectHideFlags: 0
