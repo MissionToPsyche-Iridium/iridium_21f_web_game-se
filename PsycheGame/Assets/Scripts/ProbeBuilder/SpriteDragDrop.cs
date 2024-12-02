@@ -27,27 +27,16 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
-<<<<<<< HEAD
-=======
-        
->>>>>>> probe-builder-dev
+
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
-        
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
-        
         UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
         originalMaterial = image.material;
         sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
 
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
-<<<<<<< HEAD
-    
-    
-=======
-
->>>>>>> probe-builder-dev
     private void OnMouseDown()
     {
         selected = true;

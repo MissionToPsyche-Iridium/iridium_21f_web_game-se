@@ -64,7 +64,7 @@ public class ContainerManager : MonoBehaviour
 		
 		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.7);
 		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.5);
-		this.tileScale = (int)(parentRectTransform.rect.width / 19.5);
+		this.tileScale = (int)(parentRectTransform.rect.width / 18);
 
 		for (int x = 0; x < width; x++)
 		{
