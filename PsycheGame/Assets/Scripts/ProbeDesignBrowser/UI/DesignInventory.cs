@@ -9,14 +9,15 @@ public class DesignInventory : MonoBehaviour
 {
     public List<ProbeDesign> designs;
 
-    private List<ProbeDesign> testDesigns;
+    //private List<ProbeDesign> testDesigns;
     
-    public List<Sprite> testSprites;
+    //public List<Sprite> testSprites;
 
     // Start is called before the first frame update
     void Start()
     {
-        createTestDesigns();
+        //createTestDesigns();
+        designs = ContainerGameData.Instance.getDesigns();
 
         foreach(ProbeDesign design in designs) {
             GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
@@ -37,14 +38,14 @@ public class DesignInventory : MonoBehaviour
         designs = ContainerGameData.Instance.getDesigns();
     }
 
-    private void createTestDesigns() {
-        testDesigns = new List<ProbeDesign>();
-        int num = 1;
-        foreach(Sprite sprite in testSprites) {
-            ProbeDesign pd = new ProbeDesign(sprite, "Ship " + num, "", new List<GameObject>());
-            testDesigns.Add(pd);
-        }
+    // private void createTestDesigns() {
+    //     testDesigns = new List<ProbeDesign>();
+    //     int num = 1;
+    //     foreach(Sprite sprite in testSprites) {
+    //         ProbeDesign pd = new ProbeDesign(sprite, "Ship " + num, "", new List<GameObject>());
+    //         testDesigns.Add(pd);
+    //     }
 
 
-    }
+    // }
 }

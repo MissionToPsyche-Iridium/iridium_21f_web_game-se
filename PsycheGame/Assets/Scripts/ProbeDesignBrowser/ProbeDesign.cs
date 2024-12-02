@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-public class ProbeDesign : MonoBehaviour
+public class ProbeDesign
 {
     public Sprite sprite; //flattened image of design
     public String name; //name of design

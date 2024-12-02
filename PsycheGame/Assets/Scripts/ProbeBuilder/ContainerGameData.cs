@@ -12,9 +12,7 @@ public sealed class ContainerGameData
     private static readonly object padlock = new object();
     private List<Tile> tiles = new List<Tile>();
     private List<GameObject> spawnedParts; //TODO choose part type (GameObject, ProbeComponent, something else?)
-    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>(); //TODO send to DesignInventory class
-    private SaveData saveData = new SaveData();
-    
+    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>(); //TODO send to DesignInventory class    
     private ContainerGameData() {}
 
     public static ContainerGameData Instance {
@@ -59,11 +57,11 @@ public sealed class ContainerGameData
     } 
 
     public void saveProbeDesign() {
-        List<GameObject> parts = BuildManager.GetInstance().GetSpawnedProbeComponents(); //get current spawned parts
         Sprite sprite = GameObject.Find("ContainerPanel").GetComponent<Sprite>();
         String name = "Design " + probeDesigns.Count;
-        String json = saveData.ToJson(parts); //saves current design to json; could be improved to save all designs to json but that would require changing SaveData to take in a List<List<>> type
-        ProbeDesign design = new ProbeDesign(sprite, "Design" + "", json, parts);
+        List<GameObject> parts = BuildManager.GetInstance().GetSpawnedProbeComponents(); //get current spawned parts
+        String json = SaveData.WriteToFile(parts); //saves design's parts to json
+        ProbeDesign design = new ProbeDesign(sprite, name, "", parts);
         probeDesigns.Add(design); //Adds current design to list of designs
     }
 
