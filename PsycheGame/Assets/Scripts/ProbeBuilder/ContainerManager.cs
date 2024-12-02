@@ -9,14 +9,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /* 
-	Application: Probe builder
-	File: containerManager 
-	version: 0.1
+	Probe builder :: containerManager.cs
+	version: 0.9 candidate
 	Description: this script is responsible for generating the sandwich chassis that holds the probe components.  
-
-	Assumptions (to be validated): this script will be developed in tandem with the (probe builder) user interface script (userInput) that performs
-	mouse and keyboard interactions.  Based on the data design, the data structure components that holds the probe component information will be accessed by the
-	userInput script to determine the position of the component relative to the chassis and makes the appropriate changes back to the data structure component.
 */
 
 class GridPositionData {
@@ -41,7 +36,10 @@ public class ContainerManager : MonoBehaviour
 	private float PosX, PosY;
 
 	private (float x, float y)[,] chassisGrid;
-	private GridPositionData[,] gridData;  
+	private GridPositionData[,] gridData;
+	public Material tileMaterial;
+	private Sprite tileSprite;
+
 
 	void Start()
 	{
@@ -54,6 +52,8 @@ public class ContainerManager : MonoBehaviour
 				gridData[i, j] = new GridPositionData();
 			}
 		}
+
+		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
 		GenerateContainer();
 	}
@@ -79,9 +79,9 @@ public class ContainerManager : MonoBehaviour
 					newTile.transform.tag = "tile"; 	 
 					newTile.AddComponent<Rigidbody2D>(); 	 
 					newTile.GetComponent<Rigidbody2D>().gravityScale = 0;  
-					newTile.GetComponent<BoxCollider2D>().isTrigger = true; 
-						 
-					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
+					newTile.GetComponent<BoxCollider2D>().isTrigger = true;
+					newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
+                    var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
 					newTile.Init(isOffset, x, y, targetX, targetY);    
 					chassisGrid[x, y] = (targetX, targetY);
 					newTile.transform.SetParent(transform);  

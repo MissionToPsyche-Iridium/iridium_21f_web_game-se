@@ -3,21 +3,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 /*
-    Author: Hannah M.
-    Date: 10/??/2024
+    Probe Builder :: SpriteDragDrop.cs
+
+    Date: Oct. 2024
     Description: this script provides the drag-and-drop behavior for the probe parts.  It also contains the logic to snap the probe part 
     to the grid tile when the probe part is in contact with the tile.
-
-    v 1.1 - Shawn (11/6)
-    - Updated MouseUp() method to take the tile position for placement of the game object (probe part)
-
-    v 1.2 - Shawn (11/10)
-    - Refactored OnMouseUp method to simplify the probe item placement check logic, including validation of grid position
-
-    v [1.3] - Shawn (11/11) in process to add logic to handle removal and update of grid status and visual indicator
-
-    v [2] - Shawn (11/22) updated snap logic to add and remove from a grid position.  still need to associate each occupying grid position
-    - with a unique probe item id to differentiate between the probe items
        
 */
 
@@ -37,21 +27,32 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
+<<<<<<< HEAD
+=======
+        
+>>>>>>> probe-builder-dev
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
+        
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
+        
         UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
         originalMaterial = image.material;
         sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
+
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
+<<<<<<< HEAD
     
     
+=======
+
+>>>>>>> probe-builder-dev
     private void OnMouseDown()
     {
         selected = true;
         offset = transform.position - MouseWorldPosition();
-        this.gameObject.layer = 9;
+        gameObject.layer = 9;
     }
 
     private void OnMouseDrag()
@@ -83,9 +84,9 @@ public class SpriteDragDrop : MonoBehaviour
                     UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
                     image.material = sparkMaterial;
                                     
-                    if (this.gameObject.layer <= 9)
+                    if (gameObject.layer <= 9)
                     {
-                        this.gameObject.layer = 10;
+                        gameObject.layer = 10;
                     }
                 }
             }
