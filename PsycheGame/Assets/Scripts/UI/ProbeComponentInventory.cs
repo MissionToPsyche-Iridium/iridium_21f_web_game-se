@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
-    [SerializeField] private GameObject _player;
+    [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _spawnArea;
@@ -28,7 +28,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
     public void Start()
     {
-        _inventory = _player.GetComponent<Player>().Inventory;
+        _inventory = Player.GetInstance().Inventory;
         _inventory.AddObserver(this);
 
         _currentFilter = FilterType.All;
@@ -67,7 +67,14 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
         Image image = button.GetComponent<Image>();
         image.preserveAspect = true;
-        image.sprite = probeComponent.Sprite;
+        foreach (Sprite sprite in _probeSprites)
+        {
+            if (sprite.name.Equals(probeComponent.Sprite))
+            {
+                image.sprite = sprite;
+                break;
+            }
+        }
 
         if (quantity < 1)
         {

@@ -1,31 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player
 {
-    [SerializeField] private Sprite[] _probeSprites;
+    private Player() { }
+
+    private static Player _instance;
+
+    public static Player GetInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new Player();
+        }
+        return _instance;
+    }
 
     public Inventory Inventory { get; private set; }
 
-    public void Awake()
+    public void Initialize(List<Tuple<ProbeComponent, int>> startingInventory)
     {
         Inventory = new Inventory();
-        foreach (Sprite sprite in _probeSprites)
+        foreach (Tuple<ProbeComponent, int> tuple in startingInventory)
         {
-            Inventory.AddProbeComponent(
-                new ProbeComponent(
-                    sprite.name,
-                    ProbeComponentType.Custom,
-                    "description",
-                    sprite
-                )
-            );
+            Inventory.AddProbeComponent(tuple.Item1, tuple.Item2);
         }
-    }
-
-    public void Start()
-    {
-        BuildManager.GetInstance().Initialize(Inventory);
     }
 }
