@@ -54,7 +54,7 @@ public class TetherRenderer : MonoBehaviour {
 
     private void DrawTether() {
         if (!strightLine) {
-            if (lineRenderer.GetPosition(percision - 1).x == logic.tetherPoint.x) {
+            if (Mathf.Floor(lineRenderer.GetPosition(percision - 1).x) == Mathf.Floor(logic.tetherPoint.x)) {
                 strightLine = true;
             } else {
                 DrawTetherAnim();
