@@ -151,8 +151,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                 ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
 
                 GameObject.Find("PartName").GetComponentInChildren<TMP_Text>().text = probeComponent.Name;
-                GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = InfoPanelData.getDescription(probeComponent.Name);
-                GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = probeComponent.Sprite;
+                GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = probeComponent.Description;
+                GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = GetComponent<Image>().sprite;
     }
 
     public void OnPointerExit(PointerEventData eventData)

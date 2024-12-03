@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using Microsoft.Unity.VisualStudio.Editor;
-using System.Net.Sockets;
 
 /*
     Probe Builder :: SpriteDragDrop.cs
@@ -18,8 +13,6 @@ using System.Net.Sockets;
 
 public class SpriteDragDrop : MonoBehaviour
 {
-    private UnityEngine.Vector2 mousePosition;
-    private UnityEngine.Vector2 initialPos;
     private ContainerManager containerManager;
     public bool selected;
     public String internalId;
@@ -34,19 +27,16 @@ public class SpriteDragDrop : MonoBehaviour
     private void Start()
     {
         selected = false;
-        
+
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
-        
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         this.AddComponent<AudioSource>();
-        
         UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
         originalMaterial = image.material;
         sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
 
         Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
     }
-
     private void OnMouseDown()
     {
         selected = true;

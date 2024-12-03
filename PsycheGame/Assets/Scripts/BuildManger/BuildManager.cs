@@ -29,9 +29,9 @@ public class BuildManager
     private Inventory _inventory;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
-    public void Initialize(Inventory inventory)
+    public void Initialize()
     {
-        _inventory = inventory;
+        _inventory = Player.GetInstance().Inventory;
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();
         _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
