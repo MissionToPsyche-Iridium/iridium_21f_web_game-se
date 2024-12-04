@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a293352c429424290b4cd0a4923706, type: 3}
+  m_Name: LevelConfig 1
+  m_EditorClassIdentifier: 
+  levelName: Asteroid Danger
+  rareAsteroidCount: 10
+  RMscaleMin: 0.6
+  RMscaleMax: 1.2
+  asteroidSpawnInterval: 8
+  asteroidObjectLimit: 15
+  ateroidInitialPopulation: 10
+  asteroidScaleMin: 0.4
+  asteroidScaleMax: 1
+  asteroidVelocityMax: 3
+  asteroidVelocityMin: 1
+  missionTimer: 240
+  objectives:
+  - objectiveType: 0
+    description: Collect Rare Metals
+    targetAmount: 100
+    currentProgress: 0

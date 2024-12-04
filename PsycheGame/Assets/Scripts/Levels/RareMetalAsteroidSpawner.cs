@@ -4,10 +4,10 @@ using UnityEngine;
 public class RareMetalAsteroidSpawner : MonoBehaviour {
     [SerializeField] private GameObject rareMetalAsteroidPrefab;
     [SerializeField] private GameObject boundingArea;
-    [SerializeField, Min(1)] private int rareAsteroidCount = 15;
+    [SerializeField, Min(1)] public int rareAsteroidCount = 15;
     private Vector3 boundingAreaCenter;
-    [SerializeField, Min(0.1f)] private float scaleMin = 1f;
-    [SerializeField, Min(0.1f)] private float scaleMax = 5f;
+    [SerializeField, Min(0.1f)] public float scaleMin = 1f;
+    [SerializeField, Min(0.1f)] public float scaleMax = 5f;
 
     private void Start()
     {
@@ -21,8 +21,13 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
         SpawnRareAsteroids();
     }
 
-    private void SpawnRareAsteroids()
+    public void SpawnRareAsteroids()
     {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         for (int i = 0; i < rareAsteroidCount; i++)
         {
             Vector3 position = GetRandomPosition();

@@ -3,15 +3,15 @@ using UnityEngine;
 public class ObjectSpawner : MonoBehaviour {
     [SerializeField] protected Spawnable objectToSpawn;
     [SerializeField] protected GameObject boundingArea;
-    [SerializeField] private int spawnInterval = 1;
-    [SerializeField, Min(0)] private int objectLimit = 200;
-    [SerializeField] private int initialPopulation = 0;
+    [SerializeField] public int spawnInterval = 1;
+    [SerializeField, Min(0)] public int objectLimit = 200;
+    [SerializeField] public int initialPopulation = 0;
 
     [Header("Spawned Object Properties")]
-    [SerializeField] private float scaleMin = 1f;
-    [SerializeField] private float scaleMax = 5f;
-    [SerializeField, Min(0f)] private float velocityMax = 20f;
-    [SerializeField, Min(0f)] private float velocityMin = 1f;
+    [SerializeField] public float scaleMin = 1f;
+    [SerializeField] public float scaleMax = 5f;
+    [SerializeField, Min(0f)] public float velocityMax = 20f;
+    [SerializeField, Min(0f)] public float velocityMin = 1f;
 
     [Header("Spawnning Area")]
     [SerializeField] private bool showRadiusInEditor = true;
@@ -27,7 +27,7 @@ public class ObjectSpawner : MonoBehaviour {
         this.objectCount -= 1;
     }
 
-    private void Start() {
+    public void Start() {
         boundingAreaCenter = boundingArea.GetComponent<Renderer>().bounds.center;
         InitialPopulation();
     }
