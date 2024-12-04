@@ -1,83 +1,95 @@
 
-using Microsoft.Unity.VisualStudio.Editor;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+using System.Collections.Generic;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] GameObject  missionObjectiveModalPanel;
-    [SerializeField] GameObject pauseModalPanel;
-    [SerializeField] MissionTimer missionTimer;
+    public static LevelManager Instance { get; private set; }
 
-    public static bool IsGamePaused { get; private set; } = true;
+    [SerializeField] private List<LevelConfig> levels; 
+    private int currentLevelIndex = 0;
+
+    [SerializeField] private RareMetalAsteroidSpawner spawner; 
+    [SerializeField] private MissionState missionState; 
+    [SerializeField] private float missionTimeLeft;
 
 
-   void Update()
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Instance != null && Instance != this)
         {
-            if (IsGamePaused)
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        LoadLevel(currentLevelIndex);
+    }
+
+    private void Update()
+    {
+        if (missionTimeLeft > 0)
+        {
+            missionTimeLeft -= Time.deltaTime;
+            if (missionTimeLeft <= 0)
             {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
+                EndLevel(false);
             }
         }
-    }
-    public void QuitGame()
-    {
-        SceneManager.LoadScene("MainMenu");
-    }
 
-    public void StartGame()
-    {
-        missionObjectiveModalPanel.SetActive(false);
-        Time.timeScale = 1f;
-        IsGamePaused = false;
-        missionTimer.StartMissionTimer();
-    }
-
-
-    public void PauseGame()
-    {
-        IsGamePaused = true;
-        UpdateButtonText(IsGamePaused);
-        Time.timeScale = 0f;
-        missionObjectiveModalPanel.SetActive(true);
-    }
-
-    public void ResumeGame()
-    {
-        missionObjectiveModalPanel.SetActive(false);
-        Time.timeScale = 1f;
-        IsGamePaused = false;
-    }
-
-    public void RestartGame()
-    {
-        pauseModalPanel.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-
-    public void UpdateButtonText(bool isPaused)
-    {
-        Transform textTransform = missionObjectiveModalPanel.transform.Find("BeginResumeText");
-
-        if (textTransform != null)
+        if (missionState.IsMissionComplete)
         {
-            TextMeshProUGUI textComponent = textTransform.GetComponent<TextMeshProUGUI>();
-            if (textComponent != null)
-            {
-                textComponent.text = isPaused ? "Resume" : "Begin";
-            }
+            EndLevel(true);
+        }
+    }
+
+    public void LoadLevel(int levelIndex)
+    {
+        if (levelIndex >= levels.Count)
+        {
+            Debug.Log("All levels completed!");
+            return;
+        }
+
+        currentLevelIndex = levelIndex;
+        LevelConfig config = levels[levelIndex];
+
+        spawner.rareAsteroidCount = config.rareAsteroidCount;
+        spawner.scaleMin = config.scaleMin;
+        spawner.scaleMax = config.scaleMax;
+
+        spawner.SpawnRareAsteroids();
+
+        missionState.objectives = new List<MissionState.MissionObjective>(config.objectives);
+        missionState.ResetObjectives();
+
+        missionTimeLeft = config.missionTimer;
+
+        Debug.Log($"Loaded Level: {config.levelName}");
+    }
+
+    private void EndLevel(bool success)
+    {
+        if (success)
+        {
+            Debug.Log($"Level {currentLevelIndex} Complete!");
+            LoadLevel(currentLevelIndex + 1);
         }
         else
         {
-            Debug.LogError("BeginResumeText object not found under the MissionObjectiveModalPanel.");
+            Debug.Log($"Level {currentLevelIndex} Failed.");
+            RestartLevel();
         }
+    }
+
+    private void RestartLevel()
+    {
+        LoadLevel(currentLevelIndex);
     }
 }
