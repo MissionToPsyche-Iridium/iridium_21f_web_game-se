@@ -2,7 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelController : MonoBehaviour {
+public class PauseHandler : MonoBehaviour 
+{
 
     [SerializeField] private GameObject missionObjectiveModalPanel; 
     [SerializeField] private GameObject pauseModalPanel; 
