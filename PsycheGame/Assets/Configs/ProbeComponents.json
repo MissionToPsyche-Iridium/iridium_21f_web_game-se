@@ -4,64 +4,55 @@
             "Id": "PC1",
             "Name": "DCOS",
             "Type": 1,
-            "Description": "The Deep Space Optical Communication experiment uses a flight laser transceiver and ground laser transmitter and receiver. It is a new technology for increasing bandwidth.",
-            "Sprite": "DCOS"
+            "Description": "The Deep Space Optical Communication experiment uses a flight laser transceiver and ground laser transmitter and receiver. It is a new technology for increasing bandwidth."
         },
         {
             "Id": "PC2",
             "Name": "Gamma Ray Spectrometer",
             "Type": 1,
-            "Description": "This instrument measures the distribution of the intensity of gamma radiation versus the energy of photon.",
-            "Sprite": "Gamma Ray Spectrometer"
+            "Description": "This instrument measures the distribution of the intensity of gamma radiation versus the energy of photon."
         },
         {
             "Id": "PC3",
             "Name": "Hull-effect Thruster",
             "Type": 1,
-            "Description": "This instrument uses a magnetic field to ionize the propellent and produce thrust.",
-            "Sprite": "Hull-effect Thruster"
+            "Description": "This instrument uses a magnetic field to ionize the propellent and produce thrust."
         },
         {
             "Id": "PC4",
             "Name": "Multilayer Insulation",
             "Type": 1,
-            "Description": "This is thermal material reduces heat loss by thermal radiation.",
-            "Sprite": "Multilayer Insulation"
+            "Description": "This is thermal material reduces heat loss by thermal radiation."
         },
         {
             "Id": "PC5",
             "Name": "Multispectral Imager",
             "Type": 1,
-            "Description": "This device captures images within wavelengths across the electromagnetic spectrum invisible to the human eye.",
-            "Sprite": "Multispectral Imager"
+            "Description": "This device captures images within wavelengths across the electromagnetic spectrum invisible to the human eye."
         },
         {
             "Id": "PC6",
             "Name": "Neutron Spectrometer",
             "Type": 1,
-            "Description": "This instrument detects neutrons in different energy bands and is used for finding hydrogen.",
-            "Sprite": "Neutron Spectrometer"
+            "Description": "This instrument detects neutrons in different energy bands and is used for finding hydrogen."
         },
         {
             "Id": "PC7",
             "Name": "Propellant",
             "Type": 1,
-            "Description": "This type of propellant uses xenon and is the most common used for ion propulsion.",
-            "Sprite": "Propellant"
+            "Description": "This type of propellant uses xenon and is the most common used for ion propulsion."
         },
         {
             "Id": "PC8",
             "Name": "Solar Panel",
             "Type": 1,
-            "Description": "This instrument absorbs the sun's rays as a source of energy for generating electricity and heating.",
-            "Sprite": "Solar Panel"
+            "Description": "This instrument absorbs the sun's rays as a source of energy for generating electricity and heating."
         },
         {
             "Id": "PC9",
             "Name": "X-Band Radio",
             "Type": 1,
-            "Description": "This instrument uses microwaves in the range of 8-12 GHz and offer higher data rates and accuracy than other bands.",
-            "Sprite": "X-Band Radio"
+            "Description": "This instrument uses microwaves in the range of 8-12 GHz and offer higher data rates and accuracy than other bands."
         }
     ]
 }

@@ -38,7 +38,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (gameObject.tag.Equals("Inactive"))
+        if (gameObject.tag.Equals("Inactive") || eventData.button != PointerEventData.InputButton.Left)
         {
             return;
         }

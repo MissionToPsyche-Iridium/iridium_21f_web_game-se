@@ -16,14 +16,12 @@ public class ProbeComponent
     public string Name;
     public ProbeComponentType Type;
     public string Description;
-    public string Sprite;
 
-    public ProbeComponent(string id, string name, ProbeComponentType type, string description, string sprite)
+    public ProbeComponent(string id, string name, ProbeComponentType type, string description)
     {
         Id = id;
         Type = type;
         Name = name;
         Description = description;
-        Sprite = sprite;
     }
 }

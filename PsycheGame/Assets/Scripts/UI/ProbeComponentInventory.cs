@@ -69,7 +69,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         image.preserveAspect = true;
         foreach (Sprite sprite in _probeSprites)
         {
-            if (sprite.name.Equals(probeComponent.Sprite))
+            if (sprite.name.Equals(probeComponent.Id))
             {
                 image.sprite = sprite;
                 break;

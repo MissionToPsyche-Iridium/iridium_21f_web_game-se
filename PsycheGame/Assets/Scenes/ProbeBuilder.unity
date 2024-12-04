@@ -206,7 +206,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 801ef8325d28451419bd58a557257ec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  probeComponentsConfig: {fileID: 4900000, guid: d31eba3136a6d7a4d890145719b01224, type: 3}
+  probeComponentConfig: {fileID: 4900000, guid: d31eba3136a6d7a4d890145719b01224, type: 3}
+  probeComponentInventoryConfig: {fileID: 4900000, guid: 7df4e3e479a62704fa6f6521cb310ce1, type: 3}
 --- !u!4 &163075595
 Transform:
   m_ObjectHideFlags: 0
