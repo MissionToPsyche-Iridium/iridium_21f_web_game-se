@@ -45,6 +45,9 @@ TagManager:
   - 
   - PlayerShip
   m_SortingLayers:
+  - name: BelowDefault
+    uniqueID: 1780404353
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
