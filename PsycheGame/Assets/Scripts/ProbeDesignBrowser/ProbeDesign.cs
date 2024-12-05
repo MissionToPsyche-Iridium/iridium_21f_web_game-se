@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class ProbeDesign
 {
-    public Sprite sprite; //flattened image of design
-    public String name; //name of design
+    public Sprite designSprite; //flattened image of design
+    public String designName; //name of design
     private String json; //contains the probe parts attached (names and locations) these are saved in the container game data class
 
     private List<GameObject> parts;
@@ -15,8 +15,8 @@ public class ProbeDesign
     //private List<ProbeComponent> parts;
 
     public ProbeDesign(Sprite sprite, String name, String json, List<GameObject> parts){
-        this.sprite = sprite;
-        this.name = name;
+        designSprite = sprite;
+        designName = name;
         this.json = json;
         this.parts = parts;
     }
