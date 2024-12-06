@@ -7,7 +7,7 @@ public class MissionTimer : MonoBehaviour
     [SerializeField] private GameObject modalPanel; 
     [SerializeField] private GameObject timerText; 
 
-    private float timeRemaining;
+    public float timeRemaining;
     private bool isTimerRunning = false;
 
     void Start()
