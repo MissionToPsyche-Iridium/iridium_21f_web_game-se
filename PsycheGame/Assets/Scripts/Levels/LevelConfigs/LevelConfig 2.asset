@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a293352c429424290b4cd0a4923706, type: 3}
   m_Name: LevelConfig 2
   m_EditorClassIdentifier: 
-  levelName: 
-  rareAsteroidCount: 0
-  RMscaleMin: 0
-  RMscaleMax: 0
-  asteroidSpawnInterval: 0
-  asteroidObjectLimit: 0
-  ateroidInitialPopulation: 0
-  asteroidScaleMin: 0
-  asteroidScaleMax: 0
-  asteroidVelocityMax: 0
-  asteroidVelocityMin: 0
-  missionTimer: 0
-  objectives: []
+  levelName: Meteor Mayhem
+  rareAsteroidCount: 15
+  RMscaleMin: 0.7
+  RMscaleMax: 1.5
+  asteroidSpawnInterval: 6
+  asteroidObjectLimit: 20
+  ateroidInitialPopulation: 15
+  asteroidScaleMin: 0.5
+  asteroidScaleMax: 1.2
+  asteroidVelocityMax: 4
+  asteroidVelocityMin: 1.5
+  missionTimer: 180
+  objectives:
+  - objectiveType: 0
+    description: Collect Rare Metals
+    targetAmount: 140
+    currentProgress: 0
