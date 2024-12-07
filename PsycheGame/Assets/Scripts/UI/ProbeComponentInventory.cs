@@ -13,7 +13,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _spawnArea;
-    [SerializeField] private GameObject _filter;
+    [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
 
     private enum FilterType
     {
@@ -94,6 +94,9 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         if (_currentFilter == FilterType.All)
         {
             _filter.GetComponent<TextMeshProUGUI>().text = "All";
+            _filterLeft.SetActive(false);
+            _filterRight.SetActive(true);
+
             foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
             {
                 tuple.Item2.SetActive(true);
@@ -106,12 +109,20 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
             {
                 case FilterType.Custom:
                     type = ProbeComponentType.Custom;
+
                     _filter.GetComponent<TextMeshProUGUI>().text = "Custom";
+                    _filterLeft.SetActive(true);
+                    _filterRight.SetActive(false);
+
                     break;
 
                 default:
                     type = ProbeComponentType.Standard;
+
                     _filter.GetComponent<TextMeshProUGUI>().text = "Standard";
+                    _filterLeft.SetActive(true);
+                    _filterRight.SetActive(true);
+
                     break;
             }
 
@@ -131,13 +142,21 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
     public void PreviousFilter()
     {
-        _currentFilter = _currentFilter == FilterType.All ? FilterType.Custom : _currentFilter - 1;
+        if (_currentFilter == FilterType.All)
+        {
+            return;
+        }
+        _currentFilter = _currentFilter - 1;
         Filter();
     }
 
     public void NextFilter()
     {
-        _currentFilter = _currentFilter == FilterType.Custom ? FilterType.All : _currentFilter + 1;
+        if (_currentFilter == FilterType.Custom)
+        {
+            return;
+        }
+        _currentFilter = _currentFilter + 1;
         Filter();
     }
 

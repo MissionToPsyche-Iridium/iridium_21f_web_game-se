@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 10
+    m_Left: 20
     m_Right: 20
     m_Top: 10
     m_Bottom: 10
@@ -2666,6 +2666,8 @@ MonoBehaviour:
   _buttonPrefab: {fileID: 3426248820051524260, guid: e8e3732af200392408a03367eeb3c5dc, type: 3}
   _spawnArea: {fileID: 998425892}
   _filter: {fileID: 760245041}
+  _filterLeft: {fileID: 1560660014}
+  _filterRight: {fileID: 271445500}
 --- !u!1 &1205565827
 GameObject:
   m_ObjectHideFlags: 0
@@ -3662,7 +3664,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1560660015
 RectTransform:
   m_ObjectHideFlags: 0
