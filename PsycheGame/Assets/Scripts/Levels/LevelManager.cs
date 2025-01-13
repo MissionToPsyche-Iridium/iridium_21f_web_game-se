@@ -17,7 +17,7 @@ public class LevelManager : MonoBehaviour
     private float missionTimeRemaining;
     private float missionDuration = 180f;
     private bool isTimerRunning;
-
+    private bool isPaused = false;
 
     private void Awake()
     {
@@ -34,6 +34,11 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         LoadLevel(currentLevelIndex);
+    }
+
+    public void StartMissionTimer()
+    {
+        UpdateMissionTimer();
     }
 
     private void UpdateMissionTimer()
@@ -97,6 +102,24 @@ public class LevelManager : MonoBehaviour
         Debug.Log($"Loaded Level: {config.levelName}");
     }
 
+    public void PauseGame()
+    {
+        if (isPaused) return;
+
+        isPaused = true;
+        Time.timeScale = 0f; 
+        Debug.Log("Game Paused");
+    }
+
+    public void ResumeGame()
+    {
+        if (!isPaused) return;
+
+        isPaused = false;
+        Time.timeScale = 1f;
+        Debug.Log("Game Resumed");
+    }
+
     private void EndLevel(bool success)
     {
         if (success)
@@ -111,7 +134,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         LoadLevel(currentLevelIndex);
     }
