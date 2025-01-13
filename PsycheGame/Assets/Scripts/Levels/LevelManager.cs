@@ -12,8 +12,11 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
+    [SerializeField] private MissionTimer missionTimerUI;
     private MissionState missionState; 
-    private MissionTimer missionTimeLeft;
+    private float missionTimeRemaining;
+    private float missionDuration = 180f;
+    private bool isTimerRunning;
 
 
     private void Awake()
@@ -33,12 +36,21 @@ public class LevelManager : MonoBehaviour
         LoadLevel(currentLevelIndex);
     }
 
+    private void UpdateMissionTimer()
+    {
+        missionTimeRemaining -= Time.deltaTime;
+        missionTimeRemaining = Mathf.Max(missionTimeRemaining, 0);
+
+        missionTimerUI.UpdateTimerUI(missionTimeRemaining);
+    }
+
     private void Update()
     {
-        if (missionTimeLeft.timeRemaining > 0)
+        if (isTimerRunning)
         {
-            missionTimeLeft.timeRemaining -= Time.deltaTime;
-            if (missionTimeLeft.timeRemaining <= 0)
+            UpdateMissionTimer();
+
+            if (missionTimeRemaining <= 0)
             {
                 EndLevel(false);
             }
@@ -80,7 +92,7 @@ public class LevelManager : MonoBehaviour
         missionState.objectives = new List<MissionState.MissionObjective>(config.objectives);
         missionState.ResetObjectives();
 
-        missionTimeLeft.timeRemaining = config.missionTimer;
+        missionTimeRemaining = config.missionTimer;
 
         Debug.Log($"Loaded Level: {config.levelName}");
     }
