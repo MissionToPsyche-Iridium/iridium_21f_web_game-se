@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -12,12 +13,11 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
-    [SerializeField] private MissionTimer missionTimerUI;
     private MissionState missionState; 
-    private float missionTimeRemaining;
-    private float missionDuration = 180f;
-    private bool isTimerRunning;
+    private float missionTimeRemaining = 180f;
+    private bool isTimerRunning = false;
     private bool isPaused = false;
+    private MissionTimer missionTimer;
 
     private void Awake()
     {
@@ -33,6 +33,13 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        missionState = MissionState.Instance;
+
+        if (missionState == null)
+        {
+            Debug.LogError("Instance of MissionState is not set! MissionState must be initialized for use by LevelManager.");
+            return;
+        }
         LoadLevel(currentLevelIndex);
     }
 
@@ -46,7 +53,7 @@ public class LevelManager : MonoBehaviour
         missionTimeRemaining -= Time.deltaTime;
         missionTimeRemaining = Mathf.Max(missionTimeRemaining, 0);
 
-        missionTimerUI.UpdateTimerUI(missionTimeRemaining);
+        missionTimer.UpdateTimerUI(missionTimeRemaining);
     }
 
     private void Update()
@@ -61,7 +68,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (missionState.IsMissionComplete)
+        if (MissionState.Instance.IsMissionComplete)
         {
             EndLevel(true);
         }
@@ -94,8 +101,7 @@ public class LevelManager : MonoBehaviour
 
         asteroidSpawner.Start();
 
-        missionState.objectives = new List<MissionState.MissionObjective>(config.objectives);
-        missionState.ResetObjectives();
+        MissionState.Instance.Initialize(config.objectives);
 
         missionTimeRemaining = config.missionTimer;
 
