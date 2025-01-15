@@ -40,11 +40,18 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("Instance of MissionState is not set! MissionState must be initialized for use by LevelManager.");
             return;
         }
+        missionTimer = FindObjectOfType<MissionTimer>();
+        if (missionTimer == null)
+        {
+            Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
+            return;
+        }
         LoadLevel(currentLevelIndex);
     }
 
     public void StartMissionTimer()
     {
+        isTimerRunning = true;
         UpdateMissionTimer();
     }
 
