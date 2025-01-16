@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelConfig 1
   m_EditorClassIdentifier: 
   levelName: Asteroid Danger
-  rareAsteroidCount: 10
+  rareAsteroidCount: 12
   RMscaleMin: 0.6
   RMscaleMax: 1.2
   asteroidSpawnInterval: 8

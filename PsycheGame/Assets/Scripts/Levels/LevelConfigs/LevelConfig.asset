@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
   levelName: Intro
-  rareAsteroidCount: 5
+  rareAsteroidCount: 15
   RMscaleMin: 0.5
   RMscaleMax: 1
   asteroidSpawnInterval: 10
