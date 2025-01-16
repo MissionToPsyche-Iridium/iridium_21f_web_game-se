@@ -2,6 +2,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
     private MissionState missionState; 
-    private MissionTimer missionTimeLeft;
-
+    private float missionTimeRemaining = 180f;
+    private bool isTimerRunning = false;
+    private bool isPaused = false;
+    private MissionTimer missionTimer;
 
     private void Awake()
     {
@@ -30,21 +33,49 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        missionState = MissionState.Instance;
+
+        if (missionState == null)
+        {
+            Debug.LogError("Instance of MissionState is not set! MissionState must be initialized for use by LevelManager.");
+            return;
+        }
+        missionTimer = FindObjectOfType<MissionTimer>();
+        if (missionTimer == null)
+        {
+            Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
+            return;
+        }
         LoadLevel(currentLevelIndex);
+    }
+
+    public void StartMissionTimer()
+    {
+        isTimerRunning = true;
+        UpdateMissionTimer();
+    }
+
+    private void UpdateMissionTimer()
+    {
+        missionTimeRemaining -= Time.deltaTime;
+        missionTimeRemaining = Mathf.Max(missionTimeRemaining, 0);
+
+        missionTimer.UpdateTimerUI(missionTimeRemaining);
     }
 
     private void Update()
     {
-        if (missionTimeLeft.timeRemaining > 0)
+        if (isTimerRunning)
         {
-            missionTimeLeft.timeRemaining -= Time.deltaTime;
-            if (missionTimeLeft.timeRemaining <= 0)
+            UpdateMissionTimer();
+
+            if (missionTimeRemaining <= 0)
             {
                 EndLevel(false);
             }
         }
 
-        if (missionState.IsMissionComplete)
+        if (MissionState.Instance.IsMissionComplete)
         {
             EndLevel(true);
         }
@@ -77,12 +108,29 @@ public class LevelManager : MonoBehaviour
 
         asteroidSpawner.Start();
 
-        missionState.objectives = new List<MissionState.MissionObjective>(config.objectives);
-        missionState.ResetObjectives();
+        MissionState.Instance.Initialize(config.objectives);
 
-        missionTimeLeft.timeRemaining = config.missionTimer;
+        missionTimeRemaining = config.missionTimer;
 
         Debug.Log($"Loaded Level: {config.levelName}");
+    }
+
+    public void PauseGame()
+    {
+        if (isPaused) return;
+
+        isPaused = true;
+        Time.timeScale = 0f; 
+        Debug.Log("Game Paused");
+    }
+
+    public void ResumeGame()
+    {
+        if (!isPaused) return;
+
+        isPaused = false;
+        Time.timeScale = 1f;
+        Debug.Log("Game Resumed");
     }
 
     private void EndLevel(bool success)
@@ -99,7 +147,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         LoadLevel(currentLevelIndex);
     }

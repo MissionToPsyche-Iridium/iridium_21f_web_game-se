@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelConfig 2
   m_EditorClassIdentifier: 
   levelName: Meteor Mayhem
-  rareAsteroidCount: 15
+  rareAsteroidCount: 10
   RMscaleMin: 0.7
   RMscaleMax: 1.5
   asteroidSpawnInterval: 6

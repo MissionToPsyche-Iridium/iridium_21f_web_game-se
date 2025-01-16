@@ -3,45 +3,11 @@ using UnityEngine;
 
 public class MissionTimer : MonoBehaviour
 {
-    [SerializeField] private float missionDuration = 120f;
     [SerializeField] private GameObject modalPanel; 
-    [SerializeField] private GameObject timerText; 
+    [SerializeField] private TextMeshProUGUI timerText; 
 
-    public float timeRemaining;
-    private bool isTimerRunning = false;
 
-    void Start()
-    {
-        timeRemaining = missionDuration;
-        isTimerRunning = false; 
-    }
-
-    public void StartMissionTimer()
-    {
-        timeRemaining = missionDuration;
-        isTimerRunning = true;
-        Debug.Log("Mission Timer Started!");
-    }
-
-    void Update()
-    {
-        if (isTimerRunning)
-        {
-            if (timeRemaining > 0)
-            {
-                timeRemaining -= Time.deltaTime;
-                UpdateTimerUI();
-            }
-            else
-            {
-                timeRemaining = 0;
-                isTimerRunning = false;
-                TimerExpired();
-            }
-        }
-    }
-
-    private void UpdateTimerUI()
+    public void UpdateTimerUI(float timeRemaining)
     {
         
         TextMeshProUGUI textMeshPro = timerText.GetComponent<TextMeshProUGUI>();
@@ -54,9 +20,27 @@ public class MissionTimer : MonoBehaviour
         }
     }
 
-    private void TimerExpired()
+    public void ShowTimer()
     {
-        Debug.Log("Mission timer expired!");
-        modalPanel.SetActive(true);
+        if (timerText != null)
+        {
+            timerText.gameObject.SetActive(true);
+        }
+    }
+
+    public void HideTimer()
+    {
+        if (timerText != null)
+        {
+            timerText.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowModalPanel()
+    {
+        if (modalPanel != null)
+        {
+            modalPanel.SetActive(true);
+        }
     }
 }

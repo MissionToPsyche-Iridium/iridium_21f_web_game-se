@@ -8,12 +8,10 @@ public class PauseHandler : MonoBehaviour
     [SerializeField] private GameObject missionObjectiveModalPanel; 
     [SerializeField] private GameObject pauseModalPanel; 
 
-    [SerializeField] private MissionTimer missionTimer;
-
     public static bool IsGamePaused { get; private set; } = true;
 
 
-   void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -27,8 +25,10 @@ public class PauseHandler : MonoBehaviour
             }
         }
     }
+
     public void QuitGame()
     {
+        Time.timeScale = 1f; 
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -37,31 +37,33 @@ public class PauseHandler : MonoBehaviour
         missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
         IsGamePaused = false;
-        missionTimer.StartMissionTimer();
-    }
 
+        LevelManager.Instance.StartMissionTimer();
+    }
 
     public void PauseGame()
     {
         IsGamePaused = true;
-        UpdateButtonText(IsGamePaused);
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; 
         missionObjectiveModalPanel.SetActive(true);
     }
 
     public void ResumeGame()
     {
-        missionObjectiveModalPanel.SetActive(false);
-        Time.timeScale = 1f;
         IsGamePaused = false;
+        Time.timeScale = 1f; 
+        missionObjectiveModalPanel.SetActive(false);
     }
 
     public void RestartGame()
     {
         pauseModalPanel.SetActive(false);
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
 
+        IsGamePaused = false;
+        LevelManager.Instance.RestartLevel();
+    }
 
     public void UpdateButtonText(bool isPaused)
     {
