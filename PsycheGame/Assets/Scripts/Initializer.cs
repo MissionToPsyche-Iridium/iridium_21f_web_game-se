@@ -25,8 +25,6 @@ public class Initializer : MonoBehaviour
 
         Player player = Player.GetInstance();
         player.Initialize(startingInventory);
-
-        BuildManager.GetInstance().Initialize();
     }
 
     [Serializable]

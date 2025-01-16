@@ -12,6 +12,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
     public GameObject SpawnArea { get; set; }
@@ -92,7 +93,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             {
                 if (_containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
                 {
-                    BuildManager.GetInstance().SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
+                    BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 
                     _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
                     
