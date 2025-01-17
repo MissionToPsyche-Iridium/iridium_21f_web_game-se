@@ -18,13 +18,13 @@ MonoBehaviour:
   RMscaleMax: 1
   missionTimer: 300
   gasSpawnerConfig:
-    spawnInterval: 0
-    objectLimit: 0
-    initialPopulation: 0
-    scaleMin: 0
-    scaleMax: 0
+    spawnInterval: 1
+    objectLimit: 99
+    initialPopulation: 1
+    scaleMin: 5
+    scaleMax: 10
     velocityMin: 0
-    velocityMax: 0
+    velocityMax: 0.45
   asteroidSpawnerConfig:
     spawnInterval: 10
     objectLimit: 10
