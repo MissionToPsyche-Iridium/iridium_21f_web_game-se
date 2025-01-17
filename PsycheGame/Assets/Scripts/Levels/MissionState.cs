@@ -4,8 +4,20 @@ using UnityEngine;
 public class MissionState
 {
 
-   private static MissionState _instance;
-    public static MissionState Instance => _instance ?? (_instance = new MissionState());
+    private static MissionState instance;
+    public static MissionState Instance
+    {
+    get
+    {
+        if (instance == null)
+        {
+            Debug.Log("New MissionState initialized");
+            instance = new MissionState();
+        }
+        return instance;
+    }
+    }
+    
 
     public List<MissionObjective> Objectives { get; private set; }
     public bool IsMissionComplete { get; private set; }
@@ -16,13 +28,13 @@ public class MissionState
     private MissionState()
     {
         Objectives = new List<MissionObjective>();
-        IsMissionComplete = false;
     }
 
     public void Initialize(List<MissionObjective> initialObjectives)
     {
         Objectives = new List<MissionObjective>(initialObjectives);
         ResetObjectives();
+        IsMissionComplete = false;
     }
 
     public void ResetObjectives()
@@ -37,15 +49,17 @@ public class MissionState
 
     public void UpdateObjectiveProgress(ObjectiveType type, int amount)
     {
-        var targetObjective = Objectives.Find(obj => obj.objectiveType == type && !obj.isCompleted);
-        if (targetObjective != null)
+        Debug.Log($"Updating progress for {type}: {amount}");
+        foreach (var obj in Objectives)
         {
-            targetObjective.IncrementProgress(amount);
-            Debug.Log($"Updated Objective: {targetObjective.description} ({targetObjective.currentProgress}/{targetObjective.targetAmount})");
+            if (obj.objectiveType == type)
+            {
+                obj.IncrementProgress(amount);
+                Debug.Log($"Updated Objective: {obj.description} ({obj.currentProgress}/{obj.targetAmount})");
 
-            IsMissionComplete = Objectives.TrueForAll(obj => obj.isCompleted);
-            OnMissionStateChanged?.Invoke();
+            }
         }
+        IsMissionComplete = Objectives.TrueForAll(obj => obj.isCompleted);
     }
 
     public int GetObjectiveProgress(ObjectiveType type)

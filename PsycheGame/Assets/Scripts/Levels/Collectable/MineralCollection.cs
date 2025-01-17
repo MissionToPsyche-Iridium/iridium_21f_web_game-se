@@ -70,6 +70,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
     private void Awake() {
         GenerateMetals();
+        missionState = MissionState.Instance;
     }
 
     private void Update() {
@@ -109,7 +110,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
         foreach (RareMetal metal in metals) {
             if (metal.Amount > 0) {
-                Debug.Log("Amount " + metal.Amount);
+                Debug.Log("Amount in asteroid: " + metal.Amount);
                 int minedAmount = Random.Range(15, 26);
                 minedAmount = Mathf.Min(minedAmount, metal.Amount);
                 metal.Amount -= minedAmount;
@@ -132,10 +133,16 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void UpdateMissionProgress(int minedAmount, string metalName) {
+        Debug.Log("Updaing mission progress: MineralCollection");
+        if (missionState == null) {
+            Debug.LogWarning("MissionState is null. Progress cannot be updated.");
+            return;
+        }
         if (missionState != null) {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, minedAmount);
+            FindObjectOfType<RareMetalCollectionStatusBar>()?.UpdateIndicator();
+            Debug.Log($"Collected {minedAmount} of {metalName}");
         }
-        Debug.Log($"Collected {minedAmount} of {metalName}");
     }
 
     public bool IsDepleted() {
@@ -148,6 +155,11 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void OnAsteroidDepleted() {
+        if (fragmentParticles != null) {
+            fragmentParticles.transform.parent = null;
+            fragmentParticles.Stop();
+            Destroy(fragmentParticles.gameObject, 5f); 
+        }
         fragmentParticles.gameObject.SetActive(false);
         Debug.Log("Asteroid fully mined!");
         Destroy(this.gameObject); 
