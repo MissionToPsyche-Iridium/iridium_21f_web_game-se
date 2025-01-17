@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private List<LevelConfig> levels; 
     private int currentLevelIndex = 0;
 
+    [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
     private MissionState missionState; 
@@ -98,15 +99,11 @@ public class LevelManager : MonoBehaviour
 
         spawner.SpawnRareAsteroids();
 
-        asteroidSpawner.spawnInterval = config.asteroidSpawnInterval;
-        asteroidSpawner.objectLimit = config.asteroidObjectLimit;
-        asteroidSpawner.initialPopulation = config.ateroidInitialPopulation;
-        asteroidSpawner.scaleMax = config.asteroidScaleMax;
-        asteroidSpawner.scaleMin = config.asteroidScaleMax;
-        asteroidSpawner.velocityMax = config.asteroidVelocityMax;
-        asteroidSpawner.velocityMin = config.asteroidVelocityMin;
+        asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
+        gasSpawner.InitWithConfig(config.gasSpawnerConfig);
 
         asteroidSpawner.Start();
+        gasSpawner.Start();
 
         MissionState.Instance.Initialize(config.objectives);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
-public abstract class CollectableGas : MonoBehaviour, ScannableObject {
+public abstract class CollectableGas : Spawnable, ScannableObject {
     private ParticleSystem ps;
     private Material psMaterial;
     private Material psSharedMaterial;

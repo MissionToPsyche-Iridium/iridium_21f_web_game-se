@@ -16,16 +16,26 @@ MonoBehaviour:
   rareAsteroidCount: 12
   RMscaleMin: 0.6
   RMscaleMax: 1.2
-  asteroidSpawnInterval: 8
-  asteroidObjectLimit: 15
-  ateroidInitialPopulation: 10
-  asteroidScaleMin: 0.4
-  asteroidScaleMax: 1
-  asteroidVelocityMax: 3
-  asteroidVelocityMin: 1
   missionTimer: 240
+  gasSpawnerConfig:
+    spawnInterval: 0
+    objectLimit: 0
+    initialPopulation: 0
+    scaleMin: 0
+    scaleMax: 0
+    velocityMin: 0
+    velocityMax: 0
+  asteroidSpawnerConfig:
+    spawnInterval: 8
+    objectLimit: 15
+    initialPopulation: 1
+    scaleMin: 0.4
+    scaleMax: 1
+    velocityMin: 1
+    velocityMax: 3
   objectives:
   - objectiveType: 0
     description: Collect Rare Metals
     targetAmount: 100
     currentProgress: 0
+  gasCount: 0

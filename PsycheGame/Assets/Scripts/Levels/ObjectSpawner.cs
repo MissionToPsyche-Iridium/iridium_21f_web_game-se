@@ -23,6 +23,16 @@ public class ObjectSpawner : MonoBehaviour {
     private int objectCount = 0;
     protected Vector3 boundingAreaCenter;
 
+    public void InitWithConfig(LevelConfig.ObjectSpawnerConfig config) {
+        this.spawnInterval = config.spawnInterval;
+        this.objectLimit = config.objectLimit;
+        this.initialPopulation = config.initialPopulation;
+        this.scaleMax = config.scaleMax;
+        this.scaleMin = config.scaleMax;
+        this.velocityMax = config.velocityMax;
+        this.velocityMin = config.velocityMin;
+    }
+
     public void ChildDestroyed() {
         this.objectCount -= 1;
     }
