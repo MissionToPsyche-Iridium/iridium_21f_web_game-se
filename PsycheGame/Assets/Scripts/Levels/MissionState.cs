@@ -56,7 +56,6 @@ public class MissionState
             {
                 obj.IncrementProgress(amount);
                 Debug.Log($"Updated Objective: {obj.description} ({obj.currentProgress}/{obj.targetAmount})");
-
             }
         }
         IsMissionComplete = Objectives.TrueForAll(obj => obj.isCompleted);

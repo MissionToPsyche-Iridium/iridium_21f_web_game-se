@@ -58,6 +58,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
+    [SerializeField] private RareMetalCollectionStatusBar statusBar;
 
     public Progress ScanProgress => scanProgress;
     public string Description => description;
@@ -140,7 +141,10 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
         if (missionState != null) {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, minedAmount);
-            FindObjectOfType<RareMetalCollectionStatusBar>()?.UpdateIndicator();
+            if(statusBar == null){
+                Debug.LogError("RareMetal Status Bar is null");
+            }
+            statusBar.UpdateIndicator(minedAmount);
             Debug.Log($"Collected {minedAmount} of {metalName}");
         }
     }
