@@ -1,17 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour {
-    [SerializeField] protected Spawnable objectToSpawn;
+    [System.Serializable]
+    public record SpawnedObject {
+        public Spawnable spawnable;
+        public float scaleMin;
+        public float scaleMax;
+        public float velocityMin;
+        public float velocityMax;
+    }
+    
+    [System.Serializable]
+    public record ObjectSpawnerConfig {
+        public int spawnInterval;
+        public int objectLimit;
+        public int initialPopulation;
+        public List<SpawnedObject> objectsTypes;
+    }
+
+    [SerializeField] protected List<SpawnedObject> objectsToSpawn;
     [SerializeField] protected GameObject boundingArea;
     [SerializeField] public int spawnInterval = 1;
     [SerializeField, Min(0)] public int objectLimit = 200;
     [SerializeField] public int initialPopulation = 0;
-
-    [Header("Spawned Object Properties")]
-    [SerializeField] public float scaleMin = 1f;
-    [SerializeField] public float scaleMax = 5f;
-    [SerializeField, Min(0f)] public float velocityMax = 20f;
-    [SerializeField, Min(0f)] public float velocityMin = 1f;
 
     [Header("Spawnning Area")]
     [SerializeField] private bool showRadiusInEditor = true;
@@ -23,14 +35,11 @@ public class ObjectSpawner : MonoBehaviour {
     private int objectCount = 0;
     protected Vector3 boundingAreaCenter;
 
-    public void InitWithConfig(LevelConfig.ObjectSpawnerConfig config) {
+    public void InitWithConfig(ObjectSpawnerConfig config) {
         this.spawnInterval = config.spawnInterval;
         this.objectLimit = config.objectLimit;
         this.initialPopulation = config.initialPopulation;
-        this.scaleMax = config.scaleMax;
-        this.scaleMin = config.scaleMax;
-        this.velocityMax = config.velocityMax;
-        this.velocityMin = config.velocityMin;
+        this.objectsToSpawn = config.objectsTypes;
     }
 
     public void ChildDestroyed() {
@@ -52,7 +61,6 @@ public class ObjectSpawner : MonoBehaviour {
                 Vector3 pos = GetRandomPoisiton();
                 Spawnable newObj = AddObject(pos);
                 newObj.transform.Rotate(Vector3.forward * Random.Range(-45f, 45f));
-                newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
             }
         }
     }
@@ -63,13 +71,15 @@ public class ObjectSpawner : MonoBehaviour {
             Vector3 pos = boundingAreaCenter + insideUnitCircle * spawnRadius;
             Spawnable newObj = AddObject(pos);
             newObj.transform.Rotate(Vector3.forward * Random.Range(0.0f, 360f));
-            newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
         }
     }
 
     private Spawnable AddObject(Vector3 position) {
+        int randomIdx = Random.Range(0, objectsToSpawn.Count);
+        SpawnedObject objectToSpawn = objectsToSpawn[randomIdx];
+
         GameObject newObject = Instantiate(
-            objectToSpawn.gameObject,
+            objectToSpawn.spawnable.gameObject,
             position,
             Quaternion.FromToRotation(Vector3.up, boundingAreaCenter - position),
             this.gameObject.transform
@@ -78,7 +88,8 @@ public class ObjectSpawner : MonoBehaviour {
         Spawnable spawnableScript = newObject.GetComponent<Spawnable>();
         spawnableScript.Spawner = this;
         spawnableScript.BoundingArea = this.boundingArea;
-        spawnableScript.Velocity = Random.Range(velocityMin, velocityMax); 
+        spawnableScript.Velocity = Random.Range(objectToSpawn.velocityMin, objectToSpawn.velocityMax);
+        spawnableScript.transform.localScale *= Random.Range(objectToSpawn.scaleMin, objectToSpawn.scaleMax);
 
         objectCount++;
         return spawnableScript;
