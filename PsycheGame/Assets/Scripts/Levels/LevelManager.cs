@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private List<LevelConfig> levels; 
     private int currentLevelIndex = 0;
 
+    [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
     private MissionState missionState; 
@@ -29,6 +30,16 @@ public class LevelManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // NOTE: spawners should be:
+        // 1. Disabled at 'Awake'
+        // 2. Spawner configuration set
+        // 3. Endabled
+        // This ensures that ONLY values from the given level config are used to
+        // spawn objects rather than also spawning objects using default inspector
+        // values. These spawners are renabled in 'LoadLevel'
+        gasSpawner.enabled = false;
+        asteroidSpawner.enabled = false;
     }
 
     private void Start()
@@ -98,15 +109,11 @@ public class LevelManager : MonoBehaviour
 
         spawner.SpawnRareAsteroids();
 
-        asteroidSpawner.spawnInterval = config.asteroidSpawnInterval;
-        asteroidSpawner.objectLimit = config.asteroidObjectLimit;
-        asteroidSpawner.initialPopulation = config.ateroidInitialPopulation;
-        asteroidSpawner.scaleMax = config.asteroidScaleMax;
-        asteroidSpawner.scaleMin = config.asteroidScaleMax;
-        asteroidSpawner.velocityMax = config.asteroidVelocityMax;
-        asteroidSpawner.velocityMin = config.asteroidVelocityMin;
+        asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
+        asteroidSpawner.enabled = true;
 
-        asteroidSpawner.Start();
+        gasSpawner.InitWithConfig(config.gasSpawnerConfig);
+        gasSpawner.enabled = true;
 
         MissionState.Instance.Initialize(config.objectives);
 
