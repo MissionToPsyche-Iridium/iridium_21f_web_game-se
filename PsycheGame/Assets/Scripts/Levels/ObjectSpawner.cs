@@ -13,9 +13,16 @@ public class ObjectSpawner : MonoBehaviour {
     
     [System.Serializable]
     public record ObjectSpawnerConfig {
+        [Tooltip("Batch size objects are spawned in when the current object count is less that the object limit")]
         public int spawnInterval;
+
+        [Tooltip("Maximum number of objects that can be maintained by an object spawner at any single time")]
         public int objectLimit;
+
+        [Tooltip("Number of objects that initially start inside of the spawning bounds on load (as opposed to spawning at the edge of bounds in 'Spawn Interval' batches)")]
         public int initialPopulation;
+
+        [Tooltip("Object types which this spawner randomly selects from to spawn objects")]
         public List<SpawnedObject> objectsTypes;
     }
 
