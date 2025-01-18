@@ -49,7 +49,7 @@ public class ObjectSpawner : MonoBehaviour {
     private void MaintainPopulation() {
         if (objectCount < objectLimit) {
             for (int i = 0; i < spawnInterval; i++) {
-                Vector3 pos = GetRandomPoisiton(false);
+                Vector3 pos = GetRandomPoisiton();
                 Spawnable newObj = AddObject(pos);
                 newObj.transform.Rotate(Vector3.forward * Random.Range(-45f, 45f));
                 newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
@@ -59,9 +59,11 @@ public class ObjectSpawner : MonoBehaviour {
 
     private void InitialPopulation() {
         for (int i = 0; i < initialPopulation; i++) {
-            Vector3 pos = GetRandomPoisiton(true);
+            Vector3 insideUnitCircle = Random.insideUnitCircle;
+            Vector3 pos = boundingAreaCenter + insideUnitCircle * spawnRadius;
             Spawnable newObj = AddObject(pos);
             newObj.transform.Rotate(Vector3.forward * Random.Range(0.0f, 360f));
+            newObj.transform.localScale *= Random.Range(scaleMin, scaleMax);
         }
     }
 
@@ -82,11 +84,8 @@ public class ObjectSpawner : MonoBehaviour {
         return spawnableScript;
     }
 
-    protected Vector3 GetRandomPoisiton(bool withinCamera) {
+    protected Vector3 GetRandomPoisiton() {
         Vector3 pos = Random.insideUnitCircle;
-        if (withinCamera) {
-            return pos;
-        }
         pos = pos.normalized;
         pos *= spawnRadius;
         pos += boundingAreaCenter;
