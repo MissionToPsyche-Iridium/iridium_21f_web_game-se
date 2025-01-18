@@ -58,6 +58,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
+    [SerializeField] private RareMetalCollectionStatusBar statusBar;
 
     public Progress ScanProgress => scanProgress;
     public string Description => description;
@@ -70,6 +71,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
 
     private void Awake() {
         GenerateMetals();
+        missionState = MissionState.Instance;
     }
 
     private void Update() {
@@ -109,7 +111,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
         }
         foreach (RareMetal metal in metals) {
             if (metal.Amount > 0) {
-                Debug.Log("Amount " + metal.Amount);
+                Debug.Log("Amount in asteroid: " + metal.Amount);
                 int minedAmount = Random.Range(15, 26);
                 minedAmount = Mathf.Min(minedAmount, metal.Amount);
                 metal.Amount -= minedAmount;
@@ -132,10 +134,19 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void UpdateMissionProgress(int minedAmount, string metalName) {
+        Debug.Log("Updaing mission progress: MineralCollection");
+        if (missionState == null) {
+            Debug.LogWarning("MissionState is null. Progress cannot be updated.");
+            return;
+        }
         if (missionState != null) {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, minedAmount);
+            if(statusBar == null){
+                Debug.LogError("RareMetal Status Bar is null");
+            }
+            statusBar.UpdateIndicator(minedAmount);
+            Debug.Log($"Collected {minedAmount} of {metalName}");
         }
-        Debug.Log($"Collected {minedAmount} of {metalName}");
     }
 
     public bool IsDepleted() {
@@ -148,6 +159,11 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     }
 
     private void OnAsteroidDepleted() {
+        if (fragmentParticles != null) {
+            fragmentParticles.transform.parent = null;
+            fragmentParticles.Stop();
+            Destroy(fragmentParticles.gameObject, 5f); 
+        }
         fragmentParticles.gameObject.SetActive(false);
         Debug.Log("Asteroid fully mined!");
         Destroy(this.gameObject); 
