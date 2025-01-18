@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 
 public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
+    [SerializeField] private GameObject _player;
     [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
@@ -28,7 +29,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
     public void Start()
     {
-        _inventory = Player.GetInstance().Inventory;
+        _inventory = _player.GetComponent<Player>().Inventory;
         _inventory.AddObserver(this);
 
         _currentFilter = FilterType.All;

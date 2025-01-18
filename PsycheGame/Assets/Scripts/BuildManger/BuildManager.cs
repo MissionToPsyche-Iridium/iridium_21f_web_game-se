@@ -13,13 +13,14 @@ using UnityEngine.SceneManagement;
 
 public class BuildManager : MonoBehaviour
 {
+    [SerializeField] private GameObject _player;
 
     private Inventory _inventory;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
     public void Start()
     {
-        _inventory = Player.GetInstance().Inventory;
+        _inventory = _player.GetComponent<Player>().Inventory;
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();
         _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
