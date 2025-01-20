@@ -51,7 +51,8 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
 
     private Vector3 GetRandomPosition()
     {
-        Vector3 randomOffset = Random.insideUnitSphere * Random.Range(1f, 50f);
+        float radius = boundingArea.GetComponent<Renderer>().bounds.extents.magnitude;
+        Vector3 randomOffset = Random.insideUnitSphere * Random.Range(1f, radius);
         randomOffset.z = 0;
         return boundingAreaCenter + randomOffset;
     }
