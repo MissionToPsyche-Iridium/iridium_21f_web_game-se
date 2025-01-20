@@ -91,7 +91,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             (int cellX, int cellY) cellPos = _containerManager.FindGridPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (_containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
+                if (_containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
                 {
                     BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 

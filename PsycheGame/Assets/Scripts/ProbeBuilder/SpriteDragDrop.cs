@@ -58,13 +58,10 @@ public class SpriteDragDrop : MonoBehaviour
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (containerManager.CheckGridOccupied(cellPos.cellX, cellPos.cellY) == "")
-                {
-                    if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
-                    {
-                        containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
-                    }
+                AttemptToRelease();
 
+                if (containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
+                {
                     currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
 
                     containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
@@ -78,6 +75,10 @@ public class SpriteDragDrop : MonoBehaviour
                         gameObject.layer = 10;
                     }
                 }
+                else
+                {
+                    AttemptToReoccupy();
+                }
             }
 
             (float x, float y) cell = containerManager.GetBeaconPositionGrid(currentCell.Item1, currentCell.Item2);
@@ -89,7 +90,7 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToRelease()
     {
-        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == internalId)
+        if (!containerManager.CheckOccupationEligibility(currentCell.Item1, currentCell.Item2))
         {
             containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
             return true;
@@ -99,7 +100,7 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToReoccupy()
     {
-        if (containerManager.CheckGridOccupied(currentCell.Item1, currentCell.Item2) == "")
+        if (containerManager.CheckOccupationEligibility(currentCell.Item1, currentCell.Item2))
         {
             containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
             return true;
