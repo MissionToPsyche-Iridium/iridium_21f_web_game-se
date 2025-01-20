@@ -4,27 +4,31 @@ using UnityEngine.UI;
 
 public class GasCollectionStatusBar : MonoBehaviour {
     [SerializeField] private GameObject gasCollectionBarColor;
-    [SerializeField] private GameObject gasCollectionBarPanel;
-    [SerializeField] private Slider gasCollectBar;
+    [SerializeField] private Slider gasCollectBar; 
+    MissionState missionState;
+    float gasTotal = 0;
 
     private Image gasCollectBarImage = null;
-    private Image gasCollectPanelImage = null;
 
-    private static readonly float LOW_LEVEL = 33f;
-    private static readonly float MID_LEVEL = 66f;
+    private float LOW_LEVEL;
+    private float MID_LEVEL;
 
     private void Start() {
-        this.gasCollectBarImage = gasCollectionBarColor.GetComponent<Image>();
-        this.gasCollectPanelImage = gasCollectionBarPanel.GetComponent<Image>();
+        this.gasCollectBarImage = gasCollectionBarColor.GetComponent<Image>();        
+        missionState = MissionState.Instance;
+        int amount = missionState.GetObjectiveProgress(MissionState.ObjectiveType.CollectResource);
+        LOW_LEVEL = amount * 33f;
+        MID_LEVEL = amount * 66f;
     }
 
-    public void UpdateIndicator() {
-        float gasCollected = MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectResource);
-        gasCollectBar.value = gasCollected;
+    public void UpdateIndicator(int amount) {
+        gasTotal = gasTotal + amount;
+        Debug.Log($"GasStatusBar updating indicator: {amount}");
+        gasCollectBar.value = gasTotal;
 
-        if (gasCollected < LOW_LEVEL) {
+        if (gasTotal < LOW_LEVEL) {
             gasCollectBarImage.color = Color.red;
-        } else if (gasCollected < MID_LEVEL) {
+        } else if (gasTotal < MID_LEVEL) {
             gasCollectBarImage.color = Color.yellow;
         } else {
             gasCollectBarImage.color = Color.green;

@@ -3,12 +3,10 @@ using UnityEngine.UI;
 
 public class RareMetalCollectionStatusBar : MonoBehaviour {
     [SerializeField] private GameObject rareMetalCollectionBarColor;
-    [SerializeField] private GameObject rareMetalCollectionBarPanel;
     [SerializeField] private Slider rareMetalCollectBar;
     MissionState missionState;
 
     private Image rareMetalCollectBarImage = null;
-    private Image rareMetalCollectPanelImage = null;
     private float totalMined = 0;
 
     private float LOW_LEVEL;
@@ -16,7 +14,6 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
 
     private void Start() {
         this.rareMetalCollectBarImage = rareMetalCollectionBarColor.GetComponent<Image>();
-        this.rareMetalCollectPanelImage = rareMetalCollectionBarPanel.GetComponent<Image>();
         missionState = MissionState.Instance;
         int amount = missionState.GetObjectiveProgress(MissionState.ObjectiveType.CollectResource);
         LOW_LEVEL = amount * 33f;
