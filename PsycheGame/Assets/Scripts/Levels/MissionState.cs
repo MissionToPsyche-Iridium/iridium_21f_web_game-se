@@ -25,11 +25,6 @@ public class MissionState
     public delegate void MissionStateUpdated();
     public static event MissionStateUpdated OnMissionStateChanged;
 
-    private MissionState()
-    {
-        Objectives = new List<MissionObjective>();
-    }
-
     public void Initialize(List<MissionObjective> initialObjectives)
     {
         Objectives = new List<MissionObjective>(initialObjectives);

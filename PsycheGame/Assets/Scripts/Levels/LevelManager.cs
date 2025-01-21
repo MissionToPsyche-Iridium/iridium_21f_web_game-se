@@ -13,7 +13,8 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner spawner;
-    [SerializeField] private ObjectSpawner asteroidSpawner; 
+    [SerializeField] private ObjectSpawner asteroidSpawner;
+    [SerializeField] private GameObject objectiveText;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
@@ -57,6 +58,14 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
             return;
         }
+        string objectivesText = "";
+
+        foreach (var objective in missionState.Objectives)
+        {
+            objectivesText += $"{objective.description}.\n Amount to gather: {objective.targetAmount}\n";
+        }
+        TextMeshPro text = objectiveText.GetComponent<TextMeshPro>();
+        text.SetText(objectivesText);
         LoadLevel(currentLevelIndex);
     }
 
