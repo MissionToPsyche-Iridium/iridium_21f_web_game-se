@@ -33,7 +33,11 @@ MonoBehaviour:
       velocityMin: 1
       velocityMax: 3
   objectives:
-  - objectiveType: 0
+  - objectiveType: 1
     description: Collect Rare Metals
     targetAmount: 100
+    currentProgress: 0
+  - objectiveType: 0
+    description: Collect Gases Metals
+    targetAmount: 50
     currentProgress: 0

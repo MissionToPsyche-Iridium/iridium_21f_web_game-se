@@ -9,8 +9,6 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance { get; private set; }
 
     [SerializeField] private List<LevelConfig> levels; 
-    private int currentLevelIndex = 0;
-
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
@@ -20,6 +18,7 @@ public class LevelManager : MonoBehaviour
     private bool isTimerRunning = false;
     private bool isPaused = false;
     private MissionTimer missionTimer;
+    private int currentLevelIndex = 0;
 
     private void Awake()
     {
@@ -45,6 +44,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        LevelConfig config = levels[currentLevelIndex];
+        MissionState.Instance.Initialize(config.objectives);
         missionState = MissionState.Instance;
 
         if (missionState == null)
@@ -58,14 +59,6 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
             return;
         }
-        string objectivesText = "";
-
-        foreach (var objective in missionState.Objectives)
-        {
-            objectivesText += $"{objective.description}.\n Amount to gather: {objective.targetAmount}\n";
-        }
-        TextMeshPro text = objectiveText.GetComponent<TextMeshPro>();
-        text.SetText(objectivesText);
         LoadLevel(currentLevelIndex);
     }
 
@@ -108,9 +101,19 @@ public class LevelManager : MonoBehaviour
             Debug.Log("All levels completed!");
             return;
         }
-
-        currentLevelIndex = levelIndex;
+                currentLevelIndex = levelIndex;
         LevelConfig config = levels[levelIndex];
+        MissionState.Instance.Initialize(config.objectives);
+        string objectivesText = "";
+
+        foreach (var objective in missionState.Objectives)
+        {
+            Debug.Log("Mission Objectve: " + objective.description + " : " + objective.targetAmount);
+            objectivesText += $"{config.levelName}\n";
+            objectivesText += $"{objective.description}.\n Amount to gather: {objective.targetAmount}\n";
+        }
+        TextMeshPro text = GameObject.Find("MissionObjectiveContent").GetComponent<TextMeshPro>();
+        text.SetText(objectivesText);
 
         spawner.rareAsteroidCount = config.rareAsteroidCount;
         spawner.scaleMin = config.RMscaleMin;
@@ -124,7 +127,6 @@ public class LevelManager : MonoBehaviour
         gasSpawner.InitWithConfig(config.gasSpawnerConfig);
         gasSpawner.enabled = true;
 
-        MissionState.Instance.Initialize(config.objectives);
 
         missionTimeRemaining = config.missionTimer;
 

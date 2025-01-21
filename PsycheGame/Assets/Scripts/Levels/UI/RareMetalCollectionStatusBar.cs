@@ -15,7 +15,7 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     private void Start() {
         this.rareMetalCollectBarImage = rareMetalCollectionBarColor.GetComponent<Image>();
         missionState = MissionState.Instance;
-        int amount = missionState.GetObjectiveProgress(MissionState.ObjectiveType.CollectResource);
+        int amount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals);
         LOW_LEVEL = amount * 33f;
         MID_LEVEL = amount * 66f;
     }

@@ -16,7 +16,7 @@ public class GasCollectionStatusBar : MonoBehaviour {
     private void Start() {
         this.gasCollectBarImage = gasCollectionBarColor.GetComponent<Image>();        
         missionState = MissionState.Instance;
-        int amount = missionState.GetObjectiveProgress(MissionState.ObjectiveType.CollectResource);
+        int amount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases);
         LOW_LEVEL = amount * 33f;
         MID_LEVEL = amount * 66f;
     }
