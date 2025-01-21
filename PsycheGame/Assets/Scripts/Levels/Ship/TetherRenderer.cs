@@ -23,6 +23,14 @@ public class TetherRenderer : MonoBehaviour {
     private bool tethering = true;
     private LineRenderer lineRenderer;
 
+    // should only be called from 'ShipTetherLogic.cs'
+    public void initWithConfig(ShipConfig.TetherConfig config) {
+        this.percision = config.resolution;
+        this.straightLineSpeed = config.straightLineSpeed;
+        this.startWaveSize = config.startWaveSize;
+        this.progressionSpeed = config.progressionSpeed;
+    }
+
     private void Awake() {
         lineRenderer = this.GetComponent<LineRenderer>();
         lineRenderer.numCornerVertices = 1;

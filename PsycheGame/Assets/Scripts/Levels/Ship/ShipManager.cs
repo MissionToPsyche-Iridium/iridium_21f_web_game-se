@@ -13,13 +13,29 @@ public class ShipManager : MonoBehaviour {
             _obj = GameObject.Find(_SHIP_GAMEOBJECT_NAME);
             if (_obj == null) {
                 Debug.LogError("Failed to find 'Ship' game object in scene");
+                return;
+            }
+
+            tetherLogic = _obj.GetComponent<ShipTetherLogic>();
+            if (tetherLogic == null) {
+                Debug.LogError("Failed to find 'ShipTetherLogic' script on ship");
+                return;
+            }
+
+            scanner = _obj.GetComponent<ShipScanBehavior>();
+            if (scanner == null) {
+                Debug.LogError("Failed to find 'ShipScanner' script on ship");
+                return;
             }
         }
     }
 
     private static GameObject _obj; 
+
     private static float fuel = 150f;
     private static float health = 100f;
+    private static ShipTetherLogic tetherLogic;
+    private static ShipScanBehavior scanner;
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }
@@ -29,4 +45,9 @@ public class ShipManager : MonoBehaviour {
     // otherwise a value of null will be returned
     public static GameObject Ship { get { return _obj; } }
 
+    private void Start() {
+        // TODO start initializing things here
+        // Need to keep in mind at some point this configuration may be
+        // driven via JSON object
+    }
 }

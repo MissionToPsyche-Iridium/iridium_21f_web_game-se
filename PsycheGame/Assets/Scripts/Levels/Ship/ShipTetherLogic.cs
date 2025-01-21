@@ -17,6 +17,12 @@ public class ShipTetherLogic : MonoBehaviour {
     [HideInInspector] public Vector2 tetherPoint;
     [HideInInspector] public Vector2 tetherDistVec;
 
+    public void initWithConfig(ShipConfig.TetherConfig config) {
+        this.launchSpeed = config.launchSpeed;
+        this.probeObjectDistance = config.probeObjectDistance;
+        this.tether.initWithConfig(config);
+    }
+
     private void Start() {
         rb = this.GetComponent<Rigidbody2D>();
         tether.enabled = false;
@@ -24,6 +30,10 @@ public class ShipTetherLogic : MonoBehaviour {
         springJoint = this.GetComponent<SpringJoint2D>();
         springJoint.enabled = false;
         springJoint.dampingRatio = 1.0f;
+
+        // Maybe this fixes issues with attaching to 
+        // rare metal asteroids?
+        springJoint.autoConfigureDistance = true;
     }
 
     private void Update() {

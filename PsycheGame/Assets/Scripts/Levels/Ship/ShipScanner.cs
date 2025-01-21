@@ -22,6 +22,12 @@ public class ShipScanBehavior : MonoBehaviour {
     // this is retrieved in 'Awake'
     private ScannedColumn scannedPopupColumn;
 
+    public void initWithConfig(ShipConfig.ScanConfig config) {
+        this.distance = config.distance;
+        this.rayCount = config.resolution;
+        this.arcAngle = config.arcAngle;
+    }
+
     private void Awake() {
         // TODO
         // there should be a better way to obtain an instance of the popup column

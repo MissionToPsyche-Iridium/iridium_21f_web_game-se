@@ -1,11 +1,15 @@
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
+// Rather than moving these out to there respective classes like in the
+// level config we keep these here so you can quickly see all
+// configurable ship parameters
 [CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
 public class ShipConfig : MonoBehaviour
 {
     public record TetherConfig {
+        [Tooltip("The total number of line segments that make up the tether rendering")]
+        public int resolution;
+
         [Tooltip("The initial speed the tether launches at before it attaches to an object")]
         public float launchSpeed;
 
