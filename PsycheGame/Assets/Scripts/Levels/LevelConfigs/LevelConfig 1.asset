@@ -18,14 +18,14 @@ MonoBehaviour:
   RMscaleMax: 1.2
   missionTimer: 240
   gasSpawnerConfig:
-    spawnInterval: 0
-    objectLimit: 0
-    initialPopulation: 0
+    spawnInterval: 1
+    objectLimit: 20
+    initialPopulation: 20
     objectsTypes: []
   asteroidSpawnerConfig:
-    spawnInterval: 8
-    objectLimit: 15
-    initialPopulation: 1
+    spawnInterval: 1
+    objectLimit: 45
+    initialPopulation: 15
     objectsTypes:
     - spawnable: {fileID: 5771888816593832295, guid: 5dfa80fa734b31741a85dd4c10cce663, type: 3}
       scaleMin: 0.4
@@ -38,6 +38,6 @@ MonoBehaviour:
     targetAmount: 100
     currentProgress: 0
   - objectiveType: 0
-    description: Collect Gases Metals
+    description: Collect Gases
     targetAmount: 50
     currentProgress: 0

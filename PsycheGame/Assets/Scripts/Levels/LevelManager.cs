@@ -10,9 +10,8 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<LevelConfig> levels; 
     [SerializeField] private ObjectSpawner gasSpawner;
-    [SerializeField] private RareMetalAsteroidSpawner spawner;
+    [SerializeField] private RareMetalAsteroidSpawner rareMetalAsteroidspawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
-    [SerializeField] private GameObject objectiveText;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
@@ -45,7 +44,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         LevelConfig config = levels[currentLevelIndex];
-        MissionState.Instance.Initialize(config.objectives);
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
         missionState = MissionState.Instance;
 
         if (missionState == null)
@@ -101,25 +100,15 @@ public class LevelManager : MonoBehaviour
             Debug.Log("All levels completed!");
             return;
         }
-                currentLevelIndex = levelIndex;
+        currentLevelIndex = levelIndex;
         LevelConfig config = levels[levelIndex];
-        MissionState.Instance.Initialize(config.objectives);
-        string objectivesText = "";
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
 
-        foreach (var objective in missionState.Objectives)
-        {
-            Debug.Log("Mission Objectve: " + objective.description + " : " + objective.targetAmount);
-            objectivesText += $"{config.levelName}\n";
-            objectivesText += $"{objective.description}.\n Amount to gather: {objective.targetAmount}\n";
-        }
-        TextMeshPro text = GameObject.Find("MissionObjectiveContent").GetComponent<TextMeshPro>();
-        text.SetText(objectivesText);
+        rareMetalAsteroidspawner.rareAsteroidCount = config.rareAsteroidCount;
+        rareMetalAsteroidspawner.scaleMin = config.RMscaleMin;
+        rareMetalAsteroidspawner.scaleMax = config.RMscaleMax;
 
-        spawner.rareAsteroidCount = config.rareAsteroidCount;
-        spawner.scaleMin = config.RMscaleMin;
-        spawner.scaleMax = config.RMscaleMax;
-
-        spawner.SpawnRareAsteroids();
+        rareMetalAsteroidspawner.SpawnRareAsteroids();
 
         asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
         asteroidSpawner.enabled = true;

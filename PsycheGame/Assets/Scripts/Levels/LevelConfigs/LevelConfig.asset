@@ -23,9 +23,9 @@ MonoBehaviour:
     initialPopulation: 10
     objectsTypes: []
   asteroidSpawnerConfig:
-    spawnInterval: 10
-    objectLimit: 10
-    initialPopulation: 5
+    spawnInterval: 1
+    objectLimit: 30
+    initialPopulation: 15
     objectsTypes:
     - spawnable: {fileID: 5771888816593832295, guid: 5dfa80fa734b31741a85dd4c10cce663, type: 3}
       scaleMin: 0.3

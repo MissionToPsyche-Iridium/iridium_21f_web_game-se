@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,12 +22,13 @@ public class MissionState
 
     public List<MissionObjective> Objectives { get; private set; }
     public bool IsMissionComplete { get; private set; }
-
+    public String levelName {get; private set;}
     public delegate void MissionStateUpdated();
     public static event MissionStateUpdated OnMissionStateChanged;
 
-    public void Initialize(List<MissionObjective> initialObjectives)
+    public void Initialize(List<MissionObjective> initialObjectives, String name)
     {
+        levelName = name;
         Objectives = new List<MissionObjective>(initialObjectives);
         IsMissionComplete = false;
     }
