@@ -1,45 +1,44 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /*
     Probe Builder :: SpriteDragDrop.cs
-
     Date: Oct. 2024
-    Description: this script provides the drag-and-drop behavior for the probe parts.  It also contains the logic to snap the probe part 
+    Description: this script provides the drag-and-drop behavior for the probe parts. It also contains the logic to snap the probe part 
     to the grid tile when the probe part is in contact with the tile.
-       
+
+    version 1.0 candidate (Jan 21)
+    :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
 */
 
 public class SpriteDragDrop : MonoBehaviour
 {
     private ContainerManager containerManager;
-    public bool selected;
-    public String internalId;
-    public Tuple<int, int> currentCell;
+    public bool Selected { get; private set; }
+    public string InternalId { get; set; }
+    public Tuple<int, int> CurrentCell { get; set; }
 
     private AudioClip snapSound;
     private Material originalMaterial;
     private Material sparkMaterial;
-
-    Vector3 offset;
+    private Vector3 offset;
+    private AudioSource audioSource;
+    private UnityEngine.UI.Image image;
 
     private void Start()
     {
-        selected = false;
+        Selected = false;
 
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
-        this.AddComponent<AudioSource>();
-        UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
-        originalMaterial = image.material;
-        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
+        audioSource = gameObject.AddComponent<AudioSource>();
+        image = GetComponent<UnityEngine.UI.Image>();
 
-        Debug.Log(" <SDD> +++Probe part internal ID: " + internalId + "+++");
+        Debug.Log(" <SDD> +++Probe part internal ID: " + InternalId + "+++");
     }
     private void OnMouseDown()
     {
-        selected = true;
+        Selected = true;
         offset = transform.position - MouseWorldPosition();
         gameObject.layer = 9;
     }
@@ -51,7 +50,7 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (selected)
+        if (Selected)
         {
             Vector3 newPos = MouseWorldPosition();
             (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
@@ -62,12 +61,11 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
                 {
-                    currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+                    CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
 
-                    containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
 
-                    GetComponent<AudioSource>().PlayOneShot(snapSound, 1.0f);
-                    UnityEngine.UI.Image image = GetComponent<UnityEngine.UI.Image>();
+                    audioSource.PlayOneShot(snapSound, 1.0f);
                     image.material = sparkMaterial;
                                     
                     if (gameObject.layer <= 9)
@@ -81,18 +79,18 @@ public class SpriteDragDrop : MonoBehaviour
                 }
             }
 
-            (float x, float y) cell = containerManager.GetBeaconPositionGrid(currentCell.Item1, currentCell.Item2);
+            (float x, float y) cell = containerManager.GetBeaconPositionGrid(CurrentCell.Item1, CurrentCell.Item2);
             transform.position = new Vector3(cell.x, cell.y, -0.01f);
 
-            selected = false;
+            Selected = false;
         }
     }
 
     public bool AttemptToRelease()
     {
-        if (!containerManager.CheckOccupationEligibility(currentCell.Item1, currentCell.Item2))
+        if (!containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
         {
-            containerManager.ReleaseFromGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+            containerManager.ReleaseFromGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
             return true;
         }
         return false;
@@ -100,9 +98,9 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToReoccupy()
     {
-        if (containerManager.CheckOccupationEligibility(currentCell.Item1, currentCell.Item2))
+        if (containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
         {
-            containerManager.AssignToGridPosition(currentCell.Item1, currentCell.Item2, internalId);
+            containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
             return true;
         }
         return false;

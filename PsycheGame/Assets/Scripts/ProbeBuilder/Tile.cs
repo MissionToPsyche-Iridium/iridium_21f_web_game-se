@@ -12,20 +12,27 @@ using UnityEngine.UI;
     Date: Oct. 2024
     Description: this script is a stereotype for the specific tile instantiated.  Including the coordinate
     and cell index attributes on the grid.
+
+    version 1.0 candidate (Jan 21)
+    :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
 */
 
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] private Color color1, color2;
+    [SerializeField] private Color color1;
+    [SerializeField] private Color color2;
     [SerializeField] private SpriteRenderer render;
 
-    private int cellX, cellY;
-    private float xPosition, yPosition;
+    private int cellX;
+    private int cellY;
+    private float xPosition;
+    private float yPosition;
 
     private Color defaultColor;
 
-    public void Init(bool isOffset, int x, int y, float xP, float yP) {
+    public void Init(bool isOffset, int x, int y, float xP, float yP)
+    {
         cellX = x;
         cellY = y;
         xPosition = xP;

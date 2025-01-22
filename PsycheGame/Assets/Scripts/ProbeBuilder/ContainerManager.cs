@@ -10,18 +10,22 @@ using UnityEngine.UI;
 
 /* 
 	Probe builder :: containerManager.cs
-	version: 0.9 candidate
 	Description: this script is responsible for generating the sandwich chassis that holds the probe components.  
+
+	version: 1.0 candidate (Jan 21)
+	:: revise code to meet C# convention for performance and readability
+	:: specifics - reduce redundant getcomponent calls
+	
 */
 
 class GridPositionData {
-	public bool is_occupied;
-	public String occupant;
+    public bool IsOccupied { get; set; }
+    public string Occupant { get; set; }
 
 	public GridPositionData()
 	{
-		this.is_occupied = false;
-		this.occupant = "";
+		IsOccupied = false;
+		Occupant = string.Empty;
 	}
 }
 
@@ -30,7 +34,8 @@ public class ContainerManager : MonoBehaviour
 {
 	[SerializeField] private int width, height;
 	[SerializeField] private Tile tile;
-	[SerializeField] private int originX, originY;
+	[SerializeField] private int originX;
+	[SerializeField] private int originY;
 	[SerializeField] private int tileScale;
 	
 	private float PosX, PosY;
@@ -75,18 +80,25 @@ public class ContainerManager : MonoBehaviour
 				{
 					var targetX = originX + (tileScale * x * 0.93f);
 					var targetY = originY + (tileScale * y * 0.93f);
-					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);  
-					newTile.name = $"Tile {x} {y}"; 		 
-					newTile.transform.tag = "tile"; 	 
-					newTile.AddComponent<Rigidbody2D>(); 	 
-					newTile.GetComponent<Rigidbody2D>().gravityScale = 0;  
-					newTile.GetComponent<BoxCollider2D>().isTrigger = true;
-					newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
-                    var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);  
-					newTile.Init(isOffset, x, y, targetX, targetY);    
+					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
+					newTile.name = $"Tile {x} {y}";
+					newTile.tag = "tile";
+
+					var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
+					rigidbody2D.gravityScale = 0;
+
+					var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
+					boxCollider2D.isTrigger = true;
+
+					var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
+					spriteRenderer.sprite = tileSprite;
+
+					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
+					newTile.Init(isOffset, x, y, targetX, targetY);
+
 					chassisGrid[x, y] = (targetX, targetY);
-					newTile.transform.SetParent(transform);  
-					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);  
+					newTile.transform.SetParent(transform);
+					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);
 				}
 			}
 		}
@@ -94,9 +106,9 @@ public class ContainerManager : MonoBehaviour
 
 	public String CheckGridOccupied(int x, int y)
 	{
-		if (gridData[x, y].is_occupied)
+		if (gridData[x, y].IsOccupied)
 		{
-			return gridData[x, y].occupant;
+			return gridData[x, y].Occupant;
 		}
 		else
 		{
@@ -106,7 +118,7 @@ public class ContainerManager : MonoBehaviour
 
 	public bool CheckOccupationEligibility(int x, int y)
 	{
-		if (gridData[x, y].is_occupied)
+		if (gridData[x, y].IsOccupied)
 		{
 			return false;
 		}
@@ -115,19 +127,19 @@ public class ContainerManager : MonoBehaviour
 			return true;
 		}
 
-		for (int i = x - 1; i <= x + 1; i += 1)
+		for (int i = x - 1; i <= x + 1; i++)
 		{
 			if (i < 0 || i >= width)
 			{
 				continue;
 			}
-			for (int j = y - 1; j <= y + 1; j += 1)
+			for (int j = y - 1; j <= y + 1; j++)
 			{
 				if (j < 0 || j >= height || (i == x && j == y))
 				{
 					continue;
 				}
-				else if (gridData[i, j].is_occupied)
+				else if (gridData[i, j].IsOccupied)
 				{
 					return true;
 				}
@@ -139,10 +151,10 @@ public class ContainerManager : MonoBehaviour
 
 	public bool ReleaseFromGridPosition(int x, int y, String objTag)
 	{
-		if (gridData[x, y].occupant == objTag)
+		if (gridData[x, y].Occupant == objTag)
 		{
-			gridData[x, y].is_occupied = false;
-			gridData[x, y].occupant = "";
+			gridData[x, y].IsOccupied = false;
+			gridData[x, y].Occupant = string.Empty;
 
 			totalOccupations--;
 
@@ -156,10 +168,10 @@ public class ContainerManager : MonoBehaviour
 
 	public bool AssignToGridPosition(int x, int y, String objTag)
 	{
-		if (gridData[x, y].is_occupied == false)
+		if (gridData[x, y].IsOccupied == false)
 		{
-			gridData[x, y].is_occupied = true;
-			gridData[x, y].occupant = objTag;
+			gridData[x, y].IsOccupied = true;
+			gridData[x, y].Occupant = objTag;
 
 			totalOccupations++;
 

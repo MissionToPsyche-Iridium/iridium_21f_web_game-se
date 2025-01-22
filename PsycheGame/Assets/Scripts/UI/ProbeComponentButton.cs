@@ -68,7 +68,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _dragIcon.AddComponent<SpriteDragDrop>();
         _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
-        _dragIcon.GetComponent<SpriteDragDrop>().internalId = _itemSeed;
+        _dragIcon.GetComponent<SpriteDragDrop>().InternalId = _itemSeed;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
@@ -100,7 +100,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
 
-                    _dragIcon.GetComponent<SpriteDragDrop>().currentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+                    _dragIcon.GetComponent<SpriteDragDrop>().CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
 
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     Image image = _dragIcon.GetComponent<Image>();
