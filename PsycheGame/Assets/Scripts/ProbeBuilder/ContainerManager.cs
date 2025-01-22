@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /* 
@@ -181,6 +182,20 @@ public class ContainerManager : MonoBehaviour
 			return (-1, -1);
 		}
 		return (x, y);
+	}
+
+	public (int, int) GetCellAtWorldPosition(Vector3 position)
+	{
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			Transform tile = transform.GetChild(i);
+			if (Math.Abs(tile.position.x - position.x) <= tile.localScale.x / 2 && Math.Abs(tile.position.y - position.y) <= tile.localScale.y / 2)
+			{
+				Tile tileData = tile.GetComponent<Tile>();
+				return (tileData.GetCellX(), tileData.GetCellY());
+			}
+        }
+		return (-1, -1);
 	}
 
 	public (float, float) GetBeaconPosition()

@@ -54,7 +54,7 @@ public class SpriteDragDrop : MonoBehaviour
         if (selected)
         {
             Vector3 newPos = MouseWorldPosition();
-            (int cellX, int cellY) cellPos = containerManager.FindGridPosition(newPos);
+            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(newPos);
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
@@ -111,7 +111,7 @@ public class SpriteDragDrop : MonoBehaviour
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
+        // mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
 }
