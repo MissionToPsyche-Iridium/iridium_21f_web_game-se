@@ -14,6 +14,13 @@ public class ShipMovement : MonoBehaviour {
     private bool isBoosting = false;
     private Rigidbody2D rb;
 
+    public void initWithConfig(ShipConfig.ShipMovementConfig config) {
+        moveSpeed = config.moveSpeed;
+        fuelConsumptionRate = config.fuelConsumptionRate;
+        boostMultiplier = config.boostMultiplier;
+        boostSpeedChangeRate = config.bostChangeRate;
+    }
+
     void Start() {
         rb = GetComponent<Rigidbody2D>();
     }

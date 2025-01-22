@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 // Singleton class containing representing the 'state' of the probe
@@ -27,6 +28,12 @@ public class ShipManager : MonoBehaviour {
                 Debug.LogError("Failed to find 'ShipScanner' script on ship");
                 return;
             }
+
+            moveLogic = _obj.GetComponent<ShipMovement>();
+            if (moveLogic == null) {
+                Debug.LogError("Failed to find 'ShipMovement' script on ship");
+                return;
+            }
         }
     }
 
@@ -34,8 +41,10 @@ public class ShipManager : MonoBehaviour {
 
     private static float fuel = 150f;
     private static float health = 100f;
-    private static ShipTetherLogic tetherLogic;
-    private static ShipScanBehavior scanner;
+
+    protected static ShipTetherLogic tetherLogic;
+    protected static ShipScanBehavior scanner;
+    protected static ShipMovement moveLogic;
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }
@@ -45,9 +54,17 @@ public class ShipManager : MonoBehaviour {
     // otherwise a value of null will be returned
     public static GameObject Ship { get { return _obj; } }
 
-    private void Start() {
+    public static void setShipConfig(ShipConfig config)
+    {
         // TODO start initializing things here
         // Need to keep in mind at some point this configuration may be
         // driven via JSON object
+        
+        tetherLogic.initWithConfig(config.tetherConfig);
+        scanner.initWithConfig(config.scanConfig);
+        moveLogic.initWithConfig(config.shipMoveConfig);
+
+        fuel = config.shipMoveConfig.fuel;
+        health = config.shipMoveConfig.health;
     }
 }

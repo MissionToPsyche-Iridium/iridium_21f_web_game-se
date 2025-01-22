@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
 public class ShipConfig : MonoBehaviour
 {
+    [System.Serializable]
     public record TetherConfig {
         [Tooltip("The total number of line segments that make up the tether rendering")]
         public int resolution;
@@ -26,6 +27,7 @@ public class ShipConfig : MonoBehaviour
         public float progressionSpeed;
     }
 
+    [System.Serializable]
     public record ScanConfig {
         [Tooltip("The distance at which objects can be scanned in the scene")]
         public float distance;
@@ -37,10 +39,17 @@ public class ShipConfig : MonoBehaviour
         public float arcAngle;
     }
 
+    [System.Serializable]
     public record ShipMovementConfig {
         public float moveSpeed;
         public float fuelConsumptionRate;
         public float boostMultiplier;
         public float bostChangeRate;
+        public float fuel;
+        public float health;
     }
+
+    public TetherConfig tetherConfig;
+    public ScanConfig scanConfig;
+    public ShipMovementConfig shipMoveConfig;
 }
