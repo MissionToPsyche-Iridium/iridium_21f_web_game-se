@@ -7,12 +7,15 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
-    [SerializeField] private List<LevelConfig> levels; 
+    [SerializeField] private List<LevelConfig> levels;
+    [SerializeField] private List<ShipConfig> shipConfigs;
+
     private int currentLevelIndex = 0;
 
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner spawner;
     [SerializeField] private ObjectSpawner asteroidSpawner; 
+
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
@@ -100,25 +103,32 @@ public class LevelManager : MonoBehaviour
         }
 
         currentLevelIndex = levelIndex;
-        LevelConfig config = levels[levelIndex];
+        LevelConfig levelConfig = levels[levelIndex];
+        ShipConfig shipConfig = shipConfigs[levelIndex];
 
-        spawner.rareAsteroidCount = config.rareAsteroidCount;
-        spawner.scaleMin = config.RMscaleMin;
-        spawner.scaleMax = config.RMscaleMax;
+        // Set up various spawners and level related config
+
+        spawner.rareAsteroidCount = levelConfig.rareAsteroidCount;
+        spawner.scaleMin = levelConfig.RMscaleMin;
+        spawner.scaleMax = levelConfig.RMscaleMax;
 
         spawner.SpawnRareAsteroids();
 
-        asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
+        asteroidSpawner.InitWithConfig(levelConfig.asteroidSpawnerConfig);
         asteroidSpawner.enabled = true;
 
-        gasSpawner.InitWithConfig(config.gasSpawnerConfig);
+        gasSpawner.InitWithConfig(levelConfig.gasSpawnerConfig);
         gasSpawner.enabled = true;
 
-        MissionState.Instance.Initialize(config.objectives);
+        MissionState.Instance.Initialize(levelConfig.objectives);
 
-        missionTimeRemaining = config.missionTimer;
+        missionTimeRemaining = levelConfig.missionTimer;
 
-        Debug.Log($"Loaded Level: {config.levelName}");
+        Debug.Log($"Loaded Level: {levelConfig.levelName}");
+
+        // Init ship with it's config
+
+        ShipManager.setShipConfig(shipConfig);
     }
 
     public void PauseGame()

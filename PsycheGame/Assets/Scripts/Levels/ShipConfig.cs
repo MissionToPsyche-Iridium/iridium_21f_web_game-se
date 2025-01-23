@@ -3,8 +3,8 @@ using UnityEngine;
 // Rather than moving these out to there respective classes like in the
 // level config we keep these here so you can quickly see all
 // configurable ship parameters
-[CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
-public class ShipConfig : MonoBehaviour
+[CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 2)]
+public class ShipConfig : ScriptableObject 
 {
     [System.Serializable]
     public record TetherConfig {
