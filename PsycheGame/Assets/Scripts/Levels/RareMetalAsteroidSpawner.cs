@@ -8,6 +8,7 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
     private Vector3 boundingAreaCenter;
     [SerializeField, Min(0.1f)] public float scaleMin = 0.5f;
     [SerializeField, Min(0.1f)] public float scaleMax = 1.5f;
+    [SerializeField, Min(1f)] private float spawnRadius = 50f;
 
     private void Start()
     {
@@ -50,11 +51,10 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
 
     private Vector3 GetRandomPosition()
     {
-        Bounds bounds = boundingArea.GetComponent<Renderer>().bounds;
-        float randomX = Random.Range(bounds.min.x, bounds.max.x);
-        float randomY = Random.Range(bounds.min.y, bounds.max.y);
-        float fixedZ = 0;
-        return new Vector3(randomX, randomY, fixedZ);
-
+         Vector3 pos = Random.insideUnitCircle;
+        pos = pos.normalized;
+        pos *= spawnRadius;
+        pos += boundingAreaCenter;
+        return pos;
     }
 }
