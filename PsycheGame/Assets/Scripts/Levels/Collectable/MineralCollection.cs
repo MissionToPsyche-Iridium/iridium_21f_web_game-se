@@ -58,7 +58,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
-    private RareMetalCollectionStatusBar statusBar;
+    [SerializeField] private RareMetalCollectionStatusBar statusBar;
 
     public Progress ScanProgress => scanProgress;
     public string Description => description;
