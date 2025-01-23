@@ -2,43 +2,39 @@
   "part": [
     {
       "name": "Magnetometer",
-      "description": "This instrument measures the changes in the magnetic field of an object."
+      "description":  "This instrument measures the magnetic field around the asteroid to search for evidence of an ancient magnetic field."
     },
     {
       "name": "Solar Panel",
-      "description": "This instrument absorbs the sun's rays as a source of energy for generating electricity and heating."
+      "description": "This object absorbs the sun's rays as a source of energy for generating electricity and heating. The solar arrays power everything on board, including the science instruments."
     },
     {
-      "name": "Hull-effect Thruster",
-      "description": "This instrument uses a magnetic field to ionize the propellent and produce thrust."
+      "name": "Hall-effect Thruster",
+      "description": "These thrusters use a electromagentic fields to expel charged atoms, or ions, of inert xenon gas that in turn create thrust."
     },
     {
       "name": "Propellant",
-      "description": "This type of propellant uses xenon and is the most common used for ion propulsion."
+      "description": "The Psyche spacecraft uses a propellant called xenon (a neutral gas used in car headlights and plasma TVs)."
     },
     {
       "name": "Multispectral Imager",
-      "description": "This device captures images within wavelengths across the electromagnetic spectrum invisible to the human eye."
+      "description": "A pair of identical cameras equipped with filters and telescopic lenses to photograph the surface of the asteroid in different wavelengths of light."
     },
     {
-      "name": "Gamma Ray Spectrometer",
-      "description": "This instrument measures the distribution of the intensity of gamma radiation versus the energy of photon."
+      "name": "Gamma-Ray and Neutron Spectrometer",
+      "description": "This instrument helps determine the chemical elements that make up the asteroid's surface material."
     },
     {
-      "name": "Neutron Spectrometer",
-      "description": "This instrument detects neutrons in different energy bands and is used for finding hydrogen."
+      "name": "Gravity Science Experiment",
+      "description": "This experiment uses the X-band radio telecommunications system to measure Psyche's gravity field to high precision."
     },
     {
-      "name": "X-Band Radio",
-      "description": "This instrument uses microwaves in the range of 8-12 GHz and is more accurate than other bands."
-    },
-    {
-      "name": "DCOS",
-      "description": "The Deep Space Optical Communication experiment uses a flight laser and ground laser to increase bandwidth."
+      "name": "DSOC",
+      "description": "The Deep Space Optical Communication technology demonstration uses a near-infrared laser to transmit and receive high-bandwidth data."
     },
     {
       "name": "Multilayer Insulation",
-      "description": "This is thermal material reduces heat loss by thermal radiation."
+      "description": "This thermal material reduces heat loss by thermal radiation."
     },
     {
       "name": "Battery",
@@ -53,8 +49,8 @@
       "description": "Use this to store gas collected, other than your propellant."
     },
     {
-      "name": "Asteroid Detector",
-      "description": "This sensor detects asteroids before potential collision."
+      "name": "Meteoroid Detector",
+      "description": "This sensor detects meteoroids before potential collision."
     }
   ]
 }
