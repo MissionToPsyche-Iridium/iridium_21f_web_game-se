@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class Initializer : MonoBehaviour
 {
-    [SerializeField]
-    private TextAsset probeComponentConfig, probeComponentInventoryConfig;
+    [SerializeField] private TextAsset _probeComponentConfig, _probeComponentInventoryConfig;
+    [SerializeField] private GameObject _player;
 
     public void Awake()
     {
         List<Tuple<ProbeComponent, int>> startingInventory = new List<Tuple<ProbeComponent, int>>();
-        InventoryConfigEntry[] entries = JsonParser.FromJsonArray<InventoryConfigEntry>(probeComponentInventoryConfig.text);
-        foreach (ProbeComponent probeComponent in JsonParser.FromJsonArray<ProbeComponent>(probeComponentConfig.text))
+        InventoryConfigEntry[] entries = JsonParser.FromJsonArray<InventoryConfigEntry>(_probeComponentInventoryConfig.text);
+        foreach (ProbeComponent probeComponent in JsonParser.FromJsonArray<ProbeComponent>(_probeComponentConfig.text))
         {
             foreach (InventoryConfigEntry entry in entries)
             {
@@ -23,10 +23,7 @@ public class Initializer : MonoBehaviour
             }
         }
 
-        Player player = Player.GetInstance();
-        player.Initialize(startingInventory);
-
-        BuildManager.GetInstance().Initialize();
+        _player.GetComponent<Player>().Initialize(startingInventory);
     }
 
     [Serializable]

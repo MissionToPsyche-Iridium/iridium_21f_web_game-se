@@ -12,7 +12,7 @@ public class RedoButton : MonoBehaviour, IPointerDownHandler
 
     private void Awake()
     {
-        _buildManager = BuildManager.GetInstance();
+        _buildManager = transform.parent.parent.gameObject.GetComponent<BuildManager>();
         _swooshSound = Resources.Load<AudioClip>("Audio/light-beam-hit-01");
         this.AddComponent<AudioSource>();
 

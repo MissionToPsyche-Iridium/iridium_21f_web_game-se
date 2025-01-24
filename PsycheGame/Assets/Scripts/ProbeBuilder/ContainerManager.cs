@@ -40,6 +40,7 @@ public class ContainerManager : MonoBehaviour
 	public Material tileMaterial;
 	private Sprite tileSprite;
 
+	private int totalOccupations = 0;
 
 	void Start()
 	{
@@ -103,7 +104,38 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
+	public bool CheckOccupationEligibility(int x, int y)
+	{
+		if (gridData[x, y].is_occupied)
+		{
+			return false;
+		}
+		else if (totalOccupations < 1)
+		{
+			return true;
+		}
 
+		for (int i = x - 1; i <= x + 1; i += 1)
+		{
+			if (i < 0 || i >= width)
+			{
+				continue;
+			}
+			for (int j = y - 1; j <= y + 1; j += 1)
+			{
+				if (j < 0 || j >= height || (i == x && j == y))
+				{
+					continue;
+				}
+				else if (gridData[i, j].is_occupied)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 
 	public bool ReleaseFromGridPosition(int x, int y, String objTag)
 	{
@@ -111,7 +143,10 @@ public class ContainerManager : MonoBehaviour
 		{
 			gridData[x, y].is_occupied = false;
 			gridData[x, y].occupant = "";
-			return true;
+
+			totalOccupations--;
+
+            return true;
 		}
 		else
 		{
@@ -125,6 +160,9 @@ public class ContainerManager : MonoBehaviour
 		{
 			gridData[x, y].is_occupied = true;
 			gridData[x, y].occupant = objTag;
+
+			totalOccupations++;
+
 			return true;
 		}
 		else

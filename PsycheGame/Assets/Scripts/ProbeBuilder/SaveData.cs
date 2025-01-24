@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security;
 using UnityEngine;
 
 public class SaveData
@@ -11,7 +13,9 @@ public class SaveData
     {
         string content = ""; 
         foreach (GameObject part in spawnedParts) {
-            content += part.name + "\n"; // Add each GameObject name to the string
+            ProbeComponent component = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetProbeComponentInfo(part);
+            //content += component.Name + "\n"; // Add each GameObject name to the string
+            content += JsonParser.ToJson(component);
         }
 
         File.WriteAllText(filePath, content); // Write the content to the text file
