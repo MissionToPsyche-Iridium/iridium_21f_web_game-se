@@ -123,32 +123,52 @@ public class ContainerManager : MonoBehaviour
 		{
 			return false;
 		}
-		else if (totalOccupations < 1)
-		{
-			return true;
-		}
-
-		for (int i = x - 1; i <= x + 1; i++)
-		{
-			if (i < 0 || i >= width)
-			{
-				continue;
-			}
-			for (int j = y - 1; j <= y + 1; j++)
-			{
-				if (j < 0 || j >= height || (i == x && j == y))
-				{
-					continue;
-				}
-				else if (gridData[i, j].IsOccupied)
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return true;
 	}
+
+	public bool IsReadyToSave()
+	{
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
+
+			bool hasNeighbors = false;
+
+            for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
+            {
+				if (hasNeighbors)
+				{
+					break;
+				}
+                else if (j < 0 || j >= width)
+                {
+                    continue;
+                }
+
+                for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
+                {
+					if (hasNeighbors)
+					{
+						break;
+					}
+                    else if (k < 0 || k >= height || (j == tile.GetCellX() && k == tile.GetCellY()))
+                    {
+                        continue;
+                    }
+                    else if (gridData[j, k].IsOccupied)
+                    {
+						hasNeighbors = true;
+                    }
+                }
+            }
+
+			if (!hasNeighbors)
+			{
+				return false;
+			}
+        }
+		return true;
+    }
 
 	public bool ReleaseFromGridPosition(int x, int y, String objTag)
 	{
