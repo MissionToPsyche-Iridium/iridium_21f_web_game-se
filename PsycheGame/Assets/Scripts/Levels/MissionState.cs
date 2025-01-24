@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,44 +8,29 @@ public class MissionState
     private static MissionState instance;
     public static MissionState Instance
     {
-    get
-    {
-        if (instance == null)
+        get
         {
-            Debug.Log("New MissionState initialized");
-            instance = new MissionState();
+            if (instance == null)
+            {
+                Debug.Log("New MissionState initialized");
+                instance = new MissionState();
+            }
+            return instance;
         }
-        return instance;
-    }
     }
     
 
     public List<MissionObjective> Objectives { get; private set; }
     public bool IsMissionComplete { get; private set; }
-
+    public String levelName {get; private set;}
     public delegate void MissionStateUpdated();
     public static event MissionStateUpdated OnMissionStateChanged;
 
-    private MissionState()
+    public void Initialize(List<MissionObjective> initialObjectives, String name)
     {
-        Objectives = new List<MissionObjective>();
-    }
-
-    public void Initialize(List<MissionObjective> initialObjectives)
-    {
+        levelName = name;
         Objectives = new List<MissionObjective>(initialObjectives);
-        ResetObjectives();
         IsMissionComplete = false;
-    }
-
-    public void ResetObjectives()
-    {
-        foreach (var objective in Objectives)
-        {
-            objective.currentProgress = 0;
-        }
-        IsMissionComplete = false;
-        OnMissionStateChanged?.Invoke();
     }
 
     public void UpdateObjectiveProgress(ObjectiveType type, int amount)
@@ -67,6 +53,19 @@ public class MissionState
         return targetObjective != null ? targetObjective.currentProgress : 0;
     }
 
+    public int GetObjectiveTarget(ObjectiveType type){
+        if(Objectives == null || Objectives.Count == 0){
+            return 100;
+        }
+        var targetObjective = Objectives?.Find(obj => obj.objectiveType == type);
+        if (targetObjective == null)
+        {
+            Debug.Log($"Objective List: {Objectives.Count}! Ensure MissionState is initialized properly.");
+            return 100;
+        }
+        return targetObjective.GetTargetAmount();
+    }
+
     [System.Serializable]
     public class MissionObjective
     {
@@ -80,11 +79,16 @@ public class MissionState
         {
             currentProgress = Mathf.Min(currentProgress + amount, targetAmount);
         }
+
+        public int GetTargetAmount(){
+            return targetAmount;
+        }
     }
 
     public enum ObjectiveType
     {
-        CollectResource,
+        CollectGases,
+        CollectRareMetals,
         ScanObject,
     }
 }

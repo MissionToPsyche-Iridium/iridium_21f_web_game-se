@@ -60,7 +60,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
 
         if (missionState != null)
         {
-            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, triggeredParticles);
+            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectGases, triggeredParticles);
         }
         this.OnCollect(triggeredParticles);
     }

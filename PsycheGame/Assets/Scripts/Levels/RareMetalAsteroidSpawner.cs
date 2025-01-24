@@ -6,8 +6,9 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
     [SerializeField] private GameObject boundingArea;
     [SerializeField, Min(1)] public int rareAsteroidCount = 15;
     private Vector3 boundingAreaCenter;
-    [SerializeField, Min(0.1f)] public float scaleMin = 1f;
-    [SerializeField, Min(0.1f)] public float scaleMax = 5f;
+    [SerializeField, Min(0.1f)] public float scaleMin = 0.5f;
+    [SerializeField, Min(0.1f)] public float scaleMax = 1.5f;
+    [SerializeField, Min(1f)] private float spawnRadius = 50f;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
         for (int i = 0; i < rareAsteroidCount; i++)
         {
             Vector3 position = GetRandomPosition();
+            Debug.Log("Spawning asteroid at position: " + position);
             AddRareMetalAsteroid(position);
         }
     }
@@ -45,15 +47,14 @@ public class RareMetalAsteroidSpawner : MonoBehaviour {
         );
 
         asteroid.transform.localScale *= Random.Range(scaleMin, scaleMax);
-
-        Renderer renderer = asteroid.GetComponent<Renderer>();
     }
 
     private Vector3 GetRandomPosition()
     {
-        float radius = boundingArea.GetComponent<Renderer>().bounds.extents.magnitude;
-        Vector3 randomOffset = Random.insideUnitSphere * Random.Range(1f, radius);
-        randomOffset.z = 0;
-        return boundingAreaCenter + randomOffset;
+         Vector3 pos = Random.insideUnitCircle;
+        pos = pos.normalized;
+        pos *= spawnRadius;
+        pos += boundingAreaCenter;
+        return pos;
     }
 }

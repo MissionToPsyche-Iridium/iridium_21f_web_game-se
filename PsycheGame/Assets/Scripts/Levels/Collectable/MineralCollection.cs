@@ -140,7 +140,7 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
             return;
         }
         if (missionState != null) {
-            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectResource, minedAmount);
+            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals, minedAmount);
             if(statusBar == null){
                 Debug.LogError("RareMetal Status Bar is null");
             }

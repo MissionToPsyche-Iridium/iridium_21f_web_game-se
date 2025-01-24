@@ -9,16 +9,15 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance { get; private set; }
 
     [SerializeField] private List<LevelConfig> levels; 
-    private int currentLevelIndex = 0;
-
     [SerializeField] private ObjectSpawner gasSpawner;
-    [SerializeField] private RareMetalAsteroidSpawner spawner;
-    [SerializeField] private ObjectSpawner asteroidSpawner; 
+    [SerializeField] private RareMetalAsteroidSpawner rareMetalAsteroidspawner;
+    [SerializeField] private ObjectSpawner asteroidSpawner;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
     private bool isPaused = false;
     private MissionTimer missionTimer;
+    private int currentLevelIndex = 0;
 
     private void Awake()
     {
@@ -44,6 +43,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        LevelConfig config = levels[currentLevelIndex];
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
         missionState = MissionState.Instance;
 
         if (missionState == null)
@@ -99,15 +100,15 @@ public class LevelManager : MonoBehaviour
             Debug.Log("All levels completed!");
             return;
         }
-
         currentLevelIndex = levelIndex;
         LevelConfig config = levels[levelIndex];
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
 
-        spawner.rareAsteroidCount = config.rareAsteroidCount;
-        spawner.scaleMin = config.RMscaleMin;
-        spawner.scaleMax = config.RMscaleMax;
+        rareMetalAsteroidspawner.rareAsteroidCount = config.rareAsteroidCount;
+        rareMetalAsteroidspawner.scaleMin = config.RMscaleMin;
+        rareMetalAsteroidspawner.scaleMax = config.RMscaleMax;
 
-        spawner.SpawnRareAsteroids();
+        rareMetalAsteroidspawner.SpawnRareAsteroids();
 
         asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
         asteroidSpawner.enabled = true;
@@ -115,7 +116,6 @@ public class LevelManager : MonoBehaviour
         gasSpawner.InitWithConfig(config.gasSpawnerConfig);
         gasSpawner.enabled = true;
 
-        MissionState.Instance.Initialize(config.objectives);
 
         missionTimeRemaining = config.missionTimer;
 

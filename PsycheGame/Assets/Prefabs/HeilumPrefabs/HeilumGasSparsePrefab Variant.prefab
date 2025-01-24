@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5855816500704302459
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1076874044657982297, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_Radius
+      value: 5.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 562.14856
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 365.35605
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538270545740993936, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5412671227401785163, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5412671227401785163, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: -0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7119559092380717775, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
+      propertyPath: m_Name
+      value: HeilumGasSparsePrefab Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
