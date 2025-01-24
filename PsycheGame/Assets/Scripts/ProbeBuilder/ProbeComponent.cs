@@ -24,6 +24,7 @@ public class ProbeComponent
     public int Armor;
     public int Hp;
     public int Weight;
+    public int Credits;
     public Position GridPosition; //Not sure if Position is the correct data type for this
 
     public ProbeComponent(string id, string name, ProbeComponentType type, string description)
