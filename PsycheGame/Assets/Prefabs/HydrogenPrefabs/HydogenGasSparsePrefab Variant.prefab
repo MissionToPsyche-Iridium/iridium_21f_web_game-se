@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: InitialModule.startSpeed.scalar
       value: -0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 5471302214028906177, guid: 2334fd9abdeade749bab38206671e411, type: 3}
+      propertyPath: progressIncr
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7119559092380717775, guid: 2334fd9abdeade749bab38206671e411, type: 3}
       propertyPath: m_Name
       value: HydogenGasSparsePrefab Variant

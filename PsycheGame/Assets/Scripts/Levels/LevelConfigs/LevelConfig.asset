@@ -23,13 +23,13 @@ MonoBehaviour:
     initialPopulation: 10
     objectsTypes:
     - spawnable: {fileID: -522673876629678716, guid: 9b48279aa6f4be04bb34c6f0aad2a72c, type: 3}
-      scaleMin: 0
-      scaleMax: 0
+      scaleMin: 0.5
+      scaleMax: 1.5
       velocityMin: 0
       velocityMax: 0
     - spawnable: {fileID: 5471302214028906177, guid: 2334fd9abdeade749bab38206671e411, type: 3}
-      scaleMin: 0
-      scaleMax: 0
+      scaleMin: 0.5
+      scaleMax: 1.5
       velocityMin: 0
       velocityMax: 0
   asteroidSpawnerConfig:
@@ -46,7 +46,7 @@ MonoBehaviour:
   - objectiveType: 1
     description: Collect Rare Metals
     targetAmount: 60
-    currentProgress: 0
+    currentProgress: 60
   - objectiveType: 0
     description: Collect Gases
     targetAmount: 20

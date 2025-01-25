@@ -3,14 +3,18 @@ using UnityEngine;
 public class HydrogenGas : CollectableGas {
     [SerializeField] private float progressIncr = 0.1f; // ammount of progress to gain each scan
     [SerializeField] private Sprite displayImage;
-
     private Progress scanProgress = new(Progress.NO_PROGRESS);
 
-    public override void OnStartCollect() { /* on first collect logic here */ }
-    public override void OnEndCollect() { /* on end collect logic here */ }
+
+   private void Awake() {
+    }
+
+    public override void OnStartCollect() {}
+    public override void OnEndCollect() { }
 
     public override void OnCollect(int particlesCollected) {
         ShipManager.Fuel += particlesCollected;
+        UpdateMissionProgress(particlesCollected);
     }
 
     // For new just as a demo we print the instance id of the scanned gas

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
     [SerializeField] private GameObject healthBarColor;
-    [SerializeField] private GameObject healthBarPanel;
     [SerializeField] private Slider healthBar;
 
     private Image healthBarImage = null;
@@ -16,7 +15,6 @@ public class HealthBar : MonoBehaviour {
 
     private void Start() {
         this.healthBarImage = healthBarColor.GetComponent<Image>();
-        this.healthBarPanelImage = healthBarPanel.GetComponent<Image>();
     }
 
     public void UpdateIndicator() {

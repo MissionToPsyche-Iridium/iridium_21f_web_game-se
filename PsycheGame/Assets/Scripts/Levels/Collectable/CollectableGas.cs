@@ -13,6 +13,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
 
 
     [SerializeField] protected Color gasColor = Color.white;
+    [SerializeField] private GasCollectionStatusBar statusBar;
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
@@ -23,6 +24,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
         psMaterial.SetColor("_EmissionColor", gasColor); 
         psSharedMaterial.SetColor("_EmissionColor", gasColor); 
         ps.trigger.AddCollider(GameObject.Find(ShipManager._SHIP_GAMEOBJECT_NAME).transform);
+        missionState = MissionState.Instance;
     }
 
     private void OnValidate() {
@@ -63,6 +65,22 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectGases, triggeredParticles);
         }
         this.OnCollect(triggeredParticles);
+    }
+
+      public void UpdateMissionProgress(int gasAmount) {
+        Debug.Log("Updaing mission progress: Gas Collection");
+        if (missionState == null) {
+            Debug.LogWarning("MissionState is null. Progress cannot be updated.");
+            return;
+        }
+        if (missionState != null) {
+            missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectGases, gasAmount);
+            if(statusBar == null){
+                Debug.LogError("Gae Status Bar is null");
+            }
+            statusBar.UpdateIndicator(gasAmount);
+            Debug.Log($"Collected {gasAmount} of Hydrogen");
+        }
     }
 
 /*--Inherited Functionality--------------------------------------------------------------------------*/

@@ -10,15 +10,14 @@ public class GasCollectionStatusBar : MonoBehaviour {
 
     private Image gasCollectBarImage = null;
 
-    private float LOW_LEVEL;
     private float MID_LEVEL;
+    private float targetAmount;
 
     private void Start() {
         this.gasCollectBarImage = gasCollectionBarColor.GetComponent<Image>();        
         missionState = MissionState.Instance;
-        int amount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases);
-        LOW_LEVEL = amount * 33f;
-        MID_LEVEL = amount * 66f;
+        targetAmount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases);
+        MID_LEVEL = targetAmount * 50;
     }
 
     public void UpdateIndicator(int amount) {
@@ -26,12 +25,12 @@ public class GasCollectionStatusBar : MonoBehaviour {
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
 
-        if (gasTotal < LOW_LEVEL) {
-            gasCollectBarImage.color = Color.red;
-        } else if (gasTotal < MID_LEVEL) {
+        if (gasTotal >= targetAmount) {
+            gasCollectBarImage.color = Color.green;  
+        } else if (gasTotal >= MID_LEVEL) {
             gasCollectBarImage.color = Color.yellow;
         } else {
-            gasCollectBarImage.color = Color.green;
+            gasCollectBarImage.color = Color.red;
         }
     }
 }

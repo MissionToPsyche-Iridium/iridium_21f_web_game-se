@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class FuelBar : MonoBehaviour {
     [SerializeField] private GameObject fuelBarColor;
-    [SerializeField] private GameObject fuelBarPanel;
     [SerializeField] private Slider fuelBar;
 
     private Image fuelBarImage = null;
@@ -16,7 +15,6 @@ public class FuelBar : MonoBehaviour {
 
     private void Start() {
         this.fuelBarImage = fuelBarColor.GetComponent<Image>();
-        this.fuelBarPanelImage = fuelBarPanel.GetComponent<Image>();
     }
 
     public void UpdateIndicator(float fuel) {

@@ -55,13 +55,13 @@ public class MissionState
 
     public int GetObjectiveTarget(ObjectiveType type){
         if(Objectives == null || Objectives.Count == 0){
-            return 100;
+            return 50;
         }
         var targetObjective = Objectives?.Find(obj => obj.objectiveType == type);
         if (targetObjective == null)
         {
             Debug.Log($"Objective List: {Objectives.Count}! Ensure MissionState is initialized properly.");
-            return 100;
+            return 50;
         }
         return targetObjective.GetTargetAmount();
     }
