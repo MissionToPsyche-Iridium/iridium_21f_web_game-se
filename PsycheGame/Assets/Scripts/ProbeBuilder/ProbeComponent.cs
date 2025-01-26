@@ -14,30 +14,38 @@ public enum ProbeComponentType
 [Serializable]
 public class ProbeComponent
 {
-    public string Id;
-    public string Name;
+    public string Id, Name, Description;
     public ProbeComponentType Type;
-    public string Description;
-    public int ScanningRange;
-    public int FuelCapacity;
-    public int Speed;
-    public int Armor;
-    public int Hp;
-    public int Weight;
-    public int Credits;
-    public Position GridPosition; //Not sure if Position is the correct data type for this
+    public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, Credits, GridPositionX, GridPositionY;
 
-    public ProbeComponent(string id, string name, ProbeComponentType type, string description)
+    public ProbeComponent(
+        string id,
+        string name,
+        string description,
+        ProbeComponentType type,
+        int scanningRange,
+        int fuelCapacity,
+        int speed,
+        int armor,
+        int hp,
+        int weight,
+        int credits,
+        int gridPositionX,
+        int gridPositionY
+    )
     {
         Id = id;
-        Type = type;
         Name = name;
         Description = description;
-
-        
+        Type = type;
+        ScanningRange = scanningRange;
+        FuelCapacity = fuelCapacity;
+        Speed = speed;
+        Armor = armor;
+        Hp = hp;
+        Weight = weight;
+        Credits = credits;
+        GridPositionX = gridPositionX;
+        GridPositionY = gridPositionY;
     }
-
-    //TODO: create initializer function that sets the initial values based on the name of the probe component.
-    //We will need to create a file that stores the initial values for each part and read it in when the game starts
-    //I have added this task to taiga 
 }
