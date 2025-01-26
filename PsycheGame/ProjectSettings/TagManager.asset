@@ -4,6 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - tile
+  - ProbePart
+  - Inactive
   - Asteroid
   - Boundary
   - Part
@@ -19,10 +22,11 @@ TagManager:
   - Water
   - UI
   - Scannable
+  - GridPlane
+  -
   - 
-  - 
-  - 
-  - 
+  - ProbePart
+  - ProbePartInPosition
   - 
   - 
   - 
@@ -48,6 +52,15 @@ TagManager:
   - name: BelowDefault
     uniqueID: 1780404353
     locked: 0
+  - name: Background
+    uniqueID: 745557211
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: ProbePart
+    uniqueID: 2414916577
+    locked: 0
+  - name: GridPlane
+    uniqueID: 38925935
     locked: 0

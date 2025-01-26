@@ -3,18 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour
 {
-    public void PlayGame()
+    public void GoToBuilderScene()
     {
-        Debug.Log("Start Game!");
+        Debug.Log("Scene Change: MainMenu to ProbeBuilder");
         SceneManager.LoadScene("ProbeBuilder");
     }
-    
-    public void LoadGame()
-    {
-        Debug.Log("LoadG Game");
-        //Logic to load saved games
+
+    public void GoToFlyerScene() 
+    { 
+        Debug.Log("Scene Change: MainMenu to ProbeFlyer");
+        //TODO SceneManager.LoadScene("");
+
     }
-    public void QuitGame()
+        public void QuitGame()
     {
         Debug.Log("Quit Game!");
         Application.Quit();

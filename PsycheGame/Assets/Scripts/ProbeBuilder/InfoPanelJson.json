@@ -1,0 +1,148 @@
+{
+  "part": [
+    {
+      "name": "Magnetometer",
+      "description":  "This instrument measures the magnetic field around the asteroid to search for evidence of an ancient magnetic field.",
+      "ScanningRange":6,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":2,
+      "Weight":3,
+      "GridPosition":0,
+      "Credits":80
+    },
+    {
+      "name": "Solar Panel",
+      "description": "This object absorbs the sun's rays as a source of energy for generating electricity and heating. The solar arrays power everything on board, including the science instruments.",
+      "ScanningRange":1,
+      "FuelCapacity":3,
+      "Speed":1,
+      "Armor":2,
+      "Hp":3,
+      "Weight":7,
+      "GridPosition":0,
+      "Credits":10
+    },
+    {
+      "name": "Hall-effect Thruster",
+      "description": "These thrusters use a electromagentic fields to expel charged atoms, or ions, of inert xenon gas that in turn create thrust.",
+      "ScanningRange":1,
+      "FuelCapacity":2,
+      "Speed":5,
+      "Armor":1,
+      "Hp":2,
+      "Weight":5,
+      "GridPosition":0,
+      "Credits":50
+    },
+    {
+      "name": "Propellant",
+      "description": "The Psyche spacecraft uses a propellant called xenon (a neutral gas used in car headlights and plasma TVs).",
+      "ScanningRange":1,
+      "FuelCapacity":9,
+      "Speed":1,
+      "Armor":2,
+      "Hp":5,
+      "Weight":9,
+      "GridPosition":0,
+      "Credits":20
+    },
+    {
+      "name": "Multispectral Imager",
+      "description": "A pair of identical cameras equipped with filters and telescopic lenses to photograph the surface of the asteroid in different wavelengths of light.",
+      "ScanningRange":5,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":3,
+      "Weight":4,
+      "GridPosition":0,
+      "Credits":70
+    },
+    {
+      "name": "Gamma-Ray and Neutron Spectrometer",
+      "description": "This instrument helps determine the chemical elements that make up the asteroid's surface material.",
+      "ScanningRange":7,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":2,
+      "Weight":5,
+      "GridPosition":0,
+      "Credits":70
+    },
+    {
+      "name": "Gravity Science Experiment",
+      "description": "This experiment uses the X-band radio telecommunications system to measure Psyche's gravity field to high precision.",
+      "ScanningRange":8,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":2,
+      "Weight":4,
+      "GridPosition":0,
+      "Credits":90
+    },
+    {
+      "name": "DSOC",
+      "description": "The Deep Space Optical Communication technology demonstration uses a near-infrared laser to transmit and receive high-bandwidth data.",
+      "ScanningRange":4,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":3,
+      "Weight":6,
+      "GridPosition":0,
+      "Credits":40
+    },
+    {
+      "name": "Multilayer Insulation",
+      "description": "This thermal material reduces heat loss by thermal radiation.",
+      "ScanningRange":1,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":4,
+      "Hp":6,
+      "Weight":2,
+      "GridPosition":0,
+      "Credits":30
+    },
+    {
+      "name": "Battery",
+      "description": "A place to store the energy collected by your solar panels.",
+      "ScanningRange":1,
+      "FuelCapacity":5,
+      "Speed":1,
+      "Armor":3,
+      "Hp":7,
+      "Weight":8,
+      "GridPosition":0,
+      "Credits":20
+    },
+    {
+      "name": "Repair Kit",
+      "description": "This kit repairs the damage from one collision.",
+      "ScanningRange":1,
+      "FuelCapacity":2,
+      "Speed":1,
+      "Armor":2,
+      "Hp":9,
+      "Weight":3,
+      "GridPosition":0,
+      "Credits":40
+    },
+    {
+      "name": "Meteoroid Detector",
+      "description": "This sensor detects meteoroids before potential collision.",
+      "ScanningRange":5,
+      "FuelCapacity":1,
+      "Speed":1,
+      "Armor":1,
+      "Hp":2,
+      "Weight":5,
+      "GridPosition":0,
+      "Credits":50
+    }
+  ]
+}

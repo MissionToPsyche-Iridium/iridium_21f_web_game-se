@@ -1,114 +1,105 @@
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.SceneManagement; 
-
-using Unity.VisualScripting;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+/**
+ * BuildManager.cs
+ * 
+ * This class manages the state of probe assembly. Specifically, it manages a list of all spawned probe
+ * components. It also implements the undo/redo functionality.
+ */
 
 public class BuildManager : MonoBehaviour
 {
-    public GameObject buttonPrefab;   
-    public Transform buttonContainer;
+    [SerializeField] private GameObject _player;
 
-    public GameObject[] availableShapes; 
-    public Sprite[] partImages;
+    private Inventory _inventory;
+    private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
-    private ContainerManager containerManager;
-    public GameObject spawnArea;
-    public Stack spawnedPartsStack;
-    [SerializeField] private int probePartScale;
-
-    public void Start(){
-        CreateInventoryButtons();
-        // get container manager component attached to the BuildManager GameObject
-        //ContainerManager containerManager = GameObject.Find("ContainerManager").GetComponent<ContainerManager>();
-        spawnArea = GameObject.Find("SpawnArea");
-        spawnedPartsStack = new Stack();
-        Debug.Log($"Build Manager Initialized");
+    public void Start()
+    {
+        _inventory = _player.GetComponent<Player>().Inventory;
+        _spawned = new List<Tuple<ProbeComponent, GameObject>>();
+        _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
 
-
-    void CreateInventoryButtons()
+    public List<GameObject> GetSpawnedProbeComponents()
     {
-        for (int i = 0; i < availableShapes.Length; i++)
+        List<GameObject> probeComponents = new List<GameObject>();
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
         {
-            GameObject button = Instantiate(buttonPrefab, buttonContainer);
-            Debug.Log(availableShapes.Length);
-            button.GetComponentInChildren<TextMeshProUGUI>().text = availableShapes[i].name.Substring(0, availableShapes[i].name.IndexOf("_"));
-            button.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
-            button.GetComponentInChildren<TextMeshProUGUI>().fontSize = 14;
-
-            int index = i;
-            Image probePartImage = button.transform.Find("ProbePartImage").GetComponent<Image>();
-            probePartImage.sprite = partImages[i];
-            button.GetComponent<Button>().onClick.AddListener(() => SelectShape(availableShapes[index]));
+            probeComponents.Add(tuple.Item2);
         }
-        Debug.Log($"Created {availableShapes.Length +1} buttons");
+        return probeComponents;
     }
-    public void SelectShape(GameObject shape)
+
+    public ProbeComponent GetProbeComponentInfo(GameObject probeComponent)
     {
-        Debug.Log($"Selected shape: {shape.name}");
-        SpawnShape(shape);
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        {
+            if (tuple.Item2.Equals(probeComponent))
+            {
+                return tuple.Item1;
+            }
+        }
+        return null;
     }
 
-    void SpawnShape(GameObject shapePrefab)
+    public void SpawnProbeComponent(Tuple<ProbeComponent, GameObject> probeComponentTuple)
     {
-        // foreach (Transform child in shapeSpawnArea)
-        // {
-        //     Destroy(child.gameObject);
-        // }
-
-        GameObject shape = Instantiate(shapePrefab, spawnArea.transform);
-        shape.transform.localPosition = new Vector3(0, 600, 0);
-        //shape.transform.localScale = Vector3.one;
-        shape.transform.localScale = new Vector3(probePartScale, probePartScale, 0);
-        shape.layer = 8; //sets layer to "Part" layer
-        
-        shape.AddComponent<BoxCollider2D>().isTrigger = true;
-        shape.AddComponent<Rigidbody2D>().gravityScale = 0;
-        shape.AddComponent<SpriteDragDrop>(); //adds drag and drop features
-        
-        shape.tag = "Part"; //used for UndoAllOperation()
-        spawnedPartsStack.Push(shape); //used for UndoOperation()
-
-        Debug.Log($"Spawned shape: {shapePrefab.name} at position {shapePrefab.transform.localPosition}");
-
+        _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
+        _spawned.Add(probeComponentTuple);
     }
 
-    public void ExitProbeBuilder(){
-        Debug.Log("Returning home!");
-        SaveProbe(); //saves before exiting
-        SceneManager.LoadScene("MainMenu"); //returns user to main menu
+    public void Undo()
+    {
+        if (_spawned.Count > 0)
+        {
+            Tuple<ProbeComponent, GameObject> probeComponentTuple = _spawned[_spawned.Count - 1];
+
+            probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToRelease();
+
+            _spawned.RemoveAt(_spawned.Count - 1);
+            _undone.Add(probeComponentTuple);
+
+            probeComponentTuple.Item2.SetActive(false);
+
+            _inventory.AddProbeComponent(probeComponentTuple.Item1);
+        }
     }
 
-    public void SaveProbe(){
-        Debug.Log("Saving probe!");
-        //saves all currently spawned and snapped probe parts to a persistant game object
+    public void UndoAll()
+    {
+        for (int i = _spawned.Count - 1; i >= 0; i--)
+        {
+            Undo();
+        }
     }
 
-   
-    public void UndoAllOperation(){
-        //Destroys all spawned probe parts (snapped or not)
-        Debug.Log("UndoAll operation");
-        GameObject[] parts = GameObject.FindGameObjectsWithTag("Part");
-        foreach(GameObject part in parts) {
-        GameObject.Destroy(part);
-       }
-    }
+    public void Redo()
+    {
+        for (int i = _undone.Count - 1; i >= 0; i--)
+        {
+            Tuple<ProbeComponent, GameObject> probeComponentTuple = _undone[i];
+            if (_inventory.GetProbeComponentQuantity(probeComponentTuple.Item1) > 0 && probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToReoccupy())
+            {
+                _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
 
-    public void UndoOperation(){
-        //Destroys last spawned probe part 
-        Debug.Log("Undo operation");
-        //if the last user action was to spawn a part...
-        GameObject lastSpawned = (GameObject) spawnedPartsStack.Pop();
-        GameObject.Destroy(lastSpawned);
-    }
+                _undone.RemoveAt(i);
+                _spawned.Add(probeComponentTuple);
 
-     public void RedoOperation(){
-        //Spawns a probe part that was just destroyed?
-        Debug.Log("Redo operation");
-    }
+                probeComponentTuple.Item2.SetActive(true);
 
-    
+                return;
+            }
+            else
+            {
+                _undone.RemoveAt(i);
+
+                GameObject.Destroy(probeComponentTuple.Item2);
+            }
+        }
+    }
 }
