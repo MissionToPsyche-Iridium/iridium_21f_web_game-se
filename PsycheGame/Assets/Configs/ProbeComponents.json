@@ -2,57 +2,164 @@
     "array": [
         {
             "Id": "PC1",
-            "Name": "DCOS",
+            "Name": "DSOC",
             "Type": 1,
-            "Description": "The Deep Space Optical Communication experiment uses a flight laser transceiver and ground laser transmitter and receiver. It is a new technology for increasing bandwidth."
+            "Description": "The Deep Space Optical Communication technology demonstration uses a near-infrared laser to transmit and receive high-bandwidth data.",
+            "ScanningRange": 4,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 1,
+            "Hp": 3,
+            "Weight": 6,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 40
         },
         {
             "Id": "PC2",
-            "Name": "Gamma Ray Spectrometer",
+            "Name": "Gamma-Ray and Neutron Spectrometer",
             "Type": 1,
-            "Description": "This instrument measures the distribution of the intensity of gamma radiation versus the energy of photon."
+            "Description": "This instrument helps determine the chemical elements that make up the asteroid's surface material.",
+            "ScanningRange": 7,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 1,
+            "Hp": 2,
+            "Weight": 5,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 70
         },
         {
             "Id": "PC3",
-            "Name": "Hull-effect Thruster",
+            "Name": "Hall-effect Thruster",
             "Type": 1,
-            "Description": "This instrument uses a magnetic field to ionize the propellent and produce thrust."
+            "Description": "These thrusters use a electromagentic fields to expel charged atoms, or ions, of inert xenon gas that in turn create thrust.",
+            "ScanningRange": 1,
+            "FuelCapacity": 2,
+            "Speed": 5,
+            "Armor": 1,
+            "Hp": 2,
+            "Weight": 5,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 50
         },
         {
             "Id": "PC4",
             "Name": "Multilayer Insulation",
             "Type": 1,
-            "Description": "This is thermal material reduces heat loss by thermal radiation."
+            "Description": "This thermal material reduces heat loss by thermal radiation.",
+            "ScanningRange": 1,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 4,
+            "Hp": 6,
+            "Weight": 2,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 30
         },
         {
             "Id": "PC5",
             "Name": "Multispectral Imager",
             "Type": 1,
-            "Description": "This device captures images within wavelengths across the electromagnetic spectrum invisible to the human eye."
-        },
-        {
-            "Id": "PC6",
-            "Name": "Neutron Spectrometer",
-            "Type": 1,
-            "Description": "This instrument detects neutrons in different energy bands and is used for finding hydrogen."
+            "Description": "A pair of identical cameras equipped with filters and telescopic lenses to photograph the surface of the asteroid in different wavelengths of light.",
+            "ScanningRange": 5,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 1,
+            "Hp": 3,
+            "Weight": 4,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 70
         },
         {
             "Id": "PC7",
             "Name": "Propellant",
             "Type": 1,
-            "Description": "This type of propellant uses xenon and is the most common used for ion propulsion."
+            "Description": "The Psyche spacecraft uses a propellant called xenon (a neutral gas used in car headlights and plasma TVs).",
+            "ScanningRange": 1,
+            "FuelCapacity": 9,
+            "Speed": 1,
+            "Armor": 2,
+            "Hp": 5,
+            "Weight": 9,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 20
         },
         {
             "Id": "PC8",
             "Name": "Solar Panel",
             "Type": 1,
-            "Description": "This instrument absorbs the sun's rays as a source of energy for generating electricity and heating."
+            "Description": "This object absorbs the sun's rays as a source of energy for generating electricity and heating. The solar arrays power everything on board, including the science instruments.",
+            "ScanningRange": 1,
+            "FuelCapacity": 3,
+            "Speed": 1,
+            "Armor": 2,
+            "Hp": 3,
+            "Weight": 7,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 10
         },
         {
-            "Id": "PC9",
-            "Name": "X-Band Radio",
-            "Type": 1,
-            "Description": "This instrument uses microwaves in the range of 8-12 GHz and offer higher data rates and accuracy than other bands."
+            "Id": "PC10",
+            "Name": "Meteoroid Detector",
+            "Description": "This sensor detects meteoroids before potential collision.",
+            "ScanningRange": 5,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 1,
+            "Hp": 2,
+            "Weight": 5,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 50
+        },
+        {
+            "Id": "PC11",
+            "Name": "Magnetometer",
+            "Description": "This instrument measures the magnetic field around the asteroid to search for evidence of an ancient magnetic field.",
+            "ScanningRange": 6,
+            "FuelCapacity": 1,
+            "Speed": 1,
+            "Armor": 1,
+            "Hp": 2,
+            "Weight": 3,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 80
+        },
+        {
+            "Id": "PC12",
+            "Name": "Battery",
+            "Description": "A place to store the energy collected by your solar panels.",
+            "ScanningRange": 1,
+            "FuelCapacity": 5,
+            "Speed": 1,
+            "Armor": 3,
+            "Hp": 7,
+            "Weight": 8,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 20
+        },
+        {
+            "Id": "PC13",
+            "Name": "Repair Kit",
+            "Description": "This kit repairs the damage from one collision.",
+            "ScanningRange": 1,
+            "FuelCapacity": 2,
+            "Speed": 1,
+            "Armor": 2,
+            "Hp": 9,
+            "Weight": 3,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits": 40
         }
     ]
 }
