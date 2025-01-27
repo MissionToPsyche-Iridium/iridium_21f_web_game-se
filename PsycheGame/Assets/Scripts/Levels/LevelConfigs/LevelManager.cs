@@ -89,6 +89,7 @@ public class LevelManager : MonoBehaviour
 
         if (MissionState.Instance.IsMissionComplete)
         {
+            Debug.Log("Level Complete - loading next level");
             EndLevel(true);
         }
     }

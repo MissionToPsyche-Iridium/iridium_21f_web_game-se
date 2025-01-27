@@ -26,12 +26,12 @@ public class GasCollectionStatusBar : MonoBehaviour {
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
 
-        if (gasTotal < LOW_LEVEL) {
-            gasCollectBarImage.color = Color.red;
-        } else if (gasTotal < MID_LEVEL) {
+        if (gasTotal >= MID_LEVEL) {
+            gasCollectBarImage.color = Color.green;
+        } else if (gasTotal > LOW_LEVEL) {
             gasCollectBarImage.color = Color.yellow;
         } else {
-            gasCollectBarImage.color = Color.green;
+            gasCollectBarImage.color = Color.red;
         }
     }
 }

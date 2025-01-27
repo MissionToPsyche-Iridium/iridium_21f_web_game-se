@@ -15,22 +15,22 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     private void Start() {
         this.rareMetalCollectBarImage = rareMetalCollectionBarColor.GetComponent<Image>();
         missionState = MissionState.Instance;
-        int amount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals);
-        LOW_LEVEL = amount * 33f;
-        MID_LEVEL = amount * 66f;
     }
 
     public void UpdateIndicator(int minedAmount) {
+        LOW_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 33f;
+        MID_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 66f;
+
         totalMined = minedAmount + totalMined;
         Debug.Log($"RareMetalStatusBar updating indicator: {minedAmount}");
         rareMetalCollectBar.value = totalMined;
 
-        if (totalMined < LOW_LEVEL) {
-            rareMetalCollectBarImage.color = Color.red;
-        } else if (totalMined < MID_LEVEL) {
+        if (totalMined >= MID_LEVEL) {
+            rareMetalCollectBarImage.color = Color.green;
+        } else if (totalMined > LOW_LEVEL) {
             rareMetalCollectBarImage.color = Color.yellow;
         } else {
-            rareMetalCollectBarImage.color = Color.green;
+            rareMetalCollectBarImage.color = Color.red;
         }
     }
 }

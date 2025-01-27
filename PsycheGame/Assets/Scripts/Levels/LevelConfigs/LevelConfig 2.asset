@@ -21,7 +21,17 @@ MonoBehaviour:
     spawnInterval: 1
     objectLimit: 20
     initialPopulation: 20
-    objectsTypes: []
+    objectsTypes:
+    - spawnable: {fileID: 3025043409414209791, guid: 6dabc6d3448f61347b8bb1de4c50fc80, type: 3}
+      scaleMin: 0.5
+      scaleMax: 1.5
+      velocityMin: 0
+      velocityMax: 0
+    - spawnable: {fileID: 5278067822366210641, guid: 8938c6469dfddb34f8fecc71c161b487, type: 3}
+      scaleMin: 0.5
+      scaleMax: 1.5
+      velocityMin: 0
+      velocityMax: 0
   asteroidSpawnerConfig:
     spawnInterval: 1
     objectLimit: 200

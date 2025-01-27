@@ -45,6 +45,7 @@ public class MissionState
             }
         }
         IsMissionComplete = Objectives.TrueForAll(obj => obj.isCompleted);
+        Debug.Log("Is mission complete: " + IsMissionComplete);
     }
 
     public int GetObjectiveProgress(ObjectiveType type)
@@ -55,13 +56,13 @@ public class MissionState
 
     public int GetObjectiveTarget(ObjectiveType type){
         if(Objectives == null || Objectives.Count == 0){
-            return 100;
+            return 80;
         }
         var targetObjective = Objectives?.Find(obj => obj.objectiveType == type);
         if (targetObjective == null)
         {
             Debug.Log($"Objective List: {Objectives.Count}! Ensure MissionState is initialized properly.");
-            return 100;
+            return 80;
         }
         return targetObjective.GetTargetAmount();
     }
@@ -73,11 +74,21 @@ public class MissionState
         public string description;
         public int targetAmount;
         public int currentProgress = 0;
-        public bool isCompleted => currentProgress >= targetAmount;
+        public bool isCompleted
+        {
+            get
+            {
+                bool completed = currentProgress >= targetAmount;
+                Debug.Log($"Objective: {description}, Current Progress: {currentProgress}, Target: {targetAmount}, Completed: {completed}");
+                return completed;
+            }
+        }
 
         public void IncrementProgress(int amount)
         {
+            int previousProgress = currentProgress;
             currentProgress = Mathf.Min(currentProgress + amount, targetAmount);
+            Debug.Log($"Objective Progress: {description}, Progress: {previousProgress} -> {currentProgress}, Target: {targetAmount}");
         }
 
         public int GetTargetAmount(){
