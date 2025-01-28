@@ -3,6 +3,7 @@ using UnityEngine;
 
 using System.Collections.Generic;
 using TMPro;
+using System.Collections;
 
 public class LevelManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner rareMetalAsteroidspawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private TextMeshProUGUI loadingText;
+    [SerializeField] private float minLoadingTime = 2f;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
@@ -89,18 +93,34 @@ public class LevelManager : MonoBehaviour
 
         if (MissionState.Instance.IsMissionComplete)
         {
-            Debug.Log("Level Complete - loading next level");
+            Debug.Log("Level Complete - loading next level...");
             EndLevel(true);
         }
     }
-
+ 
     public void LoadLevel(int levelIndex)
     {
+        StartCoroutine(LoadLevelAsync(levelIndex));
+    }
+
+    public IEnumerator LoadLevelAsync(int levelIndex)
+    {
+
+        if (loadingScreen != null)
+            loadingScreen.SetActive(true);
+
+        if (loadingText != null)
+            loadingText.text = "Loading Next Level...";
+
+        float startTime = Time.time;
+        yield return new WaitForSeconds(minLoadingTime);
+
         if (levelIndex >= levels.Count)
         {
             Debug.Log("All levels completed!");
-            return;
+            yield break;
         }
+
         currentLevelIndex = levelIndex;
         LevelConfig config = levels[levelIndex];
         MissionState.Instance.Initialize(config.objectives, config.levelName);
@@ -121,6 +141,9 @@ public class LevelManager : MonoBehaviour
         missionTimeRemaining = config.missionTimer;
 
         Debug.Log($"Loaded Level: {config.levelName}");
+        
+        if (loadingScreen != null)
+            loadingScreen.SetActive(false);
     }
 
     public void PauseGame()
