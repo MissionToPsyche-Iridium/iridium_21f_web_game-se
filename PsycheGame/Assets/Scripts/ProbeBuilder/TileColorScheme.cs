@@ -7,7 +7,7 @@ using UnityEngine;
     Description: this script is a stereotype for the defining the color scheme for the tiles.
 */
 
-public abstract class TileColorScheme : MonoBehaviour
+public abstract class TileColorScheme
 {
     public abstract Color GetColor1();
     public abstract Color GetColor2();

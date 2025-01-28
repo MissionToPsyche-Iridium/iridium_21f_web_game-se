@@ -1,6 +1,6 @@
 using UnityEngine;
 using static TileColorScheme;
-public class Constants : MonoBehaviour
+public class Constants
 {
     // placeholder for color scheme until config file is implemented
     // colors scheme 1 = standard, 2 = alternate
