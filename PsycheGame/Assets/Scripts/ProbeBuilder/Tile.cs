@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 /*
     Probe Builder:: Tile.cs
     
@@ -22,6 +23,8 @@ public class Tile : MonoBehaviour
 {
     [SerializeField] private Color color1;
     [SerializeField] private Color color2;
+    [SerializeField] private Color openTileColor;
+    [SerializeField] private Color occupiedTileColor;
     [SerializeField] private SpriteRenderer render;
 
     private int cellX;
@@ -30,14 +33,18 @@ public class Tile : MonoBehaviour
     private float yPosition;
 
     private Color defaultColor;
+    private TileColorScheme colorScheme;
 
     public void Init(bool isOffset, int x, int y, float xP, float yP)
     {
+        // color scheme is initialized based on the current color scheme defined in the Constants class (1 = standard, 2 = alternate)
+        colorScheme = Constants.GetColorSchemeInstance();
+
         cellX = x;
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-        render.color = isOffset ? color1 : color2;
+        render.color = isOffset ? colorScheme.GetColor1() : colorScheme.GetColor2();
         defaultColor = render.color;
     }
 
@@ -74,9 +81,9 @@ public class Tile : MonoBehaviour
     void OnMouseEnter() {
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
         if (occupied != "") {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOccupiedTileColor();
         } else {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOpenTileColor();
         }
     }
 
