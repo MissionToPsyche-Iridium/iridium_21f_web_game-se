@@ -17,6 +17,7 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         missionState = MissionState.Instance;
     }
 
+    //More unity way of reseting UI based on state change?
     public void ResetStatusBar(){
         missionState = MissionState.Instance;
         totalMined = 0;
