@@ -35,6 +35,18 @@
         {
             "ProbeComponentId": "PC9",
             "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC10",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC11",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC12",
+            "Quantity": 1
         }
     ]
 }

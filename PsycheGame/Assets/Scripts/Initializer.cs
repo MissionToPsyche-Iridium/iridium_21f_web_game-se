@@ -19,6 +19,7 @@ public class Initializer : MonoBehaviour
                 if (entry.ProbeComponentId.Equals(probeComponent.Id))
                 {
                     startingInventory.Add(new Tuple<ProbeComponent, int>(probeComponent, entry.Quantity));
+                    break;
                 }
             }
         }
