@@ -17,6 +17,11 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         missionState = MissionState.Instance;
     }
 
+    public void ResetStatusBar(){
+        missionState = MissionState.Instance;
+        totalMined = 0;
+    }
+
     public void UpdateIndicator(int minedAmount) {
         LOW_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 33f;
         MID_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 66f;

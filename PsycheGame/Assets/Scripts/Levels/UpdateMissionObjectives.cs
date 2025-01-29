@@ -7,7 +7,7 @@ public class UpdateMissionObjectives : MonoBehaviour
 {
     MissionState missionState;
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-    void Start()
+    void Update()
     {
         missionState =  MissionState.Instance;
         string objectivesContent = $"Level: {missionState.levelName}\n";

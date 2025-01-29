@@ -48,8 +48,7 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         LevelConfig config = levels[currentLevelIndex];
-        MissionState.Instance.Initialize(config.objectives, config.levelName);
-        missionState = MissionState.Instance;
+        initializeByConfig(config);
 
         if (missionState == null)
         {
@@ -62,7 +61,25 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
             return;
         }
-        LoadLevel(currentLevelIndex);
+    }
+
+    private void initializeByConfig(LevelConfig config){
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
+        missionState = MissionState.Instance;
+
+        missionTimeRemaining = config.missionTimer;
+
+        rareMetalAsteroidspawner.rareAsteroidCount = config.rareAsteroidCount;
+        rareMetalAsteroidspawner.scaleMin = config.RMscaleMin;
+        rareMetalAsteroidspawner.scaleMax = config.RMscaleMax;
+
+        rareMetalAsteroidspawner.SpawnRareAsteroids();
+
+        asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
+        asteroidSpawner.enabled = true;
+
+        gasSpawner.InitWithConfig(config.gasSpawnerConfig);
+        gasSpawner.enabled = true;
     }
 
     public void StartMissionTimer()
@@ -103,42 +120,26 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(LoadLevelAsync(levelIndex));
     }
 
-    public IEnumerator LoadLevelAsync(int levelIndex)
-    {
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(true);
-
-        if (loadingText != null)
-            loadingText.text = "Loading Next Level...";
-
-        float startTime = Time.time;
-        yield return new WaitForSeconds(minLoadingTime);
-
+    public IEnumerator LoadLevelAsync(int levelIndex){
         if (levelIndex >= levels.Count)
         {
             Debug.Log("All levels completed!");
+            loadingText.text = "All levels completed!";
+            loadingScreen.SetActive(true);
+            EnableAllChildren(loadingScreen.transform);
             yield break;
         }
 
-        currentLevelIndex = levelIndex;
+        if (loadingScreen != null){
+            loadingText.text = "Loading Next Level...";
+            loadingScreen.SetActive(true);
+            EnableAllChildren(loadingScreen.transform);
+
+        }
         LevelConfig config = levels[levelIndex];
-        MissionState.Instance.Initialize(config.objectives, config.levelName);
-
-        rareMetalAsteroidspawner.rareAsteroidCount = config.rareAsteroidCount;
-        rareMetalAsteroidspawner.scaleMin = config.RMscaleMin;
-        rareMetalAsteroidspawner.scaleMax = config.RMscaleMax;
-
-        rareMetalAsteroidspawner.SpawnRareAsteroids();
-
-        asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
-        asteroidSpawner.enabled = true;
-
-        gasSpawner.InitWithConfig(config.gasSpawnerConfig);
-        gasSpawner.enabled = true;
-
-
-        missionTimeRemaining = config.missionTimer;
+        initializeByConfig(config);
+        float startTime = Time.time;
+        yield return new WaitForSeconds(minLoadingTime);
 
         Debug.Log($"Loaded Level: {config.levelName}");
         
@@ -181,5 +182,13 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         LoadLevel(currentLevelIndex);
+    }
+
+    private void EnableAllChildren(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            child.gameObject.SetActive(true);
+        }
     }
 }
