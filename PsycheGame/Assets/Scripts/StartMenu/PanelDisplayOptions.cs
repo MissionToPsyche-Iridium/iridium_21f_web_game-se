@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
-public class PanelDisplayOptions : MonoBehaviour
+public class PanelDisplayOptions : MonoBehaviour, IPointerDownHandler
 {   
     public GameObject congratulationsText;
     public GameObject aboutText;
@@ -15,6 +17,8 @@ public class PanelDisplayOptions : MonoBehaviour
 
     public GameObject exitButton;
     public GameObject nextButton;
+    private AudioClip _swooshSound;
+
 
     public void ViewAboutText() {
         ClearPanel();
@@ -46,6 +50,17 @@ public class PanelDisplayOptions : MonoBehaviour
         exitButton.SetActive(false);
         nextButton.SetActive(false);
 
+    }
+
+    private void Awake()
+    {
+        _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
+        this.AddComponent<AudioSource>();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
     }
 
 }
