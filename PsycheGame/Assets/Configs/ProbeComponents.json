@@ -76,7 +76,7 @@
             "Credits": 70
         },
         {
-            "Id": "PC7",
+            "Id": "PC6",
             "Name": "Propellant",
             "Type": 1,
             "Description": "The Psyche spacecraft uses a propellant called xenon (a neutral gas used in car headlights and plasma TVs).",
@@ -91,7 +91,7 @@
             "Credits": 20
         },
         {
-            "Id": "PC8",
+            "Id": "PC7",
             "Name": "Solar Panel",
             "Type": 1,
             "Description": "This object absorbs the sun's rays as a source of energy for generating electricity and heating. The solar arrays power everything on board, including the science instruments.",
@@ -106,7 +106,7 @@
             "Credits": 10
         },
         {
-            "Id": "PC10",
+            "Id": "PC8",
             "Name": "Meteoroid Detector",
             "Description": "This sensor detects meteoroids before potential collision.",
             "ScanningRange": 5,
@@ -120,7 +120,7 @@
             "Credits": 50
         },
         {
-            "Id": "PC11",
+            "Id": "PC9",
             "Name": "Magnetometer",
             "Description": "This instrument measures the magnetic field around the asteroid to search for evidence of an ancient magnetic field.",
             "ScanningRange": 6,
@@ -134,7 +134,7 @@
             "Credits": 80
         },
         {
-            "Id": "PC12",
+            "Id": "PC10",
             "Name": "Battery",
             "Description": "A place to store the energy collected by your solar panels.",
             "ScanningRange": 1,
@@ -148,7 +148,7 @@
             "Credits": 20
         },
         {
-            "Id": "PC13",
+            "Id": "PC11",
             "Name": "Repair Kit",
             "Description": "This kit repairs the damage from one collision.",
             "ScanningRange": 1,
@@ -160,6 +160,20 @@
             "GridPositionX": -1,
             "GridPositionY": -1,
             "Credits": 40
-        }
+        },
+        {
+            "Id":"PC12",
+            "Name": "Gravity Science Experiment",
+            "Description": "This experiment uses the X-band radio telecommunications system to measure Psyche's gravity field to high precision.",
+            "ScanningRange":8,
+            "FuelCapacity":1,
+            "Speed":1,
+            "Armor":1,
+            "Hp":2,
+            "Weight":4,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits":90
+          }
     ]
 }
