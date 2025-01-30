@@ -9,6 +9,9 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
+    public delegate void OnLevelLoadedHandler(LevelConfig config);
+    public static event OnLevelLoadedHandler OnLevelLoaded;
+
     [SerializeField] private List<LevelConfig> levels; 
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private RareMetalAsteroidSpawner rareMetalAsteroidspawner;
@@ -16,7 +19,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private TextMeshProUGUI loadingText;
     [SerializeField] private float minLoadingTime = 2f;
+    [SerializeField] private GameObject missionObjectivePanel;
     private MissionState missionState; 
+    private RareMetalCollectionStatusBar rareMetalCollectionStatusBar;
+    private UpdateMissionObjectives updateMissionObjectives;
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
     private bool isPaused = false;
@@ -49,7 +55,7 @@ public class LevelManager : MonoBehaviour
     {
         LevelConfig config = levels[currentLevelIndex];
         initializeByConfig(config);
-
+        
         if (missionState == null)
         {
             Debug.LogError("Instance of MissionState is not set! MissionState must be initialized for use by LevelManager.");
@@ -140,11 +146,17 @@ public class LevelManager : MonoBehaviour
         initializeByConfig(config);
         float startTime = Time.time;
         yield return new WaitForSeconds(minLoadingTime);
+        
+        OnLevelLoaded?.Invoke(config);
 
         Debug.Log($"Loaded Level: {config.levelName}");
-        
+        rareMetalCollectionStatusBar.OnLevelLoaded(config);
+        updateMissionObjectives.OnLevelLoaded(config);
+
         if (loadingScreen != null)
             loadingScreen.SetActive(false);
+
+        missionObjectivePanel.SetActive(true);
     }
 
     public void PauseGame()

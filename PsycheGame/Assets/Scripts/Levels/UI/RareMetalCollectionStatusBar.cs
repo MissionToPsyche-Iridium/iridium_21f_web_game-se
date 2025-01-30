@@ -17,10 +17,24 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         missionState = MissionState.Instance;
     }
 
-    //More unity way of reseting UI based on state change?
+    private void OnEnable()
+    {
+        LevelManager.OnLevelLoaded += OnLevelLoaded;
+    }
+    private void OnDisable()
+    {
+        LevelManager.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    public void OnLevelLoaded(LevelConfig config)
+    {
+        ResetStatusBar();
+    }
+
     public void ResetStatusBar(){
         missionState = MissionState.Instance;
         totalMined = 0;
+        UpdateIndicator(0);
     }
 
     public void UpdateIndicator(int minedAmount) {

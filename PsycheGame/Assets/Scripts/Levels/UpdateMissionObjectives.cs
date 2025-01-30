@@ -7,7 +7,24 @@ public class UpdateMissionObjectives : MonoBehaviour
 {
     MissionState missionState;
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-    void Update()
+    
+
+    private void OnEnable()
+    {
+        LevelManager.OnLevelLoaded += OnLevelLoaded;
+    }
+
+    private void OnDisable()
+    {
+        LevelManager.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    public void OnLevelLoaded(LevelConfig config)
+    {
+        UpdateUI();
+    }
+
+    void UpdateUI()
     {
         missionState =  MissionState.Instance;
         string objectivesContent = $"Level: {missionState.levelName}\n";
