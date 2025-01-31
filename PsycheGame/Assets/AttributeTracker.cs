@@ -21,6 +21,7 @@ public class AttributeTracker : MonoBehaviour
 
     public void UpdateChildAttributes()
     {
+        attributes = buildManager.CalculateAttributeTotals();
         Transform[] ts = gameObject.transform.GetComponentsInChildren<Transform>();
         foreach (Transform t in ts)
         {
@@ -56,7 +57,6 @@ public class AttributeTracker : MonoBehaviour
     void Start()
     {
         buildManager = GameObject.Find("MasterCanvas").GetComponent<BuildManager>();
-        attributes = buildManager.CalculateAttributeTotals();
         Debug.Log(" <AT> +++Fetch Probe component attributes+++ ");
         UpdateChildAttributes();
     }
@@ -65,6 +65,7 @@ public class AttributeTracker : MonoBehaviour
     void Update()
     {
         Debug.Log(" <AT2> +++Updateing Probe component attributes+++");
+
         UpdateChildAttributes();
     }
 }
