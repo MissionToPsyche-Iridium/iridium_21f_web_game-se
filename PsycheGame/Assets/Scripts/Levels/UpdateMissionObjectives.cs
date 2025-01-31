@@ -8,17 +8,19 @@ public class UpdateMissionObjectives : MonoBehaviour
     MissionState missionState;
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
     
-
-    private void OnEnable()
+    private void Awake()
     {
         LevelManager.OnLevelLoaded += OnLevelLoaded;
     }
 
-    private void OnDisable()
+    private void Start(){
+        UpdateUI();
+    }
+
+    private void OnDestroy()
     {
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
     }
-
     public void OnLevelLoaded(LevelConfig config)
     {
         UpdateUI();
@@ -26,6 +28,7 @@ public class UpdateMissionObjectives : MonoBehaviour
 
     void UpdateUI()
     {
+        textMeshProUGUI.text = "";
         missionState =  MissionState.Instance;
         string objectivesContent = $"Level: {missionState.levelName}\n";
 

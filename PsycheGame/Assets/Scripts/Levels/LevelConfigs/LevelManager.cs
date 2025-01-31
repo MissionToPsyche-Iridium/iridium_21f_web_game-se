@@ -21,8 +21,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private float minLoadingTime = 2f;
     [SerializeField] private GameObject missionObjectivePanel;
     private MissionState missionState; 
-    private RareMetalCollectionStatusBar rareMetalCollectionStatusBar;
-    private UpdateMissionObjectives updateMissionObjectives;
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
     private bool isPaused = false;
@@ -150,8 +148,6 @@ public class LevelManager : MonoBehaviour
         OnLevelLoaded?.Invoke(config);
 
         Debug.Log($"Loaded Level: {config.levelName}");
-        rareMetalCollectionStatusBar.OnLevelLoaded(config);
-        updateMissionObjectives.OnLevelLoaded(config);
 
         if (loadingScreen != null)
             loadingScreen.SetActive(false);

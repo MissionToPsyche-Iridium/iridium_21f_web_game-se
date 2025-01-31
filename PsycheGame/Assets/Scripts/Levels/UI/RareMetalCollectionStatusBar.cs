@@ -13,15 +13,17 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     private float MID_LEVEL;
 
     private void Start() {
+        ResetStatusBar();
         this.rareMetalCollectBarImage = rareMetalCollectionBarColor.GetComponent<Image>();
         missionState = MissionState.Instance;
     }
 
-    private void OnEnable()
+    private void Awake()
     {
         LevelManager.OnLevelLoaded += OnLevelLoaded;
     }
-    private void OnDisable()
+
+    private void OnDestroy()
     {
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
     }
