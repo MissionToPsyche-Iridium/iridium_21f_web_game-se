@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /*
@@ -25,33 +26,29 @@ public class AttributeTracker : MonoBehaviour
         Transform[] ts = gameObject.transform.GetComponentsInChildren<Transform>();
         foreach (Transform t in ts)
         {
-            if (t.name == "ScanRangeVal")
+            switch (t.name)
             {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
-            }
-            if (t.name == "FuelCapacityVal")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["FuelCapacity"].ToString();
-            }
-            if (t.name == "SpeedVal")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["Speed"].ToString();
-            }
-            if (t.name == "ArmorVal")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["Armor"].ToString();
-            }
-            if (t.name == "HpVal")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["HP"].ToString();
-            }
-            if (t.name == "WeightVal")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["Weight"].ToString();
-            }
-            if (t.name == "CreditUsed")
-            {
-                t.GetComponent<TextMeshProUGUI>().text = attributes["CreditsUsed"].ToString();
+                case "ScanRangeVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
+                    break;
+                case "FuelCapacityVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["FuelCapacity"].ToString();
+                    break;
+                case "SpeedVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["Speed"].ToString();
+                    break;
+                case "ArmorVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["Armor"].ToString();
+                    break;
+                case "HpVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["Hp"].ToString();
+                    break;
+                case "WeightVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["Weight"].ToString();
+                    break;
+                case "AvailableCredits":
+                    t.GetComponent<TextMeshProUGUI>().text = buildManager.GetAvailableCredits().ToString();
+                    break;
             }
         }
     }

@@ -16,7 +16,8 @@ public class ProbeComponent
 {
     public string Id, Name, Description;
     public ProbeComponentType Type;
-    public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, Credits, GridPositionX, GridPositionY;
+    public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, GridPositionX, GridPositionY;
+    public float Credits;
 
     public ProbeComponent(
         string id,
@@ -29,7 +30,7 @@ public class ProbeComponent
         int armor,
         int hp,
         int weight,
-        int credits,
+        float credits,
         int gridPositionX,
         int gridPositionY
     )

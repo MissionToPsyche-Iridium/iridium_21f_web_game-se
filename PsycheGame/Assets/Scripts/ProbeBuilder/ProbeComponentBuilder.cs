@@ -7,7 +7,8 @@ public class ProbeComponentBuilder
 {
     private string _id, _name, _description;
     private ProbeComponentType _type;
-    private int _scanningRange, _fuelCapacity, _speed, _armor, _hp, _weight, _credits, _gridPositionX, _gridPositionY;
+    private int _scanningRange, _fuelCapacity, _speed, _armor, _hp, _weight, _gridPositionX, _gridPositionY;
+    private float _credits;
 
     public ProbeComponentBuilder SetId(string id)
     {
@@ -67,7 +68,7 @@ public class ProbeComponentBuilder
         return this;
     }
 
-    public ProbeComponentBuilder SetCredits(int credits)
+    public ProbeComponentBuilder SetCredits(float credits)
     {
         _credits = credits;
         return this;
