@@ -69,8 +69,8 @@ public class ContainerManager : MonoBehaviour
 	{
 		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
 		
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.65);
-		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.4);
+		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.70);
+		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
 		this.tileScale = (int)(parentRectTransform.rect.width / 18);
 
 		for (int x = 0; x < width; x++)
