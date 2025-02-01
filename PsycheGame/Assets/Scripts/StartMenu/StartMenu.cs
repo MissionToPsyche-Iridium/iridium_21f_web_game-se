@@ -18,7 +18,7 @@ public class StartMenu : MonoBehaviour, IPointerDownHandler
     public void GoToFlyerScene() 
     { 
         Debug.Log("Scene Change: MainMenu to ProbeFlyer");
-        //TODO SceneManager.LoadScene("");
+        SceneManager.LoadScene("LevelOne");
 
     }
         public void QuitGame()
