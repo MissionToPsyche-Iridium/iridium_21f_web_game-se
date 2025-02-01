@@ -57,15 +57,14 @@ public class AttributeTracker : MonoBehaviour
     void Start()
     {
         buildManager = GameObject.Find("MasterCanvas").GetComponent<BuildManager>();
-        Debug.Log(" <AT> +++Fetch Probe component attributes+++ ");
+        // Debug.Log(" <AT> +++Fetch Probe component attributes+++ ");
         UpdateChildAttributes();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(" <AT2> +++Updateing Probe component attributes+++");
-
+        //Debug.Log(" <AT2> +++Updateing Probe component attributes+++");
         UpdateChildAttributes();
     }
 }
