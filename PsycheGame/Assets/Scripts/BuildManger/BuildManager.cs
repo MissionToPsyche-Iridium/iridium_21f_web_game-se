@@ -13,6 +13,8 @@ using UnityEngine.SceneManagement;
 
 public class BuildManager : MonoBehaviour
 {
+    private const float MaxCredits = 1000;
+
     [SerializeField] private GameObject _player;
 
     private Inventory _inventory;
@@ -101,5 +103,46 @@ public class BuildManager : MonoBehaviour
                 GameObject.Destroy(probeComponentTuple.Item2);
             }
         }
+    }
+
+    public Dictionary<string, int> CalculateAttributeTotals()
+    {
+        int totalScanningRange = 0,
+            totalFuelCapacity = 0,
+            totalSpeed = 0,
+            totalArmor = 0,
+            totalHp = 0,
+            totalWeight = 0;
+
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        {
+            totalScanningRange += tuple.Item1.ScanningRange;
+            totalFuelCapacity += tuple.Item1.FuelCapacity;
+            totalSpeed += tuple.Item1.Speed;
+            totalArmor += tuple.Item1.Armor;
+            totalHp += tuple.Item1.Hp;
+            totalWeight += tuple.Item1.Weight;
+        }
+
+        Dictionary<string, int> totals = new Dictionary<string, int>();
+
+        totals.Add("ScanningRange", totalScanningRange);
+        totals.Add("FuelCapacity", totalFuelCapacity);
+        totals.Add("Speed", totalSpeed);
+        totals.Add("Armor", totalArmor);
+        totals.Add("Hp", totalHp);
+        totals.Add("Weight", totalWeight);
+
+        return totals;
+    }
+
+    public float GetAvailableCredits()
+    {
+        float creditsUsed = 0.0f;
+        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        {
+            creditsUsed += tuple.Item1.Credits;
+        }
+        return MaxCredits - creditsUsed;
     }
 }

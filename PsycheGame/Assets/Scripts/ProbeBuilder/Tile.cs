@@ -91,5 +91,4 @@ public class Tile : MonoBehaviour
 
         gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }
-
 }
