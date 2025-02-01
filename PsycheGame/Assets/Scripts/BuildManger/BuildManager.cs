@@ -105,7 +105,7 @@ public class BuildManager : MonoBehaviour
 
     public Dictionary<string, int> CalculateAttributeTotals()
     {
-        int totalScanningRange = 500,
+        int totalScanningRange = 0,
             totalFuelCapacity = 0,
             totalSpeed = 0,
             totalArmor = 0,

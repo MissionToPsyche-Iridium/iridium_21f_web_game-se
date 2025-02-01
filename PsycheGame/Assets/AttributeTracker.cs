@@ -27,7 +27,6 @@ public class AttributeTracker : MonoBehaviour
         {
             if (t.name == "ScanRangeVal")
             {
-                Debug.Log("scanning range: " + attributes["ScanningRange"]);
                 t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
             }
             if (t.name == "FuelCapacityVal")
@@ -49,6 +48,10 @@ public class AttributeTracker : MonoBehaviour
             if (t.name == "WeightVal")
             {
                 t.GetComponent<TextMeshProUGUI>().text = attributes["Weight"].ToString();
+            }
+            if (t.name == "CreditUsed")
+            {
+                t.GetComponent<TextMeshProUGUI>().text = attributes["CreditsUsed"].ToString();
             }
         }
     }
