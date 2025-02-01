@@ -1,3 +1,9 @@
 
 /.idea
-PsycheGame/UserSettings/Search.settings
+/PsycheGame/UserSettings
+/PsycheGame/Assets/InventoryData.json
+PsycheGame/.DS_Store
+/PsycheGame/UserSettings
+/PsycheGame/.vscode
+
+**/.DS_Store

@@ -6,13 +6,15 @@ using UnityEngine;
 public class Inventory
 {
     private InventoryContainer<ProbeComponent> _probeComponents;
+    private List<IInventoryObserver> _observers;
 
     public Inventory()
     {
         _probeComponents = new InventoryContainer<ProbeComponent>();
+        _observers = new List<IInventoryObserver>();
     }
 
-    public List<Tuple<ProbeComponent, int>> GetProbeComponents()
+    public List<Tuple<ProbeComponent, int>> GetProbeComponentQuantities()
     {
         List<Tuple<ProbeComponent, int>> probeComponents = new List<Tuple<ProbeComponent, int>>();
         foreach (string id in _probeComponents.GetItemIds())
@@ -22,15 +24,24 @@ public class Inventory
         return probeComponents;
     }
 
+    public int GetProbeComponentQuantity(ProbeComponent probeComponent)
+    {
+        return _probeComponents.GetItemQuantity(probeComponent.Id);
+    }
+
     public void AddProbeComponent(ProbeComponent probeComponent, int quantity)
     {
         string id = probeComponent.Id;
         if (_probeComponents.GetItem(id) != null)
         {
-            _probeComponents.UpdateItemQuantity(id, _probeComponents.GetItemQuantity(id) + quantity);
-            return;
+            quantity += _probeComponents.GetItemQuantity(id);
+            _probeComponents.UpdateItemQuantity(id, quantity);
+        } else
+        {
+            _probeComponents.AddItem(id, probeComponent, quantity);
         }
-        _probeComponents.AddItem(id, probeComponent, quantity);
+
+        NotifyObservers(probeComponent, quantity);
     }
 
     public void AddProbeComponent(ProbeComponent probeComponent)
@@ -42,11 +53,34 @@ public class Inventory
     {
         string id = probeComponent.Id;
         int quantity = _probeComponents.GetItemQuantity(id);
-        if (quantity > 0)
+        if (quantity > 1)
         {
-            _probeComponents.UpdateItemQuantity(id, quantity - 1);
-            return;
+            quantity--;
+            _probeComponents.UpdateItemQuantity(id, quantity);
+        } else
+        {
+            quantity = 0;
+            _probeComponents.RemoveItem(id);
         }
-        _probeComponents.RemoveItem(id);
+
+        NotifyObservers(probeComponent, quantity);
+    }
+
+    private void NotifyObservers(object item, int quantity)
+    {
+        foreach (IInventoryObserver observer in _observers)
+        {
+            observer.ItemUpdated(item, quantity);
+        }
+    }
+
+    public void AddObserver(IInventoryObserver observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void RemoveObserver(IInventoryObserver observer)
+    {
+        _observers.Remove(observer);
     }
 }

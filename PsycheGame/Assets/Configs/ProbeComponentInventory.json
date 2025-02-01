@@ -1,0 +1,52 @@
+{
+    "array": [
+        {
+            "ProbeComponentId": "PC1",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC2",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC3",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC4",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC5",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC6",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC7",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC8",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC9",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC10",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC11",
+            "Quantity": 1
+        },
+        {
+            "ProbeComponentId": "PC12",
+            "Quantity": 1
+        }
+    ]
+}

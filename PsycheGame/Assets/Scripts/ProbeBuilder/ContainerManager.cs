@@ -1,90 +1,256 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
-//using UnityEditor.iOS;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /* 
-	Application: Probe builder
-	File: containerManager 
-	version: 0.1
+	Probe builder :: containerManager.cs
 	Description: this script is responsible for generating the sandwich chassis that holds the probe components.  
 
-	Assumptions (to be validated): this script will be developed in tandem with the (probe builder) user interface script (userInput) that performs
-	mouse and keyboard interactions.  Based on the data design, the data structure components that holds the probe component information will be accessed by the
-	userInput script to determine the position of the component relative to the chassis and makes the appropriate changes back to the data structure component.
-
-
-	10/22 - Teague: data dictionary
-
+	version: 1.0 candidate (Jan 21)
+	:: revise code to meet C# convention for performance and readability
+	:: specifics - reduce redundant getcomponent calls
+	
 */
+
+class GridPositionData {
+    public bool IsOccupied { get; set; }
+    public string Occupant { get; set; }
+
+	public GridPositionData()
+	{
+		IsOccupied = false;
+		Occupant = string.Empty;
+	}
+}
+
 
 public class ContainerManager : MonoBehaviour
 {
 	[SerializeField] private int width, height;
 	[SerializeField] private Tile tile;
-	[SerializeField] private int originX, originY;
+	[SerializeField] private int originX;
+	[SerializeField] private int originY;
 	[SerializeField] private int tileScale;
 	
-	BuildManager buildManager;
-	
-	//[SerializeField] private int xOffset = 100;
+	private float PosX, PosY;
 
-    /*
-		to-do: read/write to access data structure of the probe that describes the following:
-			- the specific type of component installed
-			- the position of the component relative to the chassis (z, x, y)
-			- the orientation of the component (rotation)
-			- the scale of the component
-			
-		the data structure should be a dictionary of the following form:
-			- key: Vector3 (z, x, y)
-			- value: Component (type, position, orientation, scale)
+	private (float x, float y)[,] chassisGrid;
+	private GridPositionData[,] gridData;
+	public Material tileMaterial;
+	private Sprite tileSprite;
 
-	*/
-
-
-	// probe will hold the components that are installed on the chassis
-	private  Dictionary<Vector2, ProbeComponent> container = new Dictionary<Vector2, ProbeComponent>();
+	private int totalOccupations = 0;
 
 	void Start()
 	{
-		//these fields are entered in unity when you add this script to an object
-		// this.width = 10;
-		// this.height = 10;
-		// this.tileScale = 100;
-		// this.originX = 150;
-		// this.originY = 0;
+		chassisGrid = new (float x, float y)[width, height];
+		gridData = new GridPositionData[width, height];
+		for (int i = 0; i < width; i++)
+		{
+			for (int j = 0; j < height; j++)
+			{
+				gridData[i, j] = new GridPositionData();
+			}
+		}
 
-		// get the build manager (parent object) --> expect the mouse and keyboard interactions to be handled by the build manager
-		// this container will handle tile interactions with the game shape object colliding with the tile
-		this.buildManager = GameObject.Find("BuildManager").GetComponent<BuildManager>();
-		Debug.Log($"Container Manager Initialized: {this.buildManager}");
+		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
 		GenerateContainer();
 	}
 
 	void GenerateContainer()
 	{
+		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
+		
+		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.70);
+		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
+		this.tileScale = (int)(parentRectTransform.rect.width / 18);
+
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
-				// instantiate a new tile
 				if (tile != null)
 				{
-					var newTile = Instantiate(tile, new Vector3(originX + (tileScale * x), originY + (tileScale * y)), Quaternion.identity); //instantiates a new tile
-					newTile.name = $"Tile {x} {y}"; //names new tile in hierarchy
-					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0); //gets whether tile is even or odd number
-					newTile.Init(isOffset); //paints tile
-					newTile.transform.SetParent(transform); //sets parent of tile to container
-					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100); //sets scale of tile
+					var targetX = originX + (tileScale * x * 0.93f);
+					var targetY = originY + (tileScale * y * 0.93f);
+					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
+					newTile.name = $"Tile {x} {y}";
+					newTile.tag = "tile";
+
+					var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
+					rigidbody2D.gravityScale = 0;
+
+					var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
+					boxCollider2D.isTrigger = true;
+
+					var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
+					spriteRenderer.sprite = tileSprite;
+
+					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
+					newTile.Init(isOffset, x, y, targetX, targetY);
+
+					chassisGrid[x, y] = (targetX, targetY);
+					newTile.transform.SetParent(transform);
+					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);
 				}
 			}
 		}
+	}
+
+	public String CheckGridOccupied(int x, int y)
+	{
+		if (gridData[x, y].IsOccupied)
+		{
+			return gridData[x, y].Occupant;
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+	public bool CheckOccupationEligibility(int x, int y)
+	{
+		if (gridData[x, y].IsOccupied)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public bool IsReadyToSave()
+	{
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
+
+			bool hasNeighbors = false;
+
+            for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
+            {
+				if (hasNeighbors)
+				{
+					break;
+				}
+                else if (j < 0 || j >= width)
+                {
+                    continue;
+                }
+
+                for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
+                {
+					if (hasNeighbors)
+					{
+						break;
+					}
+                    else if (k < 0 || k >= height || (j == tile.GetCellX() && k == tile.GetCellY()))
+                    {
+                        continue;
+                    }
+                    else if (gridData[j, k].IsOccupied)
+                    {
+						hasNeighbors = true;
+                    }
+                }
+            }
+
+			if (!hasNeighbors)
+			{
+				return false;
+			}
+        }
+		return true;
+    }
+
+	public bool ReleaseFromGridPosition(int x, int y, String objTag)
+	{
+		if (gridData[x, y].Occupant == objTag)
+		{
+			gridData[x, y].IsOccupied = false;
+			gridData[x, y].Occupant = string.Empty;
+
+			totalOccupations--;
+
+            return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public bool AssignToGridPosition(int x, int y, String objTag)
+	{
+		if (gridData[x, y].IsOccupied == false)
+		{
+			gridData[x, y].IsOccupied = true;
+			gridData[x, y].Occupant = objTag;
+
+			totalOccupations++;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public (int, int) FindGridPosition(Vector3 position)
+	{
+		var x = (int) Math.Round((position.x - originX) / tileScale);
+		var y = (int) Math.Round((position.y - originY) / tileScale);
+
+		if (x < 0 || x > width || y < 0 || y > height) 
+		{
+			return (-1, -1);
+		}
+		return (x, y);
+	}
+
+	public (int, int) GetCellAtWorldPosition(Vector3 position)
+	{
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			Transform tile = transform.GetChild(i);
+			if (Math.Abs(tile.position.x - position.x) <= tile.localScale.x / 2 && Math.Abs(tile.position.y - position.y) <= tile.localScale.y / 2)
+			{
+				Tile tileData = tile.GetComponent<Tile>();
+				return (tileData.GetCellX(), tileData.GetCellY());
+			}
+        }
+		return (-1, -1);
+	}
+
+	public (float, float) GetBeaconPosition()
+	{
+		return (this.PosX, this.PosY);
+	}
+
+	public (float, float) GetBeaconPositionGrid(int x, int y)
+	{
+		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+	}
+
+	public String SeedUniquId()
+	{
+		Time time = new Time();
+
+		TimeSpan timeSpan = TimeSpan.FromSeconds(Time.time); 
+		string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+
+		int seedExt = UnityEngine.Random.Range(0, 100);
+		String seedValue = timeText + seedExt.ToString();
+
+		return seedValue;
 	}
 
 }

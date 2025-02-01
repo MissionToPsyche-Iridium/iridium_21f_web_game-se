@@ -1,97 +1,116 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using System.Text.RegularExpressions;
-using UnityEditor.Callbacks;
 using UnityEngine;
 
+/*
+    Probe Builder :: SpriteDragDrop.cs
+    Date: Oct. 2024
+    Description: this script provides the drag-and-drop behavior for the probe parts. It also contains the logic to snap the probe part 
+    to the grid tile when the probe part is in contact with the tile.
+
+    version 1.0 candidate (Jan 21)
+    :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
+*/
 
 public class SpriteDragDrop : MonoBehaviour
 {
-    private UnityEngine.Vector2 mousePosition;
-    private float offsetX, offsetY;
-    private UnityEngine.Vector2 initialPos;
-    public static bool selected;
+    private ContainerManager containerManager;
+    public bool Selected { get; private set; }
+    public string InternalId { get; set; }
+    public Tuple<int, int> CurrentCell { get; set; }
 
-    Collider2D col;
+    private AudioClip snapSound;
+    private Material originalMaterial;
+    private Material sparkMaterial;
+    private Vector3 offset;
+    private AudioSource audioSource;
+    private UnityEngine.UI.Image image;
 
-    Vector3 offset;
-    
-    private void OnMouseDown() {
-        Debug.Log("MouseDown");
-        selected = true;
+    private void Start()
+    {
+        Selected = false;
+
+        containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
+        snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
+        audioSource = gameObject.AddComponent<AudioSource>();
+        image = GetComponent<UnityEngine.UI.Image>();
+
+        Debug.Log(" <SDD> +++Probe part internal ID: " + InternalId + "+++");
+    }
+    private void OnMouseDown()
+    {
+        Selected = true;
         offset = transform.position - MouseWorldPosition();
-
-        /*
-        initialPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offsetX = Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.position.x;
-        offsetY = Camera.main.ScreenToWorldPoint(Input.mousePosition).y - transform.position.y;
-        */
-
+        gameObject.layer = 9;
     }
 
-    private void OnMouseDrag() {
-        Debug.Log("MouseDrag");
-
+    private void OnMouseDrag()
+    {
         transform.position = MouseWorldPosition() + offset;
-        //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //transform.position = new UnityEngine.Vector2(mousePosition.x - offsetX, mousePosition.y - offsetY);
-
-        
     }
 
-    private void OnMouseUp() {
-        selected = false;
-        Debug.Log("MouseUp");
-
-        /*  
-        col.enabled = false;
-        var rayOrigin = Camera.main.transform.position;
-        var rayDirection = MouseWorldPosition() - Camera.main.transform.position;
-        RaycastHit2D hit;
-        // String pattern = "(Square)(.*)";
-
-        if (hit = Physics2D.Raycast(rayOrigin, rayDirection))
+    private void OnMouseUp()
+    {
+        if (Selected)
         {
-            if (hit.transform.tag == chassisTag)
+            Vector3 newPos = MouseWorldPosition();
+            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(newPos);
+
+            if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                transform.position = hit.transform.position + new Vector3(0, 0, -0.01f);
-                Debug.Log("collider name: " + hit.transform.name);
+                AttemptToRelease();
+
+                if (containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
+                {
+                    CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+
+                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+
+                    audioSource.PlayOneShot(snapSound, 1.0f);
+                    image.material = sparkMaterial;
+                                    
+                    if (gameObject.layer <= 9)
+                    {
+                        gameObject.layer = 10;
+                    }
+                }
+                else
+                {
+                    AttemptToReoccupy();
+                }
             }
+
+            (float x, float y) cell = containerManager.GetBeaconPositionGrid(CurrentCell.Item1, CurrentCell.Item2);
+            transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+            Selected = false;
         }
-        col.enabled = true; 
-        */
+    }
+
+    public bool AttemptToRelease()
+    {
+        if (!containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
+        {
+            containerManager.ReleaseFromGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+            return true;
+        }
+        return false;
+    }
+
+    public bool AttemptToReoccupy()
+    {
+        if (containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
+        {
+            containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+            return true;
+        }
+        return false;
     }
 
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
+        // mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
-   
-
-    //This function snaps parts into their assigned containers 
-    // private void OnTriggerStay2D(Collider2D collision) {
-    //     string thisGameObjectName;
-    //     string thisGameObjectTag;
-    //     string collisionGameObjectName;
-    //     string collisionGameObjectTag;
-
-    //     thisGameObjectName = gameObject.name.Substring(0, name.IndexOf("_")); //i.e. GammaRaySpectrometer_Part -->GammaRaySpectrometer
-    //     thisGameObjectTag = gameObject.tag;
-    //     collisionGameObjectName = collision.gameObject.name.Substring(0, name.IndexOf("_")); //i.e. GammaRaySpectrometer_Container-->GammaRaySpectrometer
-    //     collisionGameObjectTag = collision.gameObject.tag;
-
-    //     if(mouseReleased && thisGameObjectTag == "Part" && collisionGameObjectTag == "Container" && thisGameObjectName == collisionGameObjectName) {
-    //         gameObject.SetActive(false); //snap gameObject into place
-    //         selected = false;
-
-    //     } else {
-    //        //return gameObject to original position
-    //        gameObject.transform.position = initialPos;
-    //     }
-    // }
 }
 
