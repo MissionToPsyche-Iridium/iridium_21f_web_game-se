@@ -47,9 +47,12 @@ public class ContainerManager : MonoBehaviour
 	private Sprite tileSprite;
 
 	private int totalOccupations = 0;
+	private TileColorScheme colorScheme;
 
 	void Start()
 	{
+		colorScheme = Constants.GetColorSchemeInstance();
+
 		chassisGrid = new (float x, float y)[width, height];
 		gridData = new GridPositionData[width, height];
 		for (int i = 0; i < width; i++)
@@ -63,6 +66,22 @@ public class ContainerManager : MonoBehaviour
 		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
 		GenerateContainer();
+	}
+
+	public void SetColorScheme(int colorScheme)
+	{
+		Constants.SetColorScheme(colorScheme);
+		this.colorScheme = Constants.GetColorSchemeInstance();
+	}
+
+	public int GetColorSchemeCode()
+	{
+		return Constants.GetColorScheme();
+	}
+
+	public TileColorScheme GetColorScheme()
+	{
+		return colorScheme;
 	}
 
 	void GenerateContainer()

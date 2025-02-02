@@ -3,10 +3,12 @@ using static TileColorScheme;
 public class Constants
 {
     // placeholder for color scheme until config file is implemented
-    // colors scheme 1 = standard, 2 = alternate
+    // colors schemes:
+    // 1 = standard ({green, red} for standard color) **default**
+    // 2 = alternate ({blue, orange} for visual accessibility - colorblindness)
     
-    // public static int ColorScheme = 1;
-    public static int ColorScheme = 2;
+    public static int ColorScheme = 1;
+    // public static int ColorScheme = 2;
 
     public static void SetColorScheme(int scheme)
     {
