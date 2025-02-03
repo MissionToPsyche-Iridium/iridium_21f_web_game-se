@@ -15,6 +15,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
+    public GameObject ComponentPanel { get; set; }
     public GameObject SpawnArea { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
@@ -68,6 +69,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _dragIcon.AddComponent<SpriteDragDrop>();
         _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
+        _dragIcon.GetComponent<SpriteDragDrop>().BuildManager = BuildManager;
+        _dragIcon.GetComponent<SpriteDragDrop>().ComponentPanel = ComponentPanel;
         _dragIcon.GetComponent<SpriteDragDrop>().InternalId = _itemSeed;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";

@@ -55,20 +55,32 @@ public class BuildManager : MonoBehaviour
         _spawned.Add(probeComponentTuple);
     }
 
+    public void DespawnProbeComponent(GameObject probeComponent)
+    {
+        for (int i = 0; i < _spawned.Count; i++)
+        {
+            Tuple<ProbeComponent, GameObject> tuple = _spawned[i];
+            if (tuple.Item2.Equals(probeComponent))
+            {
+                probeComponent.GetComponent<SpriteDragDrop>().AttemptToRelease();
+
+                _spawned.RemoveAt(i);
+                _undone.Add(tuple);
+
+                probeComponent.SetActive(false);
+
+                _inventory.AddProbeComponent(tuple.Item1);
+
+                break;
+            }
+        }
+    }
+
     public void Undo()
     {
         if (_spawned.Count > 0)
         {
-            Tuple<ProbeComponent, GameObject> probeComponentTuple = _spawned[_spawned.Count - 1];
-
-            probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToRelease();
-
-            _spawned.RemoveAt(_spawned.Count - 1);
-            _undone.Add(probeComponentTuple);
-
-            probeComponentTuple.Item2.SetActive(false);
-
-            _inventory.AddProbeComponent(probeComponentTuple.Item1);
+            DespawnProbeComponent(_spawned[_spawned.Count - 1].Item2);
         }
     }
 

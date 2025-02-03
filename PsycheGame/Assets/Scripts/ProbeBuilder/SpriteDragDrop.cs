@@ -14,6 +14,8 @@ using UnityEngine;
 public class SpriteDragDrop : MonoBehaviour
 {
     private ContainerManager containerManager;
+    public BuildManager BuildManager;
+    public GameObject ComponentPanel;
     public bool Selected { get; private set; }
     public string InternalId { get; set; }
     public Tuple<int, int> CurrentCell { get; set; }
@@ -52,8 +54,10 @@ public class SpriteDragDrop : MonoBehaviour
     {
         if (Selected)
         {
-            Vector3 newPos = MouseWorldPosition();
-            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(newPos);
+            Vector3 mousePos = MouseWorldPosition();
+            RectTransform panelRect = ComponentPanel.transform as RectTransform;
+
+            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(mousePos);
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
@@ -67,7 +71,7 @@ public class SpriteDragDrop : MonoBehaviour
 
                     audioSource.PlayOneShot(snapSound, 1.0f);
                     image.material = sparkMaterial;
-                                    
+
                     if (gameObject.layer <= 9)
                     {
                         gameObject.layer = 10;
@@ -77,6 +81,10 @@ public class SpriteDragDrop : MonoBehaviour
                 {
                     AttemptToReoccupy();
                 }
+            }
+            else if (Math.Abs(panelRect.position.x - mousePos.x) <= Math.Abs(panelRect.rect.width) / 2 && Math.Abs(panelRect.position.y - mousePos.y) <= Math.Abs(panelRect.rect.height) / 2)
+            {
+                BuildManager.DespawnProbeComponent(gameObject);
             }
 
             (float x, float y) cell = containerManager.GetBeaconPositionGrid(CurrentCell.Item1, CurrentCell.Item2);

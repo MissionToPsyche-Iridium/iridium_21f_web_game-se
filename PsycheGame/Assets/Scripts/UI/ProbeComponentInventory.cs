@@ -65,6 +65,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.BuildManager = transform.parent.gameObject.GetComponent<BuildManager>();
         buttonScript.ProbeComponent = probeComponent;
         buttonScript.ProbeComponentInventory = this;
+        buttonScript.ComponentPanel = transform.GetChild(0).GetChild(0).gameObject;
         buttonScript.SpawnArea = _spawnArea;
 
         Image image = button.GetComponent<Image>();
