@@ -6,7 +6,6 @@ public class PauseHandler : MonoBehaviour
 {
 
     [SerializeField] private GameObject missionObjectiveModalPanel; 
-    [SerializeField] private GameObject pauseModalPanel; 
 
     public static bool IsGamePaused { get; private set; } = true;
 
@@ -57,7 +56,7 @@ public class PauseHandler : MonoBehaviour
 
     public void RestartGame()
     {
-        pauseModalPanel.SetActive(false);
+        missionObjectiveModalPanel.SetActive(false);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
