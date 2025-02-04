@@ -6,7 +6,7 @@ public class Constants
     // colors scheme 1 = standard, 2 = alternate
     
     // public static int ColorScheme = 1;
-    public static int ColorScheme = 2;
+    public static int ColorScheme = 0;
 
     public static void SetColorScheme(int scheme)
     {
@@ -15,6 +15,11 @@ public class Constants
 
     public static int GetColorScheme()
     {
+        if (ColorScheme == 0)
+        {
+            GameObject controlHelper = GameObject.Find("Main Camera");
+            ColorScheme = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+        }
         return ColorScheme;
     }
 
