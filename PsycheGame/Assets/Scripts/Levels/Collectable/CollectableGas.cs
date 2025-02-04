@@ -11,7 +11,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
     private bool collectStart = false;
     private MissionState missionState;
 
-
+    [SerializeField] private GasCollectionStatusBar statusBar;
     [SerializeField] protected Color gasColor = Color.white;
 
     private void Awake() {
@@ -58,9 +58,13 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
 
         ps.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
 
+        Debug.Log("Updating state for Gas collection");
         if (missionState != null)
         {
             missionState.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectGases, triggeredParticles);
+            Debug.Log("Gas collected: " + triggeredParticles);
+            statusBar.UpdateIndicator(triggeredParticles);
+
         }
         this.OnCollect(triggeredParticles);
     }
