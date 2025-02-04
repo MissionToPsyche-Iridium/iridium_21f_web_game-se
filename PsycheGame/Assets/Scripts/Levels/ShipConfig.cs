@@ -1,10 +1,16 @@
 using UnityEngine;
 
+// Rather than moving each config record to it's specific class like
+// some configs for the level manager we keep these all in once place
+// so integration with the ship builder has single refrence to ship
+// variables.
 [CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
 public class ShipConfig : MonoBehaviour
 {
     public record TetherConfig
     {
+        [Tooltip("The total number of line segments that make up the tether rendering")]
+        public int resolution;
         [Tooltip("The initial speed the tether launches at before it attaches to an object")]
         public float launchSpeed;
         [Tooltip("The distance an object is kept at after pulling it towards the probe with the tether")]
