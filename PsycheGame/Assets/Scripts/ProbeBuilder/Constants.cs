@@ -7,13 +7,8 @@ public class Constants
     // 1 = standard ({green, red} for standard color) **default**
     // 2 = alternate ({blue, orange} for visual accessibility - colorblindness)
     
-<<<<<<< HEAD
-    // public static int ColorScheme = 1;
-    public static int ColorScheme = 0;
-=======
     public static int ColorScheme = 1;
     // public static int ColorScheme = 2;
->>>>>>> US#239-scene-color-scheme
 
     public static void SetColorScheme(int scheme)
     {
