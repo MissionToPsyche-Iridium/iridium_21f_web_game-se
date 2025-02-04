@@ -8,6 +8,14 @@ public class ControlHelper : MonoBehaviour
     private int ColorProfile = 1;
     // Start is called before the first frame update
 
+    public static ControlHelper Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }   
+
     public void ChangeColorProfile(int profile)
     {
         ColorProfile = profile;
@@ -17,13 +25,5 @@ public class ControlHelper : MonoBehaviour
     public int GetColorProfile()
     {
         return ColorProfile;
-    }
-    void Start()
-    {   
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

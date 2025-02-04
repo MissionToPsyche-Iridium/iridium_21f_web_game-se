@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -48,10 +50,13 @@ public class ContainerManager : MonoBehaviour
 
 	private int totalOccupations = 0;
 	private TileColorScheme colorScheme;
+	private Volume volume;
 
 	void Start()
 	{
 		colorScheme = Constants.GetColorSchemeInstance();
+		volume = GameObject.Find("Box Volume").GetComponent<Volume>();
+		updateColorScheme();
 
 		chassisGrid = new (float x, float y)[width, height];
 		gridData = new GridPositionData[width, height];
@@ -82,6 +87,15 @@ public class ContainerManager : MonoBehaviour
 	public TileColorScheme GetColorScheme()
 	{
 		return colorScheme;
+	}
+
+	public void updateColorScheme() 
+	{
+		volume.profile.TryGet<ColorAdjustments>(out var colorAdjustments);
+		colorAdjustments.colorFilter.overrideState = true;
+		colorAdjustments.postExposure.overrideState = true;
+		colorAdjustments.postExposure.value = colorScheme.exposure;
+		colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
 	}
 
 	void GenerateContainer()
