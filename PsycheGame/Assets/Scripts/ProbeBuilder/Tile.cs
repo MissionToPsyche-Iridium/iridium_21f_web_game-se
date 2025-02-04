@@ -14,8 +14,11 @@ using UnityEngine.UI;
     Description: this script is a stereotype for the specific tile instantiated.  Including the coordinate
     and cell index attributes on the grid.
 
-    version 1.0 candidate (Jan 21)
+    v1.0 - Jan 21
     :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
+    v1.1 - Feb 1
+    :: 1.1 - Feb 1 - refactored code to use the color scheme defined in the Constants class. Move handle to 
+    the ContainerManager class.
 */
 
 
@@ -66,19 +69,8 @@ public class Tile : MonoBehaviour
         return (cellX, cellY);
     }
 
-    void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.tag == "ProbePart") 
-        {
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.tag == "ProbePart") 
-        {
-        }
-    }
-
     void OnMouseEnter() {
+        colorScheme = gameObject.GetComponentInParent<ContainerManager>().GetColorScheme();
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
         if (occupied != "") {
             gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOccupiedTileColor();

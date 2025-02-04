@@ -9,6 +9,13 @@ using UnityEngine;
 
 public abstract class TileColorScheme
 {
+    public Color BaseSceneColor { get; set; }
+    public float exposure { get; set; }
+    public float Threshold { get; set; }
+    public int Intensity { get; set; }  
+    public Color Tint { get; set; }
+
+
     public abstract Color GetColor1();
     public abstract Color GetColor2();
     public abstract Color GetOpenTileColor();

@@ -18,6 +18,11 @@ public class TileStdScheme : TileColorScheme
 {
     public TileStdScheme()
     {
+        BaseSceneColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        exposure = 0.5f;
+        Threshold = 0.995f;
+        Intensity = 10;
+        Tint = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     }
     public override Color GetColor1()
     {
