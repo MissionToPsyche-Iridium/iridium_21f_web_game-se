@@ -15,13 +15,34 @@ public class GasCollectionStatusBar : MonoBehaviour {
 
     private void Start() {
         this.gasCollectBarImage = gasCollectionBarColor.GetComponent<Image>();        
+        ResetStatusBar();
+    }
+
+    private void Awake()
+    {
+        LevelManager.OnLevelLoaded += OnLevelLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    public void OnLevelLoaded(LevelConfig config)
+    {
+        ResetStatusBar();
+    }
+
+    public void ResetStatusBar(){
         missionState = MissionState.Instance;
-        int amount = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases);
-        LOW_LEVEL = amount * 33f;
-        MID_LEVEL = amount * 66f;
+        gasTotal = 0;
+        LOW_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases) * 33f;
+        MID_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases) * 66f;
+        UpdateIndicator(0);
     }
 
     public void UpdateIndicator(int amount) {
+
         gasTotal = gasTotal + amount;
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
