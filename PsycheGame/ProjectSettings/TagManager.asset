@@ -7,11 +7,16 @@ TagManager:
   - tile
   - ProbePart
   - Inactive
+  - HUD
+  - Asteroid
+  - Boundary
+  - Mineral
+  - Part
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Postprocessing
   - Water
   - UI
   - GridPlane
