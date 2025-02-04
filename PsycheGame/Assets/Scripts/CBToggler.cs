@@ -17,13 +17,13 @@ public class CBToggler : MonoBehaviour
         cbt_toggle.onValueChanged.AddListener(delegate {
             ToggleValueChanged(cbt_toggle);
         }); 
-        controlHelper = GameObject.Find("Main Camera");
+        controlHelper = GameObject.Find("ControlHelper");
         mainCamera = Camera.main;           // keep to wake up the camera! - otherwise null exception
     }
 
     // Update is called once per frame
     void ToggleValueChanged(Toggle change) {
-        controlHelper = GameObject.Find("Main Camera");
+        controlHelper = GameObject.Find("ControlHelper");
         Debug.Log(">>>" + controlHelper);
         Debug.Log("Toggle Value Changed");
         if (change.isOn) {

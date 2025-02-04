@@ -21,7 +21,7 @@ public class Constants
         if (ColorScheme == 0)
         {
             Camera mainCamera = Camera.main;
-            GameObject controlHelper = GameObject.Find("Main Camera");
+            GameObject controlHelper = GameObject.Find("ControlHelper");
             ColorScheme = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
             Debug.Log("Color scheme: " + ColorScheme);
         }
@@ -30,7 +30,7 @@ public class Constants
 
     public static TileColorScheme GetColorSchemeInstance()
     {
-        ColorScheme = GameObject.Find("Main Camera").GetComponent<ControlHelper>().GetColorProfile();
+        ColorScheme = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
         if (ColorScheme == 1)
         {
             return new TileStdScheme();
