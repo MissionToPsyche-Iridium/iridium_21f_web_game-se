@@ -6,6 +6,9 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
+    public delegate void OnLevelLoadedHandler(LevelConfig config);
+    public static event OnLevelLoadedHandler OnLevelLoaded;
+
     [SerializeField] private List<LevelConfig> levels;
     private int currentLevelIndex = 0;
 
@@ -96,6 +99,7 @@ public class LevelManager : MonoBehaviour
         {
             Debug.Log("All levels completed!");
             return;
+
         }
 
         currentLevelIndex = levelIndex;
@@ -113,7 +117,7 @@ public class LevelManager : MonoBehaviour
         gasSpawner.InitWithConfig(config.gasSpawnerConfig);
         gasSpawner.enabled = true;
 
-        MissionState.Instance.Initialize(config.objectives);
+        MissionState.Instance.Initialize(config.objectives, config.levelName);
 
         missionTimeRemaining = config.missionTimer;
 
