@@ -19,8 +19,11 @@ public class BrightnessControl : MonoBehaviour
 
     public void SetBrightness() {
 
-        foreach(SpriteRenderer spriteRenderer in spriteRendererArr) {
-            spriteRenderer.color = new Color(slider.value, slider.value, slider.value, spriteRenderer.color.a);
-        }
+        // foreach(SpriteRenderer spriteRenderer in spriteRendererArr) {
+        //     spriteRenderer.color = new Color(sliderValue, sliderValue, sliderValue, spriteRenderer.color.a);
+        // }
+
+        GameObject brightnessOverlay = GameObject.Find("Brightness");
+        brightnessOverlay.GetComponent<Image>().color = new Color(brightnessOverlay.GetComponent<Image>().color.r, brightnessOverlay.GetComponent<Image>().color.g, brightnessOverlay.GetComponent<Image>().color.b, slider.value);
     }
 }
