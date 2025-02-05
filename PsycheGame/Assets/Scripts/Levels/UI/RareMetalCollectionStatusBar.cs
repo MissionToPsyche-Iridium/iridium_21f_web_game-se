@@ -26,6 +26,14 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     {
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
     }
+    private void OnEnable() {
+        CollectionEvents.OnMetalCollected += UpdateIndicator;
+    }
+
+    private void OnDisable() {
+        CollectionEvents.OnMetalCollected -= UpdateIndicator;
+    }
+
 
     public void OnLevelLoaded(LevelConfig config)
     {
@@ -41,10 +49,10 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         UpdateIndicator(0);
     }
 
-    public void UpdateIndicator(int minedAmount) {
+    public void UpdateIndicator(int amount) {
 
-        totalMined = minedAmount + totalMined;
-        Debug.Log($"RareMetalStatusBar updating indicator: {minedAmount}");
+        totalMined = amount + totalMined;
+        Debug.Log($"RareMetalStatusBar updating indicator: {amount}");
         rareMetalCollectBar.value = totalMined;
 
         if (totalMined >= MID_LEVEL) {

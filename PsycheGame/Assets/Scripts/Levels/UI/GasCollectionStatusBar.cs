@@ -28,6 +28,14 @@ public class GasCollectionStatusBar : MonoBehaviour {
         LevelManager.OnLevelLoaded -= OnLevelLoaded;
     }
 
+    private void OnEnable() {
+        CollectionEvents.OnGasCollected += UpdateIndicator;
+    }
+
+    private void OnDisable() {
+        CollectionEvents.OnGasCollected -= UpdateIndicator;
+    }
+
     public void OnLevelLoaded(LevelConfig config)
     {
         ResetStatusBar();
@@ -42,7 +50,6 @@ public class GasCollectionStatusBar : MonoBehaviour {
     }
 
     public void UpdateIndicator(int amount) {
-
         gasTotal = gasTotal + amount;
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
