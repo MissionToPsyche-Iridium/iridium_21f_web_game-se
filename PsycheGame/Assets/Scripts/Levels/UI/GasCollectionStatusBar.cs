@@ -7,10 +7,10 @@ public class GasCollectionStatusBar : MonoBehaviour {
     [SerializeField] private Slider gasCollectBar; 
     MissionState missionState;
     float gasTotal = 0;
+    float target = 0;
 
     private Image gasCollectBarImage = null;
 
-    private float LOW_LEVEL;
     private float MID_LEVEL;
 
     private void Start() {
@@ -44,8 +44,8 @@ public class GasCollectionStatusBar : MonoBehaviour {
     public void ResetStatusBar(){
         missionState = MissionState.Instance;
         gasTotal = 0;
-        LOW_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases) * 33f;
-        MID_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases) * 66f;
+        target = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectGases);
+        MID_LEVEL =  target * .66f;
         UpdateIndicator(0);
     }
 
@@ -54,9 +54,9 @@ public class GasCollectionStatusBar : MonoBehaviour {
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
 
-        if (gasTotal >= MID_LEVEL) {
+        if (gasTotal >= target){
             gasCollectBarImage.color = Color.green;
-        } else if (gasTotal > LOW_LEVEL) {
+        } else if (gasTotal > MID_LEVEL) {
             gasCollectBarImage.color = Color.yellow;
         } else {
             gasCollectBarImage.color = Color.red;

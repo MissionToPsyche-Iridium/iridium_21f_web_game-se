@@ -112,6 +112,12 @@ public class LevelManager : MonoBehaviour
             }
         }
 
+        if (ShipManager.Health <= 0 || ShipManager.Fuel <= 0)
+        {
+            Debug.Log("Ship health or fuel reached 0. Game over!");
+            EndLevel(false);
+        }
+
         if (MissionState.Instance.IsMissionComplete)
         {
             Debug.Log("Level Complete - loading next level...");

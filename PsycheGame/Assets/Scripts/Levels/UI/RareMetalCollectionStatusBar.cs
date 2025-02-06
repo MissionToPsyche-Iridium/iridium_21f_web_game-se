@@ -8,8 +8,8 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
 
     private Image rareMetalCollectBarImage = null;
     private float totalMined = 0;
+    private float target;
 
-    private float LOW_LEVEL;
     private float MID_LEVEL;
 
     private void Start() {
@@ -43,8 +43,8 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     public void ResetStatusBar(){
         missionState = MissionState.Instance;
         totalMined = 0;
-        LOW_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 33f;
-        MID_LEVEL = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals) * 66f;
+        target = missionState.GetObjectiveTarget(MissionState.ObjectiveType.CollectRareMetals);
+        MID_LEVEL = target * .66f;
 
         UpdateIndicator(0);
     }
@@ -55,9 +55,9 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         Debug.Log($"RareMetalStatusBar updating indicator: {amount}");
         rareMetalCollectBar.value = totalMined;
 
-        if (totalMined >= MID_LEVEL) {
+        if (totalMined >= target){
             rareMetalCollectBarImage.color = Color.green;
-        } else if (totalMined > LOW_LEVEL) {
+        } else if (totalMined > MID_LEVEL) {
             rareMetalCollectBarImage.color = Color.yellow;
         } else {
             rareMetalCollectBarImage.color = Color.red;

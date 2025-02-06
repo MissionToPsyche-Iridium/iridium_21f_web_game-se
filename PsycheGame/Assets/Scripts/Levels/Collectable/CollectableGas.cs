@@ -15,6 +15,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
 
     private void Awake() {
         ps = this.GetComponent<ParticleSystem>();
+        missionState = MissionState.Instance;
 
         psMaterial = ps.GetComponent<ParticleSystemRenderer>().material;
         psSharedMaterial = ps.GetComponent<ParticleSystemRenderer>().sharedMaterial;

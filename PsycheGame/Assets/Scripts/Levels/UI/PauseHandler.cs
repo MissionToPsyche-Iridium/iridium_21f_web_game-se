@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class PauseHandler : MonoBehaviour 
 {
 
-    [SerializeField] private GameObject missionObjectiveModalPanel; 
+    [SerializeField] private GameObject missionObjectivePanel; 
 
     public static bool IsGamePaused { get; private set; } = true;
 
@@ -14,6 +14,7 @@ public class PauseHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            Debug.Log("Escape key pressed");
             if (IsGamePaused)
             {
                 ResumeGame();
@@ -33,7 +34,7 @@ public class PauseHandler : MonoBehaviour
 
     public void StartGame()
     {
-        missionObjectiveModalPanel.SetActive(false);
+        missionObjectivePanel.SetActive(false);
         Time.timeScale = 1f;
         IsGamePaused = false;
 
@@ -44,19 +45,19 @@ public class PauseHandler : MonoBehaviour
     {
         IsGamePaused = true;
         Time.timeScale = 0f; 
-        missionObjectiveModalPanel.SetActive(true);
+        missionObjectivePanel.SetActive(true);
     }
 
     public void ResumeGame()
     {
         IsGamePaused = false;
         Time.timeScale = 1f; 
-        missionObjectiveModalPanel.SetActive(false);
+        missionObjectivePanel.SetActive(false);
     }
 
     public void RestartGame()
     {
-        missionObjectiveModalPanel.SetActive(false);
+        missionObjectivePanel.SetActive(false);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
@@ -66,7 +67,7 @@ public class PauseHandler : MonoBehaviour
 
     public void UpdateButtonText(bool isPaused)
     {
-        Transform textTransform = missionObjectiveModalPanel.transform.Find("BeginResumeText");
+        Transform textTransform = missionObjectivePanel.transform.Find("BeginResumeText");
 
         if (textTransform != null)
         {
