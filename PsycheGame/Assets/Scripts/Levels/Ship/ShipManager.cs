@@ -26,10 +26,18 @@ public class ShipManager : MonoBehaviour {
                 Debug.LogError("Failed to find 'ShipTetherLogic' script on ship");
                 return;
             }
+
             scanner = _obj.GetComponent<ShipScanBehavior>();
             if (scanner == null)
             {
                 Debug.LogError("Failed to find 'ShipScanner' script on ship");
+                return;
+            }
+
+            moveLogic = _obj.GetComponent<ShipMovement>();
+            if (moveLogic == null)
+            {
+                Debug.LogError("Failed to find 'ShipMovement' script on ship");
                 return;
             }
         }
@@ -41,8 +49,9 @@ public class ShipManager : MonoBehaviour {
     
     // Private instances of components that are directly attached to the ship
     // and stored here on Awake
-    private static ShipTetherLogic tetherLogic;
-    private static ShipScanBehavior scanner;
+    protected static ShipTetherLogic tetherLogic;
+    protected static ShipScanBehavior scanner;
+    protected static ShipMovement moveLogic;
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }
@@ -52,4 +61,13 @@ public class ShipManager : MonoBehaviour {
     // otherwise a value of null will be returned
     public static GameObject Ship { get { return _obj; } }
 
+    public static void setShipConfig(ShipConfig config)
+    {
+        tetherLogic.initWithConfig(config.tetherConfig);
+        scanner.initWithConfig(config.scanConfig);
+        moveLogic.initWithConfig(config.shipMoveConfig);
+
+        fuel = config.shipMoveConfig.fuel;
+        health = config.shipMoveConfig.health;
+    }
 }
