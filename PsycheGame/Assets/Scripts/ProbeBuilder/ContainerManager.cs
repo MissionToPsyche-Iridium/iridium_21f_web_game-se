@@ -132,9 +132,14 @@ public class ContainerManager : MonoBehaviour
 		{
 			Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
 
+			if (CheckOccupationEligibility(tile.GetCellX(), tile.GetCellY()))
+			{
+				continue;
+			}
+
 			bool hasNeighbors = false;
 
-            for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
+            for (int j = tile.GetCellX() - 1; j <= tile.GetCellX() + 1; j++)
             {
 				if (hasNeighbors)
 				{
@@ -145,7 +150,7 @@ public class ContainerManager : MonoBehaviour
                     continue;
                 }
 
-                for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
+                for (int k = tile.GetCellY() - 1; k <= tile.GetCellY() + 1; k++)
                 {
 					if (hasNeighbors)
 					{

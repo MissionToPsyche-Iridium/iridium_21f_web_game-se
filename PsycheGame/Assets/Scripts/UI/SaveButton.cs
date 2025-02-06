@@ -11,7 +11,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
     [SerializeField]
     private GameObject _containerManagerObject;
     [SerializeField]
-    private GameObject _message;
+    private GameObject _notificationPrefab;
     private AudioClip _swooshSound;
     private ContainerManager _containerManager;
     private bool debounce;
@@ -42,8 +42,8 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            // _message.GetComponent<TextMeshProUGUI>().SetText("Could not save due to abnormal spacing");
-            Debug.Log("Could not save due to abnormal spacing");
+            GameObject notification = Instantiate(_notificationPrefab, transform.parent.parent);
+            notification.GetComponent<Notification>().SetMessage("Could not save probe due to abnormal spacing. Please fix and try again.");
         }
 
         debounce = false;
