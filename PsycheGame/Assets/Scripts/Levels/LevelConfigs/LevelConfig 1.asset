@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: LevelConfig 1
   m_EditorClassIdentifier: 
   levelName: Asteroid Danger
-  rareAsteroidCount: 12
-  RMscaleMin: 0.6
-  RMscaleMax: 1.2
   missionTimer: 240
   gasSpawnerConfig:
     spawnInterval: 1
@@ -39,9 +36,19 @@ MonoBehaviour:
     objectsTypes:
     - spawnable: {fileID: 5771888816593832295, guid: 5dfa80fa734b31741a85dd4c10cce663, type: 3}
       scaleMin: 0.4
-      scaleMax: 1
-      velocityMin: 1
-      velocityMax: 3
+      scaleMax: 1.2
+      velocityMin: 5
+      velocityMax: 10
+  rareMetalSpawnerConfig:
+    spawnInterval: 1
+    objectLimit: 50
+    initialPopulation: 50
+    objectsTypes:
+    - spawnable: {fileID: 6018018357191059708, guid: a7ee299807af54fde9ac41df8e2aeac8, type: 3}
+      scaleMin: 0.5
+      scaleMax: 1.5
+      velocityMin: 0
+      velocityMax: 0
   objectives:
   - objectiveType: 1
     description: Collect Rare Metals

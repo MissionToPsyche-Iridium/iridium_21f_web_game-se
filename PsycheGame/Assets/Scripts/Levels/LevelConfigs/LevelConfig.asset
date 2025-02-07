@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: LevelConfig
   m_EditorClassIdentifier: 
   levelName: Intro
-  rareAsteroidCount: 15
-  RMscaleMin: 0.5
-  RMscaleMax: 1
   missionTimer: 300
   gasSpawnerConfig:
     spawnInterval: 1
@@ -40,8 +37,18 @@ MonoBehaviour:
     - spawnable: {fileID: 5771888816593832295, guid: 5dfa80fa734b31741a85dd4c10cce663, type: 3}
       scaleMin: 0.3
       scaleMax: 0.8
-      velocityMin: 0.5
-      velocityMax: 2
+      velocityMin: 1
+      velocityMax: 5
+  rareMetalSpawnerConfig:
+    spawnInterval: 1
+    objectLimit: 50
+    initialPopulation: 30
+    objectsTypes:
+    - spawnable: {fileID: 6018018357191059708, guid: a7ee299807af54fde9ac41df8e2aeac8, type: 3}
+      scaleMin: 0.5
+      scaleMax: 1.5
+      velocityMin: 0
+      velocityMax: 0
   objectives:
   - objectiveType: 1
     description: Collect Rare Metals

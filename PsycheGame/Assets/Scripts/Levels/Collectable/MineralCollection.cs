@@ -45,7 +45,7 @@ public class Iridium : RareMetal {
 }
 
 [RequireComponent(typeof(Collider2D))]
-public abstract class MineralCollection : MonoBehaviour, ScannableObject {
+public abstract class MineralCollection : Spawnable, ScannableObject {
     [Header("Metal Properties")]
     [SerializeField] public List<RareMetal> metals = new();
     [SerializeField] protected int maxMetalTypes = 3;
@@ -58,7 +58,6 @@ public abstract class MineralCollection : MonoBehaviour, ScannableObject {
     [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
-    [SerializeField] private GameObject statusBar;
 
     public Progress ScanProgress => scanProgress;
     public string Description => description;

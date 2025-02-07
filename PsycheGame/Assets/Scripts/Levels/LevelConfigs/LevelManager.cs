@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<LevelConfig> levels; 
     [SerializeField] private ObjectSpawner gasSpawner;
-    [SerializeField] private RareMetalAsteroidSpawner rareMetalAsteroidspawner;
+    [SerializeField] private ObjectSpawner rareMetalSpawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private TextMeshProUGUI loadingText;
@@ -73,11 +73,8 @@ public class LevelManager : MonoBehaviour
 
         missionTimeRemaining = config.missionTimer;
 
-        rareMetalAsteroidspawner.rareAsteroidCount = config.rareAsteroidCount;
-        rareMetalAsteroidspawner.scaleMin = config.RMscaleMin;
-        rareMetalAsteroidspawner.scaleMax = config.RMscaleMax;
-
-        rareMetalAsteroidspawner.SpawnRareAsteroids();
+        rareMetalSpawner.InitWithConfig(config.rareMetalSpawnerConfig);
+        rareMetalSpawner.enabled = true;
 
         asteroidSpawner.InitWithConfig(config.asteroidSpawnerConfig);
         asteroidSpawner.enabled = true;

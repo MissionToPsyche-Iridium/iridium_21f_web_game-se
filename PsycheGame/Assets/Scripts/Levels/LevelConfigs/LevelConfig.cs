@@ -5,12 +5,10 @@ using System.Collections.Generic;
 public class LevelConfig : ScriptableObject
 {
     public string levelName;
-    public int rareAsteroidCount;
-    public float RMscaleMin;
-    public float RMscaleMax;
     public float missionTimer;
 
     public ObjectSpawner.ObjectSpawnerConfig gasSpawnerConfig;
     public ObjectSpawner.ObjectSpawnerConfig asteroidSpawnerConfig;
+    public ObjectSpawner.ObjectSpawnerConfig rareMetalSpawnerConfig;
     public List<MissionState.MissionObjective> objectives;
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class MineableAsteroid : MineralCollection {
+public class MineableAsteroid :  MineralCollection {
     private void Start() {
         DisplayAsteroidComposition();
     }

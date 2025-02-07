@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: LevelConfig 2
   m_EditorClassIdentifier: 
   levelName: Meteor Mayhem
-  rareAsteroidCount: 10
-  RMscaleMin: 0.7
-  RMscaleMax: 1.5
   missionTimer: 180
   gasSpawnerConfig:
     spawnInterval: 1
@@ -41,7 +38,17 @@ MonoBehaviour:
       scaleMin: 0.5
       scaleMax: 1.2
       velocityMin: 1.5
-      velocityMax: 4
+      velocityMax: 15
+  rareMetalSpawnerConfig:
+    spawnInterval: 1
+    objectLimit: 40
+    initialPopulation: 40
+    objectsTypes:
+    - spawnable: {fileID: 6018018357191059708, guid: a7ee299807af54fde9ac41df8e2aeac8, type: 3}
+      scaleMin: 0.3
+      scaleMax: 1.3
+      velocityMin: 0
+      velocityMax: 0
   objectives:
   - objectiveType: 1
     description: Collect Rare Metals
