@@ -19,6 +19,9 @@ using UnityEngine.UI;
 	:: revise code to meet C# convention for performance and readability
 	:: specifics - reduce redundant getcomponent calls
 	
+	version: 1.1 (Feb 6)
+	:: revise code to use the color scheme set in the ContainerManager class by accessing the configuration set 
+	in the Control Helper gameobject (script).  
 */
 
 class GridPositionData {

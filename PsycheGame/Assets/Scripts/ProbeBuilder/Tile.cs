@@ -19,6 +19,9 @@ using UnityEngine.UI;
     v1.1 - Feb 1
     :: 1.1 - Feb 1 - refactored code to use the color scheme defined in the Constants class. Move handle to 
     the ContainerManager class.
+    v1.2 - Feb 6
+    :: 1.2 - Feb 6 - refactored code to use the color scheme set in the ContainerManager class.  Eliminated
+    code and stack mem required to hold the color scheme in the tile class.
 */
 
 
@@ -36,11 +39,9 @@ public class Tile : MonoBehaviour
     private float yPosition;
 
     private Color defaultColor;
-    private TileColorScheme colorScheme;
 
     public void Init(bool isOffset, int x, int y, float xP, float yP)
     {
-        colorScheme = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetColorScheme();
         (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
 
         cellX = x;
@@ -76,7 +77,6 @@ public class Tile : MonoBehaviour
 
     void OnMouseEnter() 
     {
-        colorScheme = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetColorScheme();
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
         if (occupied != String.Empty) {
             gameObject.GetComponent<SpriteRenderer>().color = occupiedTileColor;
