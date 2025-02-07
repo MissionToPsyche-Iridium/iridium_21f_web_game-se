@@ -49,12 +49,13 @@ public class ContainerManager : MonoBehaviour
 	private Sprite tileSprite;
 
 	private int totalOccupations = 0;
+	private int colorProfile;
 	private TileColorScheme colorScheme;
 	private Volume volume;
 
 	void Start()
 	{
-		colorScheme = Constants.GetColorSchemeInstance();
+		colorScheme = this.GetColorScheme();
 		volume = GameObject.Find("Box Volume").GetComponent<Volume>();
 		updateColorScheme();
 
@@ -75,18 +76,38 @@ public class ContainerManager : MonoBehaviour
 
 	public void SetColorScheme(int colorScheme)
 	{
-		Constants.SetColorScheme(colorScheme);
-		this.colorScheme = Constants.GetColorSchemeInstance();
+		if (colorScheme != colorProfile)
+		{
+			this.colorProfile = colorScheme;
+			updateColorScheme();
+		}
+	}
+
+	public (Color, Color, Color, Color) GetTileColors()
+	{
+		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
 	}
 
 	public int GetColorSchemeCode()
 	{
-		return Constants.GetColorScheme();
+		return colorProfile;
 	}
 
 	public TileColorScheme GetColorScheme()
 	{
-		return colorScheme;
+		Camera mainCamera = Camera.main;
+		GameObject controlHelper = GameObject.Find("ControlHelper");
+		colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+
+		if (colorProfile == 1)
+		{
+			return new TileStdScheme();
+		}
+		else
+		{
+			Debug.Log("Using alternate color scheme");
+			return new TileAltScheme();
+		}
 	}
 
 	public void updateColorScheme() 

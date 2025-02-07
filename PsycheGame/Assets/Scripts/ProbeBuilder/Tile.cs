@@ -40,47 +40,53 @@ public class Tile : MonoBehaviour
 
     public void Init(bool isOffset, int x, int y, float xP, float yP)
     {
-        // color scheme is initialized based on the current color scheme defined in the Constants class (1 = standard, 2 = alternate)
-        colorScheme = Constants.GetColorSchemeInstance();
+        colorScheme = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetColorScheme();
+        (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
 
         cellX = x;
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-        render.color = isOffset ? colorScheme.GetColor1() : colorScheme.GetColor2();
+        render.color = isOffset ? color1 : color2;
         defaultColor = render.color;
     }
 
-    public int GetCellX() {
+    public int GetCellX() 
+    {
         return cellX;
     }
-    public int GetCellY() {
+    public int GetCellY() 
+    {
         return cellY;
     }
 
-    public float GetXPosition() {
+    public float GetXPosition() 
+    {
         return xPosition;
     }
-    public float GetYPosition() {
+    public float GetYPosition() 
+    {
         return yPosition;
     }
 
-    public (int, int) GetCell() {
+    public (int, int) GetCell() 
+    {
         return (cellX, cellY);
     }
 
-    void OnMouseEnter() {
-        colorScheme = gameObject.GetComponentInParent<ContainerManager>().GetColorScheme();
+    void OnMouseEnter() 
+    {
+        colorScheme = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetColorScheme();
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
-        if (occupied != "") {
-            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOccupiedTileColor();
+        if (occupied != String.Empty) {
+            gameObject.GetComponent<SpriteRenderer>().color = occupiedTileColor;
         } else {
-            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOpenTileColor();
+            gameObject.GetComponent<SpriteRenderer>().color = openTileColor;
         }
     }
 
-    void OnMouseExit() {
-
+    void OnMouseExit() 
+    {
         gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }
 }
