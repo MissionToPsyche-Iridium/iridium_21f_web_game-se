@@ -38,13 +38,15 @@ public class ShipConfig : MonoBehaviour
     [System.Serializable]
     public record ShipMovementConfig
     {
+        public float fuel;
+        public float health;
         public float moveSpeed;
         public float fuelConsumptionRate;
         public float boostMultiplier;
         public float bostChangeRate;
     }
 
-    public TetherConfig teatherConfig;
+    public TetherConfig tetherConfig;
     public ScanConfig scanConfig;
     public ShipMovementConfig shipMoveConfig;
 }
