@@ -9,6 +9,9 @@ using Unity.VisualScripting;
 public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
 {
    public GameObject Panel;
+   public GameObject HowToPlayButton;
+   public GameObject ControlsButton;
+   public GameObject InfoPanel;
     private AudioClip _swooshSound;
 
 
@@ -28,5 +31,19 @@ public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
+    }
+
+    public void toggleControlsButton() {
+        if(ControlsButton != null) {
+            bool isActive = ControlsButton.activeSelf;
+            ControlsButton.SetActive(!isActive);
+        }
+    }
+
+    public void toggleInfoPanel() {
+          if(InfoPanel != null) {
+            bool isActive = InfoPanel.activeSelf;
+            InfoPanel.SetActive(!isActive);
+        }
     }
 }
