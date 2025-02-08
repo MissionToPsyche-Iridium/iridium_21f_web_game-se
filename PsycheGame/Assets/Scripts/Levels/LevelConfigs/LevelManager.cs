@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 using System.Collections.Generic;
@@ -12,7 +11,9 @@ public class LevelManager : MonoBehaviour
     public delegate void OnLevelLoadedHandler(LevelConfig config);
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
-    [SerializeField] private List<LevelConfig> levels; 
+    [SerializeField] private List<LevelConfig> levels;
+    private int currentLevelIndex = 0;
+
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private ObjectSpawner rareMetalSpawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
@@ -25,7 +26,6 @@ public class LevelManager : MonoBehaviour
     private bool isTimerRunning = false;
     private bool isPaused = false;
     private MissionTimer missionTimer;
-    private int currentLevelIndex = 0;
 
     private void Awake()
     {
