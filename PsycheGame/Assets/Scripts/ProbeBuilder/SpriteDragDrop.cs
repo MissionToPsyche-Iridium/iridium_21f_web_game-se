@@ -43,6 +43,7 @@ public class SpriteDragDrop : MonoBehaviour
         Selected = true;
         offset = transform.position - MouseWorldPosition();
         gameObject.layer = 9;
+        ComponentPanel.transform.GetChild(2).gameObject.SetActive(true);
     }
 
     private void OnMouseDrag()
@@ -89,6 +90,8 @@ public class SpriteDragDrop : MonoBehaviour
 
             (float x, float y) cell = containerManager.GetBeaconPositionGrid(CurrentCell.Item1, CurrentCell.Item2);
             transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+            ComponentPanel.transform.GetChild(2).gameObject.SetActive(false);
 
             Selected = false;
         }

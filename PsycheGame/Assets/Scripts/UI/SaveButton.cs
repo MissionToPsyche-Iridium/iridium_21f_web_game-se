@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using TMPro;
+using System;
 
 public class SaveButton : MonoBehaviour, IPointerDownHandler
 {
@@ -26,12 +27,13 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!debounce)
-        {
-            debounce = true;
-        } else
+        if (debounce)
         {
             return;
+        }
+        else
+        {
+            debounce = true;
         }
 
         GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
@@ -42,8 +44,22 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            GameObject notification = Instantiate(_notificationPrefab, transform.parent.parent);
-            notification.GetComponent<Notification>().SetMessage("Could not save probe due to abnormal spacing. Please fix and try again.");
+            bool exists = false;
+
+            for (int i = 0; i < transform.parent.parent.childCount; i++)
+            {
+                GameObject child = transform.parent.parent.GetChild(i).gameObject;
+                if (child.GetComponent<Notification>())
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>().SetMessage("Could not save probe due to abnormal spacing. Please fix and try again.");
+            }
         }
 
         debounce = false;
