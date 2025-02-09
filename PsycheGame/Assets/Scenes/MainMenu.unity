@@ -1318,6 +1318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 639798459}
   - component: {fileID: 639798460}
+  - component: {fileID: 639798461}
   m_Layer: 0
   m_Name: CBToggle
   m_TagString: Untagged
@@ -1393,6 +1394,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!114 &639798461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639798458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3031d315e35d444049c9b3a2a35ef122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cbt_toggle: {fileID: 0}
+  controlHelper: {fileID: 0}
 --- !u!1 &646921288
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,6 +2691,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1022650307}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!114 &1118430806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2689,6 +2707,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1963102404}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!114 &1118430807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3431,6 +3452,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1022650307}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!114 &1283758185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3444,6 +3468,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1963102404}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!1 &1412519467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4530,6 +4557,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1022650307}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!114 &1764182898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4543,6 +4573,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Panel: {fileID: 1963102404}
+  HowToPlayButton: {fileID: 0}
+  ControlsButton: {fileID: 0}
+  InfoPanel: {fileID: 0}
 --- !u!114 &1764182899
 MonoBehaviour:
   m_ObjectHideFlags: 0

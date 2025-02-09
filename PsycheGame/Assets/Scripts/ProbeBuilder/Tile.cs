@@ -14,8 +14,14 @@ using UnityEngine.UI;
     Description: this script is a stereotype for the specific tile instantiated.  Including the coordinate
     and cell index attributes on the grid.
 
-    version 1.0 candidate (Jan 21)
+    v1.0 - Jan 21
     :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
+    v1.1 - Feb 1
+    :: 1.1 - Feb 1 - refactored code to use the color scheme defined in the Constants class. Move handle to 
+    the ContainerManager class.
+    v1.2 - Feb 6
+    :: 1.2 - Feb 6 - refactored code to use the color scheme set in the ContainerManager class.  Eliminated
+    code and stack mem required to hold the color scheme in the tile class.
 */
 
 
@@ -33,62 +39,54 @@ public class Tile : MonoBehaviour
     private float yPosition;
 
     private Color defaultColor;
-    private TileColorScheme colorScheme;
 
     public void Init(bool isOffset, int x, int y, float xP, float yP)
     {
-        // color scheme is initialized based on the current color scheme defined in the Constants class (1 = standard, 2 = alternate)
-        colorScheme = Constants.GetColorSchemeInstance();
+        (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
 
         cellX = x;
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-        render.color = isOffset ? colorScheme.GetColor1() : colorScheme.GetColor2();
+        render.color = isOffset ? color1 : color2;
         defaultColor = render.color;
     }
 
-    public int GetCellX() {
+    public int GetCellX() 
+    {
         return cellX;
     }
-    public int GetCellY() {
+    public int GetCellY() 
+    {
         return cellY;
     }
 
-    public float GetXPosition() {
+    public float GetXPosition() 
+    {
         return xPosition;
     }
-    public float GetYPosition() {
+    public float GetYPosition() 
+    {
         return yPosition;
     }
 
-    public (int, int) GetCell() {
+    public (int, int) GetCell() 
+    {
         return (cellX, cellY);
     }
 
-    void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.tag == "ProbePart") 
-        {
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.tag == "ProbePart") 
-        {
-        }
-    }
-
-    void OnMouseEnter() {
+    void OnMouseEnter() 
+    {
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
-        if (occupied != "") {
-            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOccupiedTileColor();
+        if (occupied != String.Empty) {
+            gameObject.GetComponent<SpriteRenderer>().color = occupiedTileColor;
         } else {
-            gameObject.GetComponent<SpriteRenderer>().color = colorScheme.GetOpenTileColor();
+            gameObject.GetComponent<SpriteRenderer>().color = openTileColor;
         }
     }
 
-    void OnMouseExit() {
-
+    void OnMouseExit() 
+    {
         gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }
 }

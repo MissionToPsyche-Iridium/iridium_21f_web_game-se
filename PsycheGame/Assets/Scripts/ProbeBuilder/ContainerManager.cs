@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -17,6 +19,9 @@ using UnityEngine.UI;
 	:: revise code to meet C# convention for performance and readability
 	:: specifics - reduce redundant getcomponent calls
 	
+	version: 1.1 (Feb 6)
+	:: revise code to use the color scheme set in the ContainerManager class by accessing the configuration set 
+	in the Control Helper gameobject (script).  
 */
 
 class GridPositionData {
@@ -47,9 +52,16 @@ public class ContainerManager : MonoBehaviour
 	private Sprite tileSprite;
 
 	private int totalOccupations = 0;
+	private int colorProfile;
+	private TileColorScheme colorScheme;
+	private Volume volume;
 
 	void Start()
 	{
+		colorScheme = this.GetColorScheme();
+		volume = GameObject.Find("Box Volume").GetComponent<Volume>();
+		updateColorScheme();
+
 		chassisGrid = new (float x, float y)[width, height];
 		gridData = new GridPositionData[width, height];
 		for (int i = 0; i < width; i++)
@@ -63,6 +75,51 @@ public class ContainerManager : MonoBehaviour
 		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
 		GenerateContainer();
+	}
+
+	public void SetColorScheme(int colorScheme)
+	{
+		if (colorScheme != colorProfile)
+		{
+			this.colorProfile = colorScheme;
+			updateColorScheme();
+		}
+	}
+
+	public (Color, Color, Color, Color) GetTileColors()
+	{
+		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
+	}
+
+	public int GetColorSchemeCode()
+	{
+		return colorProfile;
+	}
+
+	public TileColorScheme GetColorScheme()
+	{
+		Camera mainCamera = Camera.main;
+		GameObject controlHelper = GameObject.Find("ControlHelper");
+		colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+
+		if (colorProfile == 1)
+		{
+			return new TileStdScheme();
+		}
+		else
+		{
+			Debug.Log("Using alternate color scheme");
+			return new TileAltScheme();
+		}
+	}
+
+	public void updateColorScheme() 
+	{
+		volume.profile.TryGet<ColorAdjustments>(out var colorAdjustments);
+		colorAdjustments.colorFilter.overrideState = true;
+		colorAdjustments.postExposure.overrideState = true;
+		colorAdjustments.postExposure.value = colorScheme.exposure;
+		colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
 	}
 
 	void GenerateContainer()
@@ -132,14 +189,9 @@ public class ContainerManager : MonoBehaviour
 		{
 			Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
 
-			if (CheckOccupationEligibility(tile.GetCellX(), tile.GetCellY()))
-			{
-				continue;
-			}
-
 			bool hasNeighbors = false;
 
-            for (int j = tile.GetCellX() - 1; j <= tile.GetCellX() + 1; j++)
+            for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
             {
 				if (hasNeighbors)
 				{
@@ -150,7 +202,7 @@ public class ContainerManager : MonoBehaviour
                     continue;
                 }
 
-                for (int k = tile.GetCellY() - 1; k <= tile.GetCellY() + 1; k++)
+                for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
                 {
 					if (hasNeighbors)
 					{
