@@ -1,11 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HealthBar : MonoBehaviour {
     [SerializeField] private GameObject healthBarColor;
     [SerializeField] private GameObject healthBarPanel;
     [SerializeField] private Slider healthBar;
+    [SerializeField] private TextMeshProUGUI textDisplay;
 
     private Image healthBarImage = null;
     private Image healthBarPanelImage = null;
@@ -22,6 +24,7 @@ public class HealthBar : MonoBehaviour {
     public void UpdateIndicator() {
         float health = ShipManager.Health;
         healthBar.value = health;
+        textDisplay.text = $"{health}";
 
         if (health < HEALTH_LOW_LEVEL) {
             healthBarImage.color = Color.red;

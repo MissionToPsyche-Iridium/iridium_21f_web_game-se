@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GasCollectionStatusBar : MonoBehaviour {
     [SerializeField] private GameObject gasCollectionBarColor;
     [SerializeField] private Slider gasCollectBar; 
+    [SerializeField] private TextMeshProUGUI textDisplay;
+
     MissionState missionState;
     float gasTotal = 0;
     float target = 0;
@@ -53,7 +56,7 @@ public class GasCollectionStatusBar : MonoBehaviour {
         gasTotal = gasTotal + amount;
         Debug.Log($"GasStatusBar updating indicator: {amount}");
         gasCollectBar.value = gasTotal;
-
+        textDisplay.text = $"{gasTotal}/{target}";
         if (gasTotal >= target){
             gasCollectBarImage.color = Color.green;
         } else if (gasTotal > MID_LEVEL) {

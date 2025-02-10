@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class RareMetalCollectionStatusBar : MonoBehaviour {
     [SerializeField] private GameObject rareMetalCollectionBarColor;
     [SerializeField] private Slider rareMetalCollectBar;
+    [SerializeField] private TextMeshProUGUI textDisplay;
     MissionState missionState;
 
     private Image rareMetalCollectBarImage = null;
+    private string metalCollected = "";
     private float totalMined = 0;
     private float target;
 
@@ -54,7 +57,7 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
         totalMined = amount + totalMined;
         Debug.Log($"RareMetalStatusBar updating indicator: {amount}");
         rareMetalCollectBar.value = totalMined;
-
+        textDisplay.text = $"{totalMined}/{target}";
         if (totalMined >= target){
             rareMetalCollectBarImage.color = Color.green;
         } else if (totalMined > MID_LEVEL) {

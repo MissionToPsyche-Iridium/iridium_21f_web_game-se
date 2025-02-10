@@ -1,11 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class FuelBar : MonoBehaviour {
     [SerializeField] private GameObject fuelBarColor;
     [SerializeField] private GameObject fuelBarPanel;
     [SerializeField] private Slider fuelBar;
+    [SerializeField] private TextMeshProUGUI textDisplay;
 
     private Image fuelBarImage = null;
     private Image fuelBarPanelImage = null;
@@ -21,6 +23,7 @@ public class FuelBar : MonoBehaviour {
 
     public void UpdateIndicator(float fuel) {
         fuelBar.value = fuel;
+        textDisplay.text = $"{fuel}";
         if (fuel < FUEL_LOW_LEVEL) {
             fuelBarImage.color = Color.red;
             StartCoroutine(FlashLowFuel());
