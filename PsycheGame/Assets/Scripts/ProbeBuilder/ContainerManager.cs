@@ -77,6 +77,17 @@ public class ContainerManager : MonoBehaviour
 		GenerateContainer();
 	}
 
+	private bool profileUpdate()
+	{
+		int profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
+		if (profile != colorProfile)
+		{
+			colorProfile = profile;
+			return true;
+		}
+		else return false;
+	}
+
 	public void SetColorScheme(int colorScheme)
 	{
 		if (colorScheme != colorProfile)
@@ -88,6 +99,11 @@ public class ContainerManager : MonoBehaviour
 
 	public (Color, Color, Color, Color) GetTileColors()
 	{
+		if (profileUpdate())
+		{
+			colorScheme = this.GetColorScheme();
+			updateColorScheme();
+		}
 		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
 	}
 
