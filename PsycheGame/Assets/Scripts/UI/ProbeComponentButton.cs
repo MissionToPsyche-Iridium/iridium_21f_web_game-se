@@ -144,6 +144,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _tooltip = new TooltipBuilder()
                     .SetTitle(ProbeComponent.Name)
+                    .SetCredits(ProbeComponent.Credits)
                     .Build();
 
         _tooltip.Enable();

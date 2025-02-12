@@ -14,7 +14,7 @@ public class Tooltip
 
     private GameObject _tooltip;
 
-    public Tooltip(Transform parent, string title, string description, Vector3 position)
+    public Tooltip(Transform parent, string title, string description, string credits, Vector3 position)
     {
         _tooltip = GameObject.Instantiate(_tooltipTemplate);
 
@@ -24,15 +24,19 @@ public class Tooltip
         RectTransform contentRect = _tooltip.transform.GetChild(0).GetChild(0).gameObject.transform as RectTransform;
         RectTransform titleRect = contentRect.GetChild(0) as RectTransform;
         RectTransform descriptionRect = contentRect.GetChild(1) as RectTransform;
+        RectTransform creditsRect = contentRect.GetChild(1) as RectTransform;
 
         TextMeshProUGUI titleMesh = titleRect.gameObject.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI descriptionMesh = descriptionRect.gameObject.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI creditsMesh = creditsRect.gameObject.GetComponent<TextMeshProUGUI>();
 
         titleMesh.text = title;
         descriptionMesh.text = description;
+        creditsMesh.text = credits;
 
         titleRect.sizeDelta = new Vector2(titleRect.rect.width, titleMesh.GetPreferredValues().y);
         descriptionRect.sizeDelta = new Vector2(descriptionRect.rect.width, descriptionMesh.GetPreferredValues().y);
+        creditsRect.sizeDelta = new Vector2(creditsRect.rect.width, descriptionMesh.GetPreferredValues().y);
         contentRect.sizeDelta = new Vector2(Math.Max(titleRect.rect.width, descriptionRect.rect.width), titleRect.rect.height + descriptionRect.rect.height + 10.0f);
 
         RectTransform tooltipRect = _tooltip.GetComponent<RectTransform>();
