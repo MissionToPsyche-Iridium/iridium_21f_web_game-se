@@ -52,40 +52,42 @@ public class Tile : MonoBehaviour
         defaultColor = render.color;
     }
 
-    public int GetCellX() 
+    public int GetCellX()
     {
         return cellX;
     }
-    public int GetCellY() 
+    public int GetCellY()
     {
         return cellY;
     }
 
-    public float GetXPosition() 
+    public float GetXPosition()
     {
         return xPosition;
     }
-    public float GetYPosition() 
+    public float GetYPosition()
     {
         return yPosition;
     }
 
-    public (int, int) GetCell() 
+    public (int, int) GetCell()
     {
         return (cellX, cellY);
     }
 
-    void OnMouseEnter() 
+    void OnMouseEnter()
     {
-        String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
-        if (occupied != String.Empty) {
+        if (!gameObject.GetComponentInParent<ContainerManager>().CanOccupyCell(cellX, cellY))
+        {
             gameObject.GetComponent<SpriteRenderer>().color = occupiedTileColor;
-        } else {
+        }
+        else
+        {
             gameObject.GetComponent<SpriteRenderer>().color = openTileColor;
         }
     }
 
-    void OnMouseExit() 
+    void OnMouseExit()
     {
         gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
     }

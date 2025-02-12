@@ -17,7 +17,6 @@ public class SpriteDragDrop : MonoBehaviour
     public BuildManager BuildManager;
     public GameObject ComponentPanel;
     public bool Selected { get; private set; }
-    public string InternalId { get; set; }
     public Tuple<int, int> CurrentCell { get; set; }
 
     private AudioClip snapSound;
@@ -35,8 +34,6 @@ public class SpriteDragDrop : MonoBehaviour
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         audioSource = gameObject.AddComponent<AudioSource>();
         image = GetComponent<UnityEngine.UI.Image>();
-
-        Debug.Log(" <SDD> +++Probe part internal ID: " + InternalId + "+++");
     }
     private void OnMouseDown()
     {
@@ -62,13 +59,13 @@ public class SpriteDragDrop : MonoBehaviour
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                AttemptToRelease();
-
-                if (containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
+                if (containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
                 {
+                    AttemptToRelease();
+
                     CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
 
-                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
 
                     audioSource.PlayOneShot(snapSound, 1.0f);
                     image.material = sparkMaterial;
@@ -80,7 +77,8 @@ public class SpriteDragDrop : MonoBehaviour
                 }
                 else
                 {
-                    AttemptToReoccupy();
+                    Debug.Log("Attempting swap");
+                    containerManager.SwapOccupants(CurrentCell.Item1, CurrentCell.Item2, cellPos.cellX, cellPos.cellY);
                 }
             }
             else if (Math.Abs(panelRect.position.x - mousePos.x) <= Math.Abs(panelRect.rect.width) / 2 && Math.Abs(panelRect.position.y - mousePos.y) <= Math.Abs(panelRect.rect.height) / 2)
@@ -99,9 +97,9 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToRelease()
     {
-        if (!containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
+        if (!containerManager.CanOccupyCell(CurrentCell.Item1, CurrentCell.Item2))
         {
-            containerManager.ReleaseFromGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+            containerManager.ReleaseFromGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
             return true;
         }
         return false;
@@ -109,9 +107,9 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToReoccupy()
     {
-        if (containerManager.CheckOccupationEligibility(CurrentCell.Item1, CurrentCell.Item2))
+        if (containerManager.CanOccupyCell(CurrentCell.Item1, CurrentCell.Item2))
         {
-            containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, InternalId);
+            containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
             return true;
         }
         return false;
@@ -120,7 +118,6 @@ public class SpriteDragDrop : MonoBehaviour
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;
-        // mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
 }

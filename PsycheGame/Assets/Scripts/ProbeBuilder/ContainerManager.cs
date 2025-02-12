@@ -24,179 +24,173 @@ using UnityEngine.UI;
 	in the Control Helper gameobject (script).  
 */
 
-class GridPositionData {
+class GridPositionData
+{
     public bool IsOccupied { get; set; }
-    public string Occupant { get; set; }
+    public GameObject Occupant { get; set; }
 
-	public GridPositionData()
-	{
-		IsOccupied = false;
-		Occupant = string.Empty;
-	}
+    public GridPositionData()
+    {
+        IsOccupied = false;
+        Occupant = null;
+    }
 }
 
 
 public class ContainerManager : MonoBehaviour
 {
-	[SerializeField] private int width, height;
-	[SerializeField] private Tile tile;
-	[SerializeField] private int originX;
-	[SerializeField] private int originY;
-	[SerializeField] private int tileScale;
-	
-	private float PosX, PosY;
+    [SerializeField] private int width, height;
+    [SerializeField] private Tile tile;
+    [SerializeField] private int originX;
+    [SerializeField] private int originY;
+    [SerializeField] private int tileScale;
 
-	private (float x, float y)[,] chassisGrid;
-	private GridPositionData[,] gridData;
-	public Material tileMaterial;
-	private Sprite tileSprite;
+    private float PosX, PosY;
 
-	private int totalOccupations = 0;
-	private int colorProfile;
-	private TileColorScheme colorScheme;
-	private Volume volume;
+    private (float x, float y)[,] chassisGrid;
+    private GridPositionData[,] gridData;
+    public Material tileMaterial;
+    private Sprite tileSprite;
 
-	void Start()
-	{
-		colorScheme = this.GetColorScheme();
-		volume = GameObject.Find("Box Volume").GetComponent<Volume>();
-		updateColorScheme();
+    private int totalOccupations = 0;
+    private int colorProfile;
+    private TileColorScheme colorScheme;
+    private Volume volume;
 
-		chassisGrid = new (float x, float y)[width, height];
-		gridData = new GridPositionData[width, height];
-		for (int i = 0; i < width; i++)
-		{
-			for (int j = 0; j < height; j++)
-			{
-				gridData[i, j] = new GridPositionData();
-			}
-		}
+    void Start()
+    {
+        colorScheme = this.GetColorScheme();
+        volume = GameObject.Find("Box Volume").GetComponent<Volume>();
+        updateColorScheme();
 
-		tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
+        chassisGrid = new (float x, float y)[width, height];
+        gridData = new GridPositionData[width, height];
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                gridData[i, j] = new GridPositionData();
+            }
+        }
 
-		GenerateContainer();
-	}
+        tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
 
-	public void SetColorScheme(int colorScheme)
-	{
-		if (colorScheme != colorProfile)
-		{
-			this.colorProfile = colorScheme;
-			updateColorScheme();
-		}
-	}
+        GenerateContainer();
+    }
 
-	public (Color, Color, Color, Color) GetTileColors()
-	{
-		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
-	}
+    public void SetColorScheme(int colorScheme)
+    {
+        if (colorScheme != colorProfile)
+        {
+            this.colorProfile = colorScheme;
+            updateColorScheme();
+        }
+    }
 
-	public int GetColorSchemeCode()
-	{
-		return colorProfile;
-	}
+    public (Color, Color, Color, Color) GetTileColors()
+    {
+        return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
+    }
 
-	public TileColorScheme GetColorScheme()
-	{
-		Camera mainCamera = Camera.main;
-		GameObject controlHelper = GameObject.Find("ControlHelper");
-		colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+    public int GetColorSchemeCode()
+    {
+        return colorProfile;
+    }
 
-		if (colorProfile == 1)
-		{
-			return new TileStdScheme();
-		}
-		else
-		{
-			Debug.Log("Using alternate color scheme");
-			return new TileAltScheme();
-		}
-	}
+    public TileColorScheme GetColorScheme()
+    {
+        Camera mainCamera = Camera.main;
+        GameObject controlHelper = GameObject.Find("ControlHelper");
+        colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 
-	public void updateColorScheme() 
-	{
-		volume.profile.TryGet<ColorAdjustments>(out var colorAdjustments);
-		colorAdjustments.colorFilter.overrideState = true;
-		colorAdjustments.postExposure.overrideState = true;
-		colorAdjustments.postExposure.value = colorScheme.exposure;
-		colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
-	}
+        if (colorProfile == 1)
+        {
+            return new TileStdScheme();
+        }
+        else
+        {
+            Debug.Log("Using alternate color scheme");
+            return new TileAltScheme();
+        }
+    }
 
-	void GenerateContainer()
-	{
-		RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
-		
-		this.originX = (int)(parentRectTransform.rect.width / 2 * 0.70);
-		this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
-		this.tileScale = (int)(parentRectTransform.rect.width / 18);
+    public void updateColorScheme()
+    {
+        volume.profile.TryGet<ColorAdjustments>(out var colorAdjustments);
+        colorAdjustments.colorFilter.overrideState = true;
+        colorAdjustments.postExposure.overrideState = true;
+        colorAdjustments.postExposure.value = colorScheme.exposure;
+        colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
+    }
 
-		for (int x = 0; x < width; x++)
-		{
-			for (int y = 0; y < height; y++)
-			{
-				if (tile != null)
-				{
-					var targetX = originX + (tileScale * x * 0.93f);
-					var targetY = originY + (tileScale * y * 0.93f);
-					var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
-					newTile.name = $"Tile {x} {y}";
-					newTile.tag = "tile";
+    void GenerateContainer()
+    {
+        RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
 
-					var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
-					rigidbody2D.gravityScale = 0;
+        this.originX = (int)(parentRectTransform.rect.width / 2 * 0.70);
+        this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
+        this.tileScale = (int)(parentRectTransform.rect.width / 18);
 
-					var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
-					boxCollider2D.isTrigger = true;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (tile != null)
+                {
+                    var targetX = originX + (tileScale * x * 0.93f);
+                    var targetY = originY + (tileScale * y * 0.93f);
+                    var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
+                    newTile.name = $"Tile {x} {y}";
+                    newTile.tag = "tile";
 
-					var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
-					spriteRenderer.sprite = tileSprite;
+                    var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
+                    rigidbody2D.gravityScale = 0;
 
-					var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-					newTile.Init(isOffset, x, y, targetX, targetY);
+                    var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
+                    boxCollider2D.isTrigger = true;
 
-					chassisGrid[x, y] = (targetX, targetY);
-					newTile.transform.SetParent(transform);
-					newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);
-				}
-			}
-		}
-	}
+                    var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
+                    spriteRenderer.sprite = tileSprite;
 
-	public String CheckGridOccupied(int x, int y)
-	{
-		if (gridData[x, y].IsOccupied)
-		{
-			return gridData[x, y].Occupant;
-		}
-		else
-		{
-			return "";
-		}
-	}
+                    var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
+                    newTile.Init(isOffset, x, y, targetX, targetY);
 
-	public bool CheckOccupationEligibility(int x, int y)
-	{
-		if (gridData[x, y].IsOccupied)
-		{
-			return false;
-		}
-		return true;
-	}
+                    chassisGrid[x, y] = (targetX, targetY);
+                    newTile.transform.SetParent(transform);
+                    newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);
+                }
+            }
+        }
+    }
 
-	public bool IsReadyToSave()
-	{
-		for (int i = 0; i < transform.childCount; i++)
-		{
-			Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
+    public bool CanOccupyCell(int x, int y)
+    {
+        if (gridData[x, y].IsOccupied)
+        {
+            return false;
+        }
+        return true;
+    }
 
-			bool hasNeighbors = false;
+    public bool IsReadyToSave()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
+
+            if (CanOccupyCell(tile.GetCellX(), tile.GetCellY()))
+            {
+                continue;
+            }
+
+            bool hasNeighbors = false;
 
             for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
             {
-				if (hasNeighbors)
-				{
-					break;
-				}
+                if (hasNeighbors)
+                {
+                    break;
+                }
                 else if (j < 0 || j >= width)
                 {
                     continue;
@@ -204,110 +198,112 @@ public class ContainerManager : MonoBehaviour
 
                 for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
                 {
-					if (hasNeighbors)
-					{
-						break;
-					}
+                    if (hasNeighbors)
+                    {
+                        break;
+                    }
                     else if (k < 0 || k >= height || (j == tile.GetCellX() && k == tile.GetCellY()))
                     {
                         continue;
                     }
                     else if (gridData[j, k].IsOccupied)
                     {
-						hasNeighbors = true;
+                        hasNeighbors = true;
                     }
                 }
             }
 
-			if (!hasNeighbors)
-			{
-				return false;
-			}
+            if (!hasNeighbors)
+            {
+                return false;
+            }
         }
-		return true;
+        return true;
     }
 
-	public bool ReleaseFromGridPosition(int x, int y, String objTag)
-	{
-		if (gridData[x, y].Occupant == objTag)
-		{
-			gridData[x, y].IsOccupied = false;
-			gridData[x, y].Occupant = string.Empty;
+    public bool ReleaseFromGridPosition(int x, int y, GameObject component)
+    {
+        if (gridData[x, y].Occupant == component)
+        {
+            gridData[x, y].IsOccupied = false;
+            gridData[x, y].Occupant = null;
 
-			totalOccupations--;
+            totalOccupations--;
 
             return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public bool AssignToGridPosition(int x, int y, String objTag)
-	{
-		if (gridData[x, y].IsOccupied == false)
-		{
-			gridData[x, y].IsOccupied = true;
-			gridData[x, y].Occupant = objTag;
-
-			totalOccupations++;
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public (int, int) FindGridPosition(Vector3 position)
-	{
-		var x = (int) Math.Round((position.x - originX) / tileScale);
-		var y = (int) Math.Round((position.y - originY) / tileScale);
-
-		if (x < 0 || x > width || y < 0 || y > height) 
-		{
-			return (-1, -1);
-		}
-		return (x, y);
-	}
-
-	public (int, int) GetCellAtWorldPosition(Vector3 position)
-	{
-		for (int i = 0; i < transform.childCount; i++)
-		{
-			Transform tile = transform.GetChild(i);
-			if (Math.Abs(tile.position.x - position.x) <= tile.localScale.x / 2 && Math.Abs(tile.position.y - position.y) <= tile.localScale.y / 2)
-			{
-				Tile tileData = tile.GetComponent<Tile>();
-				return (tileData.GetCellX(), tileData.GetCellY());
-			}
         }
-		return (-1, -1);
-	}
+        else
+        {
+            return false;
+        }
+    }
 
-	public (float, float) GetBeaconPosition()
-	{
-		return (this.PosX, this.PosY);
-	}
+    public bool AssignToGridPosition(int x, int y, GameObject component)
+    {
+        if (gridData[x, y].IsOccupied == false)
+        {
+            gridData[x, y].IsOccupied = true;
+            gridData[x, y].Occupant = component;
 
-	public (float, float) GetBeaconPositionGrid(int x, int y)
-	{
-		return (chassisGrid[x, y].x, chassisGrid[x, y].y);
-	}
+            totalOccupations++;
 
-	public String SeedUniquId()
-	{
-		Time time = new Time();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-		TimeSpan timeSpan = TimeSpan.FromSeconds(Time.time); 
-		string timeText = string.Format("{0:D2}:{1:D2}:{2:D2}", timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+    public void SwapOccupants(int x1, int y1, int x2, int y2)
+    {
+        GameObject temp = gridData[x1, y1].Occupant;
+        gridData[x1, y1].Occupant = gridData[x2, y2].Occupant;
+        gridData[x2, y2].Occupant = temp;
 
-		int seedExt = UnityEngine.Random.Range(0, 100);
-		String seedValue = timeText + seedExt.ToString();
+        gridData[x1, y1].Occupant.GetComponent<SpriteDragDrop>().CurrentCell = new Tuple<int, int>(x1, y1);
+        gridData[x2, y2].Occupant.GetComponent<SpriteDragDrop>().CurrentCell = new Tuple<int, int>(x2, y2);
 
-		return seedValue;
-	}
+        (float x, float y) position1 = GetBeaconPositionGrid(x1, y1);
+        gridData[x1, y1].Occupant.transform.position = new Vector3(position1.x, position1.y, -0.01f);
 
+        (float x, float y) position2 = GetBeaconPositionGrid(x2, y2);
+        gridData[x2, y2].Occupant.transform.position = new Vector3(position2.x, position2.y, -0.01f);
+    }
+
+    public (int, int) FindGridPosition(Vector3 position)
+    {
+        var x = (int)Math.Round((position.x - originX) / tileScale);
+        var y = (int)Math.Round((position.y - originY) / tileScale);
+
+        if (x < 0 || x > width || y < 0 || y > height)
+        {
+            return (-1, -1);
+        }
+        return (x, y);
+    }
+
+    public (int, int) GetCellAtWorldPosition(Vector3 position)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform tile = transform.GetChild(i);
+            if (Math.Abs(tile.position.x - position.x) <= tile.localScale.x / 2 && Math.Abs(tile.position.y - position.y) <= tile.localScale.y / 2)
+            {
+                Tile tileData = tile.GetComponent<Tile>();
+                return (tileData.GetCellX(), tileData.GetCellY());
+            }
+        }
+        return (-1, -1);
+    }
+
+    public (float, float) GetBeaconPosition()
+    {
+        return (this.PosX, this.PosY);
+    }
+
+    public (float, float) GetBeaconPositionGrid(int x, int y)
+    {
+        return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+    }
 }

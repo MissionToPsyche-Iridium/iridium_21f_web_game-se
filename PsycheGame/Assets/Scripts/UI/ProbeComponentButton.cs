@@ -24,7 +24,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     private RectTransform _dragPlane;
     private AudioClip _snapSound;
     private Tooltip _tooltip;
-    private String _itemSeed;
 
     public void Awake()
     {
@@ -58,7 +57,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _dragIcon.AddComponent<AudioSource>();
 
-        RectTransform rect = (RectTransform) transform;
+        RectTransform rect = (RectTransform)transform;
         Vector2 size = new Vector2(rect.rect.width, rect.rect.height);
         _dragIcon.GetComponent<RectTransform>().sizeDelta = size;
         _dragIcon.GetComponent<BoxCollider2D>().size = size;
@@ -68,10 +67,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragPlane = canvasTransform as RectTransform;
 
         _dragIcon.AddComponent<SpriteDragDrop>();
-        _itemSeed = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SeedUniquId();
         _dragIcon.GetComponent<SpriteDragDrop>().BuildManager = BuildManager;
         _dragIcon.GetComponent<SpriteDragDrop>().ComponentPanel = ComponentPanel;
-        _dragIcon.GetComponent<SpriteDragDrop>().InternalId = _itemSeed;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
@@ -94,12 +91,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1))
             {
-                if (_containerManager.CheckOccupationEligibility(cellPos.cellX, cellPos.cellY))
+                if (_containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
                 {
                     BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 
-                    _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _itemSeed);
-                    
+                    _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _dragIcon);
+
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
 
@@ -108,7 +105,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     Image image = _dragIcon.GetComponent<Image>();
                     image.material = _sparkMaterial;
-                    
+
                     if (this.gameObject.layer <= 9)
                     {
                         this.gameObject.layer = 10;
@@ -151,12 +148,12 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _tooltip.Enable();
 
-         //set info panel
-                ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
+        //set info panel
+        ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
 
-                GameObject.Find("PartName").GetComponentInChildren<TMP_Text>().text = probeComponent.Name;
-                GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = probeComponent.Description;
-                GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = GetComponent<Image>().sprite;
+        GameObject.Find("PartName").GetComponentInChildren<TMP_Text>().text = probeComponent.Name;
+        GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = probeComponent.Description;
+        GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = GetComponent<Image>().sprite;
     }
 
     public void OnPointerExit(PointerEventData eventData)
