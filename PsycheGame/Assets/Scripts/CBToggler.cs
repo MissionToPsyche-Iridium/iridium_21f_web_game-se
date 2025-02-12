@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CBToggler : MonoBehaviour
 {
@@ -21,6 +22,15 @@ public class CBToggler : MonoBehaviour
         controlHelper = GameObject.Find("ControlHelper");        
     }
 
+    // check if current scene is the probe builder
+    void UpdateContainerIfNeeded(int colorProfile)
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "ProbeBuilder") {
+            GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SetColorScheme(colorProfile);
+        }
+    }
+
     // Update is called once per frame
     void ToggleValueChanged(Toggle change) {
         controlHelper = GameObject.Find("ControlHelper");
@@ -29,9 +39,11 @@ public class CBToggler : MonoBehaviour
         if (change.isOn) {
             Debug.Log("Toggle is ON - ColorBlind Mode");
             controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(2);
+            UpdateContainerIfNeeded(2);
         } else {
             Debug.Log("Toggle is OFF - Normal Mode");
             controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(1);
+            UpdateContainerIfNeeded(1);
         }
     }
 }

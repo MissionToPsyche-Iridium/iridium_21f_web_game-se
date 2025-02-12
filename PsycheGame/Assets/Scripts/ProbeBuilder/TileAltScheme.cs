@@ -17,11 +17,19 @@ public class TileAltScheme : TileColorScheme
 
     public TileAltScheme()
     {
+        BaseSceneColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        exposure = 0.5f;
+        Threshold = 0.995f;
+        Intensity = 10;
+        Tint = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        
+        /* Legacy - retain until version release
         BaseSceneColor = new Color(0.0f, 0.7f, 1.13f, 0.6f);
         exposure = 0.65f;
         Threshold = 0.995f;
         Intensity = 12;
         Tint = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        */
     }
 
     public override Color GetColor1()

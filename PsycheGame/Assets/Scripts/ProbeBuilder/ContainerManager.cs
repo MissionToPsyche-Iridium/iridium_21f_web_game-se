@@ -88,12 +88,28 @@ public class ContainerManager : MonoBehaviour
 		else return false;
 	}
 
+	public void UpdateColorScheme()
+	{
+		if (profileUpdate())
+		{
+			colorScheme = this.GetColorScheme();
+			updateColorScheme();
+		}
+	}
+
 	public void SetColorScheme(int colorScheme)
 	{
 		if (colorScheme != colorProfile)
 		{
 			this.colorProfile = colorScheme;
-			updateColorScheme();
+			if (colorScheme == 1)
+			{
+				this.colorScheme = new TileStdScheme();
+			}
+			else
+			{
+				this.colorScheme = new TileAltScheme();
+			}
 		}
 	}
 
