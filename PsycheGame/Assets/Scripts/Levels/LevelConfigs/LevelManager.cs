@@ -12,6 +12,8 @@ public class LevelManager : MonoBehaviour
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
     [SerializeField] private List<LevelConfig> levels;
+    [SerializeField] private List<ShipConfig> shipConfigs;
+
     private int currentLevelIndex = 0;
 
     [SerializeField] private ObjectSpawner gasSpawner;
@@ -146,14 +148,18 @@ public class LevelManager : MonoBehaviour
         loadingScreen.SetActive(true);
         EnableAllChildren(loadingScreen.transform);
 
-        LevelConfig config = levels[levelIndex];
-        initializeByConfig(config);
+        LevelConfig levelConfig = levels[levelIndex];
+        initializeByConfig(levelConfig);
+
+        ShipConfig shipConfig = shipConfigs[levelIndex];
+        ShipManager.setShipConfig(shipConfig);
+
         float startTime = Time.time;
         yield return new WaitForSeconds(minLoadingTime);
         
-        OnLevelLoaded?.Invoke(config);
+        OnLevelLoaded?.Invoke(levelConfig);
 
-        Debug.Log($"Loaded Level: {config.levelName}");
+        Debug.Log($"Loaded Level: {levelConfig.levelName}");
         DisableAllChildren(loadingScreen.transform);
         loadingScreen.SetActive(false);
 
