@@ -34,10 +34,11 @@ public class PauseHandler : MonoBehaviour
 
     public void StartGame()
     {
+        LevelManager.isLoading = false;
+        Debug.Log("Level Manager is loading: " + LevelManager.isLoading);
         missionObjectivePanel.SetActive(false);
         Time.timeScale = 1f;
         IsGamePaused = false;
-
         LevelManager.Instance.StartMissionTimer();
     }
 
@@ -61,7 +62,7 @@ public class PauseHandler : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
-        IsGamePaused = false;
+        IsGamePaused = true;
         LevelManager.Instance.RestartLevel();
     }
 

@@ -5,12 +5,10 @@ using TMPro;
 
 public class FuelBar : MonoBehaviour {
     [SerializeField] private GameObject fuelBarColor;
-    [SerializeField] private GameObject fuelBarPanel;
     [SerializeField] private Slider fuelBar;
     [SerializeField] private TextMeshProUGUI textDisplay;
 
     private Image fuelBarImage = null;
-    private Image fuelBarPanelImage = null;
 
     private static readonly float FUEL_LOW_LEVEL = 25f;
     private static readonly float FUEL_MID_LEVEL = 50f;
@@ -18,12 +16,11 @@ public class FuelBar : MonoBehaviour {
 
     private void Start() {
         this.fuelBarImage = fuelBarColor.GetComponent<Image>();
-        this.fuelBarPanelImage = fuelBarPanel.GetComponent<Image>();
     }
 
     public void UpdateIndicator(float fuel) {
         fuelBar.value = fuel;
-        textDisplay.text = $"{fuel}";
+        textDisplay.text = $"{Mathf.FloorToInt(fuel)}";
         if (fuel < FUEL_LOW_LEVEL) {
             fuelBarImage.color = Color.red;
             StartCoroutine(FlashLowFuel());
@@ -36,9 +33,9 @@ public class FuelBar : MonoBehaviour {
 
     private IEnumerator FlashLowFuel() {
         while (ShipManager.Fuel < FUEL_LOW_THRESHOLD) {
-            fuelBarPanelImage.color = Color.red;
+            fuelBarImage.color = Color.red;
             yield return new WaitForSeconds(0.5f);
-            fuelBarPanelImage.color = Color.white;
+            fuelBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }   
     }

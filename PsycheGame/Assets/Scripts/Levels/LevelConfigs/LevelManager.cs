@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
     private bool isTimerRunning = false;
     private bool isPaused = false;
     private MissionTimer missionTimer;
+    public static bool isLoading = false;
 
     private void Awake()
     {
@@ -99,6 +100,8 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        if (isLoading) return;
+
         if (isTimerRunning)
         {
             UpdateMissionTimer();
@@ -109,7 +112,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (ShipManager.Health <= 0 || ShipManager.Fuel <= 0)
+        if ((ShipManager.Health <= 0 || ShipManager.Fuel <= 0))
         {
             Debug.Log("Ship health or fuel reached 0. Game over!");
             EndLevel(false);
@@ -124,10 +127,12 @@ public class LevelManager : MonoBehaviour
  
     public void LoadLevel(int levelIndex)
     {
+        if (isLoading) return;
         StartCoroutine(LoadLevelAsync(levelIndex));
     }
 
     public IEnumerator LoadLevelAsync(int levelIndex){
+        isLoading = true;
         if (levelIndex >= levels.Count)
         {
             Debug.Log("All levels completed!");
@@ -137,12 +142,10 @@ public class LevelManager : MonoBehaviour
             yield break;
         }
 
-        if (loadingScreen != null){
-            loadingText.text = "Loading Next Level...";
-            loadingScreen.SetActive(true);
-            EnableAllChildren(loadingScreen.transform);
+        loadingText.text = "Loading Level " + levelIndex;
+        loadingScreen.SetActive(true);
+        EnableAllChildren(loadingScreen.transform);
 
-        }
         LevelConfig config = levels[levelIndex];
         initializeByConfig(config);
         float startTime = Time.time;
@@ -151,33 +154,15 @@ public class LevelManager : MonoBehaviour
         OnLevelLoaded?.Invoke(config);
 
         Debug.Log($"Loaded Level: {config.levelName}");
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(false);
+        DisableAllChildren(loadingScreen.transform);
+        loadingScreen.SetActive(false);
 
         missionObjectivePanel.SetActive(true);
     }
 
-    public void PauseGame()
-    {
-        if (isPaused) return;
-
-        isPaused = true;
-        Time.timeScale = 0f; 
-        Debug.Log("Game Paused");
-    }
-
-    public void ResumeGame()
-    {
-        if (!isPaused) return;
-
-        isPaused = false;
-        Time.timeScale = 1f;
-        Debug.Log("Game Resumed");
-    }
-
     private void EndLevel(bool success)
     {
+        if(isLoading) return;
         if (success)
         {
             Debug.Log($"Level {currentLevelIndex} Complete!");
@@ -192,6 +177,9 @@ public class LevelManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        if(isLoading) return;
+        ShipManager.Health = 100;
+        ShipManager.Fuel = 150;
         LoadLevel(currentLevelIndex);
     }
 
@@ -200,6 +188,13 @@ public class LevelManager : MonoBehaviour
         foreach (Transform child in parent)
         {
             child.gameObject.SetActive(true);
+        }
+    }
+    private void DisableAllChildren(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            child.gameObject.SetActive(false);
         }
     }
 }

@@ -5,12 +5,10 @@ using TMPro;
 
 public class HealthBar : MonoBehaviour {
     [SerializeField] private GameObject healthBarColor;
-    [SerializeField] private GameObject healthBarPanel;
     [SerializeField] private Slider healthBar;
     [SerializeField] private TextMeshProUGUI textDisplay;
 
     private Image healthBarImage = null;
-    private Image healthBarPanelImage = null;
 
     private static readonly float HEALTH_LOW_LEVEL = 25f;
     private static readonly float HEALTH_MID_LEVEL = 50f;
@@ -18,7 +16,6 @@ public class HealthBar : MonoBehaviour {
 
     private void Start() {
         this.healthBarImage = healthBarColor.GetComponent<Image>();
-        this.healthBarPanelImage = healthBarPanel.GetComponent<Image>();
     }
 
     public void UpdateIndicator() {
@@ -38,9 +35,9 @@ public class HealthBar : MonoBehaviour {
 
     private IEnumerator FlashLowHealth() {
         while (ShipManager.Health < HEALTH_LOW_THRESHOLD) {
-            healthBarPanelImage.color = Color.red;
+            healthBarImage.color = Color.red;
             yield return new WaitForSeconds(0.5f);
-            healthBarPanelImage.color = Color.white;
+            healthBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }   
     }
