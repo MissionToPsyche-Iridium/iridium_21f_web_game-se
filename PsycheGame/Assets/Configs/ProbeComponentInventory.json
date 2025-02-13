@@ -10,11 +10,11 @@
         },
         {
             "ProbeComponentId": "PC3",
-            "Quantity": 1
+            "Quantity": 12
         },
         {
             "ProbeComponentId": "PC4",
-            "Quantity": 1
+            "Quantity": 12
         },
         {
             "ProbeComponentId": "PC5",
@@ -26,7 +26,7 @@
         },
         {
             "ProbeComponentId": "PC7",
-            "Quantity": 1
+            "Quantity": 12
         },
         {
             "ProbeComponentId": "PC8",
@@ -38,11 +38,11 @@
         },
         {
             "ProbeComponentId": "PC10",
-            "Quantity": 1
+            "Quantity": 12
         },
         {
             "ProbeComponentId": "PC11",
-            "Quantity": 1
+            "Quantity": 6
         },
         {
             "ProbeComponentId": "PC12",
