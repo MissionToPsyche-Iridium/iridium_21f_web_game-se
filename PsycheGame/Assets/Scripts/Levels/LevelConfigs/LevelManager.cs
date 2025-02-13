@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
+using System;
 
 public class LevelManager : MonoBehaviour
 {
@@ -151,8 +152,16 @@ public class LevelManager : MonoBehaviour
         LevelConfig levelConfig = levels[levelIndex];
         initializeByConfig(levelConfig);
 
-        ShipConfig shipConfig = shipConfigs[levelIndex];
-        ShipManager.setShipConfig(shipConfig);
+        try
+        {
+            ShipConfig shipConfig = shipConfigs[levelIndex];
+            ShipManager.setShipConfig(shipConfig);
+        }
+        catch (ArgumentOutOfRangeException _)
+        {
+            Debug.LogWarning("No Ship Config found for explorer level with index: " + levelIndex + "\n" +
+                             "Using default editor ship config");
+        }
 
         float startTime = Time.time;
         yield return new WaitForSeconds(minLoadingTime);
@@ -184,8 +193,8 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         if(isLoading) return;
-        ShipManager.Health = 100;
-        ShipManager.Fuel = 150;
+        //ShipManager.Health = 100;
+        //ShipManager.Fuel = 150;
         LoadLevel(currentLevelIndex);
     }
 
