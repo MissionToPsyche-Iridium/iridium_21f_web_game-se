@@ -14,7 +14,7 @@ public class TooltipBuilder
     public const float OffsetYFromMouse = -2.0f;
 
     private Canvas _canvas;
-    private string _title, _description;
+    private string _title, _description, _credits;
     private Vector3? _position;
 
     public TooltipBuilder()
@@ -41,6 +41,11 @@ public class TooltipBuilder
         return this;
     }
 
+    public TooltipBuilder SetCredits(float credits) {
+        _credits = credits.ToString() + " Credits";
+        return this;
+    }
+
     public TooltipBuilder SetPosition(float x, float y, float z)
     {
         _position = new Vector3(x, y, z);
@@ -59,6 +64,6 @@ public class TooltipBuilder
             _position = (Input.mousePosition + new Vector3(OffsetXFromMouse, OffsetYFromMouse, 0.0f)) / _canvas.scaleFactor;
         }
 
-        return new Tooltip(_canvas.transform, _title, _description, (Vector3) _position);
+        return new Tooltip(_canvas.transform, _title, _description, _credits, (Vector3) _position);
     }
 }
