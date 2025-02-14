@@ -10,6 +10,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.U2D;
 
 /* 
 	Probe builder :: containerManager.cs
@@ -55,6 +56,7 @@ public class ContainerManager : MonoBehaviour
     private GridPositionData[,] gridData;
     public Material tileMaterial;
     private Sprite tileSprite;
+    private Sprite tileSprite2;
 
     private int totalOccupations = 0;
     private int colorProfile;
@@ -77,6 +79,7 @@ public class ContainerManager : MonoBehaviour
             }
         }
         tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
+        tileSprite2 = Resources.Load<Sprite>("Standard/T_16_Emissive");
 		GenerateContainer();
 	}
 
@@ -168,6 +171,14 @@ public class ContainerManager : MonoBehaviour
         colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
     }
 
+    private Sprite GetMaterial(int x, int y) {
+        if (y == 0 || y == height-1) {
+            return tileSprite2;
+        } else {
+            return tileSprite;
+        }
+    }
+
     void GenerateContainer()
     {
         RectTransform parentRectTransform = GameObject.Find("MasterCanvas").GetComponent<RectTransform>();
@@ -195,7 +206,7 @@ public class ContainerManager : MonoBehaviour
                     boxCollider2D.isTrigger = true;
 
                     var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
-                    spriteRenderer.sprite = tileSprite;
+                    spriteRenderer.sprite = GetMaterial(x, y);
 
                     var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
                     newTile.Init(isOffset, x, y, targetX, targetY);
