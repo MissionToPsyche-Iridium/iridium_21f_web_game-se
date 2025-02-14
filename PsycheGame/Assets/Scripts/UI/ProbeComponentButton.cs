@@ -10,12 +10,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
     public GameObject ComponentPanel { get; set; }
+    public GameObject InfoPanel { get; set; }
+    public GameObject InfoPartName { get; set; }
+    public GameObject InfoPartDescription { get; set; }
+    public GameObject InfoPartImage { get; set; }
     public GameObject SpawnArea { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
@@ -147,13 +151,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     .Build();
 
         _tooltip.Enable();
-
-        //set info panel
-        ProbeComponent probeComponent = ProbeComponentInventory.GetProbeComponent(gameObject);
-
-        GameObject.Find("PartName").GetComponentInChildren<TMP_Text>().text = probeComponent.Name;
-        GameObject.Find("PartDescription").GetComponentInChildren<TMP_Text>().text = probeComponent.Description;
-        GameObject.Find("PartImage").GetComponentInChildren<Image>().sprite = GetComponent<Image>().sprite;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -166,5 +163,20 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _tooltip.Destroy();
 
         _tooltip = null;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            InfoPartName.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Name;
+            InfoPartDescription.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Description;
+            InfoPartImage.GetComponent<Image>().sprite = GetComponent<Image>().sprite;
+
+            if (!InfoPanel.activeSelf)
+            {
+                InfoPanel.SetActive(true);
+            }
+        }
     }
 }

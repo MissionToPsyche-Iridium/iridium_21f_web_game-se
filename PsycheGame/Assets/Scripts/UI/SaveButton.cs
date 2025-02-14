@@ -58,7 +58,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
             if (!exists)
             {
-                Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>().SetMessage("Could not save probe due to abnormal spacing. Please fix and try again.");
+                Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>().SetMessage("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
             }
         }
 

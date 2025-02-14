@@ -13,6 +13,8 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
+    [SerializeField] private GameObject _infoPanel;
+    [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartImage;
     [SerializeField] private GameObject _spawnArea;
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
 
@@ -66,6 +68,10 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.ProbeComponent = probeComponent;
         buttonScript.ProbeComponentInventory = this;
         buttonScript.ComponentPanel = transform.GetChild(0).GetChild(0).gameObject;
+        buttonScript.InfoPanel = _infoPanel;
+        buttonScript.InfoPartName = _infoPartName;
+        buttonScript.InfoPartDescription = _infoPartDescription;
+        buttonScript.InfoPartImage = _infoPartImage;
         buttonScript.SpawnArea = _spawnArea;
 
         Image image = button.GetComponent<Image>();

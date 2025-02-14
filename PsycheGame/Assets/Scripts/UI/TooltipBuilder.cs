@@ -41,9 +41,9 @@ public class TooltipBuilder
         return this;
     }
 
-    public TooltipBuilder SetPosition(float x, float y, float z)
+    public TooltipBuilder SetPosition(Vector3 position)
     {
-        _position = new Vector3(x, y, z);
+        _position = position;
         return this;
     }
 

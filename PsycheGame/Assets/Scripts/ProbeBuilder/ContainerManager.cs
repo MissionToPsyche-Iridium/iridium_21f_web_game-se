@@ -230,48 +230,55 @@ public class ContainerManager : MonoBehaviour
 
     public bool IsReadyToSave()
     {
-        for (int i = 0; i < transform.childCount; i++)
+        if (totalOccupations < 1)
         {
-            Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
-
-            if (CanOccupyCell(tile.GetCellX(), tile.GetCellY()))
+            return false;
+        }
+        else if (totalOccupations > 1)
+        {
+            for (int i = 0; i < transform.childCount; i++)
             {
-                continue;
-            }
+                Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
 
-            bool hasNeighbors = false;
-
-            for (int j = tile.GetCellX() - 1; i <= tile.GetCellX() + 1; i++)
-            {
-                if (hasNeighbors)
-                {
-                    break;
-                }
-                else if (j < 0 || j >= width)
+                if (CanOccupyCell(tile.GetCellX(), tile.GetCellY()))
                 {
                     continue;
                 }
 
-                for (int k = tile.GetCellY() - 1; j <= tile.GetCellY() + 1; j++)
+                bool hasNeighbors = false;
+
+                for (int j = tile.GetCellX() - 1; j <= tile.GetCellX() + 1; j++)
                 {
                     if (hasNeighbors)
                     {
                         break;
                     }
-                    else if (k < 0 || k >= height || (j == tile.GetCellX() && k == tile.GetCellY()))
+                    else if (j < 0 || j >= width)
                     {
                         continue;
                     }
-                    else if (gridData[j, k].IsOccupied)
+
+                    for (int k = tile.GetCellY() - 1; k <= tile.GetCellY() + 1; k++)
                     {
-                        hasNeighbors = true;
+                        if (hasNeighbors)
+                        {
+                            break;
+                        }
+                        else if (k < 0 || k >= height || (j == tile.GetCellX() && k == tile.GetCellY()))
+                        {
+                            continue;
+                        }
+                        else if (gridData[j, k].IsOccupied)
+                        {
+                            hasNeighbors = true;
+                        }
                     }
                 }
-            }
 
-            if (!hasNeighbors)
-            {
-                return false;
+                if (!hasNeighbors)
+                {
+                    return false;
+                }
             }
         }
         return true;
