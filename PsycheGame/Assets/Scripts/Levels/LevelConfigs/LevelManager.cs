@@ -27,6 +27,8 @@ public class LevelManager : MonoBehaviour
     private bool isPaused = false;
     private MissionTimer missionTimer;
     public static bool isLoading = false;
+     private int playerScore = 0;
+    public int PlayerScore => playerScore;
 
     private void Awake()
     {
@@ -166,6 +168,9 @@ public class LevelManager : MonoBehaviour
         if (success)
         {
             Debug.Log($"Level {currentLevelIndex} Complete!");
+            float totalTime = levels[currentLevelIndex].missionTimer;
+            int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
+            playerScore += pointsEarned;
             LoadLevel(currentLevelIndex + 1);
         }
         else
@@ -196,5 +201,15 @@ public class LevelManager : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
+    }
+
+    private int CalculateScore(float timeRemaining, float totalTime)
+    {
+        int basePoints = 100;
+
+        float timeRatio = timeRemaining / totalTime;
+        int timeBonus = Mathf.RoundToInt(timeRatio * 200);
+
+        return basePoints + timeBonus;
     }
 }
