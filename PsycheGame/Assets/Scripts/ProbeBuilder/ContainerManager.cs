@@ -22,6 +22,10 @@ using UnityEngine.UI;
 	version: 1.1 (Feb 6)
 	:: revise code to use the color scheme set in the ContainerManager class by accessing the configuration set 
 	in the Control Helper gameobject (script).  
+
+	version: 1.2 (Feb 13)
+	:: enhanced code to handle color scheme change from the builder scene CONTROL setting (toggle).  additionally, 
+	updated the code with the ability to render the tile without loading from the START scene.
 */
 
 class GridPositionData {
@@ -79,7 +83,13 @@ public class ContainerManager : MonoBehaviour
 
 	private bool profileUpdate()
 	{
-		int profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
+		int profile;
+		try {
+			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
+		} catch (Exception e) {
+			profile = colorProfile;
+		}
+
 		if (profile != colorProfile)
 		{
 			colorProfile = profile;
@@ -99,16 +109,19 @@ public class ContainerManager : MonoBehaviour
 
 	public void SetColorScheme(int colorScheme)
 	{
+		Debug.Log("CS++ SCS - Setting color scheme to " + colorScheme);
 		if (colorScheme != colorProfile)
 		{
 			this.colorProfile = colorScheme;
 			if (colorScheme == 1)
 			{
 				this.colorScheme = new TileStdScheme();
+				UpdateColorScheme();
 			}
 			else
 			{
 				this.colorScheme = new TileAltScheme();
+				UpdateColorScheme();
 			}
 		}
 	}
@@ -131,8 +144,14 @@ public class ContainerManager : MonoBehaviour
 	public TileColorScheme GetColorScheme()
 	{
 		Camera mainCamera = Camera.main;
-		GameObject controlHelper = GameObject.Find("ControlHelper");
-		colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+
+		try {
+			GameObject controlHelper = GameObject.Find("ControlHelper");
+			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+		} catch (Exception e) {
+			Debug.Log("Control Helper not found: " + e.Message);
+			colorProfile = 1;
+		}
 
 		if (colorProfile == 1)
 		{
