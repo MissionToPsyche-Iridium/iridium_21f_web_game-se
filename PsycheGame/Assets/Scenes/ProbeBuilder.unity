@@ -2683,6 +2683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 395021017}
   - component: {fileID: 395021018}
+  - component: {fileID: 395021019}
   m_Layer: 0
   m_Name: CBToggle
   m_TagString: Untagged
@@ -2758,6 +2759,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 0
+--- !u!114 &395021019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395021016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3031d315e35d444049c9b3a2a35ef122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cbt_toggle: {fileID: 0}
+  controlHelper: {fileID: 0}
 --- !u!1 &414895501
 GameObject:
   m_ObjectHideFlags: 0

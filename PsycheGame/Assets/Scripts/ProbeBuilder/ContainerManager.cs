@@ -22,6 +22,10 @@ using UnityEngine.UI;
 	version: 1.1 (Feb 6)
 	:: revise code to use the color scheme set in the ContainerManager class by accessing the configuration set 
 	in the Control Helper gameobject (script).  
+
+	version: 1.2 (Feb 13)
+	:: enhanced code to handle color scheme change from the builder scene CONTROL setting (toggle).  additionally, 
+	updated the code with the ability to render the tile without loading from the START scene.
 */
 
 class GridPositionData
@@ -72,36 +76,77 @@ public class ContainerManager : MonoBehaviour
                 gridData[i, j] = new GridPositionData();
             }
         }
-
         tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
+		GenerateContainer();
+	}
 
-        GenerateContainer();
-    }
+	private bool profileUpdate()
+	{
+		int profile;
+		try {
+			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
+		} catch (Exception e) {
+			Debug.Log("Control Helper not found: " + e.Message);
+			profile = colorProfile;
+		}
 
-    public void SetColorScheme(int colorScheme)
-    {
-        if (colorScheme != colorProfile)
-        {
-            this.colorProfile = colorScheme;
-            updateColorScheme();
-        }
-    }
+		if (profile != colorProfile)
+		{
+			colorProfile = profile;
+			return true;
+		}
+		else return false;
+	}
 
-    public (Color, Color, Color, Color) GetTileColors()
-    {
-        return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
-    }
+	public void UpdateColorScheme()
+	{
+		if (profileUpdate())
+		{
+			colorScheme = this.GetColorScheme();
+			updateColorScheme();
+		}
+	}
 
-    public int GetColorSchemeCode()
-    {
-        return colorProfile;
-    }
+	public void SetColorScheme(int colorScheme)
+	{
+		Debug.Log("CS++ SCS - Setting color scheme to " + colorScheme);
+		if (colorScheme != colorProfile)
+		{
+			this.colorProfile = colorScheme;
+			if (colorScheme == 1)
+			{
+				this.colorScheme = new TileStdScheme();
+				UpdateColorScheme();
+			}
+			else
+			{
+				this.colorScheme = new TileAltScheme();
+				UpdateColorScheme();
+			}
+		}
+	}
 
-    public TileColorScheme GetColorScheme()
-    {
-        Camera mainCamera = Camera.main;
-        GameObject controlHelper = GameObject.Find("ControlHelper");
-        colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+	public (Color, Color, Color, Color) GetTileColors()
+	{
+		if (profileUpdate())
+		{
+			colorScheme = this.GetColorScheme();
+			updateColorScheme();
+		}
+		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
+	}
+
+	public TileColorScheme GetColorScheme()
+	{
+		Camera mainCamera = Camera.main;
+
+		try {
+			GameObject controlHelper = GameObject.Find("ControlHelper");
+			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+		} catch (Exception e) {
+			Debug.Log("Control Helper not found: " + e.Message);
+			colorProfile = 1;
+		}
 
         if (colorProfile == 1)
         {
@@ -162,6 +207,17 @@ public class ContainerManager : MonoBehaviour
             }
         }
     }
+	public String CheckGridOccupied(int x, int y)
+	{
+		if (gridData[x, y].IsOccupied)
+		{
+			return gridData[x, y].Occupant.name;
+		}
+		else
+		{
+			return String.Empty;
+		}
+	}
 
     public bool CanOccupyCell(int x, int y)
     {
