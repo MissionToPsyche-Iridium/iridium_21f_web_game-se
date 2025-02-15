@@ -89,7 +89,7 @@ public class ContainerManager : MonoBehaviour
 		try {
 			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.Log("Control Helper not found: " + e.Message);
+			// Debug.Log("Control Helper not found: " + e.Message);
 			profile = colorProfile;
 		}
 
@@ -147,7 +147,7 @@ public class ContainerManager : MonoBehaviour
 			GameObject controlHelper = GameObject.Find("ControlHelper");
 			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.Log("Control Helper not found: " + e.Message);
+			// Debug.Log("Control Helper not found: " + e.Message);
 			colorProfile = 1;
 		}
 
@@ -218,6 +218,12 @@ public class ContainerManager : MonoBehaviour
             }
         }
     }
+
+    public bool IsInteriorTile(int x, int y)
+    {
+        return (y == 0 || y == height - 1) ? false : true;
+    }
+
 	public String CheckGridOccupied(int x, int y)
 	{
 		if (gridData[x, y].IsOccupied)

@@ -20,7 +20,7 @@ public class SpriteDragDrop : MonoBehaviour
     public Tuple<int, int> CurrentCell { get; set; }
 
     private AudioClip snapSound;
-    private Material originalMaterial;
+    private Material exteriorlMaterial;
     private Material sparkMaterial;
     private Vector3 offset;
     private AudioSource audioSource;
@@ -33,6 +33,8 @@ public class SpriteDragDrop : MonoBehaviour
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         audioSource = gameObject.AddComponent<AudioSource>();
+        exteriorlMaterial = Resources.Load<Material>("EFX/OrangeRecolor");
+        sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
         image = GetComponent<UnityEngine.UI.Image>();
     }
     private void OnMouseDown()
@@ -64,11 +66,19 @@ public class SpriteDragDrop : MonoBehaviour
                     AttemptToRelease();
 
                     CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
-
                     containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
-
                     audioSource.PlayOneShot(snapSound, 1.0f);
-                    image.material = sparkMaterial;
+
+                    if (containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY))
+                    {
+                        Debug.Log("set to [Spark material]");
+                        image.material = sparkMaterial;
+                    }
+                    else 
+                    {
+                        Debug.Log("set to [Original material]");
+                        image.material = exteriorlMaterial;
+                    }
 
                     if (gameObject.layer <= 9)
                     {
