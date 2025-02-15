@@ -4,10 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+/*
+
+    ColorBlind Mode Toggler :: CBToggler.cs
+    Date: Jan, 2024
+    Description: this script provides the functionality to toggle the colorblind mode on and off. It changes the color scheme of the game
+    based on the toggle state.
+
+    version 1.1 (Feb 11)
+    :: updated logic to work with different scenes -- ex: either from main menu or applied directly in the builder scene
+*/
+
 public class CBToggler : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     public Toggle cbt_toggle;
     public GameObject controlHelper;
     Camera mainCamera;
@@ -18,7 +27,7 @@ public class CBToggler : MonoBehaviour
         cbt_toggle.onValueChanged.AddListener(delegate {
             ToggleValueChanged(cbt_toggle);
         }); 
-        mainCamera = Camera.main;    // keep to wake up the camera! - otherwise null exception
+        mainCamera = Camera.main;       // keep to wake up the camera! - otherwise null exception
         controlHelper = GameObject.Find("ControlHelper");        
     }
 
@@ -40,7 +49,7 @@ public class CBToggler : MonoBehaviour
             try {
                 controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(2);
             } catch (System.Exception e) {
-                Debug.Log("Control Helper not found - debug mode only");
+                // Debug.Log("Control Helper not found - debug mode only");
             }
             UpdateContainerIfNeeded(2);
         } else {
@@ -48,7 +57,7 @@ public class CBToggler : MonoBehaviour
             try {
                 controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(1);
             } catch (System.Exception e) {
-                Debug.Log("Control Helper not found - debug mode only");
+                // Debug.Log("Control Helper not found - debug mode only");
             }
             UpdateContainerIfNeeded(1);
         }

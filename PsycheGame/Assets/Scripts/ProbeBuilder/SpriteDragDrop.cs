@@ -9,6 +9,9 @@ using UnityEngine;
 
     version 1.0 candidate (Jan 21)
     :: 1.0 candidate - Jan 21 - refactored code to meet C# convention for performance and readability
+
+    version 1.1 (Feb 14)
+    :: updated the logic to apply different shader materials to the probe part when it is placed on the interior or exterior tile
 */
 
 public class SpriteDragDrop : MonoBehaviour
