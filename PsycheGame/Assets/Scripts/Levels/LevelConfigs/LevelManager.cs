@@ -143,8 +143,7 @@ public class LevelManager : MonoBehaviour
             EnableAllChildren(loadingScreen.transform);
             yield break;
         }
-
-        loadingText.text = "Loading Level " + levelIndex;
+        loadingText.text = "You socred: " + playerScore + "\n\n" + "Loading Level " + levelIndex;
         loadingScreen.SetActive(true);
         EnableAllChildren(loadingScreen.transform);
 
