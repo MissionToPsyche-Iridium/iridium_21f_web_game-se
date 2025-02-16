@@ -15,12 +15,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
+    public GameObject MasterCanvas { get; set; }
     public GameObject ComponentPanel { get; set; }
     public GameObject InfoPanel { get; set; }
     public GameObject InfoPartName { get; set; }
     public GameObject InfoPartDescription { get; set; }
     public GameObject InfoPartImage { get; set; }
     public GameObject SpawnArea { get; set; }
+    public GameObject TooltipPrefab { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
     private Material _boundMaterial;
@@ -92,7 +94,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     {
         if (_dragIcon != null)
         {
-            (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(_dragIcon.transform.position);
             if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1))
             {
                 if (_containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
@@ -146,9 +148,11 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        _tooltip = new TooltipBuilder()
-                    .SetTitle(ProbeComponent.Name)
-                    .Build();
+        _tooltip = Instantiate(TooltipPrefab, MasterCanvas.transform).GetComponent<Tooltip>();
+
+        _tooltip.SetTitle(ProbeComponent.Name);
+        _tooltip.SetDescription("");
+        _tooltip.SetPosition(transform.position + new Vector3(80.0f, -80.0f, 0.0f));
 
         _tooltip.Enable();
     }
@@ -160,8 +164,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        _tooltip.Destroy();
-
+        Destroy(_tooltip.gameObject);
         _tooltip = null;
     }
 
@@ -172,6 +175,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             InfoPartName.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Name;
             InfoPartDescription.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Description;
             InfoPartImage.GetComponent<Image>().sprite = GetComponent<Image>().sprite;
+
+            InfoPanel.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Scrollbar>().value = 1;
 
             if (!InfoPanel.activeSelf)
             {

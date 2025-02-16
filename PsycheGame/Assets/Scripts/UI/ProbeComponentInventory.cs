@@ -13,6 +13,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
+    [SerializeField] private GameObject _tooltipPrefab;
     [SerializeField] private GameObject _infoPanel;
     [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartImage;
     [SerializeField] private GameObject _spawnArea;
@@ -73,6 +74,8 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.InfoPartDescription = _infoPartDescription;
         buttonScript.InfoPartImage = _infoPartImage;
         buttonScript.SpawnArea = _spawnArea;
+        buttonScript.TooltipPrefab = _tooltipPrefab;
+        buttonScript.MasterCanvas = transform.parent.gameObject;
 
         Image image = button.GetComponent<Image>();
         image.preserveAspect = true;
@@ -91,7 +94,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
             image.color = new Color(255, 255, 255, 0.25f);
         }
 
-        probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
+        probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x - {probeComponent.Credits} Credits";
 
         probeComponentButton.transform.SetParent(_content.transform);
 
@@ -174,7 +177,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
                         button.GetComponent<Image>().color = new Color(255, 255, 255, 1.0f);
                     }
 
-                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = quantity.ToString() + "x";
+                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x - {probeComponent.Credits} Credits";
 
                     return;
                 }

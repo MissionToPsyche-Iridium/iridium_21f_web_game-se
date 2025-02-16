@@ -52,10 +52,9 @@ public class SpriteDragDrop : MonoBehaviour
     {
         if (Selected)
         {
-            Vector3 mousePos = MouseWorldPosition();
             RectTransform panelRect = ComponentPanel.transform as RectTransform;
 
-            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(mousePos);
+            (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(transform.position);
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
@@ -77,11 +76,10 @@ public class SpriteDragDrop : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Attempting swap");
                     containerManager.SwapOccupants(CurrentCell.Item1, CurrentCell.Item2, cellPos.cellX, cellPos.cellY);
                 }
             }
-            else if (Math.Abs(panelRect.position.x - mousePos.x) <= Math.Abs(panelRect.rect.width) / 2 && Math.Abs(panelRect.position.y - mousePos.y) <= Math.Abs(panelRect.rect.height) / 2)
+            else if (Math.Abs(panelRect.position.x - transform.position.x) <= Math.Abs(panelRect.rect.width) / 2 && Math.Abs(panelRect.position.y - transform.position.y) <= Math.Abs(panelRect.rect.height) / 2)
             {
                 BuildManager.DespawnProbeComponent(gameObject);
             }

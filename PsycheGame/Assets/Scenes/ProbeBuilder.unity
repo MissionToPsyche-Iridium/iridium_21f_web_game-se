@@ -6433,6 +6433,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 33b12e90c67f27249866622ed3439ea6, type: 3}
   _content: {fileID: 385889573}
   _buttonPrefab: {fileID: 3426248820051524260, guid: e8e3732af200392408a03367eeb3c5dc, type: 3}
+  _tooltipPrefab: {fileID: 726597104414653139, guid: 5530206e9ac3cd544be23b209ca203d7, type: 3}
   _infoPanel: {fileID: 1232514722}
   _infoPartName: {fileID: 393313555}
   _infoPartDescription: {fileID: 1390708432}
