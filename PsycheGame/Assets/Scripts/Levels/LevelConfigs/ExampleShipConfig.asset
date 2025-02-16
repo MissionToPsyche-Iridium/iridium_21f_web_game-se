@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: ExampleShipConfig
   m_EditorClassIdentifier: 
   tetherConfig:
-    resolution: 0
-    launchSpeed: 0
-    probeObjectDistance: 0
-    straightLineSpeed: 0
-    startWaveSize: 0
-    progressionSpeed: 0
+    resolution: 40
+    launchSpeed: 0.5
+    probeObjectDistance: 10
+    straightLineSpeed: 5
+    startWaveSize: 3
+    progressionSpeed: 10
   scanConfig:
-    distance: 0
-    resolution: 0
-    arcAngle: 0
+    distance: 10
+    resolution: 100
+    arcAngle: 180
   shipMoveConfig:
-    fuel: 0
-    health: 0
-    moveSpeed: 0
-    fuelConsumptionRate: 0
-    boostMultiplier: 0
-    bostChangeRate: 0
+    fuel: 150
+    health: 100
+    moveSpeed: 15
+    fuelConsumptionRate: 1
+    boostMultiplier: 2
+    bostChangeRate: 2
