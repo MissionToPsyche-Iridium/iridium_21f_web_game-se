@@ -19,8 +19,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private ObjectSpawner asteroidSpawner;
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private TextMeshProUGUI loadingText;
-    [SerializeField] private float minLoadingTime = 2f;
+    [SerializeField] private float loadingTime = 2f;
     [SerializeField] private GameObject missionObjectivePanel;
+    [SerializeField] private ProgressBarWrapper progressBarWrapper;
+
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
@@ -135,6 +137,7 @@ public class LevelManager : MonoBehaviour
 
     public IEnumerator LoadLevelAsync(int levelIndex){
         isLoading = true;
+
         if (levelIndex >= levels.Count)
         {
             Debug.Log("All levels completed!");
@@ -149,9 +152,18 @@ public class LevelManager : MonoBehaviour
 
         LevelConfig config = levels[levelIndex];
         initializeByConfig(config);
+        float elapsedTime = 0f;
         float startTime = Time.time;
-        yield return new WaitForSeconds(minLoadingTime);
-        
+        while (elapsedTime < loadingTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float progressValue = Mathf.Clamp01(elapsedTime / loadingTime) * 100;
+            progressBarWrapper.UpdateProgress(progressValue);
+            yield return null;
+        }
+
+        progressBarWrapper.UpdateProgress(100);
+
         OnLevelLoaded?.Invoke(config);
 
         Debug.Log($"Loaded Level: {config.levelName}");
