@@ -12,13 +12,13 @@ public class LeaderboardManager : MonoBehaviour
     public class LeaderboardEntry
     {
         public string playerName;
-        public int score;
+        public int totalScore;
     }
 
     [System.Serializable]
     public class LeaderboardData
     {
-        public Dictionary<int, List<LeaderboardEntry>> levelLeaderboards = new Dictionary<int, List<LeaderboardEntry>>();
+        public List<LeaderboardEntry> entries = new List<LeaderboardEntry>();
     }
 
     private LeaderboardData leaderboardData;
@@ -31,34 +31,31 @@ public class LeaderboardManager : MonoBehaviour
         leaderboardData = LoadLeaderboard();
     }
 
-    public void SaveScore(int level, string playerName, int score)
+    public void SaveScore(string playerName, int levelScore)
     {
-        if (!leaderboardData.levelLeaderboards.ContainsKey(level))
+        LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
+
+        if (playerEntry == null)
         {
-            leaderboardData.levelLeaderboards[level] = new List<LeaderboardEntry>();
+            playerEntry = new LeaderboardEntry { playerName = playerName, totalScore = 0 };
+            leaderboardData.entries.Add(playerEntry);
         }
 
-        LeaderboardEntry newEntry = new LeaderboardEntry { playerName = playerName, score = score };
-        leaderboardData.levelLeaderboards[level].Add(newEntry);
+        playerEntry.totalScore += levelScore;
 
-        leaderboardData.levelLeaderboards[level] = leaderboardData.levelLeaderboards[level]
-            .OrderByDescending(entry => entry.score)
+        leaderboardData.entries = leaderboardData.entries
+            .OrderByDescending(entry => entry.totalScore)
             .Take(10)
             .ToList();
 
         SaveLeaderboard();
     }
 
-    public List<LeaderboardEntry> GetTopScores(int level)
+    public List<LeaderboardEntry> GetTopScores()
     {
-        if (leaderboardData.levelLeaderboards.ContainsKey(level))
-        {
-            return leaderboardData.levelLeaderboards[level];
-        }
-        else
-        {
-            return new List<LeaderboardEntry>();
-        }
+        return leaderboardData.entries
+            .OrderByDescending(entry => entry.totalScore)
+            .ToList();
     }
 
     private void SaveLeaderboard()
@@ -80,13 +77,13 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
-    public void DisplayLeaderboard(int level)
+    public void DisplayLeaderboard()
     {
-        List<LeaderboardEntry> topScores = GetTopScores(level);
-        Debug.Log($"Top 10 Scores for Level {level}:");
+        List<LeaderboardEntry> topScores = GetTopScores();
+        Debug.Log("Top 10 Players:");
         for (int i = 0; i < topScores.Count; i++)
         {
-            Debug.Log($"{i + 1}. {topScores[i].playerName}: {topScores[i].score}");
+            Debug.Log($"{i + 1}. {topScores[i].playerName}: {topScores[i].totalScore}");
         }
     }
 }
