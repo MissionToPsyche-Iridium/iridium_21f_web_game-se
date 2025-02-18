@@ -4,7 +4,6 @@ using UnityEngine;
 public class ShipManager : MonoBehaviour {
     private static ShipManager instance;
     public static readonly string _SHIP_GAMEOBJECT_NAME = "Ship";
-
     private void Awake() {
         if (instance != null && instance != this)
         {
@@ -69,5 +68,11 @@ public class ShipManager : MonoBehaviour {
 
         fuel = config.shipMoveConfig.fuel;
         health = config.shipMoveConfig.health;
+    }
+
+    public static void ResetShip()
+    {
+        health = 100f;
+        fuel = 150f;
     }
 }

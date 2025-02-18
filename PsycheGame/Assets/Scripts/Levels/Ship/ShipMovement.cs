@@ -26,6 +26,29 @@ public class ShipMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void Awake()
+    {
+        LevelManager.OnLevelLoaded += OnLevelLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    private void OnLevelLoaded(LevelConfig config)
+    {
+        ResetPosition();
+    }
+
+    public void ResetPosition()
+    {
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+        transform.rotation = Quaternion.identity;
+    }
+
+
     void Update() {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
         float moveVertical = Input.GetAxis("Vertical");
@@ -36,6 +59,10 @@ public class ShipMovement : MonoBehaviour {
             rb.velocity = Vector2.zero;
             return;
         }
+
+        if(fuel <= 0f){
+            LevelManager.Instance.RestartLevel();
+        } 
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
         

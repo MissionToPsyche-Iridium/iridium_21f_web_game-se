@@ -39,4 +39,19 @@ public class FuelBar : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }   
     }
+
+    private void Awake()
+    {
+        LevelManager.OnLevelLoaded += OnLevelLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        LevelManager.OnLevelLoaded -= OnLevelLoaded;
+    }
+
+    public void OnLevelLoaded(LevelConfig config)
+    {
+        UpdateIndicator(ShipManager.Fuel);
+    }
 }

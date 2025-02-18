@@ -57,22 +57,17 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         LevelConfig config = levels[currentLevelIndex];
-        initializeByConfig(config);
-        
-        if (missionState == null)
-        {
-            Debug.LogError("Instance of MissionState is not set! MissionState must be initialized for use by LevelManager.");
-            return;
-        }
+        InitializeByConfig(config);
+
         missionTimer = FindObjectOfType<MissionTimer>();
         if (missionTimer == null)
         {
-            Debug.LogError("MissionTimer is not found in the scene! Make sure a GameObject with the MissionTimer component exists.");
+            Debug.LogError("MissionTimer is missing in the scene.");
             return;
         }
     }
 
-    private void initializeByConfig(LevelConfig config){
+    private void InitializeByConfig(LevelConfig config){
         MissionState.Instance.Initialize(config.objectives, config.levelName);
         missionState = MissionState.Instance;
 
@@ -116,12 +111,6 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if ((ShipManager.Health <= 0 || ShipManager.Fuel <= 0))
-        {
-            Debug.Log("Ship health or fuel reached 0. Game over!");
-            EndLevel(false);
-        }
-
         if (MissionState.Instance.IsMissionComplete)
         {
             Debug.Log("Level Complete - loading next level...");
@@ -132,45 +121,40 @@ public class LevelManager : MonoBehaviour
     public void LoadLevel(int levelIndex)
     {
         if (isLoading) return;
+        if (levelIndex < 0 || levelIndex >= levels.Count)
+        {
+            Debug.LogWarning($"Invalid level index {levelIndex}. Returning to first level.");
+            levelIndex = 0;
+        }
         StartCoroutine(LoadLevelAsync(levelIndex));
     }
 
-    public IEnumerator LoadLevelAsync(int levelIndex){
-        isLoading = true;
+private IEnumerator LoadLevelAsync(int levelIndex)
+    {
+        SetLoadingState(true);
+        loadingText.text = $"You scored: {playerScore}\n\nLoading Level {levelIndex + 1}...";
 
-        if (levelIndex >= levels.Count)
-        {
-            Debug.Log("All levels completed!");
-            loadingText.text = "All levels completed!";
-            loadingScreen.SetActive(true);
-            EnableAllChildren(loadingScreen.transform);
-            yield break;
-        }
-        loadingText.text = "You socred: " + playerScore + "\n\n" + "Loading Level " + levelIndex;
-        loadingScreen.SetActive(true);
-        EnableAllChildren(loadingScreen.transform);
+        yield return new WaitForSeconds(0.5f);
 
-        LevelConfig config = levels[levelIndex];
-        initializeByConfig(config);
         float elapsedTime = 0f;
-        float startTime = Time.time;
         while (elapsedTime < loadingTime)
         {
             elapsedTime += Time.deltaTime;
-            float progressValue = Mathf.Clamp01(elapsedTime / loadingTime) * 100;
-            progressBarWrapper.UpdateProgress(progressValue);
+            progressBarWrapper.UpdateProgress(Mathf.Clamp01(elapsedTime / loadingTime) * 100);
             yield return null;
         }
 
         progressBarWrapper.UpdateProgress(100);
+        yield return new WaitForSeconds(0.5f);
 
+        currentLevelIndex = levelIndex;
+        LevelConfig config = levels[levelIndex];
+        InitializeByConfig(config);
         OnLevelLoaded?.Invoke(config);
 
-        Debug.Log($"Loaded Level: {config.levelName}");
-        DisableAllChildren(loadingScreen.transform);
-        loadingScreen.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
 
-        missionObjectivePanel.SetActive(true);
+        SetLoadingState(false);
     }
 
     private void EndLevel(bool success)
@@ -193,24 +177,25 @@ public class LevelManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        if(isLoading) return;
-        ShipManager.Health = 100;
-        ShipManager.Fuel = 150;
+        if (isLoading) return;
+        ShipManager.ResetShip();
+        StopAllCoroutines();
         LoadLevel(currentLevelIndex);
     }
 
-    private void EnableAllChildren(Transform parent)
+    private void SetLoadingState(bool state)
     {
-        foreach (Transform child in parent)
-        {
-            child.gameObject.SetActive(true);
-        }
+        isLoading = state;
+        loadingScreen.SetActive(state);
+        ToggleChildren(loadingScreen.transform, state);
+        missionObjectivePanel.SetActive(!state);
     }
-    private void DisableAllChildren(Transform parent)
+
+    private void ToggleChildren(Transform parent, bool state)
     {
         foreach (Transform child in parent)
         {
-            child.gameObject.SetActive(false);
+            child.gameObject.SetActive(state);
         }
     }
 

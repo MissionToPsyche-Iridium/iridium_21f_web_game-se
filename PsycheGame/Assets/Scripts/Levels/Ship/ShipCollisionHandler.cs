@@ -45,6 +45,6 @@ public class ShipCollisionHandler : MonoBehaviour
     private void DestroyShip()
     {
         modalPanel.SetActive(true);
-        Destroy(ship);
+        LevelManager.Instance.RestartLevel();
     }
 }

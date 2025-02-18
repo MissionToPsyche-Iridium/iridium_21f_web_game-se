@@ -44,7 +44,10 @@ public class MissionState
                 Debug.Log($"Updated Objective: {obj.description} ({obj.currentProgress}/{obj.targetAmount})");
             }
         }
-        IsMissionComplete = Objectives.TrueForAll(obj => obj.isCompleted);
+        bool gasComplete = Objectives.Exists(obj => obj.objectiveType == ObjectiveType.CollectGases && obj.isCompleted);
+        bool metalComplete = Objectives.Exists(obj => obj.objectiveType == ObjectiveType.CollectRareMetals && obj.isCompleted);
+
+        IsMissionComplete = gasComplete && metalComplete;
         Debug.Log("Is mission complete: " + IsMissionComplete);
     }
 
