@@ -1,15 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 /* 
 	Probe builder :: containerManager.cs
@@ -55,6 +49,7 @@ public class ContainerManager : MonoBehaviour
     private GridPositionData[,] gridData;
     public Material tileMaterial;
     private Sprite tileSprite;
+    private Sprite tileSprite2;
 
     private int totalOccupations = 0;
     private int colorProfile;
@@ -77,6 +72,7 @@ public class ContainerManager : MonoBehaviour
             }
         }
         tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
+        tileSprite2 = Resources.Load<Sprite>("Standard/T_16_Emissive");
 		GenerateContainer();
 	}
 
@@ -86,7 +82,7 @@ public class ContainerManager : MonoBehaviour
 		try {
 			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.Log("Control Helper not found: " + e.Message);
+			// Debug.Log("Control Helper not found: " + e.Message);
 			profile = colorProfile;
 		}
 
@@ -144,7 +140,7 @@ public class ContainerManager : MonoBehaviour
 			GameObject controlHelper = GameObject.Find("ControlHelper");
 			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.Log("Control Helper not found: " + e.Message);
+			Debug.Log("Control Helper not found - testing builder scene only - code:" + e.Message);
 			colorProfile = 1;
 		}
 
@@ -166,6 +162,14 @@ public class ContainerManager : MonoBehaviour
         colorAdjustments.postExposure.overrideState = true;
         colorAdjustments.postExposure.value = colorScheme.exposure;
         colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
+    }
+
+    private Sprite GetMaterial(int x, int y) {
+        if (y == 0 || y == height-1) {
+            return tileSprite2;
+        } else {
+            return tileSprite;
+        }
     }
 
     void GenerateContainer()
@@ -195,7 +199,7 @@ public class ContainerManager : MonoBehaviour
                     boxCollider2D.isTrigger = true;
 
                     var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
-                    spriteRenderer.sprite = tileSprite;
+                    spriteRenderer.sprite = GetMaterial(x, y);
 
                     var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
                     newTile.Init(isOffset, x, y, targetX, targetY);
@@ -207,6 +211,12 @@ public class ContainerManager : MonoBehaviour
             }
         }
     }
+
+    public bool IsInteriorTile(int x, int y)
+    {
+        return (y == 0 || y == height - 1) ? false : true;
+    }
+
 	public String CheckGridOccupied(int x, int y)
 	{
 		if (gridData[x, y].IsOccupied)

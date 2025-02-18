@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -39,7 +38,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         _snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
-        _boundMaterial = Resources.Load<Material>("EFX/BlueRecolor");
+        _boundMaterial = Resources.Load<Material>("EFX/OrangeRecolor");
         _sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
     }
 
@@ -59,7 +58,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         Image image = _dragIcon.AddComponent<Image>();
         image.preserveAspect = true;
         image.sprite = GetComponent<Image>().sprite;
-        image.material = _boundMaterial;
+        //image.material = _boundMaterial;
 
         _dragIcon.AddComponent<AudioSource>();
 
@@ -110,7 +109,15 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
                     _dragIcon.GetComponent<AudioSource>().PlayOneShot(_snapSound, 1.0f);
                     Image image = _dragIcon.GetComponent<Image>();
-                    image.material = _sparkMaterial;
+
+                    if (_containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY))
+                    {
+                        image.material = _sparkMaterial;
+                    }
+                    else
+                    {
+                        image.material = _boundMaterial;
+                    }
 
                     if (this.gameObject.layer <= 9)
                     {

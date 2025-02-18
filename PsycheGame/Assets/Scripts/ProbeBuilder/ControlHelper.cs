@@ -6,7 +6,6 @@ public class ControlHelper : MonoBehaviour
 {
     [SerializeField]
     private int ColorProfile = 1;
-    // Start is called before the first frame update
 
     public static ControlHelper Instance { get; private set; }
 

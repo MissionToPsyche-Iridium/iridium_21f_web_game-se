@@ -8,7 +8,8 @@ using UnityEngine.UIElements;
 public enum ProbeComponentType
 {
     Standard,
-    Custom
+    Custom,
+    Sensor
 }
 
 [Serializable]

@@ -17,7 +17,7 @@ public class TileAltScheme : TileColorScheme
 
     public TileAltScheme()
     {
-        BaseSceneColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        BaseSceneColor = new Color(1.0f, 0.5f, 1.0f, 1.0f);
         exposure = 0.5f;
         Threshold = 0.995f;
         Intensity = 10;
