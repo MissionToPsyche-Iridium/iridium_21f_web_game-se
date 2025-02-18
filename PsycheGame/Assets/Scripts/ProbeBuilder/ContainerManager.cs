@@ -1,16 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.U2D;
 
 /* 
 	Probe builder :: containerManager.cs
@@ -147,7 +140,7 @@ public class ContainerManager : MonoBehaviour
 			GameObject controlHelper = GameObject.Find("ControlHelper");
 			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			// Debug.Log("Control Helper not found: " + e.Message);
+			Debug.Log("Control Helper not found - testing builder scene only - code:" + e.Message);
 			colorProfile = 1;
 		}
 
