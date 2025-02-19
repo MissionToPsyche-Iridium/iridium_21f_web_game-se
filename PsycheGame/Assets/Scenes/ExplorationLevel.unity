@@ -191953,7 +191953,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fc5af015011ea3745b7f78ea1dd1049f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -194202,7 +194202,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d804e31e3b34e4a83d951d92385e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fuelEnabled: 1
   fuelBarUI: {fileID: 1851209610}
   boost: {fileID: 1653014659}
   moveSpeed: 15
