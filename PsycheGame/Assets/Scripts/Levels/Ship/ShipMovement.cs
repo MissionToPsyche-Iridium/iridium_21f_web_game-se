@@ -2,16 +2,16 @@ using System.Collections;
 using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
-    [SerializeField] private bool fuelEnabled = true;
     [SerializeField] private FuelBar fuelBarUI;
     [SerializeField] GameObject boost;
 
-    public float moveSpeed = 5f; 
+    private bool isBoosting = false;
+    private float targetSpeed; 
+    private float baseSpeed = 7.5f;
+    public float moveSpeed = 7.5f; 
     public float fuelConsumptionRate = 1f;
     public float boostMultiplier = 2f;
-    public float boostSpeedChangeRate = 2f;
-    private Coroutine boostCoroutine;
-    private bool isBoosting = false;
+    public float boostSpeedChangeRate = 4f;
     private Rigidbody2D rb;
 
     public void initWithConfig(ShipConfig.ShipMovementConfig config)
@@ -66,18 +66,15 @@ public class ShipMovement : MonoBehaviour {
 
         Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
         
-        if (fuel > 0f && movement != Vector3.zero || !fuelEnabled)
+        if (fuel > 0f && movement != Vector3.zero)
         {
             ShipManager.Fuel -= fuelConsumptionRate * Time.deltaTime;
             ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
             RotateShip(movement);
             HandleBoostInput();
+            UpdateSpeed();
             fuelBarUI.UpdateIndicator(fuel);
-        }
-        else if (fuelEnabled)
-        {
-            rb.velocity = Vector2.zero;
         }
     }
 
@@ -87,31 +84,26 @@ public class ShipMovement : MonoBehaviour {
         rb.rotation = angle - 90f;
     }
 
-    void HandleBoostInput() {
-        if (Input.GetKeyDown(KeyCode.Space) && boostCoroutine == null) {
-            boostCoroutine = StartCoroutine(BoostSpeed(boostMultiplier));
+
+    private void HandleBoostInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             isBoosting = true;
-            boost.SetActive(true);
+            targetSpeed = baseSpeed * boostMultiplier; 
+            boost.SetActive(true); 
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && isBoosting) {
-            if (boostCoroutine != null) {
-                StopCoroutine(boostCoroutine);
-            }
-            boostCoroutine = StartCoroutine(BoostSpeed(1f / boostMultiplier));
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
             isBoosting = false;
+            targetSpeed = baseSpeed; 
             boost.SetActive(false);
         }
     }
 
-    IEnumerator BoostSpeed(float targetMultiplier) {
-        float targetSpeed = moveSpeed * targetMultiplier;
-
-        while (Mathf.Abs(moveSpeed - targetSpeed) > 0.01f) {
-            moveSpeed = Mathf.MoveTowards(moveSpeed, targetSpeed, boostSpeedChangeRate * Time.deltaTime);
-            yield return null;
-        }
-
-        moveSpeed = targetSpeed; 
-        boostCoroutine = null;
+    private void UpdateSpeed()
+    {
+        moveSpeed = Mathf.MoveTowards(moveSpeed, targetSpeed, boostSpeedChangeRate * Time.deltaTime);
+        moveSpeed = Mathf.Clamp(moveSpeed, baseSpeed, baseSpeed * boostMultiplier);
     }
 }
