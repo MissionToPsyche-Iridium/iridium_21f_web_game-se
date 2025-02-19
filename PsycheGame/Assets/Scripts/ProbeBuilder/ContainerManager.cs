@@ -48,6 +48,7 @@ public class ContainerManager : MonoBehaviour
     private (float x, float y)[,] chassisGrid;
     private GridPositionData[,] gridData;
     public Material tileMaterial;
+    public Material tileMaterial2;
     private Sprite tileSprite;
     private Sprite tileSprite2;
 
@@ -73,6 +74,11 @@ public class ContainerManager : MonoBehaviour
         }
         tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
         tileSprite2 = Resources.Load<Sprite>("Standard/T_16_Emissive");
+
+        // set tilematerial to standard material
+        tileMaterial = Resources.Load<Material>("Sprites-Default");    
+        tileMaterial2 = Resources.Load<Material>("EFX/FogMaterial");
+
 		GenerateContainer();
 	}
 
@@ -189,7 +195,7 @@ public class ContainerManager : MonoBehaviour
                     var targetX = originX + (tileScale * x * 0.93f);
                     var targetY = originY + (tileScale * y * 0.93f);
                     var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
-                    newTile.name = $"Tile {x} {y}";
+                    newTile.name = $"Tile{x}{y}";
                     newTile.tag = "tile";
 
                     var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
@@ -287,12 +293,27 @@ public class ContainerManager : MonoBehaviour
         return true;
     }
 
+    private void updateTileMaterial(int x, int y, bool isOccupied)
+    {
+        // if occupied set material to tileMaterial2 else set to tileMaterial
+        if (x == 0 || x == width - 1)
+        {
+            transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().sprite = tileSprite2;
+        }
+        else
+        {
+            transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().sprite = tileSprite;
+        }
+        transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().material = isOccupied ? tileMaterial2 : tileMaterial;
+    }
+
     public bool ReleaseFromGridPosition(int x, int y, GameObject component)
     {
         if (gridData[x, y].Occupant == component)
         {
             gridData[x, y].IsOccupied = false;
             gridData[x, y].Occupant = null;
+            updateTileMaterial(x, y, false);
 
             totalOccupations--;
 
@@ -310,6 +331,7 @@ public class ContainerManager : MonoBehaviour
         {
             gridData[x, y].IsOccupied = true;
             gridData[x, y].Occupant = component;
+            updateTileMaterial(x, y, true);
 
             totalOccupations++;
 
