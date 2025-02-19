@@ -15,7 +15,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _tooltipPrefab;
     [SerializeField] private GameObject _infoPanel;
-    [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartImage;
+    [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartCredits, _infoPartImage;
     [SerializeField] private GameObject _spawnArea;
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
 
@@ -72,6 +72,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.InfoPanel = _infoPanel;
         buttonScript.InfoPartName = _infoPartName;
         buttonScript.InfoPartDescription = _infoPartDescription;
+        buttonScript.InfoPartCredits = _infoPartCredits;
         buttonScript.InfoPartImage = _infoPartImage;
         buttonScript.SpawnArea = _spawnArea;
         buttonScript.TooltipPrefab = _tooltipPrefab;
@@ -94,7 +95,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
             image.color = new Color(255, 255, 255, 0.25f);
         }
 
-        probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x - {probeComponent.Credits} Credits";
+        probeComponentButton.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x";
 
         probeComponentButton.transform.SetParent(_content.transform);
 
@@ -177,7 +178,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
                         button.GetComponent<Image>().color = new Color(255, 255, 255, 1.0f);
                     }
 
-                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x - {probeComponent.Credits} Credits";
+                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x";
 
                     return;
                 }

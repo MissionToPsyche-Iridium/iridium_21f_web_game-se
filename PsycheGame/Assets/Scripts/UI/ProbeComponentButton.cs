@@ -19,6 +19,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject InfoPanel { get; set; }
     public GameObject InfoPartName { get; set; }
     public GameObject InfoPartDescription { get; set; }
+    public GameObject InfoPartCredits { get; set; }
     public GameObject InfoPartImage { get; set; }
     public GameObject SpawnArea { get; set; }
     public GameObject TooltipPrefab { get; set; }
@@ -158,10 +159,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _tooltip = Instantiate(TooltipPrefab, MasterCanvas.transform).GetComponent<Tooltip>();
 
         _tooltip.SetTitle(ProbeComponent.Name);
-        _tooltip.SetDescription("");
-        _tooltip.SetPosition(transform.position + new Vector3(80.0f, -80.0f, 0.0f));
-
-        _tooltip.Enable();
+        _tooltip.SetDescription("Click for more info");
+        _tooltip.SetPosition(transform.position + new Vector3(0.0f, 0.0f, 0.0f));
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -171,7 +170,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        Destroy(_tooltip.gameObject);
+        _tooltip.Delete();
         _tooltip = null;
     }
 
@@ -181,6 +180,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             InfoPartName.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Name;
             InfoPartDescription.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Description;
+            InfoPartCredits.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Credits.ToString() + " Credits";
             InfoPartImage.GetComponent<Image>().sprite = GetComponent<Image>().sprite;
 
             InfoPanel.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Scrollbar>().value = 1;

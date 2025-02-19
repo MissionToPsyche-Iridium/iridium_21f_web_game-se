@@ -9,6 +9,11 @@ public class Tooltip : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _title, _description;
 
+    public void Start()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+    }
+
     public void SetTitle(string title)
     {
         _title.text = title;
@@ -24,9 +29,8 @@ public class Tooltip : MonoBehaviour
         transform.position = position;
     }
 
-    public void Enable()
+    public void Delete()
     {
-        gameObject.SetActive(true);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+        Destroy(gameObject);
     }
 }

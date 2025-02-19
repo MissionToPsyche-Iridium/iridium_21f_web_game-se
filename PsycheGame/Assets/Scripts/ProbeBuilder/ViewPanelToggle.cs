@@ -12,8 +12,9 @@ public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
    public GameObject HowToPlayButton;
    public GameObject ControlsButton;
    public GameObject InfoPanel;
-    private AudioClip _swooshSound;
+   private AudioClip _swooshSound;
 
+    private bool _previouslyActive = false;
 
    public void openPanel() {
         if(Panel != null) {
@@ -41,9 +42,15 @@ public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
     }
 
     public void toggleInfoPanel() {
-          if(InfoPanel != null) {
-            bool isActive = InfoPanel.activeSelf;
-            InfoPanel.SetActive(!isActive);
+        if (InfoPanel.activeSelf)
+        {
+            _previouslyActive = true;
+            InfoPanel.SetActive(false);
+        }
+        else if (_previouslyActive)
+        {
+            _previouslyActive = false;
+            InfoPanel.SetActive(true);
         }
     }
 }
