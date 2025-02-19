@@ -448,6 +448,7 @@ MonoBehaviour:
   originY: 0
   tileScale: 100
   tileMaterial: {fileID: 0}
+  tileMaterial2: {fileID: 0}
 --- !u!1 &39198844
 GameObject:
   m_ObjectHideFlags: 0

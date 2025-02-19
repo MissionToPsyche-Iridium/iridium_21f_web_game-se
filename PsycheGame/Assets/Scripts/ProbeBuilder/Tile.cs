@@ -75,6 +75,11 @@ public class Tile : MonoBehaviour
         return (cellX, cellY);
     }
 
+    public void SetColor()
+    {
+        render.color = defaultColor;
+    }
+
     void OnMouseEnter()
     {
         (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();

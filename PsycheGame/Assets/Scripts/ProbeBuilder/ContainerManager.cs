@@ -76,7 +76,9 @@ public class ContainerManager : MonoBehaviour
         tileSprite2 = Resources.Load<Sprite>("Standard/T_16_Emissive");
 
         // set tilematerial to standard material
-        tileMaterial = Resources.Load<Material>("Sprites-Default");    
+        GameObject parent = GameObject.Find("ContainerPanel");
+
+        tileMaterial = Resources.Load<Material>("EFX/DefaultMaterial");    
         tileMaterial2 = Resources.Load<Material>("EFX/FogMaterial");
 
 		GenerateContainer();
@@ -295,16 +297,15 @@ public class ContainerManager : MonoBehaviour
 
     private void updateTileMaterial(int x, int y, bool isOccupied)
     {
-        // if occupied set material to tileMaterial2 else set to tileMaterial
-        if (x == 0 || x == width - 1)
-        {
-            transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().sprite = tileSprite2;
+        GameObject tile = transform.GetChild(x * width + y).gameObject;
+        if (isOccupied) {
+            tile.GetComponent<SpriteRenderer>().material = tileMaterial2;
         }
-        else
-        {
-            transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().sprite = tileSprite;
+        else {
+            tile.GetComponent<SpriteRenderer>().sprite = y == 0 || y == width - 1 ? tileSprite2 : tileSprite;
+            tile.GetComponent<SpriteRenderer>().material = tileMaterial;
+            tile.GetComponent<Tile>().SetColor();
         }
-        transform.GetChild(x * width + y).GetComponent<SpriteRenderer>().material = isOccupied ? tileMaterial2 : tileMaterial;
     }
 
     public bool ReleaseFromGridPosition(int x, int y, GameObject component)
