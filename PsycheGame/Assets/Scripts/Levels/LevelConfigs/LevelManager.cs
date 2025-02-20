@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
+using System;
 
 public class LevelManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class LevelManager : MonoBehaviour
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
     [SerializeField] private List<LevelConfig> levels;
+    [SerializeField] private List<ShipConfig> shipConfigs;
+
     private int currentLevelIndex = 0;
 
     [SerializeField] private ObjectSpawner gasSpawner;
@@ -148,9 +151,17 @@ private IEnumerator LoadLevelAsync(int levelIndex)
         yield return new WaitForSeconds(0.5f);
 
         currentLevelIndex = levelIndex;
-        LevelConfig config = levels[levelIndex];
-        InitializeByConfig(config);
-        OnLevelLoaded?.Invoke(config);
+        LevelConfig levelConfig = levels[levelIndex];
+        InitializeByConfig(levelConfig);
+        OnLevelLoaded?.Invoke(levelConfig);
+
+        try {
+            ShipConfig shipConfig = shipConfigs[levelIndex];
+            ShipManager.setShipConfig(shipConfig);
+        } catch (ArgumentOutOfRangeException _) {
+            Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
+                            + "Using default ship configuration with editor defaults");
+        }
 
         yield return new WaitForSeconds(0.5f);
 

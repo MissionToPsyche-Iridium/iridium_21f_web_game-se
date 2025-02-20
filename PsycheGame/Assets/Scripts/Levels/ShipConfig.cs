@@ -5,7 +5,7 @@ using UnityEngine;
 // so integration with the ship builder has single refrence to ship
 // variables.
 [CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
-public class ShipConfig : MonoBehaviour
+public class ShipConfig : ScriptableObject 
 {
     [System.Serializable]
     public record TetherConfig
