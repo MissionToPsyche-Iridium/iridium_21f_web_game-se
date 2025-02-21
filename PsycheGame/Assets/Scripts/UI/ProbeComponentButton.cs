@@ -14,8 +14,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
-    public GameObject MasterCanvas { get; set; }
-    public GameObject ComponentPanel { get; set; }
+    public GameObject ForegroundCanvas { get; set; }
+    public GameObject DraggingBox { get; set; }
     public GameObject InfoPanel { get; set; }
     public GameObject InfoPartName { get; set; }
     public GameObject InfoPartDescription { get; set; }
@@ -74,7 +74,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
         _dragIcon.AddComponent<SpriteDragDrop>();
         _dragIcon.GetComponent<SpriteDragDrop>().BuildManager = BuildManager;
-        _dragIcon.GetComponent<SpriteDragDrop>().ComponentPanel = ComponentPanel;
+        _dragIcon.GetComponent<SpriteDragDrop>().DraggingBox = DraggingBox;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
@@ -156,11 +156,13 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
-        _tooltip = Instantiate(TooltipPrefab, MasterCanvas.transform).GetComponent<Tooltip>();
+        _tooltip = Instantiate(TooltipPrefab, ForegroundCanvas.transform).GetComponent<Tooltip>();
 
         _tooltip.SetTitle(ProbeComponent.Name);
         _tooltip.SetDescription("Click for more info");
-        _tooltip.SetPosition(transform.position + new Vector3(0.0f, 0.0f, 0.0f));
+
+        Rect rect = (_tooltip.transform as RectTransform).rect;
+        _tooltip.SetPosition(transform.position + new Vector3(rect.width / 2, -rect.height / 2, 0.0f));
     }
 
     public void OnPointerExit(PointerEventData eventData)

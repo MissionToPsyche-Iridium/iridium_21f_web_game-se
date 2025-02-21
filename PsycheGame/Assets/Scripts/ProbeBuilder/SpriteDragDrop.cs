@@ -18,7 +18,7 @@ public class SpriteDragDrop : MonoBehaviour
 {
     private ContainerManager containerManager;
     public BuildManager BuildManager;
-    public GameObject ComponentPanel;
+    public GameObject DraggingBox;
     public bool Selected { get; private set; }
     public Tuple<int, int> CurrentCell { get; set; }
 
@@ -45,7 +45,7 @@ public class SpriteDragDrop : MonoBehaviour
         Selected = true;
         offset = transform.position - MouseWorldPosition();
         gameObject.layer = 9;
-        ComponentPanel.transform.GetChild(2).gameObject.SetActive(true);
+        DraggingBox.SetActive(true);
     }
 
     private void OnMouseDrag()
@@ -57,7 +57,7 @@ public class SpriteDragDrop : MonoBehaviour
     {
         if (Selected)
         {
-            RectTransform panelRect = ComponentPanel.transform as RectTransform;
+            RectTransform draggingBox = DraggingBox.transform as RectTransform;
 
             (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(transform.position);
 
@@ -92,7 +92,7 @@ public class SpriteDragDrop : MonoBehaviour
                     containerManager.SwapOccupants(CurrentCell.Item1, CurrentCell.Item2, cellPos.cellX, cellPos.cellY);
                 }
             }
-            else if (Math.Abs(panelRect.position.x - transform.position.x) <= Math.Abs(panelRect.rect.width) / 2 && Math.Abs(panelRect.position.y - transform.position.y) <= Math.Abs(panelRect.rect.height) / 2)
+            else if (Math.Abs(draggingBox.position.x - transform.position.x) <= Math.Abs(draggingBox.rect.width) / 2 && Math.Abs(draggingBox.position.y - transform.position.y) <= Math.Abs(draggingBox.rect.height) / 2)
             {
                 BuildManager.DespawnProbeComponent(gameObject);
             }
@@ -100,7 +100,7 @@ public class SpriteDragDrop : MonoBehaviour
             (float x, float y) cell = containerManager.GetBeaconPositionGrid(CurrentCell.Item1, CurrentCell.Item2);
             transform.position = new Vector3(cell.x, cell.y, -0.01f);
 
-            ComponentPanel.transform.GetChild(2).gameObject.SetActive(false);
+            DraggingBox.SetActive(false);
 
             Selected = false;
         }

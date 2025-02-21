@@ -11,6 +11,7 @@ public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
    public GameObject Panel;
    public GameObject HowToPlayButton;
    public GameObject ControlsButton;
+   public GameObject ControlsPanel;
    public GameObject InfoPanel;
    private AudioClip _swooshSound;
 
@@ -34,10 +35,11 @@ public class ViewPanelToggle : MonoBehaviour, IPointerDownHandler
         GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
     }
 
-    public void toggleControlsButton() {
-        if(ControlsButton != null) {
-            bool isActive = ControlsButton.activeSelf;
-            ControlsButton.SetActive(!isActive);
+    public void toggleControls() {
+        ControlsButton.SetActive(!ControlsButton.activeSelf);
+        if (ControlsPanel.activeSelf)
+        {
+            ControlsPanel.SetActive(false);
         }
     }
 

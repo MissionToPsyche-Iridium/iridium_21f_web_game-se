@@ -11,6 +11,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
     [SerializeField] private GameObject _player;
     [SerializeField] private Sprite[] _probeSprites;
+    [SerializeField] private GameObject _foregroundCanvas;
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _tooltipPrefab;
@@ -18,6 +19,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartCredits, _infoPartImage;
     [SerializeField] private GameObject _spawnArea;
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
+    [SerializeField] private GameObject _draggingBox;
 
     private enum FilterType
     {
@@ -68,7 +70,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.BuildManager = transform.parent.gameObject.GetComponent<BuildManager>();
         buttonScript.ProbeComponent = probeComponent;
         buttonScript.ProbeComponentInventory = this;
-        buttonScript.ComponentPanel = transform.GetChild(0).GetChild(0).gameObject;
+        buttonScript.DraggingBox = _draggingBox;
         buttonScript.InfoPanel = _infoPanel;
         buttonScript.InfoPartName = _infoPartName;
         buttonScript.InfoPartDescription = _infoPartDescription;
@@ -76,7 +78,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.InfoPartImage = _infoPartImage;
         buttonScript.SpawnArea = _spawnArea;
         buttonScript.TooltipPrefab = _tooltipPrefab;
-        buttonScript.MasterCanvas = transform.parent.gameObject;
+        buttonScript.ForegroundCanvas = _foregroundCanvas;
 
         Image image = button.GetComponent<Image>();
         image.preserveAspect = true;
