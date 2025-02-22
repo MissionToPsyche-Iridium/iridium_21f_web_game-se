@@ -8,7 +8,7 @@ using System;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
-
+    public LeaderBoard leaderBoard;
     public delegate void OnLevelLoadedHandler(LevelConfig config);
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
@@ -117,11 +117,12 @@ public class LevelManager : MonoBehaviour
         if (MissionState.Instance.IsMissionComplete)
         {
             Debug.Log("Level Complete - loading next level...");
+            
             EndLevel(true);
         }
     }
  
-    public void LoadLevel(int levelIndex)
+    public void LoadLevel(int levelIndex, bool success)
     {
         if (isLoading) return;
         if (levelIndex < 0 || levelIndex >= levels.Count)
@@ -129,13 +130,17 @@ public class LevelManager : MonoBehaviour
             Debug.LogWarning($"Invalid level index {levelIndex}. Returning to first level.");
             levelIndex = 0;
         }
-        StartCoroutine(LoadLevelAsync(levelIndex));
+        StartCoroutine(LoadLevelAsync(levelIndex, success));
     }
 
-private IEnumerator LoadLevelAsync(int levelIndex)
+private IEnumerator LoadLevelAsync(int levelIndex, bool success)
     {
         SetLoadingState(true);
-        loadingText.text = $"You scored: {playerScore}\n\nLoading Level {levelIndex + 1}...";
+        if(success){
+            loadingText.text = $"You scored: {playerScore}\n {leaderBoard.DisplayLeaderboard} \nLoading Level {levelIndex + 1}...";
+        } else {
+            loadingText.text = $"Better luck this time! Loading Level {levelIndex}"
+        }
 
         yield return new WaitForSeconds(0.5f);
 
@@ -177,7 +182,8 @@ private IEnumerator LoadLevelAsync(int levelIndex)
             float totalTime = levels[currentLevelIndex].missionTimer;
             int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
             playerScore += pointsEarned;
-            LoadLevel(currentLevelIndex + 1);
+            leaderBoard.SaveScore("Player One", playerScore);
+            LoadLevel(currentLevelIndex + 1, true);
         }
         else
         {
@@ -191,7 +197,7 @@ private IEnumerator LoadLevelAsync(int levelIndex)
         if (isLoading) return;
         ShipManager.ResetShip();
         StopAllCoroutines();
-        LoadLevel(currentLevelIndex);
+        LoadLevel(currentLevelIndex, false);
     }
 
     private void SetLoadingState(bool state)
