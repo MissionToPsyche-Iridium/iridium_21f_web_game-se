@@ -20,6 +20,9 @@ using UnityEngine.Rendering.Universal;
 	version: 1.2 (Feb 13)
 	:: enhanced code to handle color scheme change from the builder scene CONTROL setting (toggle).  additionally, 
 	updated the code with the ability to render the tile without loading from the START scene.
+
+    version: 1.3 (Feb 20)
+    :: added tile special effect material including restoring to original material when tile is released.
 */
 
 class GridPositionData
@@ -78,7 +81,7 @@ public class ContainerManager : MonoBehaviour
         // set tilematerial to standard material
         GameObject parent = GameObject.Find("ContainerPanel");
 
-        tileMaterial = Resources.Load<Material>("EFX/DefaultMaterial");    
+        // tileMaterial = Resources.Load<Material>("EFX/DefaultMaterial");    
         tileMaterial2 = Resources.Load<Material>("EFX/FogMaterial");
 
 		GenerateContainer();
@@ -299,12 +302,12 @@ public class ContainerManager : MonoBehaviour
     {
         GameObject tile = transform.GetChild(x * width + y).gameObject;
         if (isOccupied) {
+            tileMaterial = tile.GetComponent<SpriteRenderer>().material;
             tile.GetComponent<SpriteRenderer>().material = tileMaterial2;
         }
         else {
             tile.GetComponent<SpriteRenderer>().sprite = y == 0 || y == width - 1 ? tileSprite2 : tileSprite;
             tile.GetComponent<SpriteRenderer>().material = tileMaterial;
-            tile.GetComponent<Tile>().SetColor();
         }
     }
 
