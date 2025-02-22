@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class LeaderboardManager : MonoBehaviour
+public class LeaderBoard : MonoBehaviour
 {
     private string filePath;
 

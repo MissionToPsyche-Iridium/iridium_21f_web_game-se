@@ -8,7 +8,6 @@ using System;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
-    public LeaderBoard leaderBoard;
     public delegate void OnLevelLoadedHandler(LevelConfig config);
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
@@ -25,7 +24,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private float loadingTime = 2f;
     [SerializeField] private GameObject missionObjectivePanel;
     [SerializeField] private ProgressBarWrapper progressBarWrapper;
-
+    private LeaderBoard leaderBoard;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
