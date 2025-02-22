@@ -12,7 +12,6 @@ public class LevelManager : MonoBehaviour
     public static event OnLevelLoadedHandler OnLevelLoaded;
 
     [SerializeField] private List<LevelConfig> levels;
-    [SerializeField] private List<ShipConfig> shipConfigs;
 
     private int currentLevelIndex = 0;
 
@@ -160,12 +159,10 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         InitializeByConfig(levelConfig);
         OnLevelLoaded?.Invoke(levelConfig);
 
-        try
-        {
-            ShipConfig shipConfig = shipConfigs[levelIndex];
+        ShipConfig shipConfig = levelConfig.levelShipConfig;
+        if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
-        } catch (ArgumentOutOfRangeException)
-        {
+        } else {
             Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
                             + "Using default ship configuration with editor defaults");
         }
