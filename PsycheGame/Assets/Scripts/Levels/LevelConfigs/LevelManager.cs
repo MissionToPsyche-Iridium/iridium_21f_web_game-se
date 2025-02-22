@@ -139,7 +139,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         if(success){
             loadingText.text = $"You scored: {playerScore}\n {leaderBoard.DisplayLeaderboard} \nLoading Level {levelIndex + 1}...";
         } else {
-            loadingText.text = $"Better luck this time! Loading Level {levelIndex}"
+            loadingText.text = $"Better luck this time! Loading Level {levelIndex}";
         }
 
         yield return new WaitForSeconds(0.5f);
