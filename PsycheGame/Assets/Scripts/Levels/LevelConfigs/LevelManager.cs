@@ -20,6 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private ObjectSpawner asteroidSpawner;
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private TextMeshProUGUI loadingText;
+    [SerializeField] private TextMeshProUGUI leaderboardText;
     [SerializeField] private float loadingTime = 2f;
     [SerializeField] private GameObject missionObjectivePanel;
     [SerializeField] private ProgressBarWrapper progressBarWrapper;
