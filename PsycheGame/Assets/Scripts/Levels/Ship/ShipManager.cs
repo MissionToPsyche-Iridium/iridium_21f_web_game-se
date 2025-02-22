@@ -19,22 +19,19 @@ public class ShipManager : MonoBehaviour {
                 return;
             }
 
-            tetherLogic = _obj.GetComponent<ShipTetherLogic>();
-            if (tetherLogic == null)
+            if (!_obj.TryGetComponent<ShipTetherLogic>(out tetherLogic))
             {
                 Debug.LogError("Failed to find 'ShipTetherLogic' script on ship");
                 return;
             }
 
-            scanner = _obj.GetComponent<ShipScanBehavior>();
-            if (scanner == null)
+            if (!_obj.TryGetComponent<ShipScanBehavior>(out scanner))
             {
                 Debug.LogError("Failed to find 'ShipScanner' script on ship");
                 return;
             }
 
-            moveLogic = _obj.GetComponent<ShipMovement>();
-            if (moveLogic == null)
+            if (!_obj.TryGetComponent<ShipMovement>(out moveLogic))
             {
                 Debug.LogError("Failed to find 'ShipMovement' script on ship");
                 return;
@@ -60,7 +57,7 @@ public class ShipManager : MonoBehaviour {
     // otherwise a value of null will be returned
     public static GameObject Ship { get { return _obj; } }
 
-    public static void setShipConfig(ShipConfig config)
+    public static void SetShipConfig(ShipConfig config)
     {
         tetherLogic.initWithConfig(config.tetherConfig);
         scanner.initWithConfig(config.scanConfig);

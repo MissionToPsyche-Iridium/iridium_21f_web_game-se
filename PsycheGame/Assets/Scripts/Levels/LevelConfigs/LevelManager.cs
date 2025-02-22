@@ -160,10 +160,12 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         InitializeByConfig(levelConfig);
         OnLevelLoaded?.Invoke(levelConfig);
 
-        try {
+        try
+        {
             ShipConfig shipConfig = shipConfigs[levelIndex];
-            ShipManager.setShipConfig(shipConfig);
-        } catch (ArgumentOutOfRangeException _) {
+            ShipManager.SetShipConfig(shipConfig);
+        } catch (ArgumentOutOfRangeException)
+        {
             Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
                             + "Using default ship configuration with editor defaults");
         }
