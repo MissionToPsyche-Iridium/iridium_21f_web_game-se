@@ -136,7 +136,8 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
     {
         SetLoadingState(true);
         if(success){
-            loadingText.text = $"You scored: {playerScore}\n {leaderBoard.DisplayLeaderboard} \nLoading Level {levelIndex + 1}...";
+            loadingText.text = $"You scored: {playerScore}\nLoading Level {levelIndex + 1}...";
+            leaderBoard.DisplayLeaderboard();
         } else {
             loadingText.text = $"Better luck this time! Loading Level {levelIndex}";
         }
