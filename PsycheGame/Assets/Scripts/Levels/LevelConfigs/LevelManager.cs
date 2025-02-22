@@ -135,8 +135,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
     {
         SetLoadingState(true);
         if(success){
-            loadingText.text = $"You scored: {playerScore}\nLoading Level {levelIndex + 1}...";
-            leaderBoard.DisplayLeaderboard();
+            loadingText.text = $"You scored: {playerScore}\n\n {leaderBoard.DisplayLeaderboardByLevel(levelIndex)} \n\n Loading Level {levelIndex + 1}...";
         } else {
             loadingText.text = $"Better luck this time! Loading Level {levelIndex}";
         }
@@ -181,7 +180,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
             float totalTime = levels[currentLevelIndex].missionTimer;
             int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
             playerScore += pointsEarned;
-            leaderBoard.SaveScore("Player One", playerScore);
+            leaderBoard.SaveScore("Player One", playerScore, currentLevelIndex); // Temp value until there is a means for recording a player name
             LoadLevel(currentLevelIndex + 1, true);
         }
         else

@@ -13,6 +13,7 @@ public class LeaderBoard : MonoBehaviour
     {
         public string playerName;
         public int totalScore;
+        public Dictionary<int, int> levelScores = new Dictionary<int, int>();
     }
 
     [System.Serializable]
@@ -31,7 +32,7 @@ public class LeaderBoard : MonoBehaviour
         leaderboardData = LoadLeaderboard();
     }
 
-    public void SaveScore(string playerName, int levelScore)
+    public void SaveScore(string playerName, int levelScore, int levelIndex)
     {
         LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
 
@@ -42,6 +43,15 @@ public class LeaderBoard : MonoBehaviour
         }
 
         playerEntry.totalScore += levelScore;
+
+        if (playerEntry.levelScores.ContainsKey(levelIndex))
+        {
+            playerEntry.levelScores[levelIndex] = Math.Max(playerEntry.levelScores[levelIndex], levelScore);
+        }
+        else
+        {
+            playerEntry.levelScores[levelIndex] = levelScore;
+        }
 
         leaderboardData.entries = leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
@@ -77,13 +87,36 @@ public class LeaderBoard : MonoBehaviour
         }
     }
 
-    public void DisplayLeaderboard()
+    public string DisplayTotalLeaderboard()
     {
         List<LeaderboardEntry> topScores = GetTopScores();
-        Debug.Log("Top 10 Players:");
+        string leaderboardText = "Top 10 Players (Total Score):\n";
+
         for (int i = 0; i < topScores.Count; i++)
         {
-            Debug.Log($"{i + 1}. {topScores[i].playerName}: {topScores[i].totalScore}");
+            leaderboardText += $"{i + 1}. {topScores[i].playerName}: {topScores[i].totalScore}\n";
         }
+
+        return leaderboardText;
+    }
+
+    public string DisplayLeaderboardByLevel(int levelIndex)
+    {
+        var levelScores = leaderboardData.entries
+            .Select(entry => new
+            {
+                entry.playerName,
+                levelScore = entry.levelScores.ContainsKey(levelIndex) ? entry.levelScores[levelIndex] : 0
+            })
+            .OrderByDescending(entry => entry.levelScore)
+            .Take(10)
+            .ToList();
+
+        string leaderboardText = $"Top 10 Players (Level {levelIndex}):\n";
+        for (int i = 0; i < levelScores.Count; i++)
+        {
+            leaderboardText += $"{i + 1}. {levelScores[i].playerName}: {levelScores[i].levelScore}\n";
+        }
+        return leaderboardText;
     }
 }
