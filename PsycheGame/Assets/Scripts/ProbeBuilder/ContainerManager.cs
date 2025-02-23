@@ -76,6 +76,18 @@ public class ContainerManager : MonoBehaviour
 		GenerateContainer();
 	}
 
+    public Tile GetTileAtCell(int x, int y)
+    {
+        foreach (Transform child in transform) {
+            Tile tile = child.gameObject.GetComponent<Tile>();
+            if (tile != null && (tile.GetCellX() == x && tile.GetCellY() == y))
+            {
+                return tile;
+            }
+        }
+        return null;
+    }
+
 	private bool profileUpdate()
 	{
 		int profile;

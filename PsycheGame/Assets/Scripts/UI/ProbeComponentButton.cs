@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -105,6 +106,9 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
                     (float x, float y) cell = _containerManager.GetBeaconPositionGrid(cellPos.cellX, cellPos.cellY);
                     _dragIcon.transform.position = new Vector3(cell.x, cell.y, -0.01f);
+
+                    Vector3 tileScale = _containerManager.GetTileAtCell(cellPos.cellX, cellPos.cellY).gameObject.transform.localScale;
+                    (_dragIcon.transform as RectTransform).sizeDelta = new Vector2(tileScale.x, tileScale.y);
 
                     _dragIcon.GetComponent<SpriteDragDrop>().CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
 
