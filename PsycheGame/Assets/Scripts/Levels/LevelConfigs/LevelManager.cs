@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI leaderboardText;
     [SerializeField] private float loadingTime = 2f;
     [SerializeField] private GameObject missionObjectivePanel;
-    [SerializeField] private ProgressBarWrapper progressBarWrapper;
+    [SerializeField] private LoadingProgressBar loadingProgressBar;
     private LeaderBoard leaderBoard;
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
@@ -147,11 +147,11 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         while (elapsedTime < loadingTime)
         {
             elapsedTime += Time.deltaTime;
-            progressBarWrapper.UpdateProgress(Mathf.Clamp01(elapsedTime / loadingTime) * 100);
+            loadingProgressBar.UpdateProgress(Mathf.Clamp01(elapsedTime / loadingTime) * 100);
             yield return null;
         }
 
-        progressBarWrapper.UpdateProgress(100);
+        loadingProgressBar.UpdateProgress(100);
         yield return new WaitForSeconds(0.5f);
 
         currentLevelIndex = levelIndex;
