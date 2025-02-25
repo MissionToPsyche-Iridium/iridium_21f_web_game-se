@@ -20,10 +20,13 @@ public class DesignInventory : MonoBehaviour
         designs = ContainerGameData.Instance.getDesigns();
 
         foreach(ProbeDesign design in designs) {
-            GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
-            uiDesignObject.transform.SetParent(GameObject.Find("DesignContent").transform);
-            uiDesignObject.GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            uiDesignObject.GetComponentInChildren<Image>().sprite = design.sprite;
+            // GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+            // uiDesignObject.transform.SetParent(GameObject.Find("DesignContent").transform);
+            // uiDesignObject.GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
+            // uiDesignObject.GetComponentInChildren<Image>().sprite = design.sprite;
+
+             GameObject.Find("testtext").GetComponentInChildren<TMPro.TMP_Text>().text = "part";
+        //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
 
         }
 

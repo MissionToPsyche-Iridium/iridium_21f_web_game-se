@@ -10,7 +10,7 @@ public class ProbeDesign
     public String name; //name of design
     private String json; //contains the probe parts attached (names and locations) these are saved in the container game data class
 
-    private List<GameObject> parts;
+    public List<GameObject> parts;
     
     //private List<ProbeComponent> parts;
 
