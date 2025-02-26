@@ -13,6 +13,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private List<LevelConfig> levels;
 
+    private int currentLevel = 1;
     private int currentLevelIndex = 0;
 
     [SerializeField] private ObjectSpawner gasSpawner;
@@ -21,7 +22,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private TextMeshProUGUI loadingText;
     [SerializeField] private TextMeshProUGUI leaderboardText;
-    [SerializeField] private float loadingTime = 2f;
+    [SerializeField] private float loadingTime = 3f;
     [SerializeField] private GameObject missionObjectivePanel;
     [SerializeField] private LoadingProgressBar loadingProgressBar;
     private LeaderBoard leaderBoard;
@@ -43,7 +44,6 @@ public class LevelManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         // NOTE: spawners should be:
         // 1. Disabled at 'Awake'
@@ -58,8 +58,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        LevelConfig config = levels[currentLevelIndex];
-        InitializeByConfig(config);
+        InitializeByConfig(levels[currentLevelIndex]);
+        Time.timeScale = 0f;
 
         missionTimer = FindObjectOfType<MissionTimer>();
         if (missionTimer == null)
@@ -67,6 +67,15 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("MissionTimer is missing in the scene.");
             return;
         }
+    }
+
+    public void StartGame()
+    {
+        isLoading = false;
+        missionObjectivePanel.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+        StartMissionTimer();
     }
 
     private void InitializeByConfig(LevelConfig config){
@@ -121,24 +130,20 @@ public class LevelManager : MonoBehaviour
         }
     }
  
-    public void LoadLevel(int levelIndex, bool success)
+    public void LoadLevel(bool success)
     {
         if (isLoading) return;
-        if (levelIndex < 0 || levelIndex >= levels.Count)
-        {
-            Debug.LogWarning($"Invalid level index {levelIndex}. Returning to first level.");
-            levelIndex = 0;
-        }
-        StartCoroutine(LoadLevelAsync(levelIndex, success));
+        StartCoroutine(LoadLevelAsync(success));
     }
 
-private IEnumerator LoadLevelAsync(int levelIndex, bool success)
+private IEnumerator LoadLevelAsync(bool success)
     {
         SetLoadingState(true);
         if(success){
-            loadingText.text = $"You scored: {playerScore}\n\n {leaderBoard.DisplayLeaderboardByLevel(levelIndex)} \n\n Loading Level {levelIndex + 1}...";
+            leaderboardText.text = leaderBoard.DisplayLeaderboardByLevel(currentLevel);
+            loadingText.text = $"You scored: {playerScore}\n\n\n Loading Level {currentLevel + 1}...";
         } else {
-            loadingText.text = $"Better luck this time! Loading Level {levelIndex}";
+            loadingText.text = $"Better luck this time! Loading Level {currentLevel}";
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -148,43 +153,38 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         {
             elapsedTime += Time.deltaTime;
             loadingProgressBar.UpdateProgress(Mathf.Clamp01(elapsedTime / loadingTime) * 100);
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         loadingProgressBar.UpdateProgress(100);
         yield return new WaitForSeconds(0.5f);
 
-        currentLevelIndex = levelIndex;
-        LevelConfig levelConfig = levels[levelIndex];
-        InitializeByConfig(levelConfig);
-        OnLevelLoaded?.Invoke(levelConfig);
-
-        // @note - keeping this here as reminder of prvious impl
-        //
-        // ShipConfig shipConfig = levelConfig.levelShipConfig;
-        // if (shipConfig != null) {
-        //     ShipManager.SetShipConfig(shipConfig);
-        // } else {
-        //     Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
-        //                     + "Using default ship configuration with editor defaults");
-        // }
-
-        // it's possible that there could be some JSON exception or any other error
-        // which get's propogated by attempting to load the builder config. In this
-        // situation we simply keep the current config or use the values stored in
-        // the explorer scene by default
-        try
+        if (success)
         {
-            ShipConfig shipConfiguration = ShipConfigLoader.LoadBuilderConfig();
-            ShipManager.SetShipConfig(shipConfiguration);
-        } catch (Exception e)
+            currentLevel++;
+            currentLevelIndex++;
+            if (currentLevelIndex < levels.Count)
+            {
+                InitializeByConfig(levels[currentLevelIndex]);
+                OnLevelLoaded?.Invoke(levels[currentLevelIndex]);
+            }
+            else
+            {
+                Debug.Log("All levels completed.");
+            }
+        }
+        else
         {
-            Debug.LogWarning(
-                "WARNING: While loading ship config from builder scene an execption occured!\n" +
-                "         Using default ship configuration (i.e. editor default values)\n"      +
-                "EXCEPTION:\n"                                                                  +
-                e.ToString()
-            );
+            InitializeByConfig(levels[currentLevelIndex]);
+        }
+
+        ShipManager.ResetShip();
+        ShipConfig shipConfig = levels[currentLevelIndex].levelShipConfig;
+        if (shipConfig != null) {
+            ShipManager.SetShipConfig(shipConfig);
+        } else {
+            Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + currentLevelIndex + "\n"
+                            + "Using default ship configuration with editor defaults");
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -197,16 +197,17 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         if(isLoading) return;
         if (success)
         {
-            Debug.Log($"Level {currentLevelIndex} Complete!");
+            leaderBoard = LeaderBoard.Instance;
+            Debug.Log($"Level {currentLevel} Complete!");
             float totalTime = levels[currentLevelIndex].missionTimer;
             int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
             playerScore += pointsEarned;
-            leaderBoard.SaveScore("Player One", playerScore, currentLevelIndex); // Temp value until there is a means for recording a player name
-            LoadLevel(currentLevelIndex + 1, true);
+            leaderBoard.SaveScore(playerScore, currentLevel); 
+            LoadLevel(true);
         }
         else
         {
-            Debug.Log($"Level {currentLevelIndex} Failed.");
+            Debug.Log($"Level {currentLevel} Failed.");
             RestartLevel();
         }
     }
@@ -216,7 +217,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         if (isLoading) return;
         ShipManager.ResetShip();
         StopAllCoroutines();
-        LoadLevel(currentLevelIndex, false);
+        LoadLevel(false);
     }
 
     private void SetLoadingState(bool state)

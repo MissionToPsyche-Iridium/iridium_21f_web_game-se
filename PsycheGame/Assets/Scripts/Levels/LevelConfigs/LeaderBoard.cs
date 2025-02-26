@@ -1,12 +1,13 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
 public class LeaderBoard : MonoBehaviour
 {
     private string filePath;
+    public static LeaderBoard Instance { get; private set; }
 
     [System.Serializable]
     public class LeaderboardEntry
@@ -23,17 +24,29 @@ public class LeaderBoard : MonoBehaviour
     }
 
     private LeaderboardData leaderboardData;
+    private const string PlayerNameKey = "PlayerName"; 
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        Debug.Log("LeaderBoard initialized");
+
         filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
         Debug.Log($"Leaderboard file path: {filePath}");
 
         leaderboardData = LoadLeaderboard();
+        
     }
 
-    public void SaveScore(string playerName, int levelScore, int levelIndex)
+    public void SaveScore(int levelScore, int level)
     {
+        Debug.Log($"Score: " + levelScore + " Level: " + level);
+        string playerName = PlayerPrefs.GetString(PlayerNameKey);
         LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
 
         if (playerEntry == null)
@@ -44,27 +57,28 @@ public class LeaderBoard : MonoBehaviour
 
         playerEntry.totalScore += levelScore;
 
-        if (playerEntry.levelScores.ContainsKey(levelIndex))
+        if (playerEntry.levelScores.ContainsKey(level))
         {
-            playerEntry.levelScores[levelIndex] = Math.Max(playerEntry.levelScores[levelIndex], levelScore);
+            playerEntry.levelScores[level] = Math.Max(playerEntry.levelScores[level], levelScore);
         }
         else
         {
-            playerEntry.levelScores[levelIndex] = levelScore;
+            playerEntry.levelScores[level] = levelScore;
         }
 
+        // Sort and keep all entries, not just top 10
         leaderboardData.entries = leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
-            .Take(10)
             .ToList();
 
         SaveLeaderboard();
     }
 
-    public List<LeaderboardEntry> GetTopScores()
+    public List<LeaderboardEntry> GetTopScores(int count = 10)
     {
         return leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
+            .Take(count)
             .ToList();
     }
 
@@ -87,6 +101,18 @@ public class LeaderBoard : MonoBehaviour
         }
     }
 
+    public bool IsPlayerNameUnique(string playerName)
+    {
+        LeaderboardData data = LoadLeaderboard();
+        if(data.entries.Count > 0){
+            if(data.entries.Any(entry => entry.playerName == playerName)){
+                return false; 
+            }
+            return true; 
+        } 
+        return true;
+    }
+
     public string DisplayTotalLeaderboard()
     {
         List<LeaderboardEntry> topScores = GetTopScores();
@@ -100,19 +126,20 @@ public class LeaderBoard : MonoBehaviour
         return leaderboardText;
     }
 
-    public string DisplayLeaderboardByLevel(int levelIndex)
+    public string DisplayLeaderboardByLevel(int level)
     {
         var levelScores = leaderboardData.entries
+            .Where(entry => entry.levelScores.ContainsKey(level))
             .Select(entry => new
             {
                 entry.playerName,
-                levelScore = entry.levelScores.ContainsKey(levelIndex) ? entry.levelScores[levelIndex] : 0
+                levelScore = entry.levelScores[level]
             })
             .OrderByDescending(entry => entry.levelScore)
             .Take(10)
             .ToList();
 
-        string leaderboardText = $"Top 10 Players (Level {levelIndex}):\n";
+        string leaderboardText = $"Top 10 Players (Level {level}):\n";
         for (int i = 0; i < levelScores.Count; i++)
         {
             leaderboardText += $"{i + 1}. {levelScores[i].playerName}: {levelScores[i].levelScore}\n";
