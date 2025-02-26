@@ -15,7 +15,7 @@ TagManager:
   - Water
   - UI
   - GridPlane
-  - 
+  - Snapshot
   - 
   - ProbePart
   - ProbePartInPosition
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Foreground
+    uniqueID: 179432027
     locked: 0
   - name: ProbePart
     uniqueID: 2414916577
