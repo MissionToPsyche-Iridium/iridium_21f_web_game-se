@@ -8,6 +8,8 @@ public class Inventory
     private InventoryContainer<ProbeComponent> _probeComponents;
     private List<IInventoryObserver> _observers;
 
+    public static object Instance { get; internal set; }
+
     public Inventory()
     {
         _probeComponents = new InventoryContainer<ProbeComponent>();
