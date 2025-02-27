@@ -1,53 +1,70 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PauseHandler : MonoBehaviour 
 {
 
     [SerializeField] private GameObject missionObjectivePanel; 
-    [SerializeField] private InputField playerNameField;
+    [SerializeField] private GameObject playerNameObject;
     [SerializeField] private Button beginButton; 
+    private InputField playerNameField; 
     public static bool IsGamePaused { get; private set; } = true;
 
     private const string PlayerNameKey = "PlayerName"; 
 
     private void Awake()
     {
+        playerNameField = playerNameObject.GetComponent<InputField>();
         if (PlayerPrefs.HasKey(PlayerNameKey))
         {
-            nameInputField.gameObject.SetActive(false);
+            playerNameField.gameObject.SetActive(false);
             beginButton.interactable = true;
-            validationMessage.gameObject.SetActive(false);
+           // validationMessage.gameObject.SetActive(false);
         }
         else
         {
-            nameInputField.gameObject.SetActive(true);
+            playerNameField.gameObject.SetActive(true);
             beginButton.interactable = false;
-            validationMessage.gameObject.SetActive(false);
+         //   validationMessage.gameObject.SetActive(false);
         }
 
-        nameInputField.onValueChanged.AddListener(OnNameInputChanged);
+        playerNameField.onValueChanged.AddListener(OnNameInputChanged);
         beginButton.onClick.AddListener(OnBeginButtonClicked);
     }
 
+    private void OnNameInputChanged(string input)
+    {
+        if (!string.IsNullOrWhiteSpace(input))
+        {
+            beginButton.interactable = true;
+         //   validationMessage.gameObject.SetActive(false);
+        }
+        else
+        {
+            beginButton.interactable = false;
+           // validationMessage.gameObject.SetActive(true);
+           // validationMessage.text = "Please enter a name.";
+        }
+    }
     private void OnBeginButtonClicked()
     {
-        string playerName = nameInputField.text.Trim();
+        string playerName = playerNameField.text.Trim();
         if (!string.IsNullOrWhiteSpace(playerName))
         {
             PlayerPrefs.SetString(PlayerNameKey, playerName);
             PlayerPrefs.Save();
 
-            nameInputField.gameObject.SetActive(false);
-            validationMessage.gameObject.SetActive(false);
+            playerNameField.gameObject.SetActive(false);
+        //    validationMessage.gameObject.SetActive(false);
 
             StartGame();
         }
         else
         {
-            validationMessage.gameObject.SetActive(true);
-            validationMessage.text = "Please enter a valid name.";
+            // validationMessage.gameObject.SetActive(true);
+            // validationMessage.text = "Please enter a valid name.";
         }
     }
 
@@ -123,22 +140,6 @@ public class PauseHandler : MonoBehaviour
         else
         {
             Debug.LogError("BeginResumeText object not found under the MissionObjectiveModalPanel.");
-        }
-    }
-
-
-    private void OnNameInputChanged(string input)
-    {
-        if (!string.IsNullOrWhiteSpace(input))
-        {
-            beginButton.interactable = true;
-            validationMessage.gameObject.SetActive(false);
-        }
-        else
-        {
-            beginButton.interactable = false;
-            validationMessage.gameObject.SetActive(true);
-            validationMessage.text = "Please enter a name.";
         }
     }
 }
