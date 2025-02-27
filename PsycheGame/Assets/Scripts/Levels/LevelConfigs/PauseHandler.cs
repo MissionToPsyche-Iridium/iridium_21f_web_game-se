@@ -9,6 +9,7 @@ public class PauseHandler : MonoBehaviour
     [SerializeField] private GameObject missionObjectivePanel; 
     [SerializeField] private GameObject playerNameObject;
     [SerializeField] private Button beginButton; 
+    [SerializeField] private TextMeshProUGUI validationMessage;
     private InputField playerNameField; 
     public static bool IsGamePaused { get; private set; } = true;
 
@@ -21,13 +22,13 @@ public class PauseHandler : MonoBehaviour
         {
             playerNameField.gameObject.SetActive(false);
             beginButton.interactable = true;
-           // validationMessage.gameObject.SetActive(false);
+            validationMessage.gameObject.SetActive(false);
         }
         else
         {
             playerNameField.gameObject.SetActive(true);
             beginButton.interactable = false;
-         //   validationMessage.gameObject.SetActive(false);
+            validationMessage.gameObject.SetActive(false);
         }
 
         playerNameField.onValueChanged.AddListener(OnNameInputChanged);
@@ -39,13 +40,13 @@ public class PauseHandler : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(input))
         {
             beginButton.interactable = true;
-         //   validationMessage.gameObject.SetActive(false);
+            validationMessage.gameObject.SetActive(false);
         }
         else
         {
             beginButton.interactable = false;
-           // validationMessage.gameObject.SetActive(true);
-           // validationMessage.text = "Please enter a name.";
+            validationMessage.gameObject.SetActive(true);
+            validationMessage.text = "Please enter a name.";
         }
     }
     private void OnBeginButtonClicked()
@@ -57,14 +58,14 @@ public class PauseHandler : MonoBehaviour
             PlayerPrefs.Save();
 
             playerNameField.gameObject.SetActive(false);
-        //    validationMessage.gameObject.SetActive(false);
+            validationMessage.gameObject.SetActive(false);
 
             StartGame();
         }
         else
         {
-            // validationMessage.gameObject.SetActive(true);
-            // validationMessage.text = "Please enter a valid name.";
+             validationMessage.gameObject.SetActive(true);
+             validationMessage.text = "Please enter a valid name.";
         }
     }
 
