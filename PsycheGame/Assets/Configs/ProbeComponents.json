@@ -188,6 +188,34 @@
             "GridPositionX": -1,
             "GridPositionY": -1,
             "Credits":70
+          },
+          {
+            "Id":"PC14",
+            "Name": "Gas Detector",
+            "Description": "This sensor detects gas that can be collected.",
+            "ScanningRange":5,
+            "FuelCapacity":1,
+            "Speed":2,
+            "Armor":1,
+            "Hp":3,
+            "Weight":4,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits":70
+          },
+          {
+            "Id":"PC15",
+            "Name": "Drill",
+            "Description": "This instrument is used for mining objects in space.",
+            "ScanningRange":5,
+            "FuelCapacity":1,
+            "Speed":2,
+            "Armor":1,
+            "Hp":3,
+            "Weight":4,
+            "GridPositionX": -1,
+            "GridPositionY": -1,
+            "Credits":70
           }
     ]
 }

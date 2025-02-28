@@ -6436,6 +6436,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 312b61630733f9d45893df2de7c10c89, type: 3}
   - {fileID: 21300000, guid: 33b12e90c67f27249866622ed3439ea6, type: 3}
   - {fileID: 21300000, guid: 1d69720d3d7aa4749af36be8c8c59ab3, type: 3}
+  - {fileID: 21300000, guid: a11ac8aa17fd62545bbe4b34679e7b50, type: 3}
+  - {fileID: 21300000, guid: e38a624edcef8a447a43bda9c7ce3820, type: 3}
   _foregroundCanvas: {fileID: 1309627608}
   _content: {fileID: 385889573}
   _buttonPrefab: {fileID: 3426248820051524260, guid: e8e3732af200392408a03367eeb3c5dc, type: 3}
