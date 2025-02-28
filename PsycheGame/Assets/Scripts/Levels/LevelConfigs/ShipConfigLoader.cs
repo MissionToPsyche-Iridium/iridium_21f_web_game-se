@@ -6,6 +6,8 @@ public class ShipConfigLoader : MonoBehaviour {
     private static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
 
     private class ProbeComponentList {
+        // NOTE: due to how JSON is deserialized the public variable name below
+        // should match that used when calling "FromJson"
         public ProbeComponent[] components;
     }
 
@@ -17,7 +19,7 @@ public class ShipConfigLoader : MonoBehaviour {
         }
 
         string fileText = File.ReadAllText(DATA_PATH);
-        return JsonUtility.FromJson<ProbeComponentList>(fileText);
+        return JsonUtility.FromJson<ProbeComponentList>("{\"components\":" + fileText + "}");
     }
 
     private void DebugPrintProbeComponent(ProbeComponent comp)
