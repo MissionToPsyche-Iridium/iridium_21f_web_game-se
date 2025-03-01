@@ -1,12 +1,13 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
 public class LeaderBoard : MonoBehaviour
 {
     private string filePath;
+    public static LeaderBoard Instance { get; private set; }
 
     [System.Serializable]
     public class LeaderboardEntry
@@ -26,10 +27,19 @@ public class LeaderBoard : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        Debug.Log("LeaderBoard initialized");
+
         filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
         Debug.Log($"Leaderboard file path: {filePath}");
 
         leaderboardData = LoadLeaderboard();
+        
     }
 
     public void SaveScore(string playerName, int levelScore, int levelIndex)

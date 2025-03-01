@@ -43,7 +43,6 @@ public class LevelManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         // NOTE: spawners should be:
         // 1. Disabled at 'Awake'
@@ -67,6 +66,15 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("MissionTimer is missing in the scene.");
             return;
         }
+    }
+
+    public void StartGame()
+    {
+        isLoading = false;
+        missionObjectivePanel.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+        StartMissionTimer();
     }
 
     private void InitializeByConfig(LevelConfig config){
@@ -177,6 +185,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         if(isLoading) return;
         if (success)
         {
+            leaderBoard = LeaderBoard.Instance;
             Debug.Log($"Level {currentLevelIndex} Complete!");
             float totalTime = levels[currentLevelIndex].missionTimer;
             int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
