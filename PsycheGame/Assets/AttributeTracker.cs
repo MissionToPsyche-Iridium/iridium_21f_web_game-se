@@ -20,6 +20,21 @@ public class AttributeTracker : MonoBehaviour
     private Dictionary<string, int> attributes = new Dictionary<string, int>();
     private BuildManager buildManager;
 
+    const int MAX_SCANNING_RANGE = 59;
+    const int MAX_FUEL_CAPACITY = 68;
+    const int MAX_SPEED = 29;
+    const int MAX_HEALTH = 177;
+
+    private int scanningRange = 0;
+    private int fuelCapacity = 0;
+    private int speed = 0;
+    private int health = 0;
+    private int creditAvailable = 0;
+
+    private void Awake()
+    {
+    }
+
     public void UpdateChildAttributes()
     {
         attributes = buildManager.CalculateAttributeTotals();
@@ -28,29 +43,24 @@ public class AttributeTracker : MonoBehaviour
         {
             switch (t.name)
             {
-                case "ScanRangeVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
+                case "HealthVal":
+                    t.GetComponent<TextMeshProUGUI>().text = (attributes["Hp"] + attributes["Armor"]).ToString();
                     break;
-                case "FuelCapacityVal":
+                case "FuelVal":
                     t.GetComponent<TextMeshProUGUI>().text = attributes["FuelCapacity"].ToString();
                     break;
-                case "SpeedVal":
+                case "ThrusterVal":
                     t.GetComponent<TextMeshProUGUI>().text = attributes["Speed"].ToString();
                     break;
-                case "ArmorVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Armor"].ToString();
+                case "ScannerVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
                     break;
-                case "HpVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Hp"].ToString();
-                    break;
-                case "WeightVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Weight"].ToString();
-                    break;
-                case "AvailableCredits":
+                case "Credits":
                     t.GetComponent<TextMeshProUGUI>().text = buildManager.GetAvailableCredits().ToString();
                     break;
             }
         }
+
     }
 
     // Start is called before the first frame update
