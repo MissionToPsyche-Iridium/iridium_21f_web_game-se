@@ -11,7 +11,7 @@ public class PauseHandler : MonoBehaviour
     [SerializeField] private Button beginButton; 
     [SerializeField] private TextMeshProUGUI validationMessage;
     private LeaderBoard leaderBoard;
-    private TMP_InputField playerNameField;
+    private InputField playerNameField;
     private string typedValue;
     public static bool IsGamePaused { get; private set; } = true;
 
@@ -19,7 +19,7 @@ public class PauseHandler : MonoBehaviour
 
     private void Awake()
     {
-        playerNameField = playerNameObject.GetComponent<TMP_InputField>();
+        playerNameField = playerNameObject.GetComponent<InputField>();
         if (PlayerPrefs.HasKey(PlayerNameKey))
         {
             playerNameObject.SetActive(false);
@@ -34,11 +34,11 @@ public class PauseHandler : MonoBehaviour
             validationMessage.text = "Please enter a name.";
         }
 
-        playerNameField.onDeselect.AddListener(OnDeselectInputField);
+        playerNameField.onEndEdit.AddListener(OnEndEditInputField);
         beginButton.onClick.AddListener(OnBeginButtonClicked);
     }
 
-    public void OnDeselectInputField(string input)
+    public void OnEndEditInputField(string input)
     {
         string playerName = input.Trim();
         if (!string.IsNullOrWhiteSpace(playerName))

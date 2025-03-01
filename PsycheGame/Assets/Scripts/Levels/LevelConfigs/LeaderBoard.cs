@@ -90,7 +90,13 @@ public class LeaderBoard : MonoBehaviour
     public bool IsPlayerNameUnique(string playerName)
     {
         LeaderboardData data = LoadLeaderboard();
-        return !data.entries.Any(entry => entry.playerName == playerName);
+        if(data.entries.Count > 0){
+            if(data.entries.Any(entry => entry.playerName == playerName)){
+                return false; 
+            }
+            return true; 
+        } 
+        return true;
     }
 
     public string DisplayTotalLeaderboard()
