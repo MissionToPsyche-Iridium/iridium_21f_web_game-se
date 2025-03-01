@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Snapshot
 {
@@ -33,31 +35,50 @@ public class Snapshot
         }
     }
 
-    // TODO: Set camera position, convert texture to sprite, and dispose of any unnecessary objects
-    public Texture Take()
+    public Sprite Take()
     {
         int[] originalLayers = new int[_targets.Count];
+        Vector3 centerPosition = Vector3.zero;
+
         for (int i = 0; i < _targets.Count; i++)
         {
             originalLayers[i] = _targets[i].layer;
             _targets[i].layer = _layer;
+
+            centerPosition += _targets[i].transform.position;
         }
 
-        RenderTexture renderTexture = new RenderTexture(256, 256, 16, RenderTextureFormat.ARGB32);
+        centerPosition /= _targets.Count;
+
+        RenderTexture renderTexture = new RenderTexture(256, 256, 24);
 
         Camera tempCam = (new GameObject()).AddComponent<Camera>();
+        tempCam.transform.position = centerPosition;
         tempCam.cullingMask = 1 << _layer;
         tempCam.targetTexture = renderTexture;
 
-        renderTexture.Create();
+        Canvas rootCanvas = _targets[0].transform.root.GetComponent<Canvas>();
 
-        GameObject.Destroy(tempCam);
+        Camera originalCamera = rootCanvas.worldCamera;
+        rootCanvas.worldCamera = tempCam;
 
-        for (int i = 0; i < _targets.Count; i++)
-        {
-            _targets[i].layer = originalLayers[i];
-        }
+        tempCam.Render();
 
-        return renderTexture;
+        rootCanvas.worldCamera = originalCamera;
+
+        RenderTexture tempRender = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+
+        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
+        texture.ReadPixels(new Rect(0.0f, 0.0f, texture.width, texture.height), 0, 0);
+        texture.Apply();
+
+        RenderTexture.active = tempRender;
+
+        Sprite sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+        GameObject.Destroy(tempCam.gameObject);
+
+        return sprite;
     }
 }
