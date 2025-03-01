@@ -87,6 +87,12 @@ public class LeaderBoard : MonoBehaviour
         }
     }
 
+    public bool IsPlayerNameUnique(string playerName)
+    {
+        LeaderboardData data = LoadLeaderboard();
+        return !data.entries.Any(entry => entry.playerName == playerName);
+    }
+
     public string DisplayTotalLeaderboard()
     {
         List<LeaderboardEntry> topScores = GetTopScores();

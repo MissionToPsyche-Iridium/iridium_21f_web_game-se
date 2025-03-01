@@ -10,64 +10,67 @@ public class PauseHandler : MonoBehaviour
     [SerializeField] private GameObject playerNameObject;
     [SerializeField] private Button beginButton; 
     [SerializeField] private TextMeshProUGUI validationMessage;
-    private InputField playerNameField; 
+    private LeaderBoard leaderBoard;
+    private TMP_InputField playerNameField;
+    private string typedValue;
     public static bool IsGamePaused { get; private set; } = true;
 
     private const string PlayerNameKey = "PlayerName"; 
 
     private void Awake()
     {
-        playerNameField = playerNameObject.GetComponent<InputField>();
+        playerNameField = playerNameObject.GetComponent<TMP_InputField>();
         if (PlayerPrefs.HasKey(PlayerNameKey))
         {
-            playerNameField.gameObject.SetActive(false);
+            playerNameObject.SetActive(false);
             beginButton.interactable = true;
             validationMessage.gameObject.SetActive(false);
         }
         else
         {
-            playerNameField.gameObject.SetActive(true);
-            beginButton.interactable = false;
-            validationMessage.gameObject.SetActive(false);
-        }
-
-        playerNameField.onValueChanged.AddListener(OnNameInputChanged);
-        beginButton.onClick.AddListener(OnBeginButtonClicked);
-    }
-
-    private void OnNameInputChanged(string input)
-    {
-        if (!string.IsNullOrWhiteSpace(input))
-        {
-            beginButton.interactable = true;
-            validationMessage.gameObject.SetActive(false);
-        }
-        else
-        {
+            playerNameObject.SetActive(true);
             beginButton.interactable = false;
             validationMessage.gameObject.SetActive(true);
             validationMessage.text = "Please enter a name.";
         }
+
+        playerNameField.onDeselect.AddListener(OnDeselectInputField);
+        beginButton.onClick.AddListener(OnBeginButtonClicked);
     }
-    private void OnBeginButtonClicked()
+
+    public void OnDeselectInputField(string input)
     {
-        string playerName = playerNameField.text.Trim();
+        string playerName = input.Trim();
         if (!string.IsNullOrWhiteSpace(playerName))
         {
-            PlayerPrefs.SetString(PlayerNameKey, playerName);
-            PlayerPrefs.Save();
-
-            playerNameField.gameObject.SetActive(false);
-            validationMessage.gameObject.SetActive(false);
-
-            StartGame();
+            if (leaderBoard.IsPlayerNameUnique(playerName))
+            {
+                validationMessage.text = "Name is valid.";
+                beginButton.interactable = true;
+            }
+            else
+            {
+                validationMessage.text = "Name already exists. Please choose another.";
+                beginButton.interactable = false;
+            }
         }
         else
         {
-             validationMessage.gameObject.SetActive(true);
-             validationMessage.text = "Please enter a valid name.";
+            beginButton.interactable = false;
+            validationMessage.text = "Please enter a name.";
         }
     }
+
+    private void OnBeginButtonClicked()
+    {
+        string playerName = playerNameField.text.Trim();
+        PlayerPrefs.SetString(PlayerNameKey, playerName);
+        PlayerPrefs.Save();
+
+        playerNameObject.SetActive(false);
+        validationMessage.gameObject.SetActive(false);
+    }
+
 
     private void Update()
     {
