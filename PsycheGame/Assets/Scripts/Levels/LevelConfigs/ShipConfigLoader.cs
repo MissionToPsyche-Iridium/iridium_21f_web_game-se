@@ -25,8 +25,7 @@ public class ShipConfigLoader : MonoBehaviour {
     private void DebugPrintProbeComponent(ProbeComponent comp)
     {
         Debug.Log(
-            "Probe Component:\n" +
-            "---------------------\n" +
+            "Probe Component Found:\n" +
             $"ID: {comp.Id}\n" +
             $"Name: {comp.Name}\n" +
             $"Description: {comp.Description}\n" +
@@ -38,18 +37,26 @@ public class ShipConfigLoader : MonoBehaviour {
             $"HP: {comp.Hp}\n" +
             $"Weight: {comp.Weight}\n" +
             $"Credits: {comp.Credits:F2}\n" +
-            $"Grid Position: ({comp.GridPositionX}, {comp.GridPositionY})\n" +
-            "---------------------\n"
+            $"Grid Position: ({comp.GridPositionX}, {comp.GridPositionY})\n"
         );
     }
 
     private void Awake()
     {
+        // Step through each probe component and create a ship config here which will
+        // then be passed to LevelManager.cs to initialize the ship?
+        ShipConfig config = new ShipConfig();
         ProbeComponentList probeComponents = LoadBuilderSaveData();
+
         foreach (ProbeComponent probeComponent in probeComponents.components)
         {
             DebugPrintProbeComponent(probeComponent);
+            config.shipMoveConfig.health += probeComponent.Hp;
+            config.shipMoveConfig.fuel += probeComponent.FuelCapacity;
         }
+
+        Debug.Log("Ship config initialized with: " + config.shipMoveConfig.health + " health");
+        Debug.Log("Ship config initialized with: " + config.shipMoveConfig.fuel + " fuel");
     }
 
     private void Start()
