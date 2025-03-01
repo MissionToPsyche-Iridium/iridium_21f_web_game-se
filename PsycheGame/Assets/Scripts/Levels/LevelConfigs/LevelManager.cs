@@ -59,6 +59,7 @@ public class LevelManager : MonoBehaviour
     {
         LevelConfig config = levels[currentLevelIndex];
         InitializeByConfig(config);
+        Time.timeScale = 0f;
 
         missionTimer = FindObjectOfType<MissionTimer>();
         if (missionTimer == null)

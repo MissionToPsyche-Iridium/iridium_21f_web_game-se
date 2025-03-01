@@ -18,6 +18,7 @@ public class PlayerNameHandler : MonoBehaviour
     {
         playerNameField = playerNameObject.GetComponent<InputField>();
         leaderBoard = LeaderBoard.Instance;
+        playerNameObject.SetActive(true);
         if (leaderBoard == null)
         {
             Debug.LogError("LeaderBoard script not found.");
@@ -26,12 +27,10 @@ public class PlayerNameHandler : MonoBehaviour
 
         if (PlayerPrefs.HasKey(PlayerNameKey))
         {
-            playerNameObject.SetActive(false);
             validationMessage.gameObject.SetActive(false);
         }
         else
         {
-            playerNameObject.SetActive(true);
             validationMessage.gameObject.SetActive(true);
             validationMessage.text = "Please enter a name.";
         }
