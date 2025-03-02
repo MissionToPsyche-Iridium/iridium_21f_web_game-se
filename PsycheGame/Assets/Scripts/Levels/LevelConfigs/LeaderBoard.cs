@@ -24,6 +24,7 @@ public class LeaderBoard : MonoBehaviour
     }
 
     private LeaderboardData leaderboardData;
+    private const string PlayerNameKey = "PlayerName"; 
 
     private void Awake()
     {
@@ -42,8 +43,9 @@ public class LeaderBoard : MonoBehaviour
         
     }
 
-    public void SaveScore(string playerName, int levelScore, int levelIndex)
+    public void SaveScore(int levelScore, int levelIndex)
     {
+        string playerName = PlayerPrefs.GetString(PlayerNameKey);
         LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
 
         if (playerEntry == null)

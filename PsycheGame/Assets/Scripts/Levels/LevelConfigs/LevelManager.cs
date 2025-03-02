@@ -167,7 +167,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         LevelConfig levelConfig = levels[levelIndex];
         InitializeByConfig(levelConfig);
         OnLevelLoaded?.Invoke(levelConfig);
-
+        ShipManager.ResetShip();
         ShipConfig shipConfig = levelConfig.levelShipConfig;
         if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
@@ -191,7 +191,7 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
             float totalTime = levels[currentLevelIndex].missionTimer;
             int pointsEarned = CalculateScore(missionTimeRemaining, totalTime);
             playerScore += pointsEarned;
-            leaderBoard.SaveScore("Player One", playerScore, currentLevelIndex); // Temp value until there is a means for recording a player name
+            leaderBoard.SaveScore(playerScore, currentLevelIndex); 
             LoadLevel(currentLevelIndex + 1, true);
         }
         else
