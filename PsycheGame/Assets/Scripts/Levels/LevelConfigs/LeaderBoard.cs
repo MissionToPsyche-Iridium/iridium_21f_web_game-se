@@ -43,8 +43,9 @@ public class LeaderBoard : MonoBehaviour
         
     }
 
-    public void SaveScore(int levelScore, int levelIndex)
+    public void SaveScore(int levelScore, int level)
     {
+        Debug.Log($"Score: " + levelScore + " Level: " + level);
         string playerName = PlayerPrefs.GetString(PlayerNameKey);
         LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
 
@@ -56,13 +57,13 @@ public class LeaderBoard : MonoBehaviour
 
         playerEntry.totalScore += levelScore;
 
-        if (playerEntry.levelScores.ContainsKey(levelIndex))
+        if (playerEntry.levelScores.ContainsKey(level))
         {
-            playerEntry.levelScores[levelIndex] = Math.Max(playerEntry.levelScores[levelIndex], levelScore);
+            playerEntry.levelScores[level] = Math.Max(playerEntry.levelScores[level], levelScore);
         }
         else
         {
-            playerEntry.levelScores[levelIndex] = levelScore;
+            playerEntry.levelScores[level] = levelScore;
         }
 
         leaderboardData.entries = leaderboardData.entries
@@ -124,19 +125,19 @@ public class LeaderBoard : MonoBehaviour
         return leaderboardText;
     }
 
-    public string DisplayLeaderboardByLevel(int levelIndex)
+    public string DisplayLeaderboardByLevel(int level)
     {
         var levelScores = leaderboardData.entries
             .Select(entry => new
             {
                 entry.playerName,
-                levelScore = entry.levelScores.ContainsKey(levelIndex) ? entry.levelScores[levelIndex] : 0
+                levelScore = entry.levelScores.ContainsKey(level) ? entry.levelScores[level] : 0
             })
             .OrderByDescending(entry => entry.levelScore)
             .Take(10)
             .ToList();
 
-        string leaderboardText = $"Top 10 Players (Level {levelIndex}):\n";
+        string leaderboardText = $"Top 10 Players (Level {level}):\n";
         for (int i = 0; i < levelScores.Count; i++)
         {
             leaderboardText += $"{i + 1}. {levelScores[i].playerName}: {levelScores[i].levelScore}\n";
