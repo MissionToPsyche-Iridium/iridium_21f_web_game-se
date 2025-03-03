@@ -12,6 +12,9 @@ using UnityEngine;
 
     This script updates the child components' attributes based on the current probe component's attributes using the call to the
     UpdateChildAttributes() method.
+
+    v.1.1 - updated the UpdateChildAttributes() method to update the child components' attributes based on the current probe component's attributes. 
+    :: additionally, the fill bar visual indicators are updated based on the current probe component's attributes.
 */
 
 public class AttributeTracker : MonoBehaviour
@@ -58,15 +61,29 @@ public class AttributeTracker : MonoBehaviour
                 case "Credits":
                     t.GetComponent<TextMeshProUGUI>().text = buildManager.GetAvailableCredits().ToString();
                     break;
+                case "HealthFill":
+                    t.GetComponent<RectTransform>().localScale = new Vector3((float)(attributes["Hp"] + attributes["Armor"]) / MAX_HEALTH, 1, 1);
+                    break;
+                case "FuelFill":
+                    t.GetComponent<RectTransform>().localScale = new Vector3((float)attributes["FuelCapacity"] / MAX_FUEL_CAPACITY, 1, 1);
+                    break;
+                case "ThrusterFill":
+                    t.GetComponent<RectTransform>().localScale = new Vector3((float)attributes["Speed"] / MAX_SPEED, 1, 1);
+                    break;
+                case "ScanFill":
+                    t.GetComponent<RectTransform>().localScale = new Vector3((float)attributes["ScanningRange"] / MAX_SCANNING_RANGE, 1, 1);
+                    break;
+                default:
+                    break;
             }
         }
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
         buildManager = GameObject.Find("MasterCanvas").GetComponent<BuildManager>();
+
         // Debug.Log(" <AT> +++Fetch Probe component attributes+++ ");
         UpdateChildAttributes();
     }
