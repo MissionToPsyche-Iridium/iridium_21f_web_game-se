@@ -11,7 +11,7 @@ public class ShipConfigLoader : MonoBehaviour {
         public ProbeComponent[] components;
     }
 
-    private ProbeComponentList LoadBuilderSaveData()
+    private static ProbeComponentList LoadBuilderSaveData()
     {
         if (!File.Exists(DATA_PATH)) {
             Debug.LogError("ERROR: builder '.json' save data not found using default 'editor' variables for ship config");
@@ -22,7 +22,7 @@ public class ShipConfigLoader : MonoBehaviour {
         return JsonUtility.FromJson<ProbeComponentList>("{\"components\":" + fileText + "}");
     }
 
-    private void DebugPrintProbeComponent(ProbeComponent comp)
+    private static void DebugPrintProbeComponent(ProbeComponent comp)
     {
         Debug.Log(
             "Probe Component Found:\n" +
@@ -41,30 +41,46 @@ public class ShipConfigLoader : MonoBehaviour {
         );
     }
 
-    private void Awake()
+    public static ShipConfig LoadBuilderConfig()
     {
-        // Step through each probe component and create a ship config here which will
-        // then be passed to LevelManager.cs to initialize the ship?
-        ShipConfig config = new ShipConfig();
+        ShipConfig config = new();
         ProbeComponentList probeComponents = LoadBuilderSaveData();
+
+        int totalScanRange = 0,
+            totalFuelCapcity = 0,
+            totalSpeed = 0,
+            totalArmor = 0,
+            totalHp = 0,
+            totalWeight = 0;
 
         foreach (ProbeComponent probeComponent in probeComponents.components)
         {
             DebugPrintProbeComponent(probeComponent);
-            config.shipMoveConfig.health += probeComponent.Hp;
-            config.shipMoveConfig.fuel += probeComponent.FuelCapacity;
+            totalScanRange += probeComponent.ScanningRange;
+            totalFuelCapcity += probeComponent.FuelCapacity;
+            totalSpeed += probeComponent.Speed;
+            totalArmor += probeComponent.Armor;
+            totalHp += probeComponent.Hp;
+            totalWeight += probeComponent.Weight;
         }
 
-        Debug.Log("Ship config initialized with: " + config.shipMoveConfig.health + " health");
-        Debug.Log("Ship config initialized with: " + config.shipMoveConfig.fuel + " fuel");
-    }
+        Debug.Log(
+            "Ship config initialized with:\n"   +
+            "  Scan Range:   " + totalScanRange   + "\n" +
+            "  Fuel Capcity: " + totalFuelCapcity + "\n" +
+            "  Speed:        " + totalSpeed       + "\n" +
+            "  Armor:        " + totalArmor       + "\n" +
+            "  Health:       " + totalHp          + "\n" +
+            "  Weight:       " + totalWeight
+        );
 
-    private void Start()
-    {
+        // @note - here we are only loading the config with a couple of
+        // the actual computed variables. Team should meet to discuss further
+        // how we want to computes these
+        config.shipMoveConfig.health = totalHp;
+        config.shipMoveConfig.fuel = totalFuelCapcity;
+        config.scanConfig.distance = totalScanRange;
 
-    }
-
-    void Update() {
-        
+        return config;
     }
 }
