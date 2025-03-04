@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Rendering.Universal.Internal;
+using UnityEngine.UI;
 
 public sealed class ContainerGameData
 {
@@ -60,9 +61,17 @@ public sealed class ContainerGameData
         String name = "Design " + probeDesigns.Count;
         List<GameObject> parts = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetSpawnedProbeComponents(); //get current spawned parts
 
-        Snapshot snapshot = new Snapshot();
-        snapshot.AddTargets(parts);
-        snapshot.Take();
+        GameObject containerPanel = GameObject.Find("/MasterCanvas/ContainerPanel");
+        Rect containerRect = (containerPanel.transform as RectTransform).rect;
+
+        Snapshot probeSnapshot = new Snapshot(
+            containerRect.width,
+            containerRect.height,
+            containerPanel.transform.position,
+            parts
+        );
+        
+        GameObject.Find("/ForegroundCanvas/Image").GetComponent<Image>().sprite = probeSnapshot.Take();
 
         String json = SaveData.WriteToFile(parts); //saves design's parts to json
         ProbeDesign design = new ProbeDesign(sprite, name, "", parts);

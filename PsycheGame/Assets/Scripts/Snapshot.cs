@@ -5,80 +5,71 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Snapshot
 {
-    private int _layer;
+    private const int DEFAULT_RESOLUTION_WIDTH = 250,
+                      DEFAULT_RESOLUTION_HEIGHT = 250;
+
+    private static int _layer = LayerMask.NameToLayer("Snapshot");
+
+    private float _width, _height;
+    private Vector3 _position;
     private List<GameObject> _targets;
 
-    public Snapshot()
+    public Snapshot(float width, float height, Vector3 position, List<GameObject> targets)
     {
-        _layer = LayerMask.NameToLayer("Snapshot");
-        _targets = new List<GameObject>();
+        _width = width;
+        _height = height;
+        _position = position;
+        _targets = new List<GameObject>(targets);
     }
 
-    public List<GameObject> GetTargets()
+    public Sprite Take(int resolutionWidth, int resolutionHeight)
     {
-        return new List<GameObject>(_targets);
-    }
+        RenderTexture renderTexture = new RenderTexture(resolutionWidth, resolutionHeight, 24);
 
-    public void AddTarget(GameObject target)
-    {
-        _targets.Add(target);
-    }
+        Camera camera = GameObject.Instantiate(_targets[0].GetComponentInParent<Canvas>().rootCanvas.worldCamera) as Camera;
+        camera.name = "SnapshotCamera";
+        camera.cullingMask = 1 << _layer;
+        camera.targetTexture = renderTexture;
 
-    public void AddTargets(List<GameObject> targets)
-    {
-        foreach (GameObject target in targets)
+        Canvas canvas = (new GameObject("SnapshotCanvas")).AddComponent<Canvas>();
+        canvas.gameObject.layer = _layer;
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+
+        foreach (GameObject target in _targets)
         {
-            AddTarget(target);
+            GameObject targetClone = GameObject.Instantiate(target, canvas.transform);
+            targetClone.layer = _layer;
+            targetClone.name = "Target";
+            targetClone.transform.position = target.transform.position;
         }
+
+        canvas.worldCamera = camera;
+
+        camera.Render();
+
+        RenderTexture oldRenderTexture = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+
+        Texture2D texture = new Texture2D(resolutionWidth, resolutionHeight, TextureFormat.RGBA32, false);
+        texture.ReadPixels(new Rect(0.0f, 0.0f, resolutionWidth, resolutionHeight), 0, 0);
+        texture.Apply();
+
+        RenderTexture.active = oldRenderTexture;
+
+        Sprite sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, resolutionWidth, resolutionHeight), new Vector2(0.5f, 0.5f));
+
+        GameObject.Destroy(camera.gameObject);
+        GameObject.Destroy(canvas.gameObject);
+
+        return sprite;
     }
 
     public Sprite Take()
     {
-        int[] originalLayers = new int[_targets.Count];
-        Vector3 centerPosition = Vector3.zero;
-
-        for (int i = 0; i < _targets.Count; i++)
-        {
-            originalLayers[i] = _targets[i].layer;
-            _targets[i].layer = _layer;
-
-            centerPosition += _targets[i].transform.position;
-        }
-
-        centerPosition /= _targets.Count;
-
-        RenderTexture renderTexture = new RenderTexture(256, 256, 24);
-
-        Camera tempCam = (new GameObject()).AddComponent<Camera>();
-        tempCam.transform.position = centerPosition;
-        tempCam.cullingMask = 1 << _layer;
-        tempCam.targetTexture = renderTexture;
-
-        Canvas rootCanvas = _targets[0].transform.root.GetComponent<Canvas>();
-
-        Camera originalCamera = rootCanvas.worldCamera;
-        rootCanvas.worldCamera = tempCam;
-
-        tempCam.Render();
-
-        rootCanvas.worldCamera = originalCamera;
-
-        RenderTexture tempRender = RenderTexture.active;
-        RenderTexture.active = renderTexture;
-
-        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBA32, false);
-        texture.ReadPixels(new Rect(0.0f, 0.0f, texture.width, texture.height), 0, 0);
-        texture.Apply();
-
-        RenderTexture.active = tempRender;
-
-        Sprite sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-
-        GameObject.Destroy(tempCam.gameObject);
-
-        return sprite;
+        return Take(DEFAULT_RESOLUTION_WIDTH, DEFAULT_RESOLUTION_HEIGHT);
     }
 }
