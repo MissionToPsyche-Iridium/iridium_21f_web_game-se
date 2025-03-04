@@ -70,8 +70,6 @@ public sealed class ContainerGameData
             containerPanel.transform.position,
             parts
         );
-        
-        GameObject.Find("/ForegroundCanvas/Image").GetComponent<Image>().sprite = probeSnapshot.Take();
 
         String json = SaveData.WriteToFile(parts); //saves design's parts to json
         ProbeDesign design = new ProbeDesign(sprite, name, "", parts);
