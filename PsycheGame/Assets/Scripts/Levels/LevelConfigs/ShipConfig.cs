@@ -46,7 +46,7 @@ public class ShipConfig : ScriptableObject
         public float bostChangeRate;
     }
 
-    public TetherConfig tetherConfig;
-    public ScanConfig scanConfig;
-    public ShipMovementConfig shipMoveConfig;
+    public TetherConfig tetherConfig = new();
+    public ScanConfig scanConfig = new();
+    public ShipMovementConfig shipMoveConfig= new();
 }

@@ -31,7 +31,7 @@ public class LevelManager : MonoBehaviour
     private bool isPaused = false;
     private MissionTimer missionTimer;
     public static bool isLoading = false;
-     private int playerScore = 0;
+    private int playerScore = 0;
     public int PlayerScore => playerScore;
 
     private void Awake()
@@ -159,12 +159,32 @@ private IEnumerator LoadLevelAsync(int levelIndex, bool success)
         InitializeByConfig(levelConfig);
         OnLevelLoaded?.Invoke(levelConfig);
 
-        ShipConfig shipConfig = levelConfig.levelShipConfig;
-        if (shipConfig != null) {
-            ShipManager.SetShipConfig(shipConfig);
-        } else {
-            Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
-                            + "Using default ship configuration with editor defaults");
+        // @note - keeping this here as reminder of prvious impl
+        //
+        // ShipConfig shipConfig = levelConfig.levelShipConfig;
+        // if (shipConfig != null) {
+        //     ShipManager.SetShipConfig(shipConfig);
+        // } else {
+        //     Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + levelIndex + "\n"
+        //                     + "Using default ship configuration with editor defaults");
+        // }
+
+        // it's possible that there could be some JSON exception or any other error
+        // which get's propogated by attempting to load the builder config. In this
+        // situation we simply keep the current config or use the values stored in
+        // the explorer scene by default
+        try
+        {
+            ShipConfig shipConfiguration = ShipConfigLoader.LoadBuilderConfig();
+            ShipManager.SetShipConfig(shipConfiguration);
+        } catch (Exception e)
+        {
+            Debug.LogWarning(
+                "WARNING: While loading ship config from builder scene an execption occured!\n" +
+                "         Using default ship configuration (i.e. editor default values)\n"      +
+                "EXCEPTION:\n"                                                                  +
+                e.ToString()
+            );
         }
 
         yield return new WaitForSeconds(0.5f);

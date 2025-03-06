@@ -8,6 +8,6 @@ public class MineableAsteroid :  MineralCollection {
     }
 
     private void DisplayAsteroidComposition() {
-        Debug.Log($"Asteroid Composition: {string.Join(", ", metals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
+        //Debug.Log($"Asteroid Composition: {string.Join(", ", metals.ConvertAll(m => $"{m.Name} ({m.Amount})"))}");
     }
 }
