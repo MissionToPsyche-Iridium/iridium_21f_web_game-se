@@ -66,18 +66,19 @@ public class LeaderBoard : MonoBehaviour
             playerEntry.levelScores[level] = levelScore;
         }
 
+        // Sort and keep all entries, not just top 10
         leaderboardData.entries = leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
-            .Take(10)
             .ToList();
 
         SaveLeaderboard();
     }
 
-    public List<LeaderboardEntry> GetTopScores()
+    public List<LeaderboardEntry> GetTopScores(int count = 10)
     {
         return leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
+            .Take(count)
             .ToList();
     }
 
@@ -128,10 +129,11 @@ public class LeaderBoard : MonoBehaviour
     public string DisplayLeaderboardByLevel(int level)
     {
         var levelScores = leaderboardData.entries
+            .Where(entry => entry.levelScores.ContainsKey(level))
             .Select(entry => new
             {
                 entry.playerName,
-                levelScore = entry.levelScores.ContainsKey(level) ? entry.levelScores[level] : 0
+                levelScore = entry.levelScores[level]
             })
             .OrderByDescending(entry => entry.levelScore)
             .Take(10)
