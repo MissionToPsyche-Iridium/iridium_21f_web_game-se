@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -20,13 +21,13 @@ public class DesignInventory : MonoBehaviour
         designs = ContainerGameData.Instance.getDesigns();
 
         foreach(ProbeDesign design in designs) {
-            // GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
-            // uiDesignObject.transform.SetParent(GameObject.Find("DesignContent").transform);
-            // uiDesignObject.GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            // uiDesignObject.GetComponentInChildren<Image>().sprite = design.sprite;
-
-             GameObject.Find("testtext").GetComponentInChildren<TMPro.TMP_Text>().text = "part";
-        //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
+            Debug.Log("totals: " + design.attributeTotalsJson);
+            Dictionary<string, string> totals = JsonParser.FromJson<Dictionary<string, string>>(design.attributeTotalsJson);
+            
+            GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+            uiDesignObject.transform.SetParent(GameObject.Find("Viewport").transform);
+            GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
+            GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = totals["ScanningRange"];
 
         }
 
@@ -38,7 +39,7 @@ public class DesignInventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        designs = ContainerGameData.Instance.getDesigns();
+        //designs = ContainerGameData.Instance.getDesigns();
     }
 
     // private void createTestDesigns() {

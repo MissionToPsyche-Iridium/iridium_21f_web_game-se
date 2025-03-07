@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
-public class NewDesignButton : MonoBehaviour, IPointerClickHandler
+public class NewDesignButton : MonoBehaviour, IPointerDownHandler
 {
-   private AudioClip _swooshSound;
+    private AudioClip _swooshSound;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class NewDesignButton : MonoBehaviour, IPointerClickHandler
         this.AddComponent<AudioSource>();
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         SceneManager.LoadScene("ProbeBuilder");
         GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);

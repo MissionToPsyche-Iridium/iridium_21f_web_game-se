@@ -59,8 +59,10 @@ public sealed class ContainerGameData
         Sprite sprite = GameObject.Find("ContainerPanel").GetComponent<Sprite>();
         String name = "Design " + probeDesigns.Count;
         List<GameObject> parts = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetSpawnedProbeComponents(); //get current spawned parts
-        String json = SaveData.WriteToFile(parts); //saves design's parts to json
-        ProbeDesign design = new ProbeDesign(sprite, name, "", parts);
+        String partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
+        Dictionary<string, int> totals = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().CalculateAttributeTotals();
+        String totalsJson = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().getAttributeTotalsJson(totals); //get current spawned parts
+        ProbeDesign design = new ProbeDesign(sprite, name, partsJson, parts, totalsJson);
         probeDesigns.Add(design); //Adds current design to list of designs
     }
 
