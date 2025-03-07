@@ -22,8 +22,7 @@ using UnityEngine.Rendering.Universal;
 	updated the code with the ability to render the tile without loading from the START scene.
 
     version: 1.3 (Mar 5)
-    :: updated the code to use the TileColorScheme class to set the color scheme for the tiles.  The color scheme is
-    set based on the color profile set in the ControlHelper script.  The color scheme is updated when the color profile
+    :: updated the code to use the TileColorScheme class to set the color scheme for the attribute panel bars.
 */
 
 class GridPositionData
