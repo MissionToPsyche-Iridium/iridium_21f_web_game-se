@@ -43,18 +43,6 @@ public class LeaderBoard : MonoBehaviour
         
     }
 
-    public void SetPlayerName(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            Debug.LogError("Attempted to set an empty or null player name!");
-            return;
-        }
-        PlayerPrefs.SetString(PlayerNameKey, name);
-        PlayerPrefs.Save();
-        Debug.Log($"Player name set to: {name}");
-    }
-
     public void SaveScore(int levelScore, int level)
     {
         string playerName = PlayerPrefs.GetString(PlayerNameKey);
@@ -136,18 +124,6 @@ public class LeaderBoard : MonoBehaviour
         }
         Debug.Log("No leaderboard file found, starting fresh.");
         return new LeaderboardData();
-    }
-
-    public bool IsPlayerNameUnique(string playerName)
-    {
-        LeaderboardData data = LoadLeaderboard();
-        if(data.entries.Count > 0){
-            if(data.entries.Any(entry => entry.playerName == playerName)){
-                return false; 
-            }
-            return true; 
-        } 
-        return true;
     }
 
     public string DisplayTotalLeaderboard()

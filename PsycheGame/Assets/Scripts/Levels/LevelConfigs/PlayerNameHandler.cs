@@ -43,22 +43,14 @@ public class PlayerNameHandler : MonoBehaviour
         string playerName = playerNameField.text.Trim();
         if (!string.IsNullOrWhiteSpace(playerName))
         {
-            if (leaderBoard.IsPlayerNameUnique(playerName))
-            {
-                PlayerPrefs.SetString(PlayerNameKey, playerName);
-                PlayerPrefs.Save();
-                leaderBoard.SetPlayerName(playerName);
-                
-                Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
+            PlayerPrefs.SetString(PlayerNameKey, playerName);
+            PlayerPrefs.Save();
+            
+            Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
 
-                playerNameObject.SetActive(false);
-                validationMessage.gameObject.SetActive(false);
-                LevelManager.Instance.StartGame();
-            }
-            else
-            {
-                validationMessage.text = "Name already exists. Please choose another.";
-            }
+            playerNameObject.SetActive(false);
+            validationMessage.gameObject.SetActive(false);
+            LevelManager.Instance.StartGame();
         }
         else
         {
