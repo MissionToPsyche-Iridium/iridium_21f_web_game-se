@@ -35,7 +35,7 @@ public class LeaderBoard : MonoBehaviour
         }
         Instance = this;
         Debug.Log("LeaderBoard initialized");
-
+        DontDestroyOnLoad(gameObject);
         filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
         Debug.Log($"Leaderboard file path: {filePath}");
 
@@ -45,8 +45,12 @@ public class LeaderBoard : MonoBehaviour
 
     public void SaveScore(int levelScore, int level)
     {
-        Debug.Log($"Score: " + levelScore + " Level: " + level);
         string playerName = PlayerPrefs.GetString(PlayerNameKey);
+          if (string.IsNullOrEmpty(playerName))
+        {
+            Debug.LogError("Attempted to set an empty or null player name!");
+            return;
+        }
         LeaderboardEntry playerEntry = leaderboardData.entries.Find(entry => entry.playerName == playerName);
 
         if (playerEntry == null)
@@ -54,6 +58,7 @@ public class LeaderBoard : MonoBehaviour
             playerEntry = new LeaderboardEntry { playerName = playerName, totalScore = 0 };
             leaderboardData.entries.Add(playerEntry);
         }
+        Debug.Log($"Saving score for {playerName}: Score={levelScore}, Level={level}");
 
         playerEntry.totalScore += levelScore;
 
@@ -66,7 +71,6 @@ public class LeaderBoard : MonoBehaviour
             playerEntry.levelScores[level] = levelScore;
         }
 
-        // Sort and keep all entries, not just top 10
         leaderboardData.entries = leaderboardData.entries
             .OrderByDescending(entry => entry.totalScore)
             .ToList();
@@ -84,33 +88,42 @@ public class LeaderBoard : MonoBehaviour
 
     private void SaveLeaderboard()
     {
-        string json = JsonUtility.ToJson(leaderboardData);
-        File.WriteAllText(filePath, json);
+        try
+        {
+            string json = JsonUtility.ToJson(leaderboardData, true); // Pretty print for readability
+            File.WriteAllText(filePath, json);
+            Debug.Log("Leaderboard saved successfully");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to save leaderboard: {e.Message}");
+        }
     }
 
     private LeaderboardData LoadLeaderboard()
     {
         if (File.Exists(filePath))
         {
-            string json = File.ReadAllText(filePath);
-            return JsonUtility.FromJson<LeaderboardData>(json);
-        }
-        else
-        {
-            return new LeaderboardData();
-        }
-    }
-
-    public bool IsPlayerNameUnique(string playerName)
-    {
-        LeaderboardData data = LoadLeaderboard();
-        if(data.entries.Count > 0){
-            if(data.entries.Any(entry => entry.playerName == playerName)){
-                return false; 
+            try
+            {
+                string json = File.ReadAllText(filePath);
+                LeaderboardData data = JsonUtility.FromJson<LeaderboardData>(json);
+                if (data == null)
+                    {
+                        Debug.LogWarning("Loaded JSON was invalid, initializing new leaderboard.");
+                        return new LeaderboardData();
+                    }
+                    Debug.Log("Leaderboard loaded successfully");
+                    return data;
             }
-            return true; 
-        } 
-        return true;
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load leaderboard: {e.Message}");
+                return new LeaderboardData();
+            }
+        }
+        Debug.Log("No leaderboard file found, starting fresh.");
+        return new LeaderboardData();
     }
 
     public string DisplayTotalLeaderboard()
