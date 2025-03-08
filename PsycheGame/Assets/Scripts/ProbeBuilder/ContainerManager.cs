@@ -43,6 +43,8 @@ public class ContainerManager : MonoBehaviour
     [SerializeField] private int originY;
     [SerializeField] private int tileScale;
 
+    [SerializeField] private RectTransform _spawnArea;
+
     private float PosX, PosY;
 
     private (float x, float y)[,] chassisGrid;
@@ -191,6 +193,9 @@ public class ContainerManager : MonoBehaviour
         this.originX = (int)(parentRectTransform.rect.width / 2 * 0.70);
         this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
         this.tileScale = (int)(parentRectTransform.rect.width / 18);
+
+        _spawnArea.sizeDelta = new Vector2(tileScale * width, tileScale * height);
+        _spawnArea.position = gameObject.transform.position;
 
         for (int x = 0; x < width; x++)
         {

@@ -54,7 +54,7 @@ public class ShipMovement : MonoBehaviour {
         float moveVertical = Input.GetAxis("Vertical");
         float fuel = ShipManager.Fuel;
 
-         if (PauseHandler.IsGamePaused)
+        if (PauseHandler.IsGamePaused)
         {
             rb.velocity = Vector2.zero;
             return;

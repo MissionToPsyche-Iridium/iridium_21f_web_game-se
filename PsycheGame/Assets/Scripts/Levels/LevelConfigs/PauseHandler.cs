@@ -1,14 +1,12 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PauseHandler : MonoBehaviour 
 {
-
     [SerializeField] private GameObject missionObjectivePanel; 
-
-    public static bool IsGamePaused { get; private set; } = true;
-
+    public static bool IsGamePaused { get; private set; } = false;
 
     private void Update()
     {
@@ -30,16 +28,6 @@ public class PauseHandler : MonoBehaviour
     {
         Time.timeScale = 1f; 
         SceneManager.LoadScene("MainMenu");
-    }
-
-    public void StartGame()
-    {
-        LevelManager.isLoading = false;
-        Debug.Log("Level Manager is loading: " + LevelManager.isLoading);
-        missionObjectivePanel.SetActive(false);
-        Time.timeScale = 1f;
-        IsGamePaused = false;
-        LevelManager.Instance.StartMissionTimer();
     }
 
     public void PauseGame()

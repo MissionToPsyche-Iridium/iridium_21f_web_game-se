@@ -35,20 +35,17 @@ public class MissionState
 
     public void UpdateObjectiveProgress(ObjectiveType type, int amount)
     {
-        Debug.Log($"Updating progress for {type}: {amount}");
         foreach (var obj in Objectives)
         {
             if (obj.objectiveType == type)
             {
                 obj.IncrementProgress(amount);
-                Debug.Log($"Updated Objective: {obj.description} ({obj.currentProgress}/{obj.targetAmount})");
             }
         }
         bool gasComplete = Objectives.Exists(obj => obj.objectiveType == ObjectiveType.CollectGases && obj.isCompleted);
         bool metalComplete = Objectives.Exists(obj => obj.objectiveType == ObjectiveType.CollectRareMetals && obj.isCompleted);
 
         IsMissionComplete = gasComplete && metalComplete;
-        Debug.Log("Is mission complete: " + IsMissionComplete);
     }
 
     public int GetObjectiveProgress(ObjectiveType type)

@@ -17,34 +17,34 @@ using UnityEngine;
 public class AttributeTracker : MonoBehaviour
 {
 
-    private Dictionary<string, int> attributes = new Dictionary<string, int>();
+    private ProbeAttributeTotals attributeTotals;
     private BuildManager buildManager;
 
     public void UpdateChildAttributes()
     {
-        attributes = buildManager.CalculateAttributeTotals();
+        attributeTotals = buildManager.CalculateAttributeTotals();
         Transform[] ts = gameObject.transform.GetComponentsInChildren<Transform>();
         foreach (Transform t in ts)
         {
             switch (t.name)
             {
                 case "ScanRangeVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["ScanningRange"].ToString();
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange).ToString();
                     break;
-                case "FuelCapacityVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["FuelCapacity"].ToString();
+                case "FuelVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity).ToString();
                     break;
                 case "SpeedVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Speed"].ToString();
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed).ToString();
                     break;
                 case "ArmorVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Armor"].ToString();
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor).ToString();
                     break;
-                case "HpVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Hp"].ToString();
+                case "HPVal":
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp).ToString();
                     break;
                 case "WeightVal":
-                    t.GetComponent<TextMeshProUGUI>().text = attributes["Weight"].ToString();
+                    t.GetComponent<TextMeshProUGUI>().text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Weight).ToString();
                     break;
                 case "AvailableCredits":
                     t.GetComponent<TextMeshProUGUI>().text = buildManager.GetAvailableCredits().ToString();

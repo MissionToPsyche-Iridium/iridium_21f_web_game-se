@@ -41,6 +41,12 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         if (_containerManager.IsReadyToSave())
         {
             ContainerGameData.Instance.saveProbeDesign();
+
+            Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
+
+            Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
+            notification.SetImage(probeSprite);
+            notification.SetMessage("Successfully saved probe");
         }
         else
         {
