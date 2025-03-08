@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 /**
  * Snapshot.cs
@@ -13,39 +14,47 @@ public class Snapshot
 {
     private static int _layer = LayerMask.NameToLayer("Snapshot");
 
-    private RectTransform _target;
+    private Canvas _target;
 
-    public Snapshot(RectTransform target)
+    public Snapshot(Canvas target)
     {
         _target = target;
     }
 
     public Sprite Take()
     {
+        RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 32);
+
+        Camera originalCamera = _target.rootCanvas.worldCamera;
+
+        Camera camera = GameObject.Instantiate(originalCamera).GetComponent<Camera>();
+        camera.backgroundColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+        camera.cullingMask = 1 << _layer;
+        camera.targetTexture = renderTexture;
+
+        camera.gameObject.name = "SnapshotCamera";
+        camera.gameObject.GetComponent<UniversalAdditionalCameraData>().renderPostProcessing = false;
+
         int originalLayer = _target.gameObject.layer;
         _target.gameObject.layer = _layer;
+        
+        _target.rootCanvas.worldCamera = camera;
 
-        int originalMask = Camera.main.cullingMask;
-        Camera.main.cullingMask = 1 << _layer;
-
-        RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
-        Camera.main.targetTexture = renderTexture;
-
-        Camera.main.Render();
+        camera.Render();
 
         Vector3[] worldCorners = new Vector3[4];
-        _target.GetWorldCorners(worldCorners);
+        _target.gameObject.GetComponent<RectTransform>().GetWorldCorners(worldCorners);
 
         Vector3[] corners = new Vector3[4];
         for (int i = 0; i < corners.Length; i++)
         {
-            corners[i] = Camera.main.WorldToScreenPoint(worldCorners[i]);
+            corners[i] = camera.WorldToScreenPoint(worldCorners[i]);
         }
 
         int width = (int) (corners[2].x - corners[0].x),
             height = (int) (corners[2].y - corners[0].y);
 
-        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        Texture2D texture = new Texture2D(width, height, TextureFormat.ARGB32, false);
 
         RenderTexture previousRenderTexture = RenderTexture.active;
         RenderTexture.active = renderTexture;
@@ -59,8 +68,10 @@ public class Snapshot
 
         _target.gameObject.layer = originalLayer;
 
-        Camera.main.cullingMask = originalMask;
-        Camera.main.targetTexture = null;
+        _target.rootCanvas.worldCamera = originalCamera;
+
+        GameObject.Destroy(camera.gameObject);
+        Object.Destroy(renderTexture);
 
         return sprite;
     }
