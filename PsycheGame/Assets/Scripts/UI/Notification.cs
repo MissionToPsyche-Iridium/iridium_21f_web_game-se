@@ -16,7 +16,11 @@ public class Notification : MonoBehaviour
 
     public void SetImage(Sprite sprite)
     {
-        _image.GetComponent<Image>().sprite = sprite;
+        Image image = _image.GetComponent<Image>();
+        image.sprite = sprite;
+        image.type = Image.Type.Simple;
+        image.preserveAspect = true;
+
         _image.SetActive(true);
 
         Rebuild();
@@ -25,6 +29,7 @@ public class Notification : MonoBehaviour
     public void SetMessage(string message)
     {
         _messageField.GetComponent<TextMeshProUGUI>().text = message;
+
         _messageField.SetActive(true);
 
         Rebuild();
