@@ -11,8 +11,8 @@ public class Initializer : MonoBehaviour
     public void Awake()
     {
         List<Tuple<ProbeComponent, int>> startingInventory = new List<Tuple<ProbeComponent, int>>();
-        InventoryConfigEntry[] entries = JsonParser.FromJsonArray<InventoryConfigEntry>(_probeComponentInventoryConfig.text);
-        foreach (ProbeComponent probeComponent in JsonParser.FromJsonArray<ProbeComponent>(_probeComponentConfig.text))
+        InventoryConfigEntry[] entries = JsonUtilityWrapper.FromJsonArray<InventoryConfigEntry>(_probeComponentInventoryConfig.text);
+        foreach (ProbeComponent probeComponent in JsonUtilityWrapper.FromJsonArray<ProbeComponent>(_probeComponentConfig.text))
         {
             foreach (InventoryConfigEntry entry in entries)
             {

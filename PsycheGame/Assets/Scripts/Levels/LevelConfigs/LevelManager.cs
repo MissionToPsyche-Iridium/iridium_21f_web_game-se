@@ -179,7 +179,7 @@ private IEnumerator LoadLevelAsync(bool success)
         }
 
         ShipManager.ResetShip();
-        ShipConfig shipConfig = levels[currentLevelIndex].levelShipConfig;
+        ShipConfig shipConfig = null;
         if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
         } else {

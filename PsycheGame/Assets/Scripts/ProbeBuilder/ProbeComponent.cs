@@ -5,6 +5,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+public enum ProbeComponentAttribute
+{
+    ScanningRange,
+    FuelCapacity,
+    Speed,
+    Armor,
+    Hp,
+    Weight
+}
+
 public enum ProbeComponentType
 {
     Standard,
@@ -49,5 +59,26 @@ public class ProbeComponent
         Credits = credits;
         GridPositionX = gridPositionX;
         GridPositionY = gridPositionY;
+    }
+
+    public int GetAttributeValue(ProbeComponentAttribute attribute)
+    {
+        switch (attribute)
+        {
+            case ProbeComponentAttribute.ScanningRange:
+                return ScanningRange;
+            case ProbeComponentAttribute.FuelCapacity:
+                return FuelCapacity;
+            case ProbeComponentAttribute.Speed:
+                return Speed;
+            case ProbeComponentAttribute.Armor:
+                return Armor;
+            case ProbeComponentAttribute.Hp:
+                return Hp;
+            case ProbeComponentAttribute.Weight:
+                return Weight;
+            default:
+                return 0;
+        }
     }
 }

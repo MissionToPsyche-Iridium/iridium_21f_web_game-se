@@ -117,34 +117,16 @@ public class BuildManager : MonoBehaviour
         }
     }
 
-    public Dictionary<string, int> CalculateAttributeTotals()
+    public ProbeAttributeTotals CalculateAttributeTotals()
     {
-        int totalScanningRange = 0,
-            totalFuelCapacity = 0,
-            totalSpeed = 0,
-            totalArmor = 0,
-            totalHp = 0,
-            totalWeight = 0;
-
+        ProbeAttributeTotals totals = new ProbeAttributeTotals();
         foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
         {
-            totalScanningRange += tuple.Item1.ScanningRange;
-            totalFuelCapacity += tuple.Item1.FuelCapacity;
-            totalSpeed += tuple.Item1.Speed;
-            totalArmor += tuple.Item1.Armor;
-            totalHp += tuple.Item1.Hp;
-            totalWeight += tuple.Item1.Weight;
+            foreach (ProbeComponentAttribute attribute in Enum.GetValues(typeof(ProbeComponentAttribute)))
+            {
+                totals.AddToAttributeTotal(attribute, tuple.Item1.GetAttributeValue(attribute));
+            }
         }
-
-        Dictionary<string, int> totals = new Dictionary<string, int>();
-
-        totals.Add("ScanningRange", totalScanningRange);
-        totals.Add("FuelCapacity", totalFuelCapacity);
-        totals.Add("Speed", totalSpeed);
-        totals.Add("Armor", totalArmor);
-        totals.Add("Hp", totalHp);
-        totals.Add("Weight", totalWeight);
-
         return totals;
     }
 

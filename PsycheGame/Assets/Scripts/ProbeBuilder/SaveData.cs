@@ -15,7 +15,7 @@ public class SaveData
         foreach (GameObject part in spawnedParts) {
             ProbeComponent component = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetProbeComponentInfo(part);
             //content += component.Name + "\n"; // Add each GameObject name to the string
-            content += JsonParser.ToJson(component);
+            content += JsonUtilityWrapper.ToJson(component);
             count++;
             if(count != spawnedParts.Count) {
                 content += ",";
