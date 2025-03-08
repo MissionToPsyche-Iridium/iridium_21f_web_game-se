@@ -19,28 +19,25 @@ public class DesignInventory : MonoBehaviour
     {
         //createTestDesigns();
         designs = ContainerGameData.Instance.getDesigns();
-
+        Debug.Log("designs count: " + designs.Count);
         foreach(ProbeDesign design in designs) {
-            Debug.Log("totals: " + design.attributeTotalsJson);
-            Dictionary<string, string> totals = JsonParser.FromJson<Dictionary<string, string>>(design.attributeTotalsJson);
             
-            GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
-            uiDesignObject.transform.SetParent(GameObject.Find("Viewport").transform);
-            GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = totals["ScanningRange"];
-
+            Debug.Log("design name: " + design.name);
+            Debug.Log("design parts: " + design.partsJson);
+            Debug.Log("totals: " + design.attributeTotalsJson);
+            
+            // Dictionary<string, string> totals = JsonParser.FromJson<Dictionary<string, string>>(design.attributeTotalsJson);
+            // GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+            // uiDesignObject.transform.SetParent(GameObject.Find("Viewport").transform);
+            // GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
+            // GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = totals["ScanningRange"];
+            //GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = testSprite.name;
+            //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
         }
 
-        //GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = testSprite.name;
-        //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //designs = ContainerGameData.Instance.getDesigns();
-    }
 
     // private void createTestDesigns() {
     //     testDesigns = new List<ProbeDesign>();

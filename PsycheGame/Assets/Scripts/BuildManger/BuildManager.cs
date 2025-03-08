@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 /**
  * BuildManager.cs
  * 
@@ -148,11 +149,6 @@ public class BuildManager : MonoBehaviour
         return totals;
     }
 
-    public String getAttributeTotalsJson(Dictionary<String, int> totals) {
-        //Hannah- 3/6/2025 still working on connecting this and loading it into the probe design browser
-        String totalsJson = JsonParser.ToJson(totals);
-        return totalsJson;
-    }
 
     public float GetAvailableCredits()
     {
