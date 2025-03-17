@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,44 +10,49 @@ using UnityEngine.UI;
 public class DesignInventory : MonoBehaviour
 {
     public List<ProbeDesign> designs;
+    private int index;
+    private int maxIndex;
 
-    //private List<ProbeDesign> testDesigns;
-    
-    //public List<Sprite> testSprites;
-
-    // Start is called before the first frame update
     void Start()
     {
-        //createTestDesigns();
+        Debug.Log("Loading list of designs");
         designs = ContainerGameData.Instance.getDesigns();
-        Debug.Log("designs count: " + designs.Count);
-        foreach(ProbeDesign design in designs) {
-            
-            Debug.Log("design name: " + design.name);
-            Debug.Log("design parts: " + design.partsJson);
-            Debug.Log("totals: " + design.attributeTotalsJson);
-            
-            // Dictionary<string, string> totals = JsonParser.FromJson<Dictionary<string, string>>(design.attributeTotalsJson);
-            // GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
-            // uiDesignObject.transform.SetParent(GameObject.Find("Viewport").transform);
-            // GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            // GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = totals["ScanningRange"];
-            //GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = testSprite.name;
-            //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
-        }
+        Debug.Log("Loading design at index 0");
+        index = 0;
+        maxIndex = designs.Count;
+        loadDesign(index);
+    }
 
-        
+    public void loadDesign(int index) {
+        Debug.Log("Loading design at index: " + index);
+        var design = designs[index];
+        GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = design.sprite;
+        GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Hp;
+        GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
+        GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
+        GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
+        //GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
+
+    }
+
+    public void nextDesign() {
+        Debug.Log("Getting next design");
+        if(index < maxIndex) {
+            index++;
+        }
+        loadDesign(index);
+
+    }
+
+    public void backDesign() {
+        Debug.Log("Getting previous design");
+        if(index > 0) {
+            index--;
+        }
+        loadDesign(index);
     }
 
 
-    // private void createTestDesigns() {
-    //     testDesigns = new List<ProbeDesign>();
-    //     int num = 1;
-    //     foreach(Sprite sprite in testSprites) {
-    //         ProbeDesign pd = new ProbeDesign(sprite, "Ship " + num, "", new List<GameObject>());
-    //         testDesigns.Add(pd);
-    //     }
-
-
-    // }
 }
