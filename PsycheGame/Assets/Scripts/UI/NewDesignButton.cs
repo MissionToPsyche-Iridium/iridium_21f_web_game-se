@@ -8,17 +8,18 @@ using Unity.VisualScripting;
 
 public class NewDesignButton : MonoBehaviour, IPointerClickHandler
 {
-   private AudioClip _swooshSound;
+    private AudioClip _swooshSound;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
         _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
-        this.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         SceneManager.LoadScene("ProbeBuilder");
-        GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
+        _audioSource.PlayOneShot(_swooshSound, 1.0f);
     }
 }

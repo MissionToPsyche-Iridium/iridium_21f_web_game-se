@@ -1,0 +1,11 @@
+{
+    "name": "Scripts",
+    "references": [
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.2D.Tilemap.Editor",
+        "UnityEngine.CoreModule"
+    ]
+}

@@ -217,7 +217,7 @@ public class ContainerManager : MonoBehaviour
                     newTile.name = $"Tile {x} {y}";
                     newTile.tag = "tile";
 
-                    var rigidbody2D = newTile.AddComponent<Rigidbody2D>();
+                    var rigidbody2D = newTile.gameObject.AddComponent<Rigidbody2D>();
                     rigidbody2D.gravityScale = 0;
 
                     var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
