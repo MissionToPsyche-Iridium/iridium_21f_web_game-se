@@ -11,11 +11,16 @@ using UnityEngine.UI;
     revision 1.3 (Mar 5)
     :: updated the attribute panel to display a bar for each attribute the represent the relative value to the max value.  Included
     gradient color to represent the value of the attribute.
+
+    revision 1.4 (Mar 17)
+    :: updated the code base using the new ProbeAttributeTotals class to calculate the attribute totals. 
 */
+
 
 public class AttributeTracker : MonoBehaviour
 {
     private Dictionary<string, int> attributes = new Dictionary<string, int>();
+    private ProbeAttributeTotals attributeTotals;
     private BuildManager buildManager;
     private ContainerManager containerManager;
 
@@ -46,44 +51,45 @@ public class AttributeTracker : MonoBehaviour
 
     public void UpdateChildAttributes()
     {
-        attributes = buildManager.CalculateAttributeTotals();
+        attributeTotals = buildManager.CalculateAttributeTotals();
         var transforms = gameObject.GetComponentsInChildren<Transform>();
         var gradientColor = attributeColor;
+        attributeTotals = buildManager.CalculateAttributeTotals();
 
         foreach (var t in transforms)
         {
             var textComponent = t.GetComponent<TextMeshProUGUI>();
-            var imageComponent = t.GetComponent<UnityEngine.UI.Image>();
+            var imageComponent = t.GetComponent<Image>();
             var rectTransform = t.GetComponent<RectTransform>();
 
             switch (t.name)
             {
                 case "HealthVal":
-                    textComponent.text = (attributes["Hp"] + attributes["Armor"]).ToString();
+                    textComponent.text = (attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor)).ToString();
                     break;
                 case "FuelVal":
-                    textComponent.text = attributes["FuelCapacity"].ToString();
+                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity).ToString();
                     break;
                 case "ThrusterVal":
-                    textComponent.text = attributes["Speed"].ToString();
+                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed).ToString();
                     break;
                 case "ScannerVal":
-                    textComponent.text = attributes["ScanningRange"].ToString();
+                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange).ToString();
                     break;
                 case "Credits":
                     textComponent.text = buildManager.GetAvailableCredits().ToString();
                     break;
                 case "HealthFill":
-                    UpdateFill(imageComponent, rectTransform, attributes["Hp"] + attributes["Armor"], maxValues["Hp"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor), maxValues["Hp"] + maxValues["Armor"]);
                     break;
                 case "FuelFill":
-                    UpdateFill(imageComponent, rectTransform, attributes["FuelCapacity"], maxValues["FuelCapacity"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity), maxValues["FuelCapacity"]);
                     break;
                 case "ThrusterFill":
-                    UpdateFill(imageComponent, rectTransform, attributes["Speed"], maxValues["Speed"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed), maxValues["Speed"]);
                     break;
                 case "ScanFill":
-                    UpdateFill(imageComponent, rectTransform, attributes["ScanningRange"], maxValues["ScanningRange"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange), maxValues["ScanningRange"]);
                     break;
                 default:
                     break;
