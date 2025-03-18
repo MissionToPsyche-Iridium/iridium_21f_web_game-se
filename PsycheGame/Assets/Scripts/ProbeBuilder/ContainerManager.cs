@@ -20,6 +20,9 @@ using UnityEngine.Rendering.Universal;
 	version: 1.2 (Feb 13)
 	:: enhanced code to handle color scheme change from the builder scene CONTROL setting (toggle).  additionally, 
 	updated the code with the ability to render the tile without loading from the START scene.
+
+    version: 1.3 (Mar 5)
+    :: updated the code to use the TileColorScheme class to set the color scheme for the attribute panel bars.
 */
 
 class GridPositionData
@@ -90,7 +93,7 @@ public class ContainerManager : MonoBehaviour
         return null;
     }
 
-	private bool profileUpdate()
+	private bool ProfileUpdate()
 	{
 		int profile;
 		try {
@@ -110,12 +113,17 @@ public class ContainerManager : MonoBehaviour
 
 	public void UpdateColorScheme()
 	{
-		if (profileUpdate())
+		if (ProfileUpdate())
 		{
 			colorScheme = this.GetColorScheme();
 			updateColorScheme();
 		}
 	}
+
+    public Color GetAttribBarColor()
+    {
+        return colorScheme.GetAttribBarColor();
+    }
 
 	public void SetColorScheme(int colorScheme)
 	{
@@ -138,7 +146,7 @@ public class ContainerManager : MonoBehaviour
 
 	public (Color, Color, Color, Color) GetTileColors()
 	{
-		if (profileUpdate())
+		if (ProfileUpdate())
 		{
 			colorScheme = this.GetColorScheme();
 			updateColorScheme();
@@ -174,7 +182,7 @@ public class ContainerManager : MonoBehaviour
         volume.profile.TryGet<ColorAdjustments>(out var colorAdjustments);
         colorAdjustments.colorFilter.overrideState = true;
         colorAdjustments.postExposure.overrideState = true;
-        colorAdjustments.postExposure.value = colorScheme.exposure;
+        colorAdjustments.postExposure.value = colorScheme.Exposure;
         colorAdjustments.colorFilter.value = colorScheme.BaseSceneColor;
     }
 
