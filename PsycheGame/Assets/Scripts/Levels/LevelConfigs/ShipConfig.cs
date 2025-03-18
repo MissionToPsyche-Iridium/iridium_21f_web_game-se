@@ -4,8 +4,7 @@ using UnityEngine;
 // some configs for the level manager we keep these all in once place
 // so integration with the ship builder has single refrence to ship
 // variables.
-[CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 1)]
-public class ShipConfig : ScriptableObject 
+public class ShipConfig : MonoBehaviour 
 {
     [System.Serializable]
     public record TetherConfig
@@ -46,7 +45,13 @@ public class ShipConfig : ScriptableObject
         public float bostChangeRate;
     }
 
-    public TetherConfig tetherConfig = new();
-    public ScanConfig scanConfig = new();
-    public ShipMovementConfig shipMoveConfig= new();
+    public void Awake() {
+        tetherConfig= new TetherConfig();
+        shipMoveConfig= new ShipMovementConfig();
+        scanConfig= new ScanConfig();
+    }
+
+    public TetherConfig tetherConfig;
+    public ScanConfig scanConfig;
+    public ShipMovementConfig shipMoveConfig;
 }

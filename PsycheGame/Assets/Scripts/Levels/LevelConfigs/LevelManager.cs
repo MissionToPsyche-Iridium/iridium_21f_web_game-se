@@ -76,6 +76,11 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1f;
         isPaused = false;
         StartMissionTimer();
+
+        // here we configure the ship based on the returned config
+        ShipConfig config = ShipConfigLoader.LoadBuilderConfig();
+        ShipManager.SetShipConfig(config);
+
     }
 
     private void InitializeByConfig(LevelConfig config){
