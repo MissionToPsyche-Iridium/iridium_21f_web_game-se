@@ -59,7 +59,7 @@ public class ShipManager : MonoBehaviour {
 
     public static void SetShipConfig(ShipConfig config)
     {
-        tetherLogic.initWithConfig(config.tetherConfig);
+        //tetherLogic.initWithConfig(config.tetherConfig);
         scanner.initWithConfig(config.scanConfig);
         moveLogic.initWithConfig(config.shipMoveConfig);
 

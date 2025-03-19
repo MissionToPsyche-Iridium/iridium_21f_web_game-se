@@ -4,10 +4,10 @@ using UnityEngine;
 // some configs for the level manager we keep these all in once place
 // so integration with the ship builder has single refrence to ship
 // variables.
-public class ShipConfig : MonoBehaviour 
+public class ShipConfig
 {
     [System.Serializable]
-    public record TetherConfig
+    public class TetherConfig
     {
         [Tooltip("The total number of line segments that make up the tether rendering")]
         public int resolution;
@@ -24,7 +24,7 @@ public class ShipConfig : MonoBehaviour
     }
 
     [System.Serializable]
-    public record ScanConfig
+    public class ScanConfig
     {
         [Tooltip("The distance at which objects can be scanned in the scene")]
         public float distance;
@@ -35,7 +35,7 @@ public class ShipConfig : MonoBehaviour
     }
 
     [System.Serializable]
-    public record ShipMovementConfig
+    public class ShipMovementConfig
     {
         public float fuel;
         public float health;
@@ -45,10 +45,10 @@ public class ShipConfig : MonoBehaviour
         public float bostChangeRate;
     }
 
-    public void Awake() {
-        tetherConfig= new TetherConfig();
-        shipMoveConfig= new ShipMovementConfig();
-        scanConfig= new ScanConfig();
+    public ShipConfig() {
+        tetherConfig = new TetherConfig();
+        shipMoveConfig = new ShipMovementConfig();
+        scanConfig = new ScanConfig();
     }
 
     public TetherConfig tetherConfig;

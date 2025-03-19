@@ -43,7 +43,8 @@ public class ShipConfigLoader : MonoBehaviour {
 
     public static ShipConfig LoadBuilderConfig()
     {
-        ShipConfig config = new();
+        ShipConfig config = new ShipConfig();
+        if (config == null) { Debug.LogError("failed to init");  }
         ProbeComponentList probeComponents = LoadBuilderSaveData();
 
         int totalScanRange = 0,

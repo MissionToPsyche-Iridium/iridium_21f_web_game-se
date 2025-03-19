@@ -79,8 +79,12 @@ public class LevelManager : MonoBehaviour
 
         // here we configure the ship based on the returned config
         ShipConfig config = ShipConfigLoader.LoadBuilderConfig();
-        ShipManager.SetShipConfig(config);
-
+        if (config == null) {
+            Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
+                "using default editor config to initalize ship parameters");
+        } else {
+            ShipManager.SetShipConfig(config);
+        }
     }
 
     private void InitializeByConfig(LevelConfig config){
