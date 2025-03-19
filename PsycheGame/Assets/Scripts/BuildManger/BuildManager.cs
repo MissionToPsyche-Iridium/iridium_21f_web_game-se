@@ -13,15 +13,23 @@ using UnityEngine.SceneManagement;
 
 public class BuildManager : MonoBehaviour
 {
-    private const float MaxCredits = 1000;
+    private const float MaxCredits = 1000.0f;
 
-    [SerializeField] private GameObject _player;
+    [SerializeField]
+    private TextAsset _maxProbeAttributeValuesConfig;
+
+    private MaxProbeAttributeValues _maxProbeAttributeValues;
+
+    [SerializeField]
+    private GameObject _player;
 
     private Inventory _inventory;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
     public void Start()
     {
+        _maxProbeAttributeValues = JsonUtilityWrapper.FromJson<MaxProbeAttributeValues>(_maxProbeAttributeValuesConfig.text);
+
         _inventory = _player.GetComponent<Player>().Inventory;
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();
         _undone = new List<Tuple<ProbeComponent, GameObject>>();
@@ -120,14 +128,20 @@ public class BuildManager : MonoBehaviour
     public ProbeAttributeTotals CalculateAttributeTotals()
     {
         ProbeAttributeTotals totals = new ProbeAttributeTotals();
-        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        foreach (ProbeComponentAttribute attribute in Enum.GetValues(typeof(ProbeComponentAttribute)))
         {
-            foreach (ProbeComponentAttribute attribute in Enum.GetValues(typeof(ProbeComponentAttribute)))
+            foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
             {
                 totals.AddToAttributeTotal(attribute, tuple.Item1.GetAttributeValue(attribute));
             }
+            totals.SetAttributeTotal(attribute, Math.Min(totals.GetAttributeTotal(attribute), GetAttributeMaxValue(attribute)));
         }
         return totals;
+    }
+
+    public int GetAttributeMaxValue(ProbeComponentAttribute attribute)
+    {
+        return _maxProbeAttributeValues.GetAttributeMaxValue(attribute);
     }
 
     public float GetAvailableCredits()
@@ -138,5 +152,30 @@ public class BuildManager : MonoBehaviour
             creditsUsed += tuple.Item1.Credits;
         }
         return MaxCredits - creditsUsed;
+    }
+
+    [Serializable]
+    private class MaxProbeAttributeValues
+    {
+        public int Hp, Armor, FuelCapacity, Speed, ScanningRange;
+
+        public int GetAttributeMaxValue(ProbeComponentAttribute attribute)
+        {
+            switch (attribute)
+            {
+                case ProbeComponentAttribute.ScanningRange:
+                    return ScanningRange;
+                case ProbeComponentAttribute.FuelCapacity:
+                    return FuelCapacity;
+                case ProbeComponentAttribute.Speed:
+                    return Speed;
+                case ProbeComponentAttribute.Armor:
+                    return Armor;
+                case ProbeComponentAttribute.Hp:
+                    return Hp;
+                default:
+                    return (int) 1e9;
+            }
+        }
     }
 }
