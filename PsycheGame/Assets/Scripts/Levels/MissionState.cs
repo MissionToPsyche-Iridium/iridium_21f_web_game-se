@@ -12,7 +12,6 @@ public class MissionState
         {
             if (instance == null)
             {
-                Debug.Log("New MissionState initialized");
                 instance = new MissionState();
             }
             return instance;

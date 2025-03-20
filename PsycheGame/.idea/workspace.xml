@@ -31,7 +31,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "US#296__DesignBrowser",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/river/VS/capstone/iridium_21f_web_game-se/PsycheGame",
     "node.js.detected.package.eslint": "true",
@@ -63,8 +63,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.300" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.300" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
       </set>
     </attachedChunks>
   </component>
@@ -80,6 +80,7 @@
       <workItem from="1737922352619" duration="654000" />
       <workItem from="1738451162264" duration="586000" />
       <workItem from="1742336568102" duration="928000" />
+      <workItem from="1742507307243" duration="133000" />
     </task>
     <servers />
   </component>
@@ -97,7 +98,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="level-manager-test" />
                       </list>
                     </value>
                   </entry>
