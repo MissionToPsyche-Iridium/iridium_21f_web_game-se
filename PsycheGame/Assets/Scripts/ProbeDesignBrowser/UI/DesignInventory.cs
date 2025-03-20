@@ -37,12 +37,24 @@ public class DesignInventory : MonoBehaviour
 
     }
 
+    public void loadEmpty() {
+        GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        GameObject.Find("DesignImage").GetComponentInChildren<Image>().enabled = false;
+        GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = "No Saved Designs";
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: ";
+        GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: ";
+        GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: ";
+        GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: ";
+
+    }
+
     public void nextDesign() {
         Debug.Log("Getting next design");
-        if(index < maxIndex) {
+        if(index < maxIndex-1 && maxIndex != 0) {
             index++;
+            loadDesign(index);
         }
-        loadDesign(index);
+       
 
     }
 
@@ -50,8 +62,28 @@ public class DesignInventory : MonoBehaviour
         Debug.Log("Getting previous design");
         if(index > 0) {
             index--;
+            loadDesign(index);
         }
-        loadDesign(index);
+    }
+
+    public void deleteShipDesign() {
+        if(maxIndex > 1) {
+            Debug.Log("Deleting design at index: " + index);
+            ContainerGameData.Instance.deleteDesign(index);
+            designs = ContainerGameData.Instance.getDesigns();
+            index = 0;
+            maxIndex = designs.Count;
+            loadDesign(index);
+        }
+        else {
+            Debug.Log("Design list is empty.");
+            loadEmpty();
+        }
+        
+    }
+
+    public void selectShipDesign() {
+        //load design info to game data json
     }
 
 

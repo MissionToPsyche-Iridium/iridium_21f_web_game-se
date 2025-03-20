@@ -70,4 +70,8 @@ public sealed class ContainerGameData
         return probeDesigns;
     }
 
+    public void deleteDesign(int index) {
+        probeDesigns.RemoveAt(index);
+    }
+
 }
