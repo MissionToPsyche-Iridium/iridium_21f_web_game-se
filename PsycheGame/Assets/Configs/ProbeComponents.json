@@ -220,6 +220,7 @@
           {
             "Id":"PC14",
             "Name": "Gas Detector",
+            "MountType": 2,
             "Description": "This sensor detects gas that can be collected.",
             "ScanningRange":5,
             "FuelCapacity":0,
@@ -234,6 +235,7 @@
           {
             "Id":"PC15",
             "Name": "Drill",
+            "MountType": 2,
             "Description": "This instrument is used for mining objects in space.",
             "ScanningRange":0,
             "FuelCapacity":0,
