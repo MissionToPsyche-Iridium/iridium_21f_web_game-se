@@ -45,13 +45,7 @@ public class ShipConfig
         public float bostChangeRate;
     }
 
-    public ShipConfig() {
-        tetherConfig = new TetherConfig();
-        shipMoveConfig = new ShipMovementConfig();
-        scanConfig = new ScanConfig();
-    }
-
-    public TetherConfig tetherConfig;
-    public ScanConfig scanConfig;
-    public ShipMovementConfig shipMoveConfig;
+    public TetherConfig tetherConfig = new TetherConfig();
+    public ScanConfig scanConfig = new ScanConfig();
+    public ShipMovementConfig shipMoveConfig = new ShipMovementConfig();
 }

@@ -4,38 +4,32 @@ using UnityEngine;
 public class ShipManager : MonoBehaviour {
     private static ShipManager instance;
     public static readonly string _SHIP_GAMEOBJECT_NAME = "Ship";
+
     private void Awake() {
-        if (instance != null && instance != this)
+        instance = this;
+        _obj = GameObject.Find(_SHIP_GAMEOBJECT_NAME);
+        if (_obj == null)
         {
-            Destroy(this.gameObject);
+            Debug.LogError("Failed to find 'Ship' game object in scene");
+            return;
         }
-        else
+
+        if (!_obj.TryGetComponent<ShipTetherLogic>(out tetherLogic))
         {
-            instance = this;
-            _obj = GameObject.Find(_SHIP_GAMEOBJECT_NAME);
-            if (_obj == null)
-            {
-                Debug.LogError("Failed to find 'Ship' game object in scene");
-                return;
-            }
+            Debug.LogError("Failed to find 'ShipTetherLogic' script on ship");
+            return;
+        }
 
-            if (!_obj.TryGetComponent<ShipTetherLogic>(out tetherLogic))
-            {
-                Debug.LogError("Failed to find 'ShipTetherLogic' script on ship");
-                return;
-            }
+        if (!_obj.TryGetComponent<ShipScanBehavior>(out scanner))
+        {
+            Debug.LogError("Failed to find 'ShipScanner' script on ship");
+            return;
+        }
 
-            if (!_obj.TryGetComponent<ShipScanBehavior>(out scanner))
-            {
-                Debug.LogError("Failed to find 'ShipScanner' script on ship");
-                return;
-            }
-
-            if (!_obj.TryGetComponent<ShipMovement>(out moveLogic))
-            {
-                Debug.LogError("Failed to find 'ShipMovement' script on ship");
-                return;
-            }
+        if (!_obj.TryGetComponent<ShipMovement>(out moveLogic))
+        {
+            Debug.LogError("Failed to find 'ShipMovement' script on ship");
+            return;
         }
     }
 
@@ -59,7 +53,7 @@ public class ShipManager : MonoBehaviour {
 
     public static void SetShipConfig(ShipConfig config)
     {
-        //tetherLogic.initWithConfig(config.tetherConfig);
+        tetherLogic.initWithConfig(config.tetherConfig);
         scanner.initWithConfig(config.scanConfig);
         moveLogic.initWithConfig(config.shipMoveConfig);
 
