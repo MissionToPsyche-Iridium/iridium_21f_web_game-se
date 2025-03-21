@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,44 +10,81 @@ using UnityEngine.UI;
 public class DesignInventory : MonoBehaviour
 {
     public List<ProbeDesign> designs;
+    private int index;
+    private int maxIndex;
 
-    //private List<ProbeDesign> testDesigns;
-    
-    //public List<Sprite> testSprites;
-
-    // Start is called before the first frame update
     void Start()
     {
-        //createTestDesigns();
+        Debug.Log("Loading list of designs");
         designs = ContainerGameData.Instance.getDesigns();
+        Debug.Log("Loading design at index 0");
+        index = 0;
+        maxIndex = designs.Count;
+        loadDesign(index);
+    }
 
-        foreach(ProbeDesign design in designs) {
-            GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
-            uiDesignObject.transform.SetParent(GameObject.Find("DesignContent").transform);
-            uiDesignObject.GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            uiDesignObject.GetComponentInChildren<Image>().sprite = design.sprite;
+    public void loadDesign(int index) {
+        Debug.Log("Loading design at index: " + index);
+        var design = designs[index];
+        GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = design.sprite;
+        GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Hp;
+        GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
+        GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
+        GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
+        //GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
 
+    }
+
+    public void loadEmpty() {
+        GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        GameObject.Find("DesignImage").GetComponentInChildren<Image>().enabled = false;
+        GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = "No Saved Designs";
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: ";
+        GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: ";
+        GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: ";
+        GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: ";
+
+    }
+
+    public void nextDesign() {
+        Debug.Log("Getting next design");
+        if(index < maxIndex-1 && maxIndex != 0) {
+            index++;
+            loadDesign(index);
         }
+       
 
-        //GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = testSprite.name;
-        //GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = testSprite; 
+    }
+
+    public void backDesign() {
+        Debug.Log("Getting previous design");
+        if(index > 0) {
+            index--;
+            loadDesign(index);
+        }
+    }
+
+    public void deleteShipDesign() {
+        if(maxIndex > 1) {
+            Debug.Log("Deleting design at index: " + index);
+            ContainerGameData.Instance.deleteDesign(index);
+            designs = ContainerGameData.Instance.getDesigns();
+            index = 0;
+            maxIndex = designs.Count;
+            loadDesign(index);
+        }
+        else {
+            Debug.Log("Design list is empty.");
+            loadEmpty();
+        }
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        designs = ContainerGameData.Instance.getDesigns();
+    public void selectShipDesign() {
+        //load design info to game data json
     }
 
-    // private void createTestDesigns() {
-    //     testDesigns = new List<ProbeDesign>();
-    //     int num = 1;
-    //     foreach(Sprite sprite in testSprites) {
-    //         ProbeDesign pd = new ProbeDesign(sprite, "Ship " + num, "", new List<GameObject>());
-    //         testDesigns.Add(pd);
-    //     }
 
-
-    // }
 }
