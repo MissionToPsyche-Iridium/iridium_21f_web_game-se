@@ -5,6 +5,15 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/*
+    Probe Builder :: ProbeComponent.cs
+    Date: Mar 20, 2025
+    Description: this script defines the probe component class and its attributes. It also contains the enums for the probe component attributes, types, and classes.
+
+    version 1.1 (Mar 20, 2025)
+    :: updated the ProbeComponentClass enum type for 'MountType' attribute
+
+*/
 public enum ProbeComponentAttribute
 {
     ScanningRange,
@@ -22,11 +31,18 @@ public enum ProbeComponentType
     Sensor
 }
 
+public enum ProbeComponentMountType
+{
+    Interior,
+    Exterior
+}
+
 [Serializable]
 public class ProbeComponent
 {
     public string Id, Name, Description;
     public ProbeComponentType Type;
+    public ProbeComponentMountType MountType;
     public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, GridPositionX, GridPositionY;
     public float Credits;
 
@@ -35,6 +51,7 @@ public class ProbeComponent
         string name,
         string description,
         ProbeComponentType type,
+        ProbeComponentMountType mountType,
         int scanningRange,
         int fuelCapacity,
         int speed,
@@ -50,6 +67,7 @@ public class ProbeComponent
         Name = name;
         Description = description;
         Type = type;
+        MountType = mountType;
         ScanningRange = scanningRange;
         FuelCapacity = fuelCapacity;
         Speed = speed;
@@ -59,6 +77,11 @@ public class ProbeComponent
         Credits = credits;
         GridPositionX = gridPositionX;
         GridPositionY = gridPositionY;
+    }
+
+    public ProbeComponentMountType GetMountType()
+    {
+        return MountType;
     }
 
     public int GetAttributeValue(ProbeComponentAttribute attribute)
