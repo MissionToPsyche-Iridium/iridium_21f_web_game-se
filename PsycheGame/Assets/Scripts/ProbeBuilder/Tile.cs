@@ -48,8 +48,10 @@ public class Tile : MonoBehaviour
         cellY = y;
         xPosition = xP;
         yPosition = yP;
-        render.color = isOffset ? color1 : color2;
-        defaultColor = render.color;
+
+        Color color = isOffset ? color1 : color2;
+        gameObject.GetComponent<Image>().color = color;
+        defaultColor = color;
     }
 
     public int GetCellX()
@@ -80,16 +82,16 @@ public class Tile : MonoBehaviour
         (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
         if (occupied != String.Empty) {
-            gameObject.GetComponent<SpriteRenderer>().color = occupiedTileColor;
+            gameObject.GetComponent<Image>().color = occupiedTileColor;
         }
         else
         {
-            gameObject.GetComponent<SpriteRenderer>().color = openTileColor;
+            gameObject.GetComponent<Image>().color = openTileColor;
         }
     }
 
     void OnMouseExit()
     {
-        gameObject.GetComponent<SpriteRenderer>().color = defaultColor;
+        gameObject.GetComponent<Image>().color = defaultColor;
     }
 }
