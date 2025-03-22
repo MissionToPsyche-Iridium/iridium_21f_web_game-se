@@ -42,13 +42,17 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
         if (_containerManager.IsReadyToSave())
         {
-            ContainerGameData.Instance.saveProbeDesign();
+            Boolean saved = ContainerGameData.Instance.saveProbeDesign();
 
             Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
 
             Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
             notification.SetImage(probeSprite);
-            notification.SetMessage("Successfully saved probe");
+            if(saved) {notification.SetMessage("Successfully saved probe");
+            } 
+            else {
+                notification.SetMessage("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
+            }
         }
         else
         {
