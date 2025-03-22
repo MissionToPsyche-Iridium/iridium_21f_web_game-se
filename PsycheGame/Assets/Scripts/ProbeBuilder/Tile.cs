@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 
 /*
@@ -25,7 +26,7 @@ using UnityEngine.UI;
 */
 
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Color color1;
     [SerializeField] private Color color2;
@@ -77,7 +78,7 @@ public class Tile : MonoBehaviour
         return (cellX, cellY);
     }
 
-    void OnMouseEnter()
+    public void OnPointerEnter(PointerEventData eventData)
     {
         (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
         String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
@@ -90,7 +91,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    void OnMouseExit()
+    public void OnPointerExit(PointerEventData eventData)
     {
         gameObject.GetComponent<Image>().color = defaultColor;
     }
