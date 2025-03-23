@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7558e86a-6914-4eb2-99d0-072eb6ceb7c7" name="Changes" comment="">
-      <changelist_data name="Forrest Cranmer" email="forrest.cranmer@proton.me" date="1738450265000" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ProbeDesignBrowser/PlayButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ProbeDesignBrowser/PlayButton.cs" afterDir="false" />
+      <changelist_data name="Forrest Cranmer" email="forrest.cranmer@proton.me" date="1738450265000" automatic="true" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +14,16 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="Mineral Collection Tests." />
+        <option name="rewordedMessage" value="Mineral Collection Tests." />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="26483f5c1adb02468b7be82d986fcd9b37f3204d" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -79,7 +86,6 @@
       <workItem from="1737913313450" duration="1944000" />
       <workItem from="1737922352619" duration="654000" />
       <workItem from="1738451162264" duration="586000" />
-      <workItem from="1742336568102" duration="928000" />
       <workItem from="1742507307243" duration="133000" />
     </task>
     <servers />
@@ -109,5 +115,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Mineral Collection Tests." />
+    <option name="LAST_COMMIT_MESSAGE" value="Mineral Collection Tests." />
   </component>
 </project>
