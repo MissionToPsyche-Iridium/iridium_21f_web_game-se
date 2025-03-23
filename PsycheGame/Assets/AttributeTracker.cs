@@ -26,28 +26,6 @@ public class AttributeTracker : MonoBehaviour
     private Dictionary<string, int> maxValues;
     private Color attributeColor;
 
-    private void LoadMaxValues()
-    {
-        string filePath = Path.Combine(Application.streamingAssetsPath, "maxValues.json");
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            maxValues = JsonUtility.FromJson<Dictionary<string, int>>(json);
-        }
-        else
-        {
-            Debug.LogError("++AT++ maxValues.json file not found. Using Default.");
-            maxValues = new Dictionary<string, int>
-            {
-                { "Hp", 177 },
-                { "Armor", 177 },
-                { "FuelCapacity", 68 },
-                { "Speed", 29 },
-                { "ScanningRange", 59 }
-            };
-        }
-    }
-
     public void UpdateChildAttributes()
     {
         attributeTotals = buildManager.CalculateAttributeTotals();
@@ -79,16 +57,16 @@ public class AttributeTracker : MonoBehaviour
                     textComponent.text = buildManager.GetAvailableCredits().ToString();
                     break;
                 case "HealthFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor), maxValues["Hp"] + maxValues["Armor"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Hp) + buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Armor));
                     break;
                 case "FuelFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity), maxValues["FuelCapacity"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.FuelCapacity));
                     break;
                 case "ThrusterFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed), maxValues["Speed"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Speed));
                     break;
                 case "ScanFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange), maxValues["ScanningRange"]);
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.ScanningRange));
                     break;
                 default:
                     break;
@@ -107,7 +85,6 @@ public class AttributeTracker : MonoBehaviour
 
     void Start()
     {
-        LoadMaxValues();      // load the max values for the attributes (maxValues.json)
         buildManager = GameObject.Find("MasterCanvas").GetComponent<BuildManager>();
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         attributeColor = containerManager.GetAttribBarColor();

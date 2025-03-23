@@ -9,6 +9,8 @@ public class StartMenu : MonoBehaviour, IPointerDownHandler
 {
     
     private AudioClip _swooshSound;
+    private AudioSource _audioSource;
+
     public void GoToBuilderScene()
     {
         Debug.Log("Scene Change: MainMenu to ProbeBuilder");
@@ -30,11 +32,11 @@ public class StartMenu : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
-        this.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
+        _audioSource.PlayOneShot(_swooshSound, 1.0f);
     }
 }

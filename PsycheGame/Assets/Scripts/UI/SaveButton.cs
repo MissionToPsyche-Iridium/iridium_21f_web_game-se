@@ -15,6 +15,8 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
     private GameObject _notificationPrefab;
     private AudioClip _swooshSound;
     private ContainerManager _containerManager;
+    private AudioSource _audioSource;
+
     private bool debounce;
 
     private void Awake()
@@ -22,7 +24,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         _containerManager = _containerManagerObject.GetComponent<ContainerManager>();
         _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
         debounce = false;
-        this.AddComponent<AudioSource>();
+        _audioSource = gameObject.AddComponent<AudioSource>();
 
     }
     public void OnPointerDown(PointerEventData eventData)
@@ -36,7 +38,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
             debounce = true;
         }
 
-        GetComponent<AudioSource>().PlayOneShot(_swooshSound, 1.0f);
+        _audioSource.PlayOneShot(_swooshSound, 1.0f);
 
         if (_containerManager.IsReadyToSave())
         {
