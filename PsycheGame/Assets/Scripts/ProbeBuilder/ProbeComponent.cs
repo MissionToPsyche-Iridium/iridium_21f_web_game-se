@@ -45,6 +45,19 @@ public class ProbeComponent
     public ProbeComponentMountType MountType;
     public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, GridPositionX, GridPositionY;
     public float Credits;
+    private string id;
+    private string name;
+    private string description;
+    private ProbeComponentType type;
+    private int scanningRange;
+    private int fuelCapacity;
+    private int speed;
+    private int armor;
+    private int hp;
+    private int weight;
+    private float credits;
+    private int gridPositionX;
+    private int gridPositionY;
 
     public ProbeComponent(
         string id,
@@ -77,6 +90,23 @@ public class ProbeComponent
         Credits = credits;
         GridPositionX = gridPositionX;
         GridPositionY = gridPositionY;
+    }
+
+    public ProbeComponent(string id, string name, string description, ProbeComponentType type, int scanningRange, int fuelCapacity, int speed, int armor, int hp, int weight, float credits, int gridPositionX, int gridPositionY)
+    {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.scanningRange = scanningRange;
+        this.fuelCapacity = fuelCapacity;
+        this.speed = speed;
+        this.armor = armor;
+        this.hp = hp;
+        this.weight = weight;
+        this.credits = credits;
+        this.gridPositionX = gridPositionX;
+        this.gridPositionY = gridPositionY;
     }
 
     public ProbeComponentMountType GetMountType()
