@@ -98,7 +98,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(_dragIcon.transform.position);
             if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1))
             {
-                if (_containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
+                ProbeComponent comp = _dragIcon.GetComponent<ProbeComponent>();
+                if (_containerManager.CanOccupyCell(comp, cellPos.cellX, cellPos.cellY))
                 {
                     BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 

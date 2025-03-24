@@ -18,6 +18,7 @@ public class SpriteDragDrop : MonoBehaviour
 {
     private ContainerManager containerManager;
     public BuildManager BuildManager;
+    public ProbeComponent ProbeComponent;
     public GameObject DraggingBox;
     public bool Selected { get; private set; }
     public Tuple<int, int> CurrentCell { get; set; }
@@ -44,12 +45,14 @@ public class SpriteDragDrop : MonoBehaviour
     {
         Selected = true;
         offset = transform.position - MouseWorldPosition();
+        ProbeComponent probeComponent = GetComponent<ProbeComponent>();
         gameObject.layer = 9;
         DraggingBox.SetActive(true);
     }
 
     private void OnMouseDrag()
     {
+        ProbeComponent probeComponent = GetComponent<ProbeComponent>();
         transform.position = MouseWorldPosition() + offset;
     }
 
@@ -63,7 +66,8 @@ public class SpriteDragDrop : MonoBehaviour
 
             if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
+                ProbeComponent comp = GetComponent<ProbeComponent>();
+                if (containerManager.CanOccupyCell(comp, cellPos.cellX, cellPos.cellY))
                 {
                     AttemptToRelease();
 
@@ -108,7 +112,8 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToRelease()
     {
-        if (!containerManager.CanOccupyCell(CurrentCell.Item1, CurrentCell.Item2))
+        ProbeComponent comp = GetComponent<ProbeComponent>();
+        if (!containerManager.CanOccupyCell(comp, CurrentCell.Item1, CurrentCell.Item2))
         {
             containerManager.ReleaseFromGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
             return true;
@@ -118,7 +123,7 @@ public class SpriteDragDrop : MonoBehaviour
 
     public bool AttemptToReoccupy()
     {
-        if (containerManager.CanOccupyCell(CurrentCell.Item1, CurrentCell.Item2))
+        if (containerManager.CanOccupyCell(ProbeComponent, CurrentCell.Item1, CurrentCell.Item2))
         {
             containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
             return true;

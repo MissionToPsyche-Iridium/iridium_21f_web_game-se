@@ -254,13 +254,20 @@ public class ContainerManager : MonoBehaviour
 		}
 	}
 
-    public bool CanOccupyCell(int x, int y)
+    public bool CanOccupyCell(ProbeComponent comp, int x, int y)
     {
+        Debug.Log("++CM++ CanOccupyCell: " + x + " " + y + " " + comp.GetMountType());
+        bool tileType = IsInteriorTile(x, y);
+        bool compatible = comp.GetMountType() == ProbeComponentMountType.Interior ? true : false;
         if (gridData[x, y].IsOccupied)
         {
             return false;
         }
-        return true;
+        if (tileType == compatible)
+        {
+            return true;
+        }
+        return false;
     }
 
     public bool IsReadyToSave()
@@ -274,8 +281,9 @@ public class ContainerManager : MonoBehaviour
             for (int i = 0; i < transform.childCount; i++)
             {
                 Tile tile = transform.GetChild(i).gameObject.GetComponent<Tile>();
+                ProbeComponent comp = transform.GetChild(i).gameObject.GetComponent<ProbeComponent>();
 
-                if (CanOccupyCell(tile.GetCellX(), tile.GetCellY()))
+                if (CanOccupyCell(comp, tile.GetCellX(), tile.GetCellY()))
                 {
                     continue;
                 }
