@@ -24,6 +24,7 @@ public class DesignInventory : MonoBehaviour
     }
 
     public void loadDesign(int index) {
+        if(maxIndex > 0){
         Debug.Log("Loading design at index: " + index);
         var design = designs[index];
         GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
@@ -34,7 +35,9 @@ public class DesignInventory : MonoBehaviour
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
         //GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
-
+        } else {
+            loadEmpty();
+        }
     }
 
     public void loadEmpty() {

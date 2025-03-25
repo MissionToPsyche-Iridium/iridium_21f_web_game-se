@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using TMPro;
 using System;
+using UnityEngine.UIElements;
 
 public class SaveButton : MonoBehaviour, IPointerDownHandler
 {
@@ -40,15 +41,19 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
         _audioSource.PlayOneShot(_swooshSound, 1.0f);
 
+
         if (_containerManager.IsReadyToSave())
         {
-            Boolean saved = ContainerGameData.Instance.saveProbeDesign();
 
             Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
 
             Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
             notification.SetImage(probeSprite);
-            if(saved) {notification.SetMessage("Successfully saved probe");
+            String designName = notification.getInputText();
+            Boolean saved = ContainerGameData.Instance.saveProbeDesign(designName);
+
+            if(saved) {
+                notification.SetMessage("Successfully saved probe");
             } 
             else {
                 notification.SetMessage("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
@@ -76,4 +81,5 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
         debounce = false;
     }
+
 }
