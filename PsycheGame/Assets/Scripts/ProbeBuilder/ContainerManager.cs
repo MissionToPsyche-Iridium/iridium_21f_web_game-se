@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 /* 
 	Probe builder :: containerManager.cs
@@ -78,6 +79,7 @@ public class ContainerManager : MonoBehaviour
         }
         tileSprite = Resources.Load<Sprite>("Standard/T_02_Specular");
         tileSprite2 = Resources.Load<Sprite>("Standard/T_16_Emissive");
+
 		GenerateContainer();
 	}
 
@@ -202,8 +204,15 @@ public class ContainerManager : MonoBehaviour
         this.originY = (int)(parentRectTransform.rect.height / 2 * 0.20);
         this.tileScale = (int)(parentRectTransform.rect.width / 18);
 
-        _spawnArea.sizeDelta = new Vector2(tileScale * width, tileScale * height);
-        _spawnArea.position = gameObject.transform.position;
+        float middleX = (float)(originX + (tileScale * (((float)width) / 2 - 0.5) * 0.93f)),
+              middleY = (float) (originY + (tileScale * (((float)height) / 2 - 0.5) * 0.93f));
+
+        RectTransform rectTransform = (transform as RectTransform);
+        rectTransform.sizeDelta = new Vector2(tileScale * width, tileScale * height);
+        rectTransform.position = new Vector3(middleX, middleY, 0.0f);
+
+        _spawnArea.sizeDelta = rectTransform.sizeDelta;
+        _spawnArea.position = rectTransform.position;
 
         for (int x = 0; x < width; x++)
         {
@@ -213,25 +222,26 @@ public class ContainerManager : MonoBehaviour
                 {
                     var targetX = originX + (tileScale * x * 0.93f);
                     var targetY = originY + (tileScale * y * 0.93f);
-                    var newTile = Instantiate(tile, new Vector3(targetX, targetY, 0), Quaternion.identity);
+                    GameObject newTile = new GameObject();
                     newTile.name = $"Tile {x} {y}";
                     newTile.tag = "tile";
 
                     var rigidbody2D = newTile.gameObject.AddComponent<Rigidbody2D>();
                     rigidbody2D.gravityScale = 0;
 
-                    var boxCollider2D = newTile.GetComponent<BoxCollider2D>();
+                    var boxCollider2D = newTile.AddComponent<BoxCollider2D>();
                     boxCollider2D.isTrigger = true;
 
-                    var spriteRenderer = newTile.GetComponent<SpriteRenderer>();
-                    spriteRenderer.sprite = GetMaterial(x, y);
+                    Image tileImage = newTile.AddComponent<Image>();
+                    tileImage.sprite = GetMaterial(x, y);
 
                     var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-                    newTile.Init(isOffset, x, y, targetX, targetY);
+                    newTile.AddComponent<Tile>().Init(isOffset, x, y, targetX, targetY);
 
                     chassisGrid[x, y] = (targetX, targetY);
                     newTile.transform.SetParent(transform);
-                    newTile.transform.localScale = new Vector3(tileScale, tileScale, 100);
+                    newTile.transform.position = new Vector3(targetX, targetY, 0);
+                    (newTile.transform as RectTransform).sizeDelta = new Vector2(tileScale, tileScale);
                 }
             }
         }
@@ -385,8 +395,8 @@ public class ContainerManager : MonoBehaviour
     {
         for (int i = 0; i < transform.childCount; i++)
         {
-            Transform tile = transform.GetChild(i);
-            if (Math.Abs(tile.position.x - position.x) <= tile.localScale.x / 2 && Math.Abs(tile.position.y - position.y) <= tile.localScale.y / 2)
+            RectTransform tile = transform.GetChild(i) as RectTransform;
+            if (Math.Abs(tile.position.x - position.x) <= tile.rect.width / 2 && Math.Abs(tile.position.y - position.y) <= tile.rect.height / 2)
             {
                 Tile tileData = tile.GetComponent<Tile>();
                 return (tileData.GetCellX(), tileData.GetCellY());

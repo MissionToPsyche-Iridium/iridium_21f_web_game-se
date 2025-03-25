@@ -83,7 +83,7 @@ public abstract class MineralCollection : Spawnable, ScannableObject {
         }
     }
 
-    private void GenerateMetals() {
+    protected void GenerateMetals() {
         metals.Clear();
         int metalCount = Random.Range(1, maxMetalTypes + 1);
         List<System.Func<int, RareMetal>> metalGenerators = new() {
@@ -132,7 +132,7 @@ public abstract class MineralCollection : Spawnable, ScannableObject {
         }
     }
 
-    private void UpdateMissionProgress(int minedAmount, string metalName) {
+    protected void UpdateMissionProgress(int minedAmount, string metalName) {
         Debug.Log("Updaing mission progress: MineralCollection");
         if (missionState == null) {
             Debug.LogWarning("MissionState is null. Progress cannot be updated.");
