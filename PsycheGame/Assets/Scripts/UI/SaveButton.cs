@@ -49,8 +49,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
             Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
             notification.SetImage(probeSprite);
-            String designName = notification.getInputText();
-            Boolean saved = ContainerGameData.Instance.saveProbeDesign(designName);
+            Boolean saved = ContainerGameData.Instance.saveProbeDesign();
 
             if(saved) {
                 notification.SetMessage("Successfully saved probe");

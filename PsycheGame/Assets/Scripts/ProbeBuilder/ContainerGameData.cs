@@ -56,9 +56,10 @@ public sealed class ContainerGameData
         spawnedParts.Clear();
     } 
 
-    public Boolean saveProbeDesign(String name) {
+    public Boolean saveProbeDesign() {
         if(probeDesigns.Count < 10) {
         Sprite sprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
+        String name = "Design " + probeDesigns.Count;
         List<GameObject> parts = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetSpawnedProbeComponents(); //get current spawned parts
         String partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
         ProbeAttributeTotals totals = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().CalculateAttributeTotals(); //saves attribute totals

@@ -9,7 +9,7 @@ public class Notification : MonoBehaviour
 {
     [SerializeField] private GameObject _image;
     [SerializeField] private GameObject _messageField;
-    [SerializeField] private GameObject _inputField;
+   
     private void Rebuild()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
@@ -36,12 +36,8 @@ public class Notification : MonoBehaviour
         Rebuild();
     }
 
-    public String getInputText() {
-        return _inputField.GetComponent<TextMeshPro>().text;
-    }
-
     public void Accept()
-    {
+    {        
         Destroy(gameObject);
     }
 }

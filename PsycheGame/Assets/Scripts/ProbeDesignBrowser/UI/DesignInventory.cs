@@ -6,12 +6,15 @@ using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class DesignInventory : MonoBehaviour
 {
     public List<ProbeDesign> designs;
     private int index;
     private int maxIndex;
+    private static string filePath = Application.dataPath + Path.AltDirectorySeparatorChar + "ContainerGameData.json";
+
 
     void Start()
     {
@@ -86,7 +89,8 @@ public class DesignInventory : MonoBehaviour
     }
 
     public void selectShipDesign() {
-        //load design info to game data json
+        Debug.Log("Selected Design " + index + " and saved it to file.");
+        File.WriteAllText(filePath, designs[index].partsJson); 
     }
 
 
