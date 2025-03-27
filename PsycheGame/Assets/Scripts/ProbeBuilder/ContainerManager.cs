@@ -228,7 +228,7 @@ public class ContainerManager : MonoBehaviour
 
                     var rigidbody2D = newTile.gameObject.AddComponent<Rigidbody2D>();
                     rigidbody2D.gravityScale = 0;
-
+    
                     var boxCollider2D = newTile.AddComponent<BoxCollider2D>();
                     boxCollider2D.isTrigger = true;
 
