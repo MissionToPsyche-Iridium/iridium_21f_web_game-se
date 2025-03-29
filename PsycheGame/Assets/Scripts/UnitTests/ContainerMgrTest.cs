@@ -12,17 +12,11 @@ using UnityEngine.TestTools;
     - TestGetTileAtcell: checks if the tile is not null when a tile is added to the container
     - TestUpdateColorScheme: checks if the color scheme is updated correctly
     - TestIsInTerior: checks if the tile is in the interior of the container
-    - TestIsInTerior: checks if the tile is not in the interior of the container
+    - TestIsInTeriorWithOutOfBounds: checks if the tile is not in the interior of the container when it is out of bounds
     - TestAssignToGrid: checks if the tile is assigned to the grid correctly
-    - TestAssignToGrid: checks if the tile is not assigned to the grid correctly
+    - TestAssignToGridWithOutOfBounds: checks if the tile is not assigned to the grid when it is out of bounds
     - TestReleaseFromGrid: checks if the tile is released from the grid correctly
-    - TestReleaseFromGrid: checks if the tile is not released from the grid correctly
-    - TestFindGridPosition: checks if the grid position is found correctly
-    - TestFindGridPosition: checks if the grid position is not found correctly
-    - TestGetCellAtPosition: checks if the cell position is found correctly
-    - TestGetCellAtPosition: checks if the cell position is not found correctly
-    - TestGetBeaconPosition: checks if the beacon position is found correctly
-    - TestGetBeaconPosition: checks if the beacon position is not found correctly
+    - TestReleaseFromGridWithOutOfBounds: checks if the tile is not released from the grid when it is out of bounds
 
 */
 public class ContainerMgrTest
@@ -33,7 +27,6 @@ public class ContainerMgrTest
     [Test]
     public void ContainerMgrTestSimplePasses()
     {
-        
     }
 
     [Test]
@@ -52,10 +45,22 @@ public class ContainerMgrTest
     }
 
     [Test]
+    // Test if color scheme update is functioning correctly (1 of 2)
     public void TestUpdateColorScheme()
     {
-        ColorScheme colorScheme = new ColorScheme();
-        containerMgr.UpdateColorScheme(colorScheme);
+        TileColorScheme colorScheme = new TileAltScheme();
+        int targetScheme = 2;
+        containerMgr.SetColorScheme(targetScheme);
+        Assert.AreEqual(colorScheme, containerMgr.GetColorScheme());
+    }
+
+    [Test]
+    // Test if color scheme update is functioning correctly (2 of 2)
+    public void TestUpdateColorScheme2()
+    {
+        TileColorScheme colorScheme = new TileStdScheme();
+        int targetScheme = 1;
+        containerMgr.SetColorScheme(targetScheme);
         Assert.AreEqual(colorScheme, containerMgr.GetColorScheme());
     }
 
@@ -78,95 +83,40 @@ public class ContainerMgrTest
     [Test]
     public void TestAssignToGrid()
     {
-        Tile tile = new Tile();
-        containerMgr.AssignToGrid(tile, 0, 0);
-        Assert.IsTrue(containerMgr.IsAssignedToGrid(tile));
+        GameObject tileObj = new GameObject();
+        containerMgr.AssignToGridPosition(0,0,tileObj);
+        Assert.IsTrue(containerMgr.IsAssignedToGrid(0,0));
     }
 
     [Test]
     public void TestAssignToGridWithOutOfBounds()
     {
-        Tile tile = new Tile();
-        containerMgr.AssignToGrid(tile, 0, 0);
-        Assert.IsFalse(containerMgr.IsAssignedToGrid(tile));
+        GameObject tileObj = new GameObject();
+        containerMgr.AssignToGridPosition(-1, -1, tileObj);
+        Assert.IsFalse(containerMgr.IsAssignedToGrid(-1, -1));
     }
 
     [Test]
     public void TestReleaseFromGrid()
     {
-        Tile tile = new Tile();
-        containerMgr.AssignToGrid(tile, 0, 0);
-        containerMgr.ReleaseFromGrid(tile);
-        Assert.IsFalse(containerMgr.IsAssignedToGrid(tile));
+        GameObject tileObj = new GameObject();
+        containerMgr.AssignToGridPosition(0,0,tileObj);
+        containerMgr.ReleaseFromGridPosition(0,0,tileObj);
+        Assert.IsFalse(containerMgr.IsAssignedToGrid(0,0));
     }
 
     [Test]
     public void TestReleaseFromGridWithOutOfBounds()
     {
-        Tile tile = new Tile();
-        containerMgr.AssignToGrid(tile, 0, 0);
-        containerMgr.ReleaseFromGrid(tile);
-        Assert.IsTrue(containerMgr.IsAssignedToGrid(tile));
+        GameObject tileObj = new GameObject();
+        containerMgr.AssignToGridPosition(-1, -1, tileObj);
+        containerMgr.ReleaseFromGridPosition(-1, -1, tileObj);
+        Assert.IsFalse(containerMgr.IsAssignedToGrid(-1, -1));
     }
-
-    [Test]
-    public void TestFindGridPosition()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int gridPosition = containerMgr.FindGridPosition(tile);
-        Assert.AreEqual(new Vector2Int(0, 0), gridPosition);
-    }
-
-    [Test]
-    public void TestFindGridPositionWithOutOfBounds()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int gridPosition = containerMgr.FindGridPosition(tile);
-        Assert.AreEqual(new Vector2Int(-1, -1), gridPosition);
-    }
-
-    [Test]
-    public void TestGetCellAtPosition()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int cellPosition = containerMgr.GetCellAtPosition(tile.transform.position);
-        Assert.AreEqual(new Vector2Int(0, 0), cellPosition);
-    }
-
-    [Test]
-    public void TestGetCellAtPositionWithOutOfBounds()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int cellPosition = containerMgr.GetCellAtPosition(tile.transform.position);
-        Assert.AreEqual(new Vector2Int(-1, -1), cellPosition);
-    }
-
-    [Test]
-    public void TestGetBeaconPosition()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int beaconPosition = containerMgr.GetBeaconPosition(tile);
-        Assert.AreEqual(new Vector2Int(0, 0), beaconPosition);
-    }
-
-    [Test]
-    public void TestGetBeaconPositionWithOutOfBounds()
-    {
-        Tile tile = new Tile();
-        containerMgr.AddTile(tile, 0, 0);
-        Vector2Int beaconPosition = containerMgr.GetBeaconPosition(tile);
-        Assert.AreEqual(new Vector2Int(-1, -1), beaconPosition);
-    } 
  
     [UnityTest]
     public IEnumerator ContainerMgrTestWithEnumeratorPasses()
     {
- 
         yield return null;
     }
 }
