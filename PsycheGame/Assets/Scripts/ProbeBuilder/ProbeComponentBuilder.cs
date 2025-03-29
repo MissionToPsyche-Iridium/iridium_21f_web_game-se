@@ -7,6 +7,7 @@ public class ProbeComponentBuilder
 {
     private string _id, _name, _description;
     private ProbeComponentType _type;
+    private ProbeComponentMountType _mountType;
     private int _scanningRange, _fuelCapacity, _speed, _armor, _hp, _weight, _gridPositionX, _gridPositionY;
     private float _credits;
 
@@ -31,6 +32,12 @@ public class ProbeComponentBuilder
     public ProbeComponentBuilder SetType(ProbeComponentType type)
     {
         _type = type;
+        return this;
+    }
+
+    public ProbeComponentBuilder SetMountType(ProbeComponentMountType mountType)
+    {
+        _mountType = mountType;
         return this;
     }
 
@@ -88,6 +95,7 @@ public class ProbeComponentBuilder
             _name,
             _description,
             _type,
+            _mountType,
             _scanningRange,
             _fuelCapacity,
             _speed,

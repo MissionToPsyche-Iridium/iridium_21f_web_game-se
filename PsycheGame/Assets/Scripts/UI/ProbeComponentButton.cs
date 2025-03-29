@@ -73,9 +73,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.transform.SetParent(SpawnArea.transform);
         _dragPlane = canvasTransform as RectTransform;
 
-        _dragIcon.AddComponent<SpriteDragDrop>();
-        _dragIcon.GetComponent<SpriteDragDrop>().BuildManager = BuildManager;
-        _dragIcon.GetComponent<SpriteDragDrop>().DraggingBox = DraggingBox;
+        SpriteDragDrop spriteDragDrop = _dragIcon.AddComponent<SpriteDragDrop>();
+        spriteDragDrop.BuildManager = BuildManager;
+        spriteDragDrop.ProbeComponent = ProbeComponent;
+        spriteDragDrop.DraggingBox = DraggingBox;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
@@ -96,7 +97,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(_dragIcon.transform.position);
-            if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1))
+            if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1) && _containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior))
             {
                 if (_containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
                 {
@@ -186,7 +187,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             InfoPartName.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Name;
             InfoPartDescription.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Description;
-            InfoPartCredits.GetComponent<TextMeshProUGUI>().text = ProbeComponent.Credits.ToString() + " Credits";
+            InfoPartCredits.GetComponent<TextMeshProUGUI>().text = ProbeComponent.MountType + " - " + ProbeComponent.Credits.ToString() + " Credits";
             InfoPartImage.GetComponent<Image>().sprite = GetComponent<Image>().sprite;
 
             InfoPanel.transform.GetChild(0).GetChild(0).GetChild(1).gameObject.GetComponent<Scrollbar>().value = 1;
