@@ -1,0 +1,8 @@
+{
+    "name": "ExplorerTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "references": ["Scripts"]
+}
