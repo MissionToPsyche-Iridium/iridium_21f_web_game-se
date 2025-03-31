@@ -10,7 +10,7 @@ public class DrillController : MonoBehaviour {
     private const float drillDuration = 2f;
     private float drillTimer = 0f;
 
-    private void Update() {
+    protected void Update() {
         HandleLaserActivation();
     }
 
@@ -26,11 +26,11 @@ public class DrillController : MonoBehaviour {
         }
     }
 
-    private void ActivateLaser() {
+    protected void ActivateLaser() {
         laserEffect.SetActive(true);
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
+    protected void OnTriggerEnter2D(Collider2D other) {
         MineralCollection asteroid = other.GetComponent<MineralCollection>();
         Debug.Log(asteroid);
         if (asteroid != null) {
@@ -40,13 +40,13 @@ public class DrillController : MonoBehaviour {
     }
 
 
-    private void DeactivateLaser() {
+    protected void DeactivateLaser() {
         laserEffect.SetActive(false);
         drillTimer = 0f;
         currentAsteroid = null;
         Debug.Log("Laser deactivated.");
     }
-    private void DrillAsteroid() {
+    protected void DrillAsteroid() {
         drillTimer += Time.deltaTime;
         if (drillTimer >= drillDuration) {
             currentAsteroid.Drill();
@@ -54,7 +54,7 @@ public class DrillController : MonoBehaviour {
         }
     }
 
-    private void OnDrawGizmosSelected() {
+    protected void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + transform.up * laserRange);
     }
