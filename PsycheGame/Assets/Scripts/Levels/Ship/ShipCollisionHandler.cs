@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class ShipCollisionHandler : MonoBehaviour
 {
-    [SerializeField] public GameObject ship;
-    [SerializeField] public GameObject modalPanel;
-    [SerializeField] public HealthBar healthBarUI;
+    [SerializeField] GameObject ship;
+    [SerializeField] GameObject modalPanel;
+    [SerializeField] HealthBar healthBarUI;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -16,6 +16,12 @@ public class ShipCollisionHandler : MonoBehaviour
         }
     }
 
+    public void InitializeForTest(GameObject testShip, GameObject testModalPanel, HealthBar testHealthBarUI)
+    {
+        ship = testShip;
+        modalPanel = testModalPanel;
+        healthBarUI = testHealthBarUI;
+    }
     public void HandleAsteroidCollision(Vector2 relativeVelocity, Vector2 collisionNormal)
     {
         Debug.Log("Ship hit by asteroid!");

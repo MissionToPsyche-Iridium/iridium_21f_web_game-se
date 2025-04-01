@@ -114,9 +114,12 @@ public class SpaceGamePlayModeTests
     {
         GameObject collisionHandlerGO = new GameObject("ShipCollisionHandler");
         ShipCollisionHandler collisionHandler = collisionHandlerGO.AddComponent<ShipCollisionHandler>();
-        collisionHandler.ship = collisionHandlerGO; 
-        collisionHandler.modalPanel = new GameObject("ModalPanel");
-        collisionHandler.healthBarUI = new GameObject("HealthBar").AddComponent<HealthBar>();
+      
+        GameObject shipGO = new GameObject("Ship");
+        GameObject modalPanelGO = new GameObject("ModalPanel");
+        HealthBar healthBar = new GameObject("HealthBar").AddComponent<HealthBar>();
+
+        collisionHandler.InitializeForTest(shipGO, modalPanelGO, healthBar);
 
         int initialHealth = (int) ShipManager.Health;
 
