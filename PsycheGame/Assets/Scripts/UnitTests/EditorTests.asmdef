@@ -7,7 +7,7 @@
         "Editor"
     ],
     "references": [
-        "Unity.TextMeshPro",
-        "Scripts"
+        "Scripts",
+        "Unity.TextMeshPro"
     ]
 }

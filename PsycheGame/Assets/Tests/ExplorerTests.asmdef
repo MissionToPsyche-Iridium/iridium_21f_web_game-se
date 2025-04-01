@@ -4,5 +4,8 @@
         "TestAssemblies"
     ],
     "includePlatforms": [],
-    "references": ["Scripts"]
+    "references": [
+        "Scripts",
+        "Unity.TextMeshPro"
+    ]
 }
