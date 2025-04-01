@@ -108,4 +108,22 @@ public class SpaceGamePlayModeTests
 
         Assert.IsTrue(MissionState.Instance.IsMissionComplete, "Mission should be complete when all objectives are met");
     }
+
+    [UnityTest]
+    public IEnumerator Test_ShipCollision_ReducesHealth()
+    {
+        GameObject collisionHandlerGO = new GameObject("ShipCollisionHandler");
+        ShipCollisionHandler collisionHandler = collisionHandlerGO.AddComponent<ShipCollisionHandler>();
+        collisionHandler.ship = collisionHandlerGO; 
+        collisionHandler.modalPanel = new GameObject("ModalPanel");
+        collisionHandler.healthBarUI = new GameObject("HealthBar").AddComponent<HealthBar>();
+
+        int initialHealth = (int) ShipManager.Health;
+
+        collisionHandler.HandleAsteroidCollision(Vector2.right * 5f, Vector2.left);
+
+        Assert.Less(ShipManager.Health, initialHealth, "Health should decrease after collision");
+
+        yield return null;
+    }
 }
