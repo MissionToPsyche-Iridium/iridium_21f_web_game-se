@@ -11,26 +11,20 @@ public class Initializer : MonoBehaviour
     public void Awake()
     {
         List<Tuple<ProbeComponent, int>> startingInventory = new List<Tuple<ProbeComponent, int>>();
-        InventoryConfigEntry[] entries = JsonUtilityWrapper.FromJsonArray<InventoryConfigEntry>(_probeComponentInventoryConfig.text);
-        foreach (ProbeComponent probeComponent in JsonUtilityWrapper.FromJsonArray<ProbeComponent>(_probeComponentConfig.text))
+        foreach (ProbeComponent probeComponent in Config.Get<ProbeComponent[]>("ProbeComponents"))
         {
-            foreach (InventoryConfigEntry entry in entries)
+            for (int i = 0; i < Config.Get<int>("#StartingInventory"); i++)
             {
-                if (entry.ProbeComponentId.Equals(probeComponent.Id))
+                if (Config.Get<string>($"StartingInventory[{i}].ProbeComponentId").Equals(probeComponent.Id))
                 {
-                    startingInventory.Add(new Tuple<ProbeComponent, int>(probeComponent, entry.Quantity));
-                    break;
+                    startingInventory.Add(new Tuple<ProbeComponent, int>(
+                        probeComponent,
+                        Config.Get<int>($"StartingInventory[{i}].Quantity")
+                    ));
                 }
             }
         }
 
         _player.GetComponent<Player>().Initialize(startingInventory);
-    }
-
-    [Serializable]
-    private class InventoryConfigEntry
-    {
-        public string ProbeComponentId;
-        public int Quantity;
     }
 }
