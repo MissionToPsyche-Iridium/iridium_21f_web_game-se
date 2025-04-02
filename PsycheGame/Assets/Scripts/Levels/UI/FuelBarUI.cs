@@ -4,11 +4,11 @@ using UnityEngine.UI;
 using TMPro;
 
 public class FuelBar : MonoBehaviour {
-    [SerializeField] private GameObject fuelBarColor;
-    [SerializeField] private Slider fuelBar;
-    [SerializeField] private TextMeshProUGUI textDisplay;
+    [SerializeField] public GameObject fuelBarColor;
+    [SerializeField] public Slider fuelBar;
+    [SerializeField] public TextMeshProUGUI textDisplay;
 
-    private Image fuelBarImage = null;
+    public Image fuelBarImage = null;
 
     private static readonly float FUEL_LOW_LEVEL = 25f;
     private static readonly float FUEL_MID_LEVEL = 50f;
