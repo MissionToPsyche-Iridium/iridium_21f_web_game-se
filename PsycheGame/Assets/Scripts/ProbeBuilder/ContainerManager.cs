@@ -83,6 +83,23 @@ public class ContainerManager : MonoBehaviour
 		GenerateContainer();
 	}
 
+    public void InitGridData()
+    {
+        Debug.Log("++CM++ Initializing grid data");
+        int width = 6;
+        int height = 6;
+        chassisGrid = new (float x, float y)[width, height];
+        gridData = new GridPositionData[width, height];
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                gridData[i, j] = new GridPositionData();
+                // Debug.Log("++CM++ Grid position: " + i + ", " + j + " - Occupant: " + gridData[i, j].Occupant);
+            }
+        }
+    }
+
     public Tile GetTileAtCell(int x, int y)
     {
         foreach (Transform child in transform) {
@@ -93,6 +110,93 @@ public class ContainerManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void AddTile(Tile tile, int x, int y)
+    {
+        if (tile != null && x >= 0 && x < width && y >= 0 && y < height)
+        {
+            gridData[x, y].Occupant = tile.gameObject;
+            gridData[x, y].IsOccupied = true;
+        }
+    }
+    public void RemoveTile(Tile tile, int x, int y)
+    {
+        if (tile != null && x >= 0 && x < width && y >= 0 && y < height)
+        {
+            gridData[x, y].Occupant = null;
+            gridData[x, y].IsOccupied = false;
+        }
+    }
+
+    public bool IsAssignedToGrid(int x, int y)
+    {
+        if (x < 0 || x >= width || y < 0 || y >= height)
+        {
+            return false;
+        }
+        return gridData[x, y].IsOccupied;
+    }
+
+    public bool IsInInterior(Tile tile)
+    {
+        if (tile != null)
+        {
+            int x = tile.GetCellX();
+            int y = tile.GetCellY();
+            return (x > 0 && x < width - 1 && y > 0 && y < height - 1);
+        }
+        return false;
+    }
+    
+    public void SetPosition(float x, float y)
+    {
+        this.PosX = x;
+        this.PosY = y;
+    }
+    public (float, float) GetPosition()
+    {
+        return (this.PosX, this.PosY);
+    }
+    public (float, float) GetPositionGrid(int x, int y)
+    {
+        return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+    }
+    public (float, float) GetPositionGrid()
+    {
+        return (this.PosX, this.PosY);
+    }
+    public (float, float) GetPositionGrid(int x, int y, float offset)
+    {
+        return (chassisGrid[x, y].x + offset, chassisGrid[x, y].y + offset);
+    }
+    public (float, float) GetPositionGrid(int x, int y, float offsetX, float offsetY)
+    {
+        return (chassisGrid[x, y].x + offsetX, chassisGrid[x, y].y + offsetY);
+    }
+
+    public (float, float) GetBeaconPosition(int x, int y)
+    {
+        return (chassisGrid[x, y].x, chassisGrid[x, y].y);
+    }
+
+    public (float, float) GetBeaconPosition(int x, int y, float offset)
+    {
+        return (chassisGrid[x, y].x + offset, chassisGrid[x, y].y + offset);
+    }
+
+    public (int, int) GetCellAtPosition(Vector3 position)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            RectTransform tile = transform.GetChild(i) as RectTransform;
+            if (Math.Abs(tile.position.x - position.x) <= tile.rect.width / 2 && Math.Abs(tile.position.y - position.y) <= tile.rect.height / 2)
+            {
+                Tile tileData = tile.GetComponent<Tile>();
+                return (tileData.GetCellX(), tileData.GetCellY());
+            }
+        }
+        return (-1, -1);
     }
 
 	private bool ProfileUpdate()
@@ -348,6 +452,19 @@ public class ContainerManager : MonoBehaviour
 
     public bool AssignToGridPosition(int x, int y, GameObject component)
     {
+
+        if (width == 0 || height == 0)
+        {
+            width = 6;
+            height = 6;
+        }
+
+        Debug.Log("++CM++ Assigning to grid position: " + x + ", " + y + " with component: " + component.name);
+        if (x < 0 || x >= width || y < 0 || y >= height)
+        {
+            return false;
+        }
+
         if (gridData[x, y].IsOccupied == false)
         {
             gridData[x, y].IsOccupied = true;
