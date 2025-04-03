@@ -13,6 +13,7 @@ public class ExplorerPlayModeTests
     private LevelManager levelManager;
     private GameObject shipGO;
     private ShipMovement shipMovement;
+    private GameObject gasGO;
 
     [SetUp]
     public void Setup()
@@ -32,6 +33,17 @@ public class ExplorerPlayModeTests
         });
         levelManager.GetLevels()[0].missionTimer = 180f;
         
+        gasGO = new GameObject("GasCloud");
+        ParticleSystem particleSystem = gasGO.AddComponent<ParticleSystem>();
+        BoxCollider2D gasCollider = gasGO.AddComponent<BoxCollider2D>();
+        gasCollider.isTrigger = true;
+
+        var renderer = gasGO.GetComponent<ParticleSystemRenderer>();
+        if (renderer.sharedMaterial == null)
+        {
+            renderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+        }
+
         ShipManager.Fuel = 100f; 
         ShipManager.Health = 100; 
     }
@@ -40,6 +52,7 @@ public class ExplorerPlayModeTests
     public void TearDown()
     {
         Object.Destroy(levelManagerGO);
+        Object.Destroy(gasGO);
         Object.Destroy(shipGO);
     }
 
@@ -55,27 +68,6 @@ public class ExplorerPlayModeTests
 
         Assert.Less(ShipManager.Fuel, initialFuel, "Fuel should decrease when ship moves");
         Assert.GreaterOrEqual(ShipManager.Fuel, 0f, "Fuel should not go below 0");
-    }
-
-    [UnityTest]
-    public IEnumerator Test_DrillAsteroid_CollectsResources()
-    {
-        GameObject drillGO = new GameObject("Drill");
-        drillGO.AddComponent<DrillController>();
-        BoxCollider2D drillCollider = drillGO.AddComponent<BoxCollider2D>();
-        drillCollider.isTrigger = true;
-
-        GameObject asteroidGO = new GameObject("Asteroid");
-        MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
-        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
-        asteroidCollider.isTrigger = true;
-
-        drillGO.transform.position = Vector3.zero;
-        asteroidGO.transform.position = Vector3.zero;
-
-        yield return new WaitForFixedUpdate();
-        Assert.Less(asteroid.metals[0].Amount, 50, "Metal amount should decrease after drilling");
-        Assert.Greater(MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals), 0, "Mission progress should increase");
     }
 
     [UnityTest]
@@ -190,4 +182,91 @@ public class ExplorerPlayModeTests
         yield return null;
     }
 
+    [UnityTest]
+    public IEnumerator Test_FuelBar_UpdatesAndFlashes()
+    {
+        GameObject fuelBarGO = new GameObject("FuelBar");
+        FuelBar fuelBar = fuelBarGO.AddComponent<FuelBar>();
+        fuelBar.fuelBarColor = new GameObject("FuelBarColor");
+        fuelBar.fuelBarImage = fuelBar.fuelBarColor.AddComponent<Image>();
+        fuelBar.fuelBar = fuelBarGO.AddComponent<Slider>();
+        fuelBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        ShipManager.Fuel = 75f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.green, fuelBar.fuelBarImage.color, "Fuel bar should be green at high fuel");
+        Assert.AreEqual("75", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 40f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.yellow, fuelBar.fuelBarImage.color, "Fuel bar should be yellow at mid fuel");
+        Assert.AreEqual("40", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 10f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        yield return new WaitForSeconds(0.6f);
+        Assert.AreEqual(Color.red, fuelBar.fuelBarImage.color, "Fuel bar should be red at low fuel");
+        yield return new WaitForSeconds(0.5f); 
+        Assert.AreEqual(Color.white, fuelBar.fuelBarImage.color, "Fuel bar should flash white at low fuel");
+        Assert.AreEqual("10", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 30f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.yellow, fuelBar.fuelBarImage.color, "Fuel bar should return to yellow above low threshold");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_DrillAsteroid_CollectsResources()
+    {
+        GameObject drillGO = new GameObject("Drill");
+        drillGO.AddComponent<DrillController>();
+        BoxCollider2D drillCollider = drillGO.AddComponent<BoxCollider2D>();
+        drillCollider.isTrigger = true;
+
+        GameObject asteroidGO = new GameObject("Asteroid");
+        MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
+        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
+        asteroidCollider.isTrigger = true;
+
+        drillGO.transform.position = Vector3.zero;
+        asteroidGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+        Assert.Less(asteroid.metals[0].Amount, 50, "Metal amount should decrease after drilling");
+        Assert.Greater(MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals), 0, "Mission progress should increase");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_HeilumGas_Collection_ReducesFuel()
+    {
+        HeilumGas heilumGas = gasGO.AddComponent<HeilumGas>();
+        float initialFuel = ShipManager.Fuel;
+
+        shipGO.transform.position = Vector3.zero;
+        gasGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+
+        heilumGas.OnCollect(10);
+
+        Assert.AreEqual(initialFuel - 5f, ShipManager.Fuel, "HeilumGas should reduce fuel when collected");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_HydrogenGas_Collection_IncreasesFuel()
+    {
+        HydrogenGas hydrogenGas = gasGO.AddComponent<HydrogenGas>();
+        float initialFuel = ShipManager.Fuel;
+
+        shipGO.transform.position = Vector3.zero;
+        gasGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+
+        hydrogenGas.OnCollect(10);
+
+        Assert.AreEqual(initialFuel + 10f, ShipManager.Fuel, "HydrogenGas should increase fuel when collected");
+    }
 }

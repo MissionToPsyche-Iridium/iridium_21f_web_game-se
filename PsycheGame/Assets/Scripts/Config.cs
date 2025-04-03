@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class Config
@@ -9,16 +9,27 @@ public class Config
     private const string PATH = "Config";
 
     private static RootConfig _config = JsonUtilityWrapper.FromJson<RootConfig>(Resources.Load<TextAsset>(PATH).text);
+    private static Regex _arrayRegex = new Regex("(?<property>\\S+)\\[(?<index>\\d+)\\]");
 
     public static T Get<T>(string propertyPath)
     {
+        bool lengthModifier = propertyPath.StartsWith('#');
+        if (lengthModifier)
+        {
+            propertyPath = propertyPath.Substring(1);
+        }
+
         string[] properties = propertyPath.Split('.');
         object obj = _config;
+
         foreach (string property in properties)
         {
-            obj = obj.GetType().GetField(property).GetValue(obj);
+            Match match = _arrayRegex.Match(property);
+            obj = obj.GetType().GetField(match.Success ? match.Groups["property"].Value : property).GetValue(obj);
+            obj = match.Success ? ((object[]) obj)[Int32.Parse(match.Groups["index"].Value)] : obj;
         }
-        return (T) obj;
+
+        return (T) (lengthModifier ? ((object[]) obj).Length : obj);
     }
 
     /**
