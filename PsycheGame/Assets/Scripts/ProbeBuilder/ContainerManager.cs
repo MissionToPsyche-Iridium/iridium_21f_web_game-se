@@ -24,6 +24,10 @@ using UnityEngine.UI;
 
     version: 1.3 (Mar 5)
     :: updated the code to use the TileColorScheme class to set the color scheme for the attribute panel bars.
+
+    version: 1.4 (Apr 2)
+    :: added additional methods to support unit testing.  this includes InitiGridData, GetTileAtCell, AddTile, RemoveTile, 
+       IsAssignedToGrid, and IsInInterior methods to support unit testing (ContainerMgrTest.cs).
 */
 
 class GridPositionData
@@ -95,7 +99,6 @@ public class ContainerManager : MonoBehaviour
             for (int j = 0; j < height; j++)
             {
                 gridData[i, j] = new GridPositionData();
-                // Debug.Log("++CM++ Grid position: " + i + ", " + j + " - Occupant: " + gridData[i, j].Occupant);
             }
         }
     }
@@ -110,6 +113,19 @@ public class ContainerManager : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void SetColorProfile(int colorProfile)
+    {
+        if (colorProfile < 1 || colorProfile > 2)
+        {
+            Debug.LogWarning("ContainerManager::SetColorProfile - invalid color profile specified, defaulting to 1");
+            this.colorProfile = 1;
+        }
+        else
+        {
+            this.colorProfile = colorProfile;
+        }
     }
 
     public void AddTile(Tile tile, int x, int y)
@@ -157,32 +173,6 @@ public class ContainerManager : MonoBehaviour
     public (float, float) GetPosition()
     {
         return (this.PosX, this.PosY);
-    }
-    public (float, float) GetPositionGrid(int x, int y)
-    {
-        return (chassisGrid[x, y].x, chassisGrid[x, y].y);
-    }
-    public (float, float) GetPositionGrid()
-    {
-        return (this.PosX, this.PosY);
-    }
-    public (float, float) GetPositionGrid(int x, int y, float offset)
-    {
-        return (chassisGrid[x, y].x + offset, chassisGrid[x, y].y + offset);
-    }
-    public (float, float) GetPositionGrid(int x, int y, float offsetX, float offsetY)
-    {
-        return (chassisGrid[x, y].x + offsetX, chassisGrid[x, y].y + offsetY);
-    }
-
-    public (float, float) GetBeaconPosition(int x, int y)
-    {
-        return (chassisGrid[x, y].x, chassisGrid[x, y].y);
-    }
-
-    public (float, float) GetBeaconPosition(int x, int y, float offset)
-    {
-        return (chassisGrid[x, y].x + offset, chassisGrid[x, y].y + offset);
     }
 
     public (int, int) GetCellAtPosition(Vector3 position)
@@ -234,6 +224,7 @@ public class ContainerManager : MonoBehaviour
 	public void SetColorScheme(int colorScheme)
 	{
 		Debug.Log("CS++ SCS - Setting color scheme to " + colorScheme);
+        Debug.Log("CS++ SCS - Current color profile: " + this.colorProfile);
 		if (colorScheme != colorProfile)
 		{
 			this.colorProfile = colorScheme;
@@ -259,6 +250,11 @@ public class ContainerManager : MonoBehaviour
 		}
 		return (colorScheme.GetColor1(), colorScheme.GetColor2(), colorScheme.GetOpenTileColor(), colorScheme.GetOccupiedTileColor());
 	}
+
+    public TileColorScheme GetCurrentColorScheme()
+    {
+        return colorScheme;
+    }
 
 	public TileColorScheme GetColorScheme()
 	{

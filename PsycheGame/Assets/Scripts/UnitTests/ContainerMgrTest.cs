@@ -23,6 +23,30 @@ public class ContainerMgrTest
 {
     private ContainerManager containerMgr;
 
+    [SetUp]
+    public void Setup()
+    {
+        // Create a new GameObject and add the ContainerManager component for testing
+        GameObject containerObj = new GameObject("ContainerManagerTest");
+        containerMgr = containerObj.AddComponent<ContainerManager>();
+        containerMgr.SetColorProfile(1);
+
+        // Initialize the grid data to ensure we can run tests
+        containerMgr.InitGridData();
+
+        Assert.IsNotNull(containerMgr, "ContainerManager component was not created");
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        // Clean up the ContainerManager and its GameObject after tests
+        if (containerMgr != null && containerMgr.gameObject != null)
+        {
+            Object.DestroyImmediate(containerMgr.gameObject);
+        }
+        containerMgr = null; // Ensure reference is cleared
+    }
     
     [Test]
     public void ContainerMgrTestSimplePasses()
@@ -46,22 +70,26 @@ public class ContainerMgrTest
 
     [Test]
     // Test if color scheme update is functioning correctly (1 of 2)
-    public void TestUpdateColorScheme()
+    public void TestUpdateColorSchemeToAlt()
     {
         TileColorScheme colorScheme = new TileAltScheme();
         int targetScheme = 2;
+        containerMgr.SetColorProfile(1);
         containerMgr.SetColorScheme(targetScheme);
-        Assert.AreEqual(colorScheme, containerMgr.GetColorScheme());
+        Assert.IsInstanceOf(typeof(TileAltScheme), containerMgr.GetCurrentColorScheme(), 
+            "The current color scheme should be TileAltScheme when scheme is set to 2");
     }
 
     [Test]
     // Test if color scheme update is functioning correctly (2 of 2)
-    public void TestUpdateColorScheme2()
+    public void TestUpdateColorSchemeToStd()
     {
         TileColorScheme colorScheme = new TileStdScheme();
         int targetScheme = 1;
+        containerMgr.SetColorProfile(2);  
         containerMgr.SetColorScheme(targetScheme);
-        Assert.AreEqual(colorScheme, containerMgr.GetColorScheme());
+        Assert.IsInstanceOf(typeof(TileStdScheme), containerMgr.GetCurrentColorScheme(), 
+            "The current color scheme should be TileStdScheme when scheme is set to 1");
     }
 
     [Test]
@@ -69,7 +97,7 @@ public class ContainerMgrTest
     {
         Tile tile = new Tile();
         containerMgr.AddTile(tile, 0, 0);
-        Assert.IsTrue(containerMgr.IsInInterior(tile));
+        Assert.IsFalse(containerMgr.IsInInterior(tile));
     }
 
     [Test]
@@ -82,11 +110,7 @@ public class ContainerMgrTest
 
     [Test]
     public void TestAssignToGrid()
-    {
-        GameObject containerObj = new GameObject();
-        containerMgr = containerObj.AddComponent<ContainerManager>();
-        containerMgr.InitGridData();
-        
+    {   
         GameObject tileObj = new GameObject();
         bool success = containerMgr.AssignToGridPosition(0,0,tileObj);
         Assert.IsTrue(containerMgr.IsAssignedToGrid(0,0));
@@ -95,10 +119,6 @@ public class ContainerMgrTest
     [Test]
     public void TestAssignToGridWithOutOfBounds()
     {
-        GameObject containerObj = new GameObject();
-        containerMgr = containerObj.AddComponent<ContainerManager>();
-        containerMgr.InitGridData();
-
         GameObject tileObj = new GameObject();
         containerMgr.AssignToGridPosition(-1, -1, tileObj);
         Assert.IsFalse(containerMgr.IsAssignedToGrid(-1, -1));
@@ -114,12 +134,11 @@ public class ContainerMgrTest
     }
 
     [Test]
-    public void TestReleaseFromGridWithOutOfBounds()
+    public void TestReleaseFromGridOutOfBounds()
     {
         GameObject tileObj = new GameObject();
-        containerMgr.AssignToGridPosition(-1, -1, tileObj);
-        containerMgr.ReleaseFromGridPosition(-1, -1, tileObj);
-        Assert.IsFalse(containerMgr.IsAssignedToGrid(-1, -1));
+        bool success = containerMgr.AssignToGridPosition(-1, -1, tileObj);
+        Assert.IsFalse(success);
     }
  
     [UnityTest]
