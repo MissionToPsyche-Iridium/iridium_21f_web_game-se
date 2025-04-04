@@ -3,12 +3,12 @@ using UnityEngine.UI;
 using TMPro;
 
 public class RareMetalCollectionStatusBar : MonoBehaviour {
-    [SerializeField] private GameObject rareMetalCollectionBarColor;
-    [SerializeField] private Slider rareMetalCollectBar;
-    [SerializeField] private TextMeshProUGUI textDisplay;
+    [SerializeField] public GameObject rareMetalCollectionBarColor;
+    [SerializeField] public Slider rareMetalCollectBar;
+    [SerializeField] public TextMeshProUGUI textDisplay;
     MissionState missionState;
 
-    private Image rareMetalCollectBarImage = null;
+    public Image rareMetalCollectBarImage = null;
     private string metalCollected = "";
     private float totalMined = 0;
     private float target;

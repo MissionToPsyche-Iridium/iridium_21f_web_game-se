@@ -269,4 +269,70 @@ public class ExplorerPlayModeTests
 
         Assert.AreEqual(initialFuel + 10f, ShipManager.Fuel, "HydrogenGas should increase fuel when collected");
     }
+
+    [UnityTest]
+    public IEnumerator Test_RareMetalCollectionStatusBar_UpdatesProgress()
+    {
+        GameObject metalBarGO = new GameObject("RareMetalBar");
+        RareMetalCollectionStatusBar metalBar = metalBarGO.AddComponent<RareMetalCollectionStatusBar>();
+        metalBar.rareMetalCollectionBarColor = new GameObject("BarColor");
+        metalBar.rareMetalCollectBarImage = metalBar.rareMetalCollectionBarColor.AddComponent<Image>();
+        metalBar.rareMetalCollectBar = metalBarGO.AddComponent<Slider>();
+        metalBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 100 }
+        }, "TestLevel");
+        metalBar.ResetStatusBar();
+
+        Assert.AreEqual(Color.red, metalBar.rareMetalCollectBarImage.color, "Bar should be red at 0 progress");
+        Assert.AreEqual("0/100", metalBar.textDisplay.text, "Text should show 0 progress");
+        Assert.AreEqual(0f, metalBar.rareMetalCollectBar.value, "Slider should be at 0");
+
+        metalBar.UpdateIndicator(70);
+        Assert.AreEqual(Color.yellow, metalBar.rareMetalCollectBarImage.color, "Bar should be yellow at mid progress");
+        Assert.AreEqual("70/100", metalBar.textDisplay.text, "Text should show 70 progress");
+        Assert.AreEqual(70f, metalBar.rareMetalCollectBar.value, "Slider should be at 70");
+
+        metalBar.UpdateIndicator(30); 
+        Assert.AreEqual(Color.green, metalBar.rareMetalCollectBarImage.color, "Bar should be green when target met");
+        Assert.AreEqual("100/100", metalBar.textDisplay.text, "Text should show 100 progress");
+        Assert.AreEqual(100f, metalBar.rareMetalCollectBar.value, "Slider should be at 100");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_GasCollectionStatusBar_UpdatesProgress()
+    {
+        GameObject gasBarGO = new GameObject("GasBar");
+        GasCollectionStatusBar gasBar = gasBarGO.AddComponent<GasCollectionStatusBar>();
+        gasBar.gasCollectionBarColor = new GameObject("BarColor");
+        gasBar.gasCollectBarImage = gasBar.gasCollectionBarColor.AddComponent<Image>();
+        gasBar.gasCollectBar = gasBarGO.AddComponent<Slider>();
+        gasBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 50 }
+        }, "TestLevel");
+        gasBar.ResetStatusBar();
+
+        Assert.AreEqual(Color.red, gasBar.gasCollectBarImage.color, "Bar should be red at 0 progress");
+        Assert.AreEqual("0/50", gasBar.textDisplay.text, "Text should show 0 progress");
+        Assert.AreEqual(0f, gasBar.gasCollectBar.value, "Slider should be at 0");
+
+        gasBar.UpdateIndicator(35);
+        Assert.AreEqual(Color.yellow, gasBar.gasCollectBarImage.color, "Bar should be yellow at mid progress");
+        Assert.AreEqual("35/50", gasBar.textDisplay.text, "Text should show 35 progress");
+        Assert.AreEqual(35f, gasBar.gasCollectBar.value, "Slider should be at 35");
+
+        gasBar.UpdateIndicator(15); 
+        Assert.AreEqual(Color.green, gasBar.gasCollectBarImage.color, "Bar should be green when target met");
+        Assert.AreEqual("50/50", gasBar.textDisplay.text, "Text should show 50 progress");
+        Assert.AreEqual(50f, gasBar.gasCollectBar.value, "Slider should be at 50");
+
+        yield return null;
+    }
 }
