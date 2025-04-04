@@ -151,7 +151,7 @@ public class ContainerMgrTest
     {
         GameObject tileObj = new GameObject();
         bool success = containerMgr.AssignToGridPosition(3, 2, tileObj);
-        Assert.IsTrue(success, "Tile should be successfully assigned to grid position (1, 1)");
+        Assert.IsTrue(success, "Tile should be successfully assigned to grid position (3, 2)");
         Assert.IsTrue(containerMgr.IsAssignedToGrid(3, 2), 
             "Tile should be found in the grid at position (3, 2)");
     }
