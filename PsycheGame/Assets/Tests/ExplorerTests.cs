@@ -335,4 +335,112 @@ public class ExplorerPlayModeTests
 
         yield return null;
     }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_PauseGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+
+        Assert.IsFalse(PauseHandler.IsGamePaused, "Game should start unpaused");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+
+        Input.GetKeyDown(KeyCode.Escape);
+        pauseHandler.PauseGame();
+        yield return null;
+
+        Assert.IsTrue(PauseHandler.IsGamePaused, "Game should be paused");
+        Assert.AreEqual(0f, Time.timeScale, "Time should be frozen");
+        Assert.IsTrue(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be visible");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_ResumeGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        pauseHandler.PauseGame();
+
+        pauseHandler.ResumeGame();
+        yield return null;
+
+        Assert.IsFalse(PauseHandler.IsGamePaused, "Game should be unpaused");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+        Assert.IsFalse(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be hidden");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_QuitGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.PauseGame();
+
+        pauseHandler.QuitGame();
+        yield return null;
+
+        Assert.AreEqual("MainMenu", SceneManager.GetActiveScene().name, "Should load MainMenu scene");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be reset to normal");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_RestartGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        SceneManager.LoadScene("TestScene");
+        string initialScene = SceneManager.GetActiveScene().name;
+
+        pauseHandler.RestartGame();
+        yield return new WaitForSecondsRealtime(0.1f); 
+
+        Assert.AreEqual(initialScene, SceneManager.GetActiveScene().name, "Scene should reload to current scene");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+        Assert.IsFalse(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be hidden");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_UpdateButtonText()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        GameObject panel = new GameObject("MissionObjectivePanel");
+        GameObject textObj = new GameObject("BeginResumeText");
+        textObj.transform.SetParent(panel.transform);
+        TextMeshProUGUI textComponent = textObj.AddComponent<TextMeshProUGUI>();
+        pauseHandler.missionObjectivePanel = panel;
+
+        pauseHandler.UpdateButtonText(false);
+        Assert.AreEqual("Begin", textComponent.text, "Button should say 'Begin' when unpaused");
+
+        pauseHandler.UpdateButtonText(true);
+        Assert.AreEqual("Resume", textComponent.text, "Button should say 'Resume' when paused");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_UpdateMissionObjectives_UpdateUI()
+    {
+        GameObject uiGO = new GameObject("MissionUI");
+        UpdateMissionObjectives ui = uiGO.AddComponent<UpdateMissionObjectives>();
+        ui.textMeshProUGUI = uiGO.AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 50, description = "Collect Rare Metals" },
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 30, description = "Collect Gases" }
+        }, "TestLevel");
+
+        ui.UpdateUI();
+        yield return null;
+
+        string expectedText = "Level: TestLevel\nCollect Rare Metals: 50\nCollect Gases: 30\n";
+        Assert.AreEqual(expectedText, ui.textMeshProUGUI.text, "UI should display level and objectives");
+        Assert.AreEqual(30, ui.textMeshProUGUI.fontSize, "Font size should be 30");
+        Assert.AreEqual(TextAlignmentOptions.Center, ui.textMeshProUGUI.alignment, "Text should be centered");
+    }
 }

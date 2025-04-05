@@ -6,7 +6,7 @@ using UnityEngine;
 public class UpdateMissionObjectives : MonoBehaviour
 {
     MissionState missionState;
-    [SerializeField] private TextMeshProUGUI textMeshProUGUI;
+    [SerializeField] public TextMeshProUGUI textMeshProUGUI;
     
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class UpdateMissionObjectives : MonoBehaviour
         UpdateUI();
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         textMeshProUGUI.text = "";
         missionState =  MissionState.Instance;
