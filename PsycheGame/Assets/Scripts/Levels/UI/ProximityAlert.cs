@@ -14,17 +14,16 @@ public class AlertNotification : MonoBehaviour
         alertPanel.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Asteroid"))
         {
-            Debug.Log("Asteroid detected!");
             nearbyAsteroids++;
             UpdateWarningIndicator();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Asteroid"))
         {

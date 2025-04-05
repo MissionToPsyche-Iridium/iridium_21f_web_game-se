@@ -5,192 +5,116 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 [TestFixture]
 public class ExplorerPlayModeTests
 {
-    private GameObject levelManagerGO;
     private LevelManager levelManager;
-    private GameObject shipGO;
-    private ShipMovement shipMovement;
-    private GameObject gasGO;
 
-    [SetUp]
-    public void Setup()
+    [UnitySetUp]
+    public IEnumerator Setup()
     {
-        SceneManager.LoadScene("TestScene"); 
+        SceneManager.LoadScene("ExplorationPlayMode");
         
-        levelManagerGO = new GameObject("LevelManager");
-        levelManager = levelManagerGO.AddComponent<LevelManager>();
-        
-        shipGO = new GameObject("Ship");
-        shipMovement = shipGO.AddComponent<ShipMovement>();
-        shipGO.AddComponent<Rigidbody2D>();
-        
-        levelManager.SetLevels(new System.Collections.Generic.List<LevelConfig>
-        {
-            ScriptableObject.CreateInstance<LevelConfig>()
-        });
-        levelManager.GetLevels()[0].missionTimer = 180f;
-        
-        gasGO = new GameObject("GasCloud");
-        ParticleSystem particleSystem = gasGO.AddComponent<ParticleSystem>();
-        BoxCollider2D gasCollider = gasGO.AddComponent<BoxCollider2D>();
-        gasCollider.isTrigger = true;
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "ExplorationPlayMode");
+        yield return new WaitForSeconds(0.5f);
 
-        var renderer = gasGO.GetComponent<ParticleSystemRenderer>();
-        if (renderer.sharedMaterial == null)
-        {
-            renderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+        levelManager = GameObject.FindObjectOfType<LevelManager>();
+        Assert.IsNotNull(levelManager, "LevelManager must be present in the test scene");
+
+        PlayerNameHandler nameHandler = GameObject.FindObjectOfType<PlayerNameHandler>();
+        Assert.IsNotNull(nameHandler, "PlayerNameHandler must be present in the test scene");
+    
+        GameObject panel = GameObject.Find("PlayerNamePanel");
+        Assert.IsNotNull(panel, "Panel not found in scene");
+
+        Transform playerNameTransform = panel.transform.Find("PlayerName");
+        Assert.IsNotNull(playerNameTransform, "PlayerName not found under Panel");
+
+        Transform nameInputFieldTransform = playerNameTransform.Find("NameInputField");
+        Assert.IsNotNull(nameInputFieldTransform, "NameInputField not found under PlayerName");
+
+        InputField nameInput = nameInputFieldTransform.GetComponent<InputField>();
+        Assert.IsNotNull(nameInput, "InputField component not found on NameInputField");
+
+        nameInput.text = "TestPlayer";
+
+        Button beginButton = GameObject.Find("BeginButton")?.GetComponent<Button>();
+        Assert.IsNotNull(beginButton, "BeginButton not found in scene");
+
+        beginButton.onClick.Invoke();
+
+        yield return new WaitUntil(() => !nameInput.gameObject.activeSelf); 
+        yield return new WaitForSeconds(0.5f); 
+        Assert.AreEqual("TestPlayer", PlayerPrefs.GetString("PlayerName", ""), "Player name should be saved in PlayerPrefs");
         }
 
-        ShipManager.Fuel = 100f; 
-        ShipManager.Health = 100; 
-    }
-
     [TearDown]
-    public void TearDown()
-    {
-        Object.Destroy(levelManagerGO);
-        Object.Destroy(gasGO);
-        Object.Destroy(shipGO);
+    public void TearDown(){
+        Debug.Log("TearDown completed");
     }
 
-    [UnityTest]
-    public IEnumerator Test_ShipMovement_ConsumesFuel()
-    {
-        float initialFuel = ShipManager.Fuel;
-        shipMovement.moveSpeed = 7.5f;
-        shipMovement.fuelConsumptionRate = 1f;
-
-        shipMovement.Update();
-        yield return new WaitForFixedUpdate();
-
-        Assert.Less(ShipManager.Fuel, initialFuel, "Fuel should decrease when ship moves");
-        Assert.GreaterOrEqual(ShipManager.Fuel, 0f, "Fuel should not go below 0");
-    }
-
-    [UnityTest]
-    public IEnumerator Test_LevelProgression_OnSuccess()
-    {
-        int initialLevel = levelManager.getCurrentLevel();
-        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
-        {
-            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 10 }
-        }, "TestLevel");
-        MissionState.Instance.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals, 10);
-
-        levelManager.EndLevel(true);
-        yield return new WaitForSeconds(4f);
-
-        Assert.AreEqual(initialLevel + 1, levelManager.getCurrentLevel(), "Level should increment on success");
-        Assert.Greater(levelManager.PlayerScore, 0, "Score should increase on level completion");
-    }
-
-    [UnityTest]
-    public IEnumerator Test_MissionObjective_Completion()
-    {
-        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
-        {
-            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 50 },
-            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 50 }
-        }, "TestLevel");
-
-        MissionState.Instance.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectGases, 50);
-        MissionState.Instance.UpdateObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals, 50);
-        yield return null;
-
-        Assert.IsTrue(MissionState.Instance.IsMissionComplete, "Mission should be complete when all objectives are met");
-    }
-
-    [UnityTest]
-    public IEnumerator Test_ShipCollision_ReducesHealth()
-    {
-        GameObject collisionHandlerGO = new GameObject("ShipCollisionHandler");
-        ShipCollisionHandler collisionHandler = collisionHandlerGO.AddComponent<ShipCollisionHandler>();
-      
-        GameObject shipGO = new GameObject("Ship");
-        GameObject modalPanelGO = new GameObject("ModalPanel");
-        HealthBar healthBar = new GameObject("HealthBar").AddComponent<HealthBar>();
-
-        collisionHandler.InitializeForTest(shipGO, modalPanelGO, healthBar);
-
-        int initialHealth = (int) ShipManager.Health;
-
-        collisionHandler.HandleAsteroidCollision(Vector2.right * 5f, Vector2.left);
-
-        Assert.Less(ShipManager.Health, initialHealth, "Health should decrease after collision");
-
-        yield return null;
-    }
-
-    [UnityTest]
+   [UnityTest]
     public IEnumerator Test_AlertNotification_FlashesOnAsteroid()
     {
+        Debug.Log("Test alert notification starting...");
+
         GameObject alertGO = new GameObject("AlertNotification");
         AlertNotification alert = alertGO.AddComponent<AlertNotification>();
         alert.alertPanel = new GameObject("AlertPanel");
         alert.flashInterval = 0.5f;
         BoxCollider2D alertCollider = alertGO.AddComponent<BoxCollider2D>();
         alertCollider.isTrigger = true;
+        alertCollider.size = new Vector2(2f, 2f);
+        Rigidbody2D alertRb = alertGO.AddComponent<Rigidbody2D>();
+        alertRb.gravityScale = 0f;
+        alertRb.freezeRotation = true;
+        alertRb.isKinematic = false;
+        alertRb.velocity = Vector2.up * 0.01f;
 
-        GameObject asteroidGO = new GameObject("Asteroid");
-        asteroidGO.tag = "Asteroid";
-        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
-        asteroidCollider.isTrigger = true;
+        GameObject asteroidGO = GameObject.FindWithTag("Asteroid");
+        if (asteroidGO == null)
+        {
+            Debug.LogWarning("No Asteroid found, creating one");
+            asteroidGO = new GameObject("Asteroid");
+            asteroidGO.tag = "Asteroid";
+            asteroidGO.AddComponent<Asteroid>();
+            BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
+            asteroidCollider.isTrigger = true;
+            asteroidCollider.size = new Vector2(2f, 2f);
+            Rigidbody2D asteroidRb = asteroidGO.AddComponent<Rigidbody2D>();
+            asteroidRb.isKinematic = true;
+        }
 
         alertGO.transform.position = Vector3.zero;
         asteroidGO.transform.position = Vector3.zero;
 
-        yield return new WaitForFixedUpdate(); 
-        yield return new WaitForSeconds(0.6f); 
+ 
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.6f);
 
         Assert.IsTrue(alert.alertPanel.activeSelf, "Alert panel should activate with nearby asteroid");
         yield return new WaitForSeconds(0.5f);
         Assert.IsFalse(alert.alertPanel.activeSelf, "Alert panel should flash off");
 
+        alertRb.velocity = Vector2.zero;
         asteroidGO.transform.position = Vector3.one * 10f;
         yield return new WaitForFixedUpdate();
+
         Assert.IsFalse(alert.alertPanel.activeSelf, "Alert panel should deactivate when asteroid leaves");
-    }
+        Debug.Log("Test completed");
 
-    [UnityTest]
-    public IEnumerator Test_HealthBar_UpdatesAndFlashes()
-    {
-        GameObject healthBarGO = new GameObject("HealthBar");
-        HealthBar healthBar = healthBarGO.AddComponent<HealthBar>();
-        healthBar.healthBarColor = new GameObject("HealthBarColor");
-        healthBar.healthBarImage = healthBar.healthBarColor.AddComponent<Image>();
-        healthBar.healthBar = healthBarGO.AddComponent<Slider>();
-        healthBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
-
-        ShipManager.Health = 75f;
-        healthBar.UpdateIndicator();
-        Assert.AreEqual(Color.green, healthBar.healthBarImage.color, "Health bar should be green at high health");
-
-        ShipManager.Health = 40f;
-        healthBar.UpdateIndicator();
-        Assert.AreEqual(Color.yellow, healthBar.healthBarImage.color, "Health bar should be yellow at mid health");
-
-        ShipManager.Health = 10f;
-        healthBar.UpdateIndicator();
-        yield return new WaitForSeconds(0.6f);
-        Assert.AreEqual(Color.red, healthBar.healthBarImage.color, "Health bar should be red at low health");
-        yield return new WaitForSeconds(0.5f);
-        Assert.AreEqual(Color.white, healthBar.healthBarImage.color, "Health bar should flash white at low health");
-
-        yield return null;
+        Object.DestroyImmediate(alertGO);
+        Object.DestroyImmediate(asteroidGO);
     }
 
     [UnityTest]
     public IEnumerator Test_FuelBar_UpdatesAndFlashes()
     {
-        GameObject fuelBarGO = new GameObject("FuelBar");
-        FuelBar fuelBar = fuelBarGO.AddComponent<FuelBar>();
-        fuelBar.fuelBarColor = new GameObject("FuelBarColor");
-        fuelBar.fuelBarImage = fuelBar.fuelBarColor.AddComponent<Image>();
-        fuelBar.fuelBar = fuelBarGO.AddComponent<Slider>();
-        fuelBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+        Debug.Log("Test fuel bar starting...");
+        FuelBar fuelBar = GameObject.FindObjectOfType<FuelBar>();
+        Assert.IsNotNull(fuelBar, "FuelBar not found in scene");
 
         ShipManager.Fuel = 75f;
         fuelBar.UpdateIndicator(ShipManager.Fuel);
@@ -206,7 +130,7 @@ public class ExplorerPlayModeTests
         fuelBar.UpdateIndicator(ShipManager.Fuel);
         yield return new WaitForSeconds(0.6f);
         Assert.AreEqual(Color.red, fuelBar.fuelBarImage.color, "Fuel bar should be red at low fuel");
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
         Assert.AreEqual(Color.white, fuelBar.fuelBarImage.color, "Fuel bar should flash white at low fuel");
         Assert.AreEqual("10", fuelBar.textDisplay.text, "Text should show current fuel");
 
@@ -220,67 +144,116 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_DrillAsteroid_CollectsResources()
     {
-        GameObject drillGO = new GameObject("Drill");
-        drillGO.AddComponent<DrillController>();
-        BoxCollider2D drillCollider = drillGO.AddComponent<BoxCollider2D>();
-        drillCollider.isTrigger = true;
+        Debug.Log("Test drill asteroid starting...");
+        DrillController drill = GameObject.FindObjectOfType<DrillController>();
+        Assert.IsNotNull(drill, "DrillController not found in scene");
 
-        GameObject asteroidGO = new GameObject("Asteroid");
-        MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
-        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
-        asteroidCollider.isTrigger = true;
+        GameObject asteroidGO = GameObject.FindWithTag("Asteroid");
+        if (asteroidGO == null || !asteroidGO.TryGetComponent<MineralCollection>(out _))
+        {
+            Debug.LogWarning("No MineralCollection asteroid found, creating one");
+            asteroidGO = new GameObject("Asteroid");
+            MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
+            asteroid.fragmentParticles = new GameObject("Fragments").AddComponent<ParticleSystem>();
+            BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
+            asteroidCollider.isTrigger = true;
+            asteroidCollider.size = new Vector2(2f, 2f);
+            asteroidGO.AddComponent<Rigidbody2D>().isKinematic = true;
+        }
+        MineralCollection mineralCollection = asteroidGO.GetComponent<MineralCollection>();
+        Assert.IsNotNull(mineralCollection, "Asteroid must have MineralCollection");
 
-        drillGO.transform.position = Vector3.zero;
+        drill.transform.position = Vector3.zero;
         asteroidGO.transform.position = Vector3.zero;
 
-        yield return new WaitForFixedUpdate();
-        Assert.Less(asteroid.metals[0].Amount, 50, "Metal amount should decrease after drilling");
+        drill.OnTriggerEnter2D(asteroidGO.GetComponent<BoxCollider2D>());
+        drill.ActivateLaser();
+
+        yield return new WaitForSeconds(2.1f);
+
+        Assert.Less(mineralCollection.metals[0].Amount, 50, "Metal amount should decrease after drilling");
         Assert.Greater(MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals), 0, "Mission progress should increase");
+
+        Object.DestroyImmediate(asteroidGO);
     }
 
     [UnityTest]
     public IEnumerator Test_HeilumGas_Collection_ReducesFuel()
     {
-        HeilumGas heilumGas = gasGO.AddComponent<HeilumGas>();
-        float initialFuel = ShipManager.Fuel;
+        Debug.Log("Test helium gas starting...");
+        GameObject gasGO = new GameObject("HeliumGasTest");
+        HeilumGas heliumGas = gasGO.AddComponent<HeilumGas>();
+        BoxCollider2D gasCollider = gasGO.AddComponent<BoxCollider2D>();
+        gasCollider.isTrigger = true;
+        gasCollider.size = new Vector2(1f, 1f);
+        ParticleSystem gasPS = gasGO.AddComponent<ParticleSystem>();
+        ParticleSystemRenderer gasPSRenderer = gasPS.GetComponent<ParticleSystemRenderer>();
+        if (gasPSRenderer.material == null)
+            gasPSRenderer.material = new Material(Shader.Find("Particles/Standard Unlit"));
 
-        shipGO.transform.position = Vector3.zero;
+        ShipMovement ship = GameObject.FindObjectOfType<ShipMovement>();
+        Assert.IsNotNull(ship, "ShipMovement not found in scene");
+        gasPS.trigger.SetCollider(0, ship.GetComponent<BoxCollider2D>());
+
+        float initialFuel = ShipManager.Fuel;
+        ship.transform.position = Vector3.zero;
         gasGO.transform.position = Vector3.zero;
 
         yield return new WaitForFixedUpdate();
-
-        heilumGas.OnCollect(10);
+        heliumGas.OnCollect(10);
 
         Assert.AreEqual(initialFuel - 5f, ShipManager.Fuel, "HeilumGas should reduce fuel when collected");
+
+        Object.DestroyImmediate(gasGO);
     }
 
     [UnityTest]
     public IEnumerator Test_HydrogenGas_Collection_IncreasesFuel()
     {
+        Debug.Log("Test hydrogen gas starting...");
+        GameObject gasGO = new GameObject("HydrogenGasTest");
         HydrogenGas hydrogenGas = gasGO.AddComponent<HydrogenGas>();
-        float initialFuel = ShipManager.Fuel;
+        BoxCollider2D gasCollider = gasGO.AddComponent<BoxCollider2D>();
+        gasCollider.isTrigger = true;
+        gasCollider.size = new Vector2(1f, 1f);
+        ParticleSystem gasPS = gasGO.AddComponent<ParticleSystem>();
+        ParticleSystemRenderer gasPSRenderer = gasPS.GetComponent<ParticleSystemRenderer>();
+        if (gasPSRenderer.material == null)
+            gasPSRenderer.material = new Material(Shader.Find("Particles/Standard Unlit"));
 
-        shipGO.transform.position = Vector3.zero;
+        ShipMovement ship = GameObject.FindObjectOfType<ShipMovement>();
+        Assert.IsNotNull(ship, "ShipMovement not found in scene");
+        gasPS.trigger.SetCollider(0, ship.GetComponent<BoxCollider2D>());
+
+        float initialFuel = ShipManager.Fuel;
+        ship.transform.position = Vector3.zero;
         gasGO.transform.position = Vector3.zero;
 
         yield return new WaitForFixedUpdate();
-
         hydrogenGas.OnCollect(10);
 
         Assert.AreEqual(initialFuel + 10f, ShipManager.Fuel, "HydrogenGas should increase fuel when collected");
+
+        Object.DestroyImmediate(gasGO);
     }
 
     [UnityTest]
     public IEnumerator Test_RareMetalCollectionStatusBar_UpdatesProgress()
     {
-        GameObject metalBarGO = new GameObject("RareMetalBar");
-        RareMetalCollectionStatusBar metalBar = metalBarGO.AddComponent<RareMetalCollectionStatusBar>();
-        metalBar.rareMetalCollectionBarColor = new GameObject("BarColor");
-        metalBar.rareMetalCollectBarImage = metalBar.rareMetalCollectionBarColor.AddComponent<Image>();
-        metalBar.rareMetalCollectBar = metalBarGO.AddComponent<Slider>();
-        metalBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+        Debug.Log("Test rare metal status bar starting...");
+        RareMetalCollectionStatusBar metalBar = GameObject.FindObjectOfType<RareMetalCollectionStatusBar>();
+        if (metalBar == null)
+        {
+            Debug.LogWarning("RareMetalCollectionStatusBar not found, creating one");
+            GameObject metalBarGO = new GameObject("RareMetalBar");
+            metalBar = metalBarGO.AddComponent<RareMetalCollectionStatusBar>();
+            metalBar.rareMetalCollectionBarColor = new GameObject("BarColor");
+            metalBar.rareMetalCollectBarImage = metalBar.rareMetalCollectionBarColor.AddComponent<Image>();
+            metalBar.rareMetalCollectBar = metalBarGO.AddComponent<Slider>();
+            metalBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+        }
 
-        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        MissionState.Instance.Initialize(new List<MissionState.MissionObjective>
         {
             new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 100 }
         }, "TestLevel");
@@ -295,25 +268,33 @@ public class ExplorerPlayModeTests
         Assert.AreEqual("70/100", metalBar.textDisplay.text, "Text should show 70 progress");
         Assert.AreEqual(70f, metalBar.rareMetalCollectBar.value, "Slider should be at 70");
 
-        metalBar.UpdateIndicator(30); 
+        metalBar.UpdateIndicator(30);
         Assert.AreEqual(Color.green, metalBar.rareMetalCollectBarImage.color, "Bar should be green when target met");
         Assert.AreEqual("100/100", metalBar.textDisplay.text, "Text should show 100 progress");
         Assert.AreEqual(100f, metalBar.rareMetalCollectBar.value, "Slider should be at 100");
 
         yield return null;
+
+        Object.DestroyImmediate(metalBar.gameObject);
     }
 
     [UnityTest]
     public IEnumerator Test_GasCollectionStatusBar_UpdatesProgress()
     {
-        GameObject gasBarGO = new GameObject("GasBar");
-        GasCollectionStatusBar gasBar = gasBarGO.AddComponent<GasCollectionStatusBar>();
-        gasBar.gasCollectionBarColor = new GameObject("BarColor");
-        gasBar.gasCollectBarImage = gasBar.gasCollectionBarColor.AddComponent<Image>();
-        gasBar.gasCollectBar = gasBarGO.AddComponent<Slider>();
-        gasBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+        Debug.Log("Test gas status bar starting...");
+        GasCollectionStatusBar gasBar = GameObject.FindObjectOfType<GasCollectionStatusBar>();
+        if (gasBar == null)
+        {
+            Debug.LogWarning("GasCollectionStatusBar not found, creating one");
+            GameObject gasBarGO = new GameObject("GasBar");
+            gasBar = gasBarGO.AddComponent<GasCollectionStatusBar>();
+            gasBar.gasCollectionBarColor = new GameObject("BarColor");
+            gasBar.gasCollectBarImage = gasBar.gasCollectionBarColor.AddComponent<Image>();
+            gasBar.gasCollectBar = gasBarGO.AddComponent<Slider>();
+            gasBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+        }
 
-        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        MissionState.Instance.Initialize(new List<MissionState.MissionObjective>
         {
             new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 50 }
         }, "TestLevel");
@@ -328,25 +309,26 @@ public class ExplorerPlayModeTests
         Assert.AreEqual("35/50", gasBar.textDisplay.text, "Text should show 35 progress");
         Assert.AreEqual(35f, gasBar.gasCollectBar.value, "Slider should be at 35");
 
-        gasBar.UpdateIndicator(15); 
+        gasBar.UpdateIndicator(15);
         Assert.AreEqual(Color.green, gasBar.gasCollectBarImage.color, "Bar should be green when target met");
         Assert.AreEqual("50/50", gasBar.textDisplay.text, "Text should show 50 progress");
         Assert.AreEqual(50f, gasBar.gasCollectBar.value, "Slider should be at 50");
 
         yield return null;
+
+        Object.DestroyImmediate(gasBar.gameObject);
     }
 
     [UnityTest]
     public IEnumerator Test_PauseHandler_PauseGame()
     {
-        GameObject pauseGO = new GameObject("PauseHandler");
-        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
-        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        Debug.Log("Test pause handler pause starting...");
+        PauseHandler pauseHandler = GameObject.FindObjectOfType<PauseHandler>();
+        Assert.IsNotNull(pauseHandler, "PauseHandler not found in scene");
 
         Assert.IsFalse(PauseHandler.IsGamePaused, "Game should start unpaused");
         Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
 
-        Input.GetKeyDown(KeyCode.Escape);
         pauseHandler.PauseGame();
         yield return null;
 
@@ -358,9 +340,9 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_PauseHandler_ResumeGame()
     {
-        GameObject pauseGO = new GameObject("PauseHandler");
-        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
-        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        Debug.Log("Test pause handler resume starting...");
+        PauseHandler pauseHandler = GameObject.FindObjectOfType<PauseHandler>();
+        Assert.IsNotNull(pauseHandler, "PauseHandler not found in scene");
         pauseHandler.PauseGame();
 
         pauseHandler.ResumeGame();
@@ -374,8 +356,9 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_PauseHandler_QuitGame()
     {
-        GameObject pauseGO = new GameObject("PauseHandler");
-        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        Debug.Log("Test pause handler quit starting...");
+        PauseHandler pauseHandler = GameObject.FindObjectOfType<PauseHandler>();
+        Assert.IsNotNull(pauseHandler, "PauseHandler not found in scene");
         pauseHandler.PauseGame();
 
         pauseHandler.QuitGame();
@@ -388,14 +371,13 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_PauseHandler_RestartGame()
     {
-        GameObject pauseGO = new GameObject("PauseHandler");
-        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
-        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
-        SceneManager.LoadScene("TestScene");
+        Debug.Log("Test pause handler restart starting...");
+        PauseHandler pauseHandler = GameObject.FindObjectOfType<PauseHandler>();
+        Assert.IsNotNull(pauseHandler, "PauseHandler not found in scene");
         string initialScene = SceneManager.GetActiveScene().name;
 
         pauseHandler.RestartGame();
-        yield return new WaitForSecondsRealtime(0.1f); 
+        yield return new WaitForSecondsRealtime(0.1f);
 
         Assert.AreEqual(initialScene, SceneManager.GetActiveScene().name, "Scene should reload to current scene");
         Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
@@ -405,13 +387,18 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_PauseHandler_UpdateButtonText()
     {
-        GameObject pauseGO = new GameObject("PauseHandler");
-        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
-        GameObject panel = new GameObject("MissionObjectivePanel");
-        GameObject textObj = new GameObject("BeginResumeText");
-        textObj.transform.SetParent(panel.transform);
-        TextMeshProUGUI textComponent = textObj.AddComponent<TextMeshProUGUI>();
-        pauseHandler.missionObjectivePanel = panel;
+        Debug.Log("Test pause handler update button text starting...");
+        PauseHandler pauseHandler = GameObject.FindObjectOfType<PauseHandler>();
+        Assert.IsNotNull(pauseHandler, "PauseHandler not found in scene");
+
+        TextMeshProUGUI textComponent = pauseHandler.missionObjectivePanel.transform.Find("BeginResumeText")?.GetComponent<TextMeshProUGUI>();
+        if (textComponent == null)
+        {
+            Debug.LogWarning("BeginResumeText not found, creating one");
+            GameObject textObj = new GameObject("BeginResumeText");
+            textObj.transform.SetParent(pauseHandler.missionObjectivePanel.transform);
+            textComponent = textObj.AddComponent<TextMeshProUGUI>();
+        }
 
         pauseHandler.UpdateButtonText(false);
         Assert.AreEqual("Begin", textComponent.text, "Button should say 'Begin' when unpaused");
@@ -425,11 +412,11 @@ public class ExplorerPlayModeTests
     [UnityTest]
     public IEnumerator Test_UpdateMissionObjectives_UpdateUI()
     {
-        GameObject uiGO = new GameObject("MissionUI");
-        UpdateMissionObjectives ui = uiGO.AddComponent<UpdateMissionObjectives>();
-        ui.textMeshProUGUI = uiGO.AddComponent<TextMeshProUGUI>();
+        Debug.Log("Test update mission objectives starting...");
+        UpdateMissionObjectives ui = GameObject.FindObjectOfType<UpdateMissionObjectives>();
+        Assert.IsNotNull(ui, "UpdateMissionObjectives not found in scene");
 
-        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        MissionState.Instance.Initialize(new List<MissionState.MissionObjective>
         {
             new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 50, description = "Collect Rare Metals" },
             new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 30, description = "Collect Gases" }

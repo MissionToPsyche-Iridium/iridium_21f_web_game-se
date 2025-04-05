@@ -72,7 +72,7 @@ private void OnBeginButtonClicked()
         }
         else
         {
-            Debug.LogError("LevelManager.Instance is null. Cannot start game.");
+            Debug.LogError("Instance is null. Cannot start game.");
         }
     }
 }

@@ -4,7 +4,7 @@ public class DrillController : MonoBehaviour {
     [Header("Laser Raycast Parameters")]
     [SerializeField] private float laserRange = 5f; 
     [Header("Laser Animation")]
-    [SerializeField] private GameObject laserEffect;
+    [SerializeField] public GameObject laserEffect;
 
     private MineralCollection currentAsteroid;
     private const float drillDuration = 2f;
@@ -26,11 +26,11 @@ public class DrillController : MonoBehaviour {
         }
     }
 
-    protected void ActivateLaser() {
+    public void ActivateLaser() {
         laserEffect.SetActive(true);
     }
 
-    protected void OnTriggerEnter2D(Collider2D other) {
+    public void OnTriggerEnter2D(Collider2D other) {
         MineralCollection asteroid = other.GetComponent<MineralCollection>();
         Debug.Log(asteroid);
         if (asteroid != null) {

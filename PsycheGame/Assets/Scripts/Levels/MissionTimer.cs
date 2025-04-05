@@ -16,7 +16,6 @@ public class MissionTimer : MonoBehaviour
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
             textMeshPro.text = $"{minutes:00}:{seconds:00}";
-            //Debug.Log($"{minutes:00}:{seconds:00}");
         }
     }
 

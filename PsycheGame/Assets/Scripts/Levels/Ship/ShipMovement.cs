@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private FuelBar fuelBarUI;
-    [SerializeField] GameObject boost;
+    [SerializeField] private GameObject boost;
 
     private bool isBoosting = false;
     private float targetSpeed; 

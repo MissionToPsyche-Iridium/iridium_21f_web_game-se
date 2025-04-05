@@ -54,7 +54,7 @@ public abstract class MineralCollection : Spawnable, ScannableObject {
     [SerializeField] protected int minTotalAmount = 100;
     [SerializeField] public float drillRate = 15f;
     [Header("Visual & Progession")]
-    [SerializeField] private ParticleSystem fragmentParticles;
+    [SerializeField] public ParticleSystem fragmentParticles;
     [SerializeField] public Progress scanProgress = new Progress(0);
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
@@ -161,7 +161,6 @@ public abstract class MineralCollection : Spawnable, ScannableObject {
             Destroy(fragmentParticles.gameObject, 5f); 
         }
         fragmentParticles.gameObject.SetActive(false);
-        Debug.Log("Asteroid fully mined!");
         Destroy(this.gameObject); 
     }
 

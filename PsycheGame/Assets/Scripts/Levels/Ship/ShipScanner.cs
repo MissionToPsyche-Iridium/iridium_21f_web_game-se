@@ -9,11 +9,11 @@ public class ShipScanBehavior : MonoBehaviour {
     [SerializeField] private float distance = 10f;    // length of rays
     [SerializeField] private float rayCount = 100.0f; // number of rays to fire
     [SerializeField] private float arcAngle = 180.0f; // angle to fire 'rayCount' rays across
-    [SerializeField] private LayerMask scannableMask;
+    [SerializeField] public LayerMask scannableMask;
 
     [Header("Animation")]
-    [SerializeField] private GameObject scanner;
-    [SerializeField] private GameObject scanProgressBarPrefab;
+    [SerializeField] public GameObject scanner;
+    [SerializeField] public GameObject scanProgressBarPrefab;
 
     private RaycastHit2D hit;
     private bool isScanning = false;

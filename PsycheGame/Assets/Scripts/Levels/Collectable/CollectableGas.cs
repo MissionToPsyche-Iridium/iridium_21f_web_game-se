@@ -7,7 +7,7 @@ public abstract class CollectableGas : Spawnable, ScannableObject {
     private ParticleSystem ps;
     private Material psMaterial;
     private Material psSharedMaterial;
-    private List<ParticleSystem.Particle> particles = new();
+    public List<ParticleSystem.Particle> particles = new();
     private bool collectStart = false;
     private MissionState missionState;
 
