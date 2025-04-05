@@ -27,8 +27,7 @@ public class BuildManager : MonoBehaviour
     public void Start()
     {
         _maxProbeAttributeValues = new MaxProbeAttributeValues();
-        _maxProbeAttributeValues.Hp = Config.Get<int>("MaxAttributes.Hp");
-        _maxProbeAttributeValues.Armor = Config.Get<int>("MaxAttributes.Armor");
+        _maxProbeAttributeValues.Health = Config.Get<int>("MaxAttributes.Health");
         _maxProbeAttributeValues.FuelCapacity = Config.Get<int>("MaxAttributes.FuelCapacity");
         _maxProbeAttributeValues.Speed = Config.Get<int>("MaxAttributes.Speed");
         _maxProbeAttributeValues.ScanningRange = Config.Get<int>("MaxAttributes.ScanningRange");
@@ -160,7 +159,7 @@ public class BuildManager : MonoBehaviour
     [Serializable]
     private class MaxProbeAttributeValues
     {
-        public int Hp, Armor, FuelCapacity, Speed, ScanningRange;
+        public int Health, FuelCapacity, Speed, ScanningRange;
 
         public int GetAttributeMaxValue(ProbeComponentAttribute attribute)
         {
@@ -172,10 +171,8 @@ public class BuildManager : MonoBehaviour
                     return FuelCapacity;
                 case ProbeComponentAttribute.Speed:
                     return Speed;
-                case ProbeComponentAttribute.Armor:
-                    return Armor;
-                case ProbeComponentAttribute.Hp:
-                    return Hp;
+                case ProbeComponentAttribute.Health:
+                    return Health;
                 default:
                     return (int) 1e9;
             }
