@@ -643,7 +643,6 @@ MonoBehaviour:
   _probeComponentConfig: {fileID: 4900000, guid: d31eba3136a6d7a4d890145719b01224, type: 3}
   _probeComponentInventoryConfig: {fileID: 4900000, guid: 7df4e3e479a62704fa6f6521cb310ce1, type: 3}
   _player: {fileID: 1097427726}
-  _promptPrefab: {fileID: 8955205875941768331, guid: 1ecd73bf7e46a954a91d392a8811b4b3, type: 3}
 --- !u!4 &163075595
 Transform:
   m_ObjectHideFlags: 0
@@ -2933,6 +2932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _containerManagerObject: {fileID: 24385199}
   _notificationPrefab: {fileID: 8955205875941768331, guid: 972993a2a01c127429eb37201924384b, type: 3}
+  _promptPrefab: {fileID: 8955205875941768331, guid: 1ecd73bf7e46a954a91d392a8811b4b3, type: 3}
 --- !u!1 &529387042
 GameObject:
   m_ObjectHideFlags: 0
@@ -4798,7 +4798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175d40abe12da4b12965c84ea5670fd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxProbeAttributeValuesConfig: {fileID: 4900000, guid: 9d108974791224948b38bf77caf16d53, type: 3}
   _player: {fileID: 1097427726}
 --- !u!1 &982051438
 GameObject:
