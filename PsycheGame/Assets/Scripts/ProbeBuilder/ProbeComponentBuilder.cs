@@ -8,7 +8,7 @@ public class ProbeComponentBuilder
     private string _id, _name, _description;
     private ProbeComponentType _type;
     private ProbeComponentMountType _mountType;
-    private int _scanningRange, _fuelCapacity, _speed, _armor, _hp, _weight, _gridPositionX, _gridPositionY;
+    private int _scanningRange, _fuelCapacity, _speed, _health, _weight, _gridPositionX, _gridPositionY;
     private float _credits;
 
     public ProbeComponentBuilder SetId(string id)
@@ -58,14 +58,10 @@ public class ProbeComponentBuilder
         _speed = speed;
         return this;
     }
-    public ProbeComponentBuilder SetArmor(int armor)
+
+    public ProbeComponentBuilder SetHealth(int health)
     {
-        _armor = armor;
-        return this;
-    }
-    public ProbeComponentBuilder SetHp(int hp)
-    {
-        _hp = hp;
+        _health = health;
         return this;
     }
 
@@ -99,8 +95,7 @@ public class ProbeComponentBuilder
             _scanningRange,
             _fuelCapacity,
             _speed,
-            _armor,
-            _hp,
+            _health,
             _weight,
             _credits,
             _gridPositionX,

@@ -6,16 +6,14 @@ using UnityEngine;
 [Serializable]
 public class ProbeAttributeTotals
 {
-    public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight;
+    public int ScanningRange, FuelCapacity, Speed, Health;
 
     public ProbeAttributeTotals()
     {
         ScanningRange = 0;
         FuelCapacity = 0;
         Speed = 0;
-        Armor = 0;
-        Hp = 0;
-        Weight = 0;
+        Health = 0;
     }
 
     public int GetAttributeTotal(ProbeComponentAttribute attribute)
@@ -28,12 +26,8 @@ public class ProbeAttributeTotals
                 return FuelCapacity;
             case ProbeComponentAttribute.Speed:
                 return Speed;
-            case ProbeComponentAttribute.Armor:
-                return Armor;
-            case ProbeComponentAttribute.Hp:
-                return Hp;
-            case ProbeComponentAttribute.Weight:
-                return Weight;
+            case ProbeComponentAttribute.Health:
+                return Health;
             default:
                 return 0;
         }
@@ -52,14 +46,8 @@ public class ProbeAttributeTotals
             case ProbeComponentAttribute.Speed:
                 Speed = total;
                 break;
-            case ProbeComponentAttribute.Armor:
-                Armor = total;
-                break;
-            case ProbeComponentAttribute.Hp:
-                Hp = total;
-                break;
-            case ProbeComponentAttribute.Weight:
-                Weight = total;
+            case ProbeComponentAttribute.Health:
+                Health = total;
                 break;
         }
     }

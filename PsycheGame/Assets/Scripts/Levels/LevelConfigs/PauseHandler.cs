@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseHandler : MonoBehaviour 
 {
-    [SerializeField] private GameObject missionObjectivePanel; 
+    [SerializeField] public GameObject missionObjectivePanel; 
     public static bool IsGamePaused { get; private set; } = false;
 
     private void Update()

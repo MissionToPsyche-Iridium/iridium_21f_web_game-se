@@ -42,7 +42,7 @@ public class AttributeTracker : MonoBehaviour
             switch (t.name)
             {
                 case "HealthVal":
-                    textComponent.text = (attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor)).ToString();
+                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Health).ToString();
                     break;
                 case "FuelVal":
                     textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity).ToString();
@@ -57,7 +57,7 @@ public class AttributeTracker : MonoBehaviour
                     textComponent.text = buildManager.GetAvailableCredits().ToString();
                     break;
                 case "HealthFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Hp) + buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Armor));
+                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Health), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Health));
                     break;
                 case "FuelFill":
                     UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.FuelCapacity));

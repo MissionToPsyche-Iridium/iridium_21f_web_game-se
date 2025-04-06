@@ -62,7 +62,7 @@ public class SpriteDragDrop : MonoBehaviour
 
             (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(transform.position);
 
-            if (cellPos.cellX != -1 && cellPos.cellY != -1 && containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior))
+            if (cellPos.cellX != -1 && cellPos.cellY != -1 && (ProbeComponent.MountType == ProbeComponentMountType.Any || containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior)))
             {
                 if (containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
                 {
