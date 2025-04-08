@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +14,9 @@ using UnityEngine.UI;
 
     revision 1.4 (Mar 17)
     :: updated the code base using the new ProbeAttributeTotals class to calculate the attribute totals. 
+
+    revision 1.5 (Apr 7)
+    :: replace the lazy switch statement with a dictionary to map the attribute names to their respective functions for cleaner code.
 */
 
 
@@ -22,54 +25,64 @@ public class AttributeTracker : MonoBehaviour
     private ProbeAttributeTotals attributeTotals;
     private BuildManager buildManager;
     private ContainerManager containerManager;
-
-    private Dictionary<string, int> maxValues;
     private Color attributeColor;
 
     public void UpdateChildAttributes()
     {
+        // calc attribute totals once and set text values
         attributeTotals = buildManager.CalculateAttributeTotals();
         var transforms = gameObject.GetComponentsInChildren<Transform>();
-        var gradientColor = attributeColor;
-        attributeTotals = buildManager.CalculateAttributeTotals();
+        var textMappings = new Dictionary<string, Func<int>>
+        {
+            { "HealthVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor) },
+            { "FuelVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity) },
+            { "ThrusterVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed) },
+            { "ScannerVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange) },
+            { "Credits", () => (int)buildManager.GetAvailableCredits() }
+        };
 
+        // define mappings for fill updates
+        var fillMappings = new Dictionary<string, Func<(int value, int maxValue)>>
+        {
+            { "HealthFill", () => (
+                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor),
+                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Hp) + buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Armor)
+            ) },
+            { "FuelFill", () => (
+                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity),
+                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.FuelCapacity)
+            ) },
+            { "ThrusterFill", () => (
+                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed),
+                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Speed)
+            ) },
+            { "ScanFill", () => (
+                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange),
+                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.ScanningRange)
+            ) }
+        };
+
+        // iterate through transforms and update GUI elements
         foreach (var t in transforms)
         {
-            var textComponent = t.GetComponent<TextMeshProUGUI>();
-            var imageComponent = t.GetComponent<Image>();
-            var rectTransform = t.GetComponent<RectTransform>();
-
-            switch (t.name)
+            if (textMappings.TryGetValue(t.name, out var textFunc))
             {
-                case "HealthVal":
-                    textComponent.text = (attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor)).ToString();
-                    break;
-                case "FuelVal":
-                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity).ToString();
-                    break;
-                case "ThrusterVal":
-                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed).ToString();
-                    break;
-                case "ScannerVal":
-                    textComponent.text = attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange).ToString();
-                    break;
-                case "Credits":
-                    textComponent.text = buildManager.GetAvailableCredits().ToString();
-                    break;
-                case "HealthFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Hp) + buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Armor));
-                    break;
-                case "FuelFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.FuelCapacity));
-                    break;
-                case "ThrusterFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Speed));
-                    break;
-                case "ScanFill":
-                    UpdateFill(imageComponent, rectTransform, attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange), buildManager.GetAttributeMaxValue(ProbeComponentAttribute.ScanningRange));
-                    break;
-                default:
-                    break;
+                var textComponent = t.GetComponent<TextMeshProUGUI>();
+                if (textComponent != null)
+                {
+                    textComponent.text = textFunc().ToString();
+                }
+            }
+
+            if (fillMappings.TryGetValue(t.name, out var fillFunc))
+            {
+                var imageComponent = t.GetComponent<Image>();
+                var rectTransform = t.GetComponent<RectTransform>();
+                if (imageComponent != null && rectTransform != null)
+                {
+                    (int value, int maxValue) = fillFunc();
+                    UpdateFill(imageComponent, rectTransform, value, maxValue);
+                }
             }
         }
     }
