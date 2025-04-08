@@ -15,6 +15,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _content;
     [SerializeField] private GameObject _buttonPrefab;
     [SerializeField] private GameObject _tooltipPrefab;
+    [SerializeField] private GameObject _notificationPrefab;
     [SerializeField] private GameObject _infoPanel;
     [SerializeField] private GameObject _infoPartName, _infoPartDescription, _infoPartCredits, _infoPartImage;
     [SerializeField] private GameObject _spawnArea;
@@ -78,6 +79,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.InfoPartImage = _infoPartImage;
         buttonScript.SpawnArea = _spawnArea;
         buttonScript.TooltipPrefab = _tooltipPrefab;
+        buttonScript.NotificationPrefab = _notificationPrefab;
         buttonScript.ForegroundCanvas = _foregroundCanvas;
 
         Image image = button.GetComponent<Image>();
