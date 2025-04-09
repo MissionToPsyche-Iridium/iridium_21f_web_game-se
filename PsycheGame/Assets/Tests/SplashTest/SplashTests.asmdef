@@ -1,0 +1,9 @@
+{
+    "name": "SplashTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ]
+}
