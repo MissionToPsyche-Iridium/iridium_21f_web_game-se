@@ -4,7 +4,8 @@ using UnityEngine;
 // some configs for the level manager we keep these all in once place
 // so integration with the ship builder has single refrence to ship
 // variables.
-public class ShipConfig
+[CreateAssetMenu(fileName = "ShipConfig", menuName = "Game/ShipConfig", order = 2)]
+public class ShipConfig : ScriptableObject
 {
     [System.Serializable]
     public class TetherConfig

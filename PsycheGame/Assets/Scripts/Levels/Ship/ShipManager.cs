@@ -37,11 +37,11 @@ public class ShipManager : MonoBehaviour {
     private static float fuel = 150f;
     private static float health = 100f;
     
-    // Private instances of components that are directly attached to the ship
+    // instances of components that are directly attached to the ship
     // and stored here on Awake
-    protected static ShipTetherLogic tetherLogic;
-    protected static ShipScanBehavior scanner;
-    protected static ShipMovement moveLogic;
+    public static ShipTetherLogic tetherLogic;
+    public static ShipScanBehavior scanner;
+    public static ShipMovement moveLogic;
 
     public static ShipManager Instance { get { return instance; } }
     public static float Fuel { get { return fuel; } set { fuel = value; } }

@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     private int currentLevel = 1;
     private int currentLevelIndex = 0;
 
+    [SerializeField] public ShipConfig defaultShipConfig;
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private ObjectSpawner rareMetalSpawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
@@ -78,7 +79,7 @@ public class LevelManager : MonoBehaviour
         StartMissionTimer();
 
         // here we configure the ship based on the returned config
-        ShipConfig config = ShipConfigLoader.LoadBuilderConfig();
+        ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
         if (config == null) {
             Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
                 "using default editor config to initalize ship parameters");
