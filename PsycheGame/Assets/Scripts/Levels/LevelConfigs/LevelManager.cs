@@ -87,6 +87,20 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void SetLevels(List<LevelConfig> newLevels)
+    {
+        levels = newLevels;
+    }
+
+    public List<LevelConfig> GetLevels()
+    {
+        return levels;
+    }
+
+    public int getCurrentLevel(){
+        return currentLevel;
+    }
+
     private void InitializeByConfig(LevelConfig config){
         MissionState.Instance.Initialize(config.objectives, config.levelName);
         missionState = MissionState.Instance;
@@ -145,7 +159,7 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(LoadLevelAsync(success));
     }
 
-private IEnumerator LoadLevelAsync(bool success)
+    private IEnumerator LoadLevelAsync(bool success)
     {
         SetLoadingState(true);
         if(success){
@@ -201,7 +215,7 @@ private IEnumerator LoadLevelAsync(bool success)
         SetLoadingState(false);
     }
 
-    private void EndLevel(bool success)
+    public void EndLevel(bool success)
     {
         if(isLoading) return;
         if (success)

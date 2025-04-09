@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using TMPro;
 using System;
+using UnityEngine.UIElements;
 
 public class SaveButton : MonoBehaviour, IPointerDownHandler
 {
@@ -13,6 +14,8 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
     private GameObject _containerManagerObject;
     [SerializeField]
     private GameObject _notificationPrefab;
+     [SerializeField]
+    private GameObject _promptPrefab;
     private AudioClip _swooshSound;
     private ContainerManager _containerManager;
     private AudioSource _audioSource;
@@ -40,15 +43,31 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
         _audioSource.PlayOneShot(_swooshSound, 1.0f);
 
+
         if (_containerManager.IsReadyToSave())
         {
-            ContainerGameData.Instance.saveProbeDesign();
 
             Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
 
-            Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
-            notification.SetImage(probeSprite);
-            notification.SetMessage("Successfully saved probe");
+            InputPrompt prompt = Instantiate(_promptPrefab, GameObject.Find("/MasterCanvas").transform).GetComponent<InputPrompt>();
+            prompt.SetPrompt("Enter text");
+            prompt.SetCallback((input) =>
+            {
+                Debug.Log(input);
+                bool saved = ContainerGameData.Instance.saveProbeDesign(input);
+                Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
+                notification.SetImage(probeSprite);
+            
+
+                if(saved) {
+                    notification.SetMessage("Successfully saved probe");
+                } 
+                else {
+                    notification.SetMessage("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
+                }
+                
+            });
+           
         }
         else
         {
@@ -72,4 +91,5 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
         debounce = false;
     }
+
 }

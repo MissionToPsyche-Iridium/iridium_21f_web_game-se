@@ -26,7 +26,7 @@ public class LeaderBoard : MonoBehaviour
     private LeaderboardData leaderboardData;
     private const string PlayerNameKey = "PlayerName"; 
 
-    private void Awake()
+    protected void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -34,19 +34,23 @@ public class LeaderBoard : MonoBehaviour
             return;
         }
         Instance = this;
-        Debug.Log("LeaderBoard initialized");
         DontDestroyOnLoad(gameObject);
-        filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
-        Debug.Log($"Leaderboard file path: {filePath}");
+        InitializeLeaderBoard();
+    }
 
+    public void InitializeLeaderBoard(){
+        if (string.IsNullOrEmpty(filePath))
+        {
+            filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
+        }
         leaderboardData = LoadLeaderboard();
-        
+        Debug.Log($"Leaderboard file path: {filePath}");
     }
 
     public void SaveScore(int levelScore, int level)
     {
         string playerName = PlayerPrefs.GetString(PlayerNameKey);
-          if (string.IsNullOrEmpty(playerName))
+        if (string.IsNullOrEmpty(playerName))
         {
             Debug.LogError("Attempted to set an empty or null player name!");
             return;

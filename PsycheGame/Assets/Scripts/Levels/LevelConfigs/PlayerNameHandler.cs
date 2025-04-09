@@ -38,23 +38,42 @@ public class PlayerNameHandler : MonoBehaviour
         beginButton.onClick.AddListener(OnBeginButtonClicked);
     }
 
-    private void OnBeginButtonClicked()
+private void OnBeginButtonClicked()
+{
+    if (playerNameField == null)
     {
-        string playerName = playerNameField.text.Trim();
-        if (!string.IsNullOrWhiteSpace(playerName))
-        {
-            PlayerPrefs.SetString(PlayerNameKey, playerName);
-            PlayerPrefs.Save();
-            
-            Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
+        Debug.LogError("PlayerNameField is not assigned.");
+        validationMessage.gameObject.SetActive(true);
+        validationMessage.text = "Error: Name input field is missing.";
+        return;
+    }
 
-            playerNameObject.SetActive(false);
-            validationMessage.gameObject.SetActive(false);
+    string playerName = playerNameField.text?.Trim() ?? "";
+    
+    if (string.IsNullOrWhiteSpace(playerName))
+    {
+        validationMessage.gameObject.SetActive(true);
+        validationMessage.text = "Please enter a name.";
+    }
+    else
+    {
+        PlayerPrefs.SetString(PlayerNameKey, playerName);
+        PlayerPrefs.Save();
+        
+        Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
+
+        playerNameObject.SetActive(false);
+        validationMessage.text = ""; 
+        validationMessage.gameObject.SetActive(false);
+
+        if (LevelManager.Instance != null)
+        {
             LevelManager.Instance.StartGame();
         }
         else
         {
-            validationMessage.text = "Please enter a name.";
+            Debug.LogError("LevelManager.Instance is null. Cannot start game.");
         }
     }
+}
 }

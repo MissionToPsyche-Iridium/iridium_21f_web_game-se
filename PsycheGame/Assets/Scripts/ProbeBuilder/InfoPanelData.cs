@@ -20,7 +20,7 @@ public class InfoPanelData: MonoBehaviour
     private static InfoPanelData _instance;
 
     void Start() {
-        jsonPartList = JsonUtility.FromJson<PartsList>(data.text);
+        // jsonPartList = JsonUtility.FromJson<PartsList>(data.text);
     }
 
     [System.Serializable]

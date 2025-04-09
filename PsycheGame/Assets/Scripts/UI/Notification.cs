@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,7 +9,7 @@ public class Notification : MonoBehaviour
 {
     [SerializeField] private GameObject _image;
     [SerializeField] private GameObject _messageField;
-
+   
     private void Rebuild()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
@@ -36,7 +37,7 @@ public class Notification : MonoBehaviour
     }
 
     public void Accept()
-    {
+    {        
         Destroy(gameObject);
     }
 }

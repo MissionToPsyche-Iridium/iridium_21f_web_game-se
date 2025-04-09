@@ -16,9 +16,6 @@ public class BuildManager : MonoBehaviour
 {
     private const float MaxCredits = 1000.0f;
 
-    [SerializeField]
-    private TextAsset _maxProbeAttributeValuesConfig;
-
     private MaxProbeAttributeValues _maxProbeAttributeValues;
 
     [SerializeField]
@@ -29,7 +26,12 @@ public class BuildManager : MonoBehaviour
 
     public void Start()
     {
-        _maxProbeAttributeValues = JsonUtilityWrapper.FromJson<MaxProbeAttributeValues>(_maxProbeAttributeValuesConfig.text);
+        _maxProbeAttributeValues = new MaxProbeAttributeValues();
+        _maxProbeAttributeValues.Hp = Config.Get<int>("MaxAttributes.Hp");
+        _maxProbeAttributeValues.Armor = Config.Get<int>("MaxAttributes.Armor");
+        _maxProbeAttributeValues.FuelCapacity = Config.Get<int>("MaxAttributes.FuelCapacity");
+        _maxProbeAttributeValues.Speed = Config.Get<int>("MaxAttributes.Speed");
+        _maxProbeAttributeValues.ScanningRange = Config.Get<int>("MaxAttributes.ScanningRange");
 
         _inventory = _player.GetComponent<Player>().Inventory;
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();

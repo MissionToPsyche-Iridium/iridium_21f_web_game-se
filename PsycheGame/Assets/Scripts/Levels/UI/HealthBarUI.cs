@@ -4,11 +4,11 @@ using UnityEngine.UI;
 using TMPro;
 
 public class HealthBar : MonoBehaviour {
-    [SerializeField] private GameObject healthBarColor;
-    [SerializeField] private Slider healthBar;
-    [SerializeField] private TextMeshProUGUI textDisplay;
+    [SerializeField] public GameObject healthBarColor;
+    [SerializeField] public Slider healthBar;
+    [SerializeField] public TextMeshProUGUI textDisplay;
 
-    private Image healthBarImage = null;
+    public Image healthBarImage = null;
 
     private static readonly float HEALTH_LOW_LEVEL = 25f;
     private static readonly float HEALTH_MID_LEVEL = 50f;

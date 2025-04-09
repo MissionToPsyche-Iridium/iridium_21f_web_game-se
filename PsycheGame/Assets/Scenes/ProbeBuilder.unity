@@ -643,6 +643,7 @@ MonoBehaviour:
   _probeComponentConfig: {fileID: 4900000, guid: d31eba3136a6d7a4d890145719b01224, type: 3}
   _probeComponentInventoryConfig: {fileID: 4900000, guid: 7df4e3e479a62704fa6f6521cb310ce1, type: 3}
   _player: {fileID: 1097427726}
+  _promptPrefab: {fileID: 8955205875941768331, guid: 1ecd73bf7e46a954a91d392a8811b4b3, type: 3}
 --- !u!4 &163075595
 Transform:
   m_ObjectHideFlags: 0

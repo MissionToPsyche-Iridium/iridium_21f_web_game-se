@@ -18,6 +18,7 @@ public class SpriteDragDrop : MonoBehaviour
 {
     private ContainerManager containerManager;
     public BuildManager BuildManager;
+    public ProbeComponent ProbeComponent;
     public GameObject DraggingBox;
     public bool Selected { get; private set; }
     public Tuple<int, int> CurrentCell { get; set; }
@@ -61,7 +62,7 @@ public class SpriteDragDrop : MonoBehaviour
 
             (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(transform.position);
 
-            if (cellPos.cellX != -1 && cellPos.cellY != -1)
+            if (cellPos.cellX != -1 && cellPos.cellY != -1 && containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior))
             {
                 if (containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
                 {

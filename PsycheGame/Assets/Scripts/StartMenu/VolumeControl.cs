@@ -16,6 +16,5 @@ public class VolumeControl : MonoBehaviour
     public void UpdateVolume()
     {
         AudioListener.volume = slider.value;
-
     }
 }

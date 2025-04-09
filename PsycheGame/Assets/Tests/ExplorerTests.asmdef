@@ -1,11 +1,9 @@
 {
-    "name": "EditorTests",
+    "name": "ExplorerTests",
     "optionalUnityReferences": [
         "TestAssemblies"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "references": [
         "Scripts",
         "Unity.TextMeshPro"

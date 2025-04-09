@@ -6,12 +6,15 @@ using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class DesignInventory : MonoBehaviour
 {
     public List<ProbeDesign> designs;
     private int index;
     private int maxIndex;
+    private static string filePath = Application.dataPath + Path.AltDirectorySeparatorChar + "ContainerGameData.json";
+
 
     void Start()
     {
@@ -24,17 +27,20 @@ public class DesignInventory : MonoBehaviour
     }
 
     public void loadDesign(int index) {
+        if(maxIndex > 0){
         Debug.Log("Loading design at index: " + index);
         var design = designs[index];
         GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
         GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = design.sprite;
         GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Hp;
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Hp + design.totals.Armor;
         GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
         //GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
-
+        } else {
+            loadEmpty();
+        }
     }
 
     public void loadEmpty() {
@@ -83,7 +89,8 @@ public class DesignInventory : MonoBehaviour
     }
 
     public void selectShipDesign() {
-        //load design info to game data json
+        Debug.Log("Selected Design " + index + " and saved it to file.");
+        File.WriteAllText(filePath, designs[index].partsJson); 
     }
 
 

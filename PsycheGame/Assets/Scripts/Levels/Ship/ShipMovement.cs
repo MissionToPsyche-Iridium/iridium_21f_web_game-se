@@ -49,7 +49,7 @@ public class ShipMovement : MonoBehaviour {
     }
 
 
-    void Update() {
+    public void Update() {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
         float moveVertical = Input.GetAxis("Vertical");
         float fuel = ShipManager.Fuel;
