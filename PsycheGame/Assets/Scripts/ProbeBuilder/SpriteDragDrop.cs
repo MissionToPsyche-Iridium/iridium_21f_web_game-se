@@ -69,8 +69,7 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (!mountTypeMatch)
                 {
-                    Notification notification = Instantiate(NotificationPrefab, GameObject.Find("/MasterCanvas").transform).GetComponent<Notification>();
-                    notification.SetMessage("Cannot mount there");
+                    NotificationService.Notify("Cannot mount there");
                 }
                 else
                 {

@@ -9,6 +9,8 @@ public class Notification : MonoBehaviour
 {
     [SerializeField] private GameObject _image;
     [SerializeField] private GameObject _messageField;
+
+    private Action _acceptCallback;
    
     private void Rebuild()
     {
@@ -30,14 +32,19 @@ public class Notification : MonoBehaviour
     public void SetMessage(string message)
     {
         _messageField.GetComponent<TextMeshProUGUI>().text = message;
-
         _messageField.SetActive(true);
 
         Rebuild();
     }
 
+    public void SetAcceptCallback(Action acceptCallback)
+    {
+        _acceptCallback = acceptCallback;
+    }
+
     public void Accept()
-    {        
+    {
+        _acceptCallback();
         Destroy(gameObject);
     }
 }
