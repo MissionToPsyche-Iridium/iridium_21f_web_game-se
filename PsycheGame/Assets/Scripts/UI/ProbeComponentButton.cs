@@ -107,8 +107,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
                 if (!(mountTypeMatch && enoughCredits))
                 {
-                    Notification notification = Instantiate(NotificationPrefab, GameObject.Find("/MasterCanvas").transform).GetComponent<Notification>();
-                    notification.SetMessage((!mountTypeMatch) ? "Cannot mount there" : "Insufficient credits");
+                    NotificationService.Notify((!mountTypeMatch) ? "Cannot mount there" : "Insufficient credits");
                 }
                 else if (canOccupy)
                 {
