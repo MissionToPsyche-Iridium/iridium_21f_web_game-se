@@ -13,6 +13,7 @@ public class ExplorerPlayModeTests
     private LevelManager levelManager;
     private GameObject shipGO;
     private ShipMovement shipMovement;
+    private GameObject gasGO;
 
     [SetUp]
     public void Setup()
@@ -32,6 +33,17 @@ public class ExplorerPlayModeTests
         });
         levelManager.GetLevels()[0].missionTimer = 180f;
         
+        gasGO = new GameObject("GasCloud");
+        ParticleSystem particleSystem = gasGO.AddComponent<ParticleSystem>();
+        BoxCollider2D gasCollider = gasGO.AddComponent<BoxCollider2D>();
+        gasCollider.isTrigger = true;
+
+        var renderer = gasGO.GetComponent<ParticleSystemRenderer>();
+        if (renderer.sharedMaterial == null)
+        {
+            renderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+        }
+
         ShipManager.Fuel = 100f; 
         ShipManager.Health = 100; 
     }
@@ -40,6 +52,7 @@ public class ExplorerPlayModeTests
     public void TearDown()
     {
         Object.Destroy(levelManagerGO);
+        Object.Destroy(gasGO);
         Object.Destroy(shipGO);
     }
 
@@ -55,27 +68,6 @@ public class ExplorerPlayModeTests
 
         Assert.Less(ShipManager.Fuel, initialFuel, "Fuel should decrease when ship moves");
         Assert.GreaterOrEqual(ShipManager.Fuel, 0f, "Fuel should not go below 0");
-    }
-
-    [UnityTest]
-    public IEnumerator Test_DrillAsteroid_CollectsResources()
-    {
-        GameObject drillGO = new GameObject("Drill");
-        drillGO.AddComponent<DrillController>();
-        BoxCollider2D drillCollider = drillGO.AddComponent<BoxCollider2D>();
-        drillCollider.isTrigger = true;
-
-        GameObject asteroidGO = new GameObject("Asteroid");
-        MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
-        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
-        asteroidCollider.isTrigger = true;
-
-        drillGO.transform.position = Vector3.zero;
-        asteroidGO.transform.position = Vector3.zero;
-
-        yield return new WaitForFixedUpdate();
-        Assert.Less(asteroid.metals[0].Amount, 50, "Metal amount should decrease after drilling");
-        Assert.Greater(MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals), 0, "Mission progress should increase");
     }
 
     [UnityTest]
@@ -190,4 +182,265 @@ public class ExplorerPlayModeTests
         yield return null;
     }
 
+    [UnityTest]
+    public IEnumerator Test_FuelBar_UpdatesAndFlashes()
+    {
+        GameObject fuelBarGO = new GameObject("FuelBar");
+        FuelBar fuelBar = fuelBarGO.AddComponent<FuelBar>();
+        fuelBar.fuelBarColor = new GameObject("FuelBarColor");
+        fuelBar.fuelBarImage = fuelBar.fuelBarColor.AddComponent<Image>();
+        fuelBar.fuelBar = fuelBarGO.AddComponent<Slider>();
+        fuelBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        ShipManager.Fuel = 75f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.green, fuelBar.fuelBarImage.color, "Fuel bar should be green at high fuel");
+        Assert.AreEqual("75", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 40f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.yellow, fuelBar.fuelBarImage.color, "Fuel bar should be yellow at mid fuel");
+        Assert.AreEqual("40", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 10f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        yield return new WaitForSeconds(0.6f);
+        Assert.AreEqual(Color.red, fuelBar.fuelBarImage.color, "Fuel bar should be red at low fuel");
+        yield return new WaitForSeconds(0.5f); 
+        Assert.AreEqual(Color.white, fuelBar.fuelBarImage.color, "Fuel bar should flash white at low fuel");
+        Assert.AreEqual("10", fuelBar.textDisplay.text, "Text should show current fuel");
+
+        ShipManager.Fuel = 30f;
+        fuelBar.UpdateIndicator(ShipManager.Fuel);
+        Assert.AreEqual(Color.yellow, fuelBar.fuelBarImage.color, "Fuel bar should return to yellow above low threshold");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_DrillAsteroid_CollectsResources()
+    {
+        GameObject drillGO = new GameObject("Drill");
+        drillGO.AddComponent<DrillController>();
+        BoxCollider2D drillCollider = drillGO.AddComponent<BoxCollider2D>();
+        drillCollider.isTrigger = true;
+
+        GameObject asteroidGO = new GameObject("Asteroid");
+        MineralCollection asteroid = asteroidGO.AddComponent<MineralCollection>();
+        BoxCollider2D asteroidCollider = asteroidGO.AddComponent<BoxCollider2D>();
+        asteroidCollider.isTrigger = true;
+
+        drillGO.transform.position = Vector3.zero;
+        asteroidGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+        Assert.Less(asteroid.metals[0].Amount, 50, "Metal amount should decrease after drilling");
+        Assert.Greater(MissionState.Instance.GetObjectiveProgress(MissionState.ObjectiveType.CollectRareMetals), 0, "Mission progress should increase");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_HeilumGas_Collection_ReducesFuel()
+    {
+        HeilumGas heilumGas = gasGO.AddComponent<HeilumGas>();
+        float initialFuel = ShipManager.Fuel;
+
+        shipGO.transform.position = Vector3.zero;
+        gasGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+
+        heilumGas.OnCollect(10);
+
+        Assert.AreEqual(initialFuel - 5f, ShipManager.Fuel, "HeilumGas should reduce fuel when collected");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_HydrogenGas_Collection_IncreasesFuel()
+    {
+        HydrogenGas hydrogenGas = gasGO.AddComponent<HydrogenGas>();
+        float initialFuel = ShipManager.Fuel;
+
+        shipGO.transform.position = Vector3.zero;
+        gasGO.transform.position = Vector3.zero;
+
+        yield return new WaitForFixedUpdate();
+
+        hydrogenGas.OnCollect(10);
+
+        Assert.AreEqual(initialFuel + 10f, ShipManager.Fuel, "HydrogenGas should increase fuel when collected");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_RareMetalCollectionStatusBar_UpdatesProgress()
+    {
+        GameObject metalBarGO = new GameObject("RareMetalBar");
+        RareMetalCollectionStatusBar metalBar = metalBarGO.AddComponent<RareMetalCollectionStatusBar>();
+        metalBar.rareMetalCollectionBarColor = new GameObject("BarColor");
+        metalBar.rareMetalCollectBarImage = metalBar.rareMetalCollectionBarColor.AddComponent<Image>();
+        metalBar.rareMetalCollectBar = metalBarGO.AddComponent<Slider>();
+        metalBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 100 }
+        }, "TestLevel");
+        metalBar.ResetStatusBar();
+
+        Assert.AreEqual(Color.red, metalBar.rareMetalCollectBarImage.color, "Bar should be red at 0 progress");
+        Assert.AreEqual("0/100", metalBar.textDisplay.text, "Text should show 0 progress");
+        Assert.AreEqual(0f, metalBar.rareMetalCollectBar.value, "Slider should be at 0");
+
+        metalBar.UpdateIndicator(70);
+        Assert.AreEqual(Color.yellow, metalBar.rareMetalCollectBarImage.color, "Bar should be yellow at mid progress");
+        Assert.AreEqual("70/100", metalBar.textDisplay.text, "Text should show 70 progress");
+        Assert.AreEqual(70f, metalBar.rareMetalCollectBar.value, "Slider should be at 70");
+
+        metalBar.UpdateIndicator(30); 
+        Assert.AreEqual(Color.green, metalBar.rareMetalCollectBarImage.color, "Bar should be green when target met");
+        Assert.AreEqual("100/100", metalBar.textDisplay.text, "Text should show 100 progress");
+        Assert.AreEqual(100f, metalBar.rareMetalCollectBar.value, "Slider should be at 100");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_GasCollectionStatusBar_UpdatesProgress()
+    {
+        GameObject gasBarGO = new GameObject("GasBar");
+        GasCollectionStatusBar gasBar = gasBarGO.AddComponent<GasCollectionStatusBar>();
+        gasBar.gasCollectionBarColor = new GameObject("BarColor");
+        gasBar.gasCollectBarImage = gasBar.gasCollectionBarColor.AddComponent<Image>();
+        gasBar.gasCollectBar = gasBarGO.AddComponent<Slider>();
+        gasBar.textDisplay = new GameObject("Text").AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 50 }
+        }, "TestLevel");
+        gasBar.ResetStatusBar();
+
+        Assert.AreEqual(Color.red, gasBar.gasCollectBarImage.color, "Bar should be red at 0 progress");
+        Assert.AreEqual("0/50", gasBar.textDisplay.text, "Text should show 0 progress");
+        Assert.AreEqual(0f, gasBar.gasCollectBar.value, "Slider should be at 0");
+
+        gasBar.UpdateIndicator(35);
+        Assert.AreEqual(Color.yellow, gasBar.gasCollectBarImage.color, "Bar should be yellow at mid progress");
+        Assert.AreEqual("35/50", gasBar.textDisplay.text, "Text should show 35 progress");
+        Assert.AreEqual(35f, gasBar.gasCollectBar.value, "Slider should be at 35");
+
+        gasBar.UpdateIndicator(15); 
+        Assert.AreEqual(Color.green, gasBar.gasCollectBarImage.color, "Bar should be green when target met");
+        Assert.AreEqual("50/50", gasBar.textDisplay.text, "Text should show 50 progress");
+        Assert.AreEqual(50f, gasBar.gasCollectBar.value, "Slider should be at 50");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_PauseGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+
+        Assert.IsFalse(PauseHandler.IsGamePaused, "Game should start unpaused");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+
+        Input.GetKeyDown(KeyCode.Escape);
+        pauseHandler.PauseGame();
+        yield return null;
+
+        Assert.IsTrue(PauseHandler.IsGamePaused, "Game should be paused");
+        Assert.AreEqual(0f, Time.timeScale, "Time should be frozen");
+        Assert.IsTrue(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be visible");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_ResumeGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        pauseHandler.PauseGame();
+
+        pauseHandler.ResumeGame();
+        yield return null;
+
+        Assert.IsFalse(PauseHandler.IsGamePaused, "Game should be unpaused");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+        Assert.IsFalse(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be hidden");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_QuitGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.PauseGame();
+
+        pauseHandler.QuitGame();
+        yield return null;
+
+        Assert.AreEqual("MainMenu", SceneManager.GetActiveScene().name, "Should load MainMenu scene");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be reset to normal");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_RestartGame()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        pauseHandler.missionObjectivePanel = new GameObject("MissionObjectivePanel");
+        SceneManager.LoadScene("TestScene");
+        string initialScene = SceneManager.GetActiveScene().name;
+
+        pauseHandler.RestartGame();
+        yield return new WaitForSecondsRealtime(0.1f); 
+
+        Assert.AreEqual(initialScene, SceneManager.GetActiveScene().name, "Scene should reload to current scene");
+        Assert.AreEqual(1f, Time.timeScale, "Time should be normal");
+        Assert.IsFalse(pauseHandler.missionObjectivePanel.activeSelf, "Mission panel should be hidden");
+    }
+
+    [UnityTest]
+    public IEnumerator Test_PauseHandler_UpdateButtonText()
+    {
+        GameObject pauseGO = new GameObject("PauseHandler");
+        PauseHandler pauseHandler = pauseGO.AddComponent<PauseHandler>();
+        GameObject panel = new GameObject("MissionObjectivePanel");
+        GameObject textObj = new GameObject("BeginResumeText");
+        textObj.transform.SetParent(panel.transform);
+        TextMeshProUGUI textComponent = textObj.AddComponent<TextMeshProUGUI>();
+        pauseHandler.missionObjectivePanel = panel;
+
+        pauseHandler.UpdateButtonText(false);
+        Assert.AreEqual("Begin", textComponent.text, "Button should say 'Begin' when unpaused");
+
+        pauseHandler.UpdateButtonText(true);
+        Assert.AreEqual("Resume", textComponent.text, "Button should say 'Resume' when paused");
+
+        yield return null;
+    }
+
+    [UnityTest]
+    public IEnumerator Test_UpdateMissionObjectives_UpdateUI()
+    {
+        GameObject uiGO = new GameObject("MissionUI");
+        UpdateMissionObjectives ui = uiGO.AddComponent<UpdateMissionObjectives>();
+        ui.textMeshProUGUI = uiGO.AddComponent<TextMeshProUGUI>();
+
+        MissionState.Instance.Initialize(new System.Collections.Generic.List<MissionState.MissionObjective>
+        {
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectRareMetals, targetAmount = 50, description = "Collect Rare Metals" },
+            new MissionState.MissionObjective { objectiveType = MissionState.ObjectiveType.CollectGases, targetAmount = 30, description = "Collect Gases" }
+        }, "TestLevel");
+
+        ui.UpdateUI();
+        yield return null;
+
+        string expectedText = "Level: TestLevel\nCollect Rare Metals: 50\nCollect Gases: 30\n";
+        Assert.AreEqual(expectedText, ui.textMeshProUGUI.text, "UI should display level and objectives");
+        Assert.AreEqual(30, ui.textMeshProUGUI.fontSize, "Font size should be 30");
+        Assert.AreEqual(TextAlignmentOptions.Center, ui.textMeshProUGUI.alignment, "Text should be centered");
+    }
 }

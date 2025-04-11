@@ -33,8 +33,7 @@ public class ShipConfigLoader : MonoBehaviour {
             $"Scanning Range: {comp.ScanningRange}\n" +
             $"Fuel Capacity: {comp.FuelCapacity}\n" +
             $"Speed: {comp.Speed}\n" +
-            $"Armor: {comp.Armor}\n" +
-            $"HP: {comp.Hp}\n" +
+            $"Health: {comp.Health}\n" +
             $"Weight: {comp.Weight}\n" +
             $"Credits: {comp.Credits:F2}\n" +
             $"Grid Position: ({comp.GridPositionX}, {comp.GridPositionY})\n"
@@ -49,8 +48,7 @@ public class ShipConfigLoader : MonoBehaviour {
         int totalScanRange = 0,
             totalFuelCapcity = 0,
             totalSpeed = 0,
-            totalArmor = 0,
-            totalHp = 0,
+            totalHealth = 0,
             totalWeight = 0;
 
         foreach (ProbeComponent probeComponent in probeComponents.components)
@@ -59,8 +57,7 @@ public class ShipConfigLoader : MonoBehaviour {
             totalScanRange += probeComponent.ScanningRange;
             totalFuelCapcity += probeComponent.FuelCapacity;
             totalSpeed += probeComponent.Speed;
-            totalArmor += probeComponent.Armor;
-            totalHp += probeComponent.Hp;
+            totalHealth += probeComponent.Health;
             totalWeight += probeComponent.Weight;
         }
 
@@ -69,15 +66,14 @@ public class ShipConfigLoader : MonoBehaviour {
             "  Scan Range:   " + totalScanRange   + "\n" +
             "  Fuel Capcity: " + totalFuelCapcity + "\n" +
             "  Speed:        " + totalSpeed       + "\n" +
-            "  Armor:        " + totalArmor       + "\n" +
-            "  Health:       " + totalHp          + "\n" +
+            "  Health:       " + totalHealth      + "\n" +
             "  Weight:       " + totalWeight
         );
 
         // @note - here we are only loading the config with a couple of
         // the actual computed variables. Team should meet to discuss further
         // how we want to computes these
-        config.shipMoveConfig.health = totalHp;
+        config.shipMoveConfig.health = totalHealth;
         config.shipMoveConfig.fuel = totalFuelCapcity;
         config.scanConfig.distance = totalScanRange;
 

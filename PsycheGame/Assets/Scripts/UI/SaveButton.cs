@@ -47,7 +47,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         if (_containerManager.IsReadyToSave())
         {
 
-            Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
+            // Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
 
             InputPrompt prompt = Instantiate(_promptPrefab, GameObject.Find("/MasterCanvas").transform).GetComponent<InputPrompt>();
             prompt.SetPrompt("Enter text");
@@ -55,15 +55,11 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
             {
                 Debug.Log(input);
                 bool saved = ContainerGameData.Instance.saveProbeDesign(input);
-                Notification notification = Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>();
-                notification.SetImage(probeSprite);
-            
-
-                if(saved) {
-                    notification.SetMessage("Successfully saved probe");
+                if (saved) {
+                    NotificationService.Notify("Successfully saved probe");
                 } 
                 else {
-                    notification.SetMessage("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
+                    NotificationService.Notify("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
                 }
                 
             });
@@ -71,22 +67,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            bool exists = false;
-
-            for (int i = 0; i < transform.parent.parent.childCount; i++)
-            {
-                GameObject child = transform.parent.parent.GetChild(i).gameObject;
-                if (child.GetComponent<Notification>())
-                {
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (!exists)
-            {
-                Instantiate(_notificationPrefab, transform.parent.parent).GetComponent<Notification>().SetMessage("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
-            }
+            NotificationService.Notify("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
         }
 
         debounce = false;

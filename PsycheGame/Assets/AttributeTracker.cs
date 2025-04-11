@@ -34,7 +34,7 @@ public class AttributeTracker : MonoBehaviour
         var transforms = gameObject.GetComponentsInChildren<Transform>();
         var textMappings = new Dictionary<string, Func<int>>
         {
-            { "HealthVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor) },
+            { "HealthVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Health) },
             { "FuelVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity) },
             { "ThrusterVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Speed) },
             { "ScannerVal", () => attributeTotals.GetAttributeTotal(ProbeComponentAttribute.ScanningRange) },
@@ -45,8 +45,8 @@ public class AttributeTracker : MonoBehaviour
         var fillMappings = new Dictionary<string, Func<(int value, int maxValue)>>
         {
             { "HealthFill", () => (
-                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Hp) + attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Armor),
-                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Hp) + buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Armor)
+                attributeTotals.GetAttributeTotal(ProbeComponentAttribute.Health),
+                buildManager.GetAttributeMaxValue(ProbeComponentAttribute.Health)
             ) },
             { "FuelFill", () => (
                 attributeTotals.GetAttributeTotal(ProbeComponentAttribute.FuelCapacity),

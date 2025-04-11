@@ -4,15 +4,15 @@ using UnityEngine.UI;
 using TMPro;
 
 public class GasCollectionStatusBar : MonoBehaviour {
-    [SerializeField] private GameObject gasCollectionBarColor;
-    [SerializeField] private Slider gasCollectBar; 
-    [SerializeField] private TextMeshProUGUI textDisplay;
+    [SerializeField] public GameObject gasCollectionBarColor;
+    [SerializeField] public Slider gasCollectBar; 
+    [SerializeField] public TextMeshProUGUI textDisplay;
 
     MissionState missionState;
     float gasTotal = 0;
     float target = 0;
 
-    private Image gasCollectBarImage = null;
+    public Image gasCollectBarImage = null;
 
     private float MID_LEVEL;
 

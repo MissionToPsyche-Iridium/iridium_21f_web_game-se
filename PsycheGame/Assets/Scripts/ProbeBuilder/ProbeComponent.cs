@@ -10,20 +10,18 @@ public enum ProbeComponentAttribute
     ScanningRange,
     FuelCapacity,
     Speed,
-    Armor,
-    Hp,
-    Weight
+    Health
 }
 
 public enum ProbeComponentType
 {
     Standard,
-    Custom,
-    Sensor
+    Custom
 }
 
 public enum ProbeComponentMountType
 {
+    Any,
     Interior,
     Exterior
 }
@@ -34,7 +32,7 @@ public class ProbeComponent
     public string Id, Name, Description;
     public ProbeComponentType Type;
     public ProbeComponentMountType MountType;
-    public int ScanningRange, FuelCapacity, Speed, Armor, Hp, Weight, GridPositionX, GridPositionY;
+    public int ScanningRange, FuelCapacity, Speed, Health, Weight, GridPositionX, GridPositionY;
     public float Credits;
 
     public ProbeComponent(
@@ -46,8 +44,7 @@ public class ProbeComponent
         int scanningRange,
         int fuelCapacity,
         int speed,
-        int armor,
-        int hp,
+        int health,
         int weight,
         float credits,
         int gridPositionX,
@@ -62,8 +59,7 @@ public class ProbeComponent
         ScanningRange = scanningRange;
         FuelCapacity = fuelCapacity;
         Speed = speed;
-        Armor = armor;
-        Hp = hp;
+        Health = health;
         Weight = weight;
         Credits = credits;
         GridPositionX = gridPositionX;
@@ -80,12 +76,8 @@ public class ProbeComponent
                 return FuelCapacity;
             case ProbeComponentAttribute.Speed:
                 return Speed;
-            case ProbeComponentAttribute.Armor:
-                return Armor;
-            case ProbeComponentAttribute.Hp:
-                return Hp;
-            case ProbeComponentAttribute.Weight:
-                return Weight;
+            case ProbeComponentAttribute.Health:
+                return Health;
             default:
                 return 0;
         }

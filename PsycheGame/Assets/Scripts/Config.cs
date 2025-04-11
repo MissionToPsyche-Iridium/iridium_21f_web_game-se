@@ -62,7 +62,7 @@ public class Config
         [Serializable]
         public class MaxAttributesConfig
         {
-            public int Hp, Armor, FuelCapacity, Speed, ScanningRange;
+            public int Health, FuelCapacity, Speed, ScanningRange;
         }
     }
 }

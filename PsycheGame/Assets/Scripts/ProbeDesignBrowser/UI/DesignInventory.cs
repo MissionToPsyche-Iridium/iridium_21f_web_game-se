@@ -33,7 +33,7 @@ public class DesignInventory : MonoBehaviour
         GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
         GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = design.sprite;
         GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Hp + design.totals.Armor;
+            GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Health;
         GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();

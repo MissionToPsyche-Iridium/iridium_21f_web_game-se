@@ -20,6 +20,7 @@ public class SpriteDragDrop : MonoBehaviour
     public BuildManager BuildManager;
     public ProbeComponent ProbeComponent;
     public GameObject DraggingBox;
+    public GameObject NotificationPrefab;
     public bool Selected { get; private set; }
     public Tuple<int, int> CurrentCell { get; set; }
 
@@ -61,36 +62,45 @@ public class SpriteDragDrop : MonoBehaviour
             RectTransform draggingBox = DraggingBox.transform as RectTransform;
 
             (int cellX, int cellY) cellPos = containerManager.GetCellAtWorldPosition(transform.position);
-
-            if (cellPos.cellX != -1 && cellPos.cellY != -1 && containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior))
+            if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
+                bool mountTypeMatch = ProbeComponent.MountType == ProbeComponentMountType.Any || containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior),
+                     canOccupy = containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY);
+
+                if (!mountTypeMatch)
                 {
-                    AttemptToRelease();
-
-                    CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
-                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
-                    audioSource.PlayOneShot(snapSound, 1.0f);
-
-                    if (containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY))
-                    {
-                        Debug.Log("set to [Spark material]");
-                        image.material = sparkMaterial;
-                    }
-                    else 
-                    {
-                        Debug.Log("set to [Original material]");
-                        image.material = exteriorlMaterial;
-                    }
-
-                    if (gameObject.layer <= 9)
-                    {
-                        gameObject.layer = 10;
-                    }
+                    NotificationService.Notify("Cannot mount there");
                 }
                 else
                 {
-                    containerManager.SwapOccupants(CurrentCell.Item1, CurrentCell.Item2, cellPos.cellX, cellPos.cellY);
+                    if (canOccupy)
+                    {
+                        AttemptToRelease();
+
+                        CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+                        containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
+                        audioSource.PlayOneShot(snapSound, 1.0f);
+
+                        if (containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY))
+                        {
+                            Debug.Log("set to [Spark material]");
+                            image.material = sparkMaterial;
+                        }
+                        else
+                        {
+                            Debug.Log("set to [Original material]");
+                            image.material = exteriorlMaterial;
+                        }
+
+                        if (gameObject.layer <= 9)
+                        {
+                            gameObject.layer = 10;
+                        }
+                    }
+                    else
+                    {
+                        containerManager.SwapOccupants(CurrentCell.Item1, CurrentCell.Item2, cellPos.cellX, cellPos.cellY);
+                    }
                 }
             }
             else if (Math.Abs(draggingBox.position.x - transform.position.x) <= Math.Abs(draggingBox.rect.width) / 2 && Math.Abs(draggingBox.position.y - transform.position.y) <= Math.Abs(draggingBox.rect.height) / 2)

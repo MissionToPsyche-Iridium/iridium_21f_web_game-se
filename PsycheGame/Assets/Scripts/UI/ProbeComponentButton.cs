@@ -23,6 +23,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject InfoPartCredits { get; set; }
     public GameObject InfoPartImage { get; set; }
     public GameObject SpawnArea { get; set; }
+    public GameObject NotificationPrefab { get; set; }
     public GameObject TooltipPrefab { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
@@ -77,6 +78,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         spriteDragDrop.BuildManager = BuildManager;
         spriteDragDrop.ProbeComponent = ProbeComponent;
         spriteDragDrop.DraggingBox = DraggingBox;
+        spriteDragDrop.NotificationPrefab = NotificationPrefab;
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
@@ -97,9 +99,17 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         if (_dragIcon != null)
         {
             (int cellX, int cellY) cellPos = _containerManager.GetCellAtWorldPosition(_dragIcon.transform.position);
-            if (BuildManager.GetAvailableCredits() >= ProbeComponent.Credits && (cellPos.cellX != -1 && cellPos.cellY != -1) && _containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior))
+            if (cellPos.cellX != -1 && cellPos.cellY != -1)
             {
-                if (_containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY))
+                bool mountTypeMatch = ProbeComponent.MountType == ProbeComponentMountType.Any || _containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY) == (ProbeComponent.MountType == ProbeComponentMountType.Interior),
+                     enoughCredits = BuildManager.GetAvailableCredits() >= ProbeComponent.Credits,
+                     canOccupy = _containerManager.CanOccupyCell(cellPos.cellX, cellPos.cellY);
+
+                if (!(mountTypeMatch && enoughCredits))
+                {
+                    NotificationService.Notify((!mountTypeMatch) ? "Cannot mount there" : "Insufficient credits");
+                }
+                else if (canOccupy)
                 {
                     BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
 
@@ -129,16 +139,13 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     {
                         this.gameObject.layer = 10;
                     }
-                }
-                else
-                {
-                    Destroy(_dragIcon);
+
+                    _dragIcon = null;
+                    return;
                 }
             }
-            else
-            {
-                Destroy(_dragIcon);
-            }
+
+            Destroy(_dragIcon);
             _dragIcon = null;
         }
     }
