@@ -195,7 +195,7 @@ public class ContainerManager : MonoBehaviour
 		try {
 			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			// Debug.Log("Control Helper not found: " + e.Message);
+			Debug.Log("Control Helper not found: " + e.Message);
 			profile = colorProfile;
 		}
 
@@ -336,7 +336,7 @@ public class ContainerManager : MonoBehaviour
                     tileImage.sprite = GetMaterial(x, y);
 
                     var isOffset = (x % 2 == 0 && y % 2 != 0) || (x % 2 != 0 && y % 2 == 0);
-                    newTile.AddComponent<Tile>().Init(isOffset, x, y, targetX, targetY);
+                    newTile.AddComponent<Tile>().Init(this, isOffset, x, y, targetX, targetY);
 
                     chassisGrid[x, y] = (targetX, targetY);
                     newTile.transform.SetParent(transform);

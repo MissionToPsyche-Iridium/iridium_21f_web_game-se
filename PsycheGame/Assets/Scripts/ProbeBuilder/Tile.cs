@@ -40,10 +40,12 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private float yPosition;
 
     private Color defaultColor;
+    private ContainerManager containerManager;
 
-    public void Init(bool isOffset, int x, int y, float xP, float yP)
+    public void Init(ContainerManager manager, bool isOffset, int x, int y, float xP, float yP)
     {
-        (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
+        containerManager = manager;
+        (color1, color2, openTileColor, occupiedTileColor) = containerManager.GetTileColors();
 
         cellX = x;
         cellY = y;
@@ -80,8 +82,8 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        (color1, color2, openTileColor, occupiedTileColor) = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().GetTileColors();
-        String occupied = gameObject.GetComponentInParent<ContainerManager>().CheckGridOccupied(cellX, cellY);
+        (color1, color2, openTileColor, occupiedTileColor) = containerManager.GetTileColors();
+        String occupied = containerManager.CheckGridOccupied(cellX, cellY);
         if (occupied != String.Empty) {
             gameObject.GetComponent<Image>().color = occupiedTileColor;
         }

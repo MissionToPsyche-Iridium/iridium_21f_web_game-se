@@ -24,21 +24,27 @@ public class SpriteDragDrop : MonoBehaviour
     public bool Selected { get; private set; }
     public Tuple<int, int> CurrentCell { get; set; }
 
-    private AudioClip snapSound;
-    private Material exteriorlMaterial;
-    private Material sparkMaterial;
+    [SerializeField] private AudioClip snapSound;
+    [SerializeField] private Material exteriorMaterial;
+    [SerializeField] private Material sparkMaterial;
     private Vector3 offset;
     private AudioSource audioSource;
     private UnityEngine.UI.Image image;
 
     private void Start()
     {
+        if (containerManager == null)
+        {
+            Debug.LogError("ContainerManager is not assigned!");
+            return;
+        }
+
         Selected = false;
 
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         snapSound = Resources.Load<AudioClip>("Audio/SnapClick");
         audioSource = gameObject.AddComponent<AudioSource>();
-        exteriorlMaterial = Resources.Load<Material>("EFX/OrangeRecolor");
+        exteriorMaterial = Resources.Load<Material>("EFX/OrangeRecolor");
         sparkMaterial = Resources.Load<Material>("EFX/SparkMaterial2");
         image = GetComponent<UnityEngine.UI.Image>();
     }
@@ -46,7 +52,6 @@ public class SpriteDragDrop : MonoBehaviour
     {
         Selected = true;
         offset = transform.position - MouseWorldPosition();
-        gameObject.layer = 9;
         DraggingBox.SetActive(true);
     }
 
@@ -69,7 +74,26 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (!mountTypeMatch)
                 {
+<<<<<<< Updated upstream
                     NotificationService.Notify("Cannot mount there");
+=======
+                    AttemptToRelease();
+
+                    CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
+                    containerManager.AssignToGridPosition(CurrentCell.Item1, CurrentCell.Item2, gameObject);
+                    audioSource.PlayOneShot(snapSound, 1.0f);
+
+                    if (containerManager.IsInteriorTile(cellPos.cellX, cellPos.cellY))
+                    {
+                        Debug.Log("set to [Spark material]");
+                        image.material = sparkMaterial;
+                    }
+                    else 
+                    {
+                        Debug.Log("set to [Original material]");
+                        image.material = exteriorMaterial;
+                    }
+>>>>>>> Stashed changes
                 }
                 else
                 {
@@ -135,6 +159,11 @@ public class SpriteDragDrop : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool IsValidGridPosition(int cellX, int cellY)
+    {
+        return cellX != -1 && cellY != -1 && containerManager.CanOccupyCell(cellX, cellY);
     }
 
     Vector3 MouseWorldPosition()

@@ -78,8 +78,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         spriteDragDrop.BuildManager = BuildManager;
         spriteDragDrop.ProbeComponent = ProbeComponent;
         spriteDragDrop.DraggingBox = DraggingBox;
-        spriteDragDrop.NotificationPrefab = NotificationPrefab;
-        _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
         UpdateIconPosition(eventData);
@@ -134,14 +132,10 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
                     {
                         image.material = _boundMaterial;
                     }
-
-                    if (this.gameObject.layer <= 9)
-                    {
-                        this.gameObject.layer = 10;
-                    }
-
-                    _dragIcon = null;
-                    return;
+                }
+                else
+                {
+                    Destroy(_dragIcon);
                 }
             }
 
