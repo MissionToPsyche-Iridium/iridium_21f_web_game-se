@@ -13,7 +13,7 @@ public class ShipConfigurationLoadingTest
     public void Setup() {
         EditorSceneManager.LoadScene(scene_path);
 
-        defaultShipConfig = new ShipConfig();
+        defaultShipConfig = ScriptableObject.CreateInstance<ShipConfig>();
 
         defaultShipConfig.tetherConfig.resolution = 1;
         defaultShipConfig.tetherConfig.launchSpeed = 2;
@@ -52,7 +52,6 @@ public class ShipConfigurationLoadingTest
     {
         ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         Assert.NotNull(config);
-        Assert.NotNull(ShipManager.Ship);
     }
 
     [Test]

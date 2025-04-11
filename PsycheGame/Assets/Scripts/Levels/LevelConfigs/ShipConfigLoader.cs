@@ -45,7 +45,11 @@ public class ShipConfigLoader : MonoBehaviour {
 
     public static ShipConfig LoadBuilderConfig(string path, ShipConfig defaultShipConfig)
     {
-        ShipConfig config = new ShipConfig();
+        ShipConfig config = ScriptableObject.CreateInstance<ShipConfig>();
+        if (config == null)
+        {
+            Debug.LogError("CONFIG NULL");
+        }
         ProbeComponentList probeComponents = LoadBuilderSaveData(path);
 
         if (probeComponents == null) {
