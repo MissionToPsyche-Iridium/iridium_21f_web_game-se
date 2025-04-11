@@ -74,9 +74,6 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (!mountTypeMatch)
                 {
-<<<<<<< Updated upstream
-                    NotificationService.Notify("Cannot mount there");
-=======
                     AttemptToRelease();
 
                     CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
@@ -93,7 +90,6 @@ public class SpriteDragDrop : MonoBehaviour
                         Debug.Log("set to [Original material]");
                         image.material = exteriorMaterial;
                     }
->>>>>>> Stashed changes
                 }
                 else
                 {
@@ -113,7 +109,7 @@ public class SpriteDragDrop : MonoBehaviour
                         else
                         {
                             Debug.Log("set to [Original material]");
-                            image.material = exteriorlMaterial;
+                            image.material = exteriorMaterial;
                         }
 
                         if (gameObject.layer <= 9)
