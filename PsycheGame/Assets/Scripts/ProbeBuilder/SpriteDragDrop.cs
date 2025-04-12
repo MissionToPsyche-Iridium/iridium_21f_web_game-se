@@ -30,6 +30,7 @@ public class SpriteDragDrop : MonoBehaviour
     private Vector3 offset;
     private AudioSource audioSource;
     private UnityEngine.UI.Image image;
+    private Material exteriorlMaterial;
 
     private void Start()
     {
@@ -74,9 +75,6 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (!mountTypeMatch)
                 {
-<<<<<<< Updated upstream
-                    NotificationService.Notify("Cannot mount there");
-=======
                     AttemptToRelease();
 
                     CurrentCell = new Tuple<int, int>(cellPos.cellX, cellPos.cellY);
@@ -93,7 +91,6 @@ public class SpriteDragDrop : MonoBehaviour
                         Debug.Log("set to [Original material]");
                         image.material = exteriorMaterial;
                     }
->>>>>>> Stashed changes
                 }
                 else
                 {
