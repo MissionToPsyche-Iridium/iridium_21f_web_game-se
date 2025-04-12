@@ -109,6 +109,13 @@ public class AttributeTracker : MonoBehaviour
                 imageComponent.material = originalMaterial;
             }
         }
+        else if (imageComponent.material != null && imageComponent.material.name == specialMaterial.name)
+        {
+            if (rectTransform.localScale.x <= 0.9f)
+            {
+                imageComponent.material = originalMaterial;
+            }
+        }
     }
 
     void Start()
