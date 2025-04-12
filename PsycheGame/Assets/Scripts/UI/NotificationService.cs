@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class NotificationService
 {
@@ -12,7 +9,7 @@ public class NotificationService
 
     private static Notification _currentNotification = null;
 
-    public static void Notify(string message, Sprite image = null)
+    public static void Create(string message, Sprite image = null)
     {
         if (_currentNotification != null)
         {

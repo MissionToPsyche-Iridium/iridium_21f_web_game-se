@@ -69,7 +69,7 @@ public class SpriteDragDrop : MonoBehaviour
 
                 if (!mountTypeMatch)
                 {
-                    NotificationService.Notify("Cannot mount there");
+                    NotificationService.Create("Cannot mount there");
                 }
                 else
                 {
