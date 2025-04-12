@@ -11,8 +11,8 @@ public sealed class ContainerGameData
     private static ContainerGameData instance = null;
     private static readonly object padlock = new object();
     private List<Tile> tiles = new List<Tile>();
-    private List<GameObject> spawnedParts; //TODO choose part type (GameObject, ProbeComponent, something else?)
-    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>(); //TODO send to DesignInventory class    
+    private List<GameObject> spawnedParts;
+    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>();  
     private ContainerGameData() {}
 
     public static ContainerGameData Instance {

@@ -14,8 +14,8 @@ public class DesignInventory : MonoBehaviour
     private int index;
     private int maxIndex;
     private static string filePath = Application.dataPath + Path.AltDirectorySeparatorChar + "ContainerGameData.json";
-
-
+    private GameObject uiDesignObject;
+    
     void Start()
     {
         Debug.Log("Loading list of designs");
@@ -26,14 +26,26 @@ public class DesignInventory : MonoBehaviour
         loadDesign(index);
     }
 
+    public void Start(List<ProbeDesign> test_designs) {
+        Debug.Log("Loading list of designs");
+        designs = test_designs;
+        Debug.Log("Loading design at index 0");
+        index = 0;
+        maxIndex = designs.Count;
+        uiDesignObject = Instantiate (Resources.Load("UI/Design") as GameObject);
+        loadDesign(index);
+    }
+
     public void loadDesign(int index) {
         if(maxIndex > 0){
         Debug.Log("Loading design at index: " + index);
         var design = designs[index];
-        GameObject uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        if(uiDesignObject == null) {
+            uiDesignObject = Instantiate(GameObject.Find("Design")) as GameObject;
+        }
         GameObject.Find("DesignImage").GetComponentInChildren<Image>().sprite = design.sprite;
         GameObject.Find("DesignName").GetComponentInChildren<TMPro.TMP_Text>().text = design.name;
-            GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Health;
+        GameObject.Find("HealthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Health: " + design.totals.Health;
         GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
@@ -60,8 +72,6 @@ public class DesignInventory : MonoBehaviour
             index++;
             loadDesign(index);
         }
-       
-
     }
 
     public void backDesign() {
@@ -88,9 +98,10 @@ public class DesignInventory : MonoBehaviour
         
     }
 
-    public void selectShipDesign() {
+    public String selectShipDesign() {
         Debug.Log("Selected Design " + index + " and saved it to file.");
         File.WriteAllText(filePath, designs[index].partsJson); 
+        return designs[index].partsJson;
     }
 
 
