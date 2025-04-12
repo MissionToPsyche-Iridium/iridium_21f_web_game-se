@@ -56,10 +56,10 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
                 Debug.Log(input);
                 bool saved = ContainerGameData.Instance.saveProbeDesign(input);
                 if (saved) {
-                    NotificationService.Notify("Successfully saved probe");
+                    NotificationService.Create("Successfully saved probe");
                 } 
                 else {
-                    NotificationService.Notify("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
+                    NotificationService.Create("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
                 }
                 
             });
@@ -67,7 +67,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            NotificationService.Notify("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
+            NotificationService.Create("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
         }
 
         debounce = false;

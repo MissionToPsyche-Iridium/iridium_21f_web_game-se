@@ -105,7 +105,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
 
                 if (!(mountTypeMatch && enoughCredits))
                 {
-                    NotificationService.Notify((!mountTypeMatch) ? "Cannot mount there" : "Insufficient credits");
+                    NotificationService.Create((!mountTypeMatch) ? "Cannot mount there" : "Insufficient credits");
                 }
                 else if (canOccupy)
                 {
@@ -161,14 +161,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             return;
         }
-
-        _tooltip = Instantiate(TooltipPrefab, ForegroundCanvas.transform).GetComponent<Tooltip>();
-
-        _tooltip.SetTitle(ProbeComponent.Name);
-        _tooltip.SetDescription("Click for more info");
-
-        Rect rect = (_tooltip.transform as RectTransform).rect;
-        _tooltip.SetPosition(transform.position + new Vector3(rect.width / 2, -rect.height / 2, 0.0f));
+        _tooltip = TooltipService.Create(ProbeComponent.Name, "Click for more info", transform.position, TooltipPivot.TopLeft);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -177,7 +170,6 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             return;
         }
-
         _tooltip.Delete();
         _tooltip = null;
     }

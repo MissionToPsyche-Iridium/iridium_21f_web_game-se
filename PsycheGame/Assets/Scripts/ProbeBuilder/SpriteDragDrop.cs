@@ -90,6 +90,7 @@ public class SpriteDragDrop : MonoBehaviour
                         Debug.Log("set to [Original material]");
                         image.material = exteriorMaterial;
                     }
+                    NotificationService.Create("Cannot mount there");
                 }
                 else
                 {

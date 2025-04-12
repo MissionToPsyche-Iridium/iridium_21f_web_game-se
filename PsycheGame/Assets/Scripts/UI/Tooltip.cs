@@ -28,13 +28,6 @@ public class Tooltip : MonoBehaviour
 
     public void SetPosition(Vector3 position)
     {
-        Vector3[] worldCorners = new Vector3[4];
-        (transform.parent as RectTransform).GetWorldCorners(worldCorners);
-
-        Rect rect = (transform as RectTransform).rect;
-        position.x = Mathf.Clamp(position.x, worldCorners[0].x + rect.width / 2, worldCorners[2].x - rect.width / 2);
-        position.y = Mathf.Clamp(position.y, worldCorners[0].y + rect.height / 2, worldCorners[2].y - rect.height / 2);
-
         transform.position = position;
     }
 
