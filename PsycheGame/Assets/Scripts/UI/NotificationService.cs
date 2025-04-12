@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,11 @@ public class NotificationService
 
     private static Notification _currentNotification = null;
 
-    public static void Create(string message, Sprite image = null)
+    public static void Create(string message, Sprite image = null, Action acceptCallback = null)
     {
         if (_currentNotification != null)
         {
-            return;
+            _currentNotification.Accept();
         }
 
         _currentNotification = GameObject.Instantiate(_notificationPrefab, _masterCanvas.transform).GetComponent<Notification>();
@@ -21,6 +22,10 @@ public class NotificationService
         _currentNotification.SetAcceptCallback(() =>
         {
             _currentNotification = null;
+            if (acceptCallback != null)
+            {
+                acceptCallback();
+            }
         });
 
         _currentNotification.SetMessage(message);

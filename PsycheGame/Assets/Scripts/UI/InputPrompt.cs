@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class InputPrompt : MonoBehaviour
 {
+    [SerializeField] private GameObject _promptLabel;
     [SerializeField] private GameObject _inputField;
 
-    private Action<string> _callback = null;
+    private Action<string> _confirmCallback = null;
 
     private void Rebuild()
     {
@@ -18,22 +19,19 @@ public class InputPrompt : MonoBehaviour
 
     public void SetPrompt(string prompt)
     {
-        _inputField.GetComponent<TMP_InputField>().text = prompt;
-
+        _promptLabel.GetComponent<TextMeshProUGUI>().text = prompt;
         Rebuild();
     }
 
-    public void SetCallback(Action<string> callback)
+    public void SetConfirmCallback(Action<string> confirmCallback)
     {
-        _callback = callback;
+        _confirmCallback = confirmCallback;
     }
 
     public void Confirm()
     {
         string input = _inputField.GetComponent<TMP_InputField>().text;
-
         Destroy(gameObject);
-
-        _callback(input);
+        _confirmCallback(input);
     }
 }
