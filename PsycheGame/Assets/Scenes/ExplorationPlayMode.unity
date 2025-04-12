@@ -190261,7 +190261,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 295154c22ea2652478f5c152093e9862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectsToSpawn: []
+  objectsToSpawn:
+  - spawnable: {fileID: 6018018357191059708, guid: a7ee299807af54fde9ac41df8e2aeac8, type: 3}
+    scaleMin: 0
+    scaleMax: 0
+    velocityMin: 0
+    velocityMax: 0
   boundingArea: {fileID: 469906351}
   spawnInterval: 1
   objectLimit: 200
@@ -196269,7 +196274,7 @@ GameObject:
   - component: {fileID: 2016682153}
   - component: {fileID: 2016682152}
   m_Layer: 0
-  m_Name: Mission Objective Modal
+  m_Name: ve ModalObjective Modal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
