@@ -91,6 +91,7 @@ public class SpriteDragDrop : MonoBehaviour
                         Debug.Log("set to [Original material]");
                         image.material = exteriorMaterial;
                     }
+                    NotificationService.Create("Cannot mount there");
                 }
                 else
                 {
@@ -110,7 +111,7 @@ public class SpriteDragDrop : MonoBehaviour
                         else
                         {
                             Debug.Log("set to [Original material]");
-                            image.material = exteriorlMaterial;
+                            image.material = exteriorMaterial;
                         }
 
                         if (gameObject.layer <= 9)
