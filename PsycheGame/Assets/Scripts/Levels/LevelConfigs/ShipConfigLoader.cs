@@ -2,8 +2,10 @@ using System.IO;
 using UnityEngine;
 
 public class ShipConfigLoader : MonoBehaviour {
-    private static readonly string DATA_FILE_NAME = "ContainerGameData.json";
-    private static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
+    public static readonly string DATA_FILE_NAME = "ContainerGameData.json";
+    public static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
+
+    [SerializeField] private ShipConfig defaultShipConfig;
 
     private class ProbeComponentList {
         // NOTE: due to how JSON is deserialized the public variable name below
@@ -11,14 +13,14 @@ public class ShipConfigLoader : MonoBehaviour {
         public ProbeComponent[] components;
     }
 
-    private static ProbeComponentList LoadBuilderSaveData()
+    private static ProbeComponentList LoadBuilderSaveData(string path)
     {
-        if (!File.Exists(DATA_PATH)) {
+        if (!File.Exists(path)) {
             Debug.LogError("ERROR: builder '.json' save data not found using default 'editor' variables for ship config");
             return null;
         }
 
-        string fileText = File.ReadAllText(DATA_PATH);
+        string fileText = File.ReadAllText(path);
         return JsonUtility.FromJson<ProbeComponentList>("{\"components\":" + fileText + "}");
     }
 
@@ -40,10 +42,18 @@ public class ShipConfigLoader : MonoBehaviour {
         );
     }
 
-    public static ShipConfig LoadBuilderConfig()
+    public static ShipConfig LoadBuilderConfig(string path, ShipConfig defaultShipConfig)
     {
-        ShipConfig config = new();
-        ProbeComponentList probeComponents = LoadBuilderSaveData();
+        ShipConfig config = ScriptableObject.CreateInstance<ShipConfig>();
+        if (config == null)
+        {
+            Debug.LogError("CONFIG NULL");
+        }
+        ProbeComponentList probeComponents = LoadBuilderSaveData(path);
+
+        if (probeComponents == null) {
+            return defaultShipConfig;
+        }
 
         int totalScanRange = 0,
             totalFuelCapcity = 0,
