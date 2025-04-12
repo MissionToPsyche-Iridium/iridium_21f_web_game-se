@@ -26,6 +26,8 @@ public class AttributeTracker : MonoBehaviour
     private BuildManager buildManager;
     private ContainerManager containerManager;
     private Color attributeColor;
+    private Material originalMaterial;
+    private Material specialMaterial;
 
     public void UpdateChildAttributes()
     {
@@ -94,6 +96,19 @@ public class AttributeTracker : MonoBehaviour
         gradientColor.a = (float)attributeValue / maxValue;
         imageComponent.color = gradientColor;
         rectTransform.localScale = new Vector3((float)attributeValue / maxValue, 1, 1);
+        
+        // if the localScale value is > 0.9, set the material to the special material
+        if (imageComponent.material != null && imageComponent.material.name == originalMaterial.name)
+        {
+            if (rectTransform.localScale.x > 0.9f)
+            {
+                imageComponent.material = specialMaterial;
+            }
+            else
+            {
+                imageComponent.material = originalMaterial;
+            }
+        }
     }
 
     void Start()
@@ -101,6 +116,21 @@ public class AttributeTracker : MonoBehaviour
         buildManager = GameObject.Find("MasterCanvas").GetComponent<BuildManager>();
         containerManager = GameObject.Find("ContainerPanel").GetComponent<ContainerManager>();
         attributeColor = containerManager.GetAttribBarColor();
+
+        var rectTransform = gameObject.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            var imageComponent = rectTransform.GetComponent<Image>();
+            if (imageComponent != null)
+            {
+                originalMaterial = imageComponent.material;
+                imageComponent.material = new Material(originalMaterial);
+                Debug.Log($"Material set to {imageComponent.material.name}");
+            }
+        }
+
+        specialMaterial = Resources.Load<Material>("EFX/SparkMaterial3");
+
         UpdateChildAttributes();
     }
 
