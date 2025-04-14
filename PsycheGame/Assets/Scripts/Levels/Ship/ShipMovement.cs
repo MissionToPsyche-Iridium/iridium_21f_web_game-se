@@ -7,8 +7,8 @@ public class ShipMovement : MonoBehaviour {
 
     private bool isBoosting = false;
     private float targetSpeed; 
-    private float baseSpeed = 7.5f;
-    public float moveSpeed = 7.5f; 
+    private float baseSpeed = 15f;
+    public float moveSpeed = 15f; 
     public float fuelConsumptionRate = 1f;
     public float boostMultiplier = 2f;
     public float boostSpeedChangeRate = 4f;
@@ -16,8 +16,7 @@ public class ShipMovement : MonoBehaviour {
 
     public void initWithConfig(ShipConfig.ShipMovementConfig config)
     {
-        moveSpeed = config.moveSpeed;
-        fuelConsumptionRate = config.fuelConsumptionRate;
+        //Incoming ship config move speed is way too slow, fuel consumption isn't working either
         boostMultiplier = config.boostMultiplier;
         boostSpeedChangeRate = config.bostChangeRate;
     }
