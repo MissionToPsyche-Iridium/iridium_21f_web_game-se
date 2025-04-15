@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     private int currentLevel = 1;
     private int currentLevelIndex = 0;
 
+    [SerializeField] public ShipConfig defaultShipConfig;
     [SerializeField] private ObjectSpawner gasSpawner;
     [SerializeField] private ObjectSpawner rareMetalSpawner;
     [SerializeField] private ObjectSpawner asteroidSpawner;
@@ -48,12 +49,12 @@ public class LevelManager : MonoBehaviour
         // NOTE: spawners should be:
         // 1. Disabled at 'Awake'
         // 2. Spawner configuration set
-        // 3. Endabled
+        // 3. Enabled
         // This ensures that ONLY values from the given level config are used to
         // spawn objects rather than also spawning objects using default inspector
         // values. These spawners are renabled in 'LoadLevel'
-        gasSpawner.enabled = false;
-        asteroidSpawner.enabled = false;
+        if (gasSpawner != null) gasSpawner.enabled = false;
+        if (asteroidSpawner != null) asteroidSpawner.enabled = false;
     }
 
     private void Start()
@@ -76,6 +77,15 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1f;
         isPaused = false;
         StartMissionTimer();
+
+        // here we configure the ship based on the returned config
+        ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
+        if (config == null) {
+            Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
+                "using default editor config to initalize ship parameters");
+        } else {
+            ShipManager.SetShipConfig(config);
+        }
     }
 
     public void SetLevels(List<LevelConfig> newLevels)
@@ -258,5 +268,18 @@ public class LevelManager : MonoBehaviour
         int timeBonus = Mathf.RoundToInt(timeRatio * 200);
 
         return basePoints + timeBonus;
+    }
+
+    public void SetupForTest(ObjectSpawner gas, ObjectSpawner rareMetal, ObjectSpawner asteroid, 
+                         GameObject loading, TextMeshProUGUI loadText, LoadingProgressBar progressBar, 
+                         GameObject missionPanel)
+    {
+        gasSpawner = gas;
+        rareMetalSpawner = rareMetal;
+        asteroidSpawner = asteroid;
+        loadingScreen = loading;
+        loadingText = loadText;
+        loadingProgressBar = progressBar;
+        missionObjectivePanel = missionPanel;
     }
 }

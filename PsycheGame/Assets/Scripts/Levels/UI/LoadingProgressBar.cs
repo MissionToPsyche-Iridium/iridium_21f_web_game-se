@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class LoadingProgressBar : MonoBehaviour
 {
-    [SerializeField] private Image fill;
+    [SerializeField] public Image fill;
 
     public void UpdateProgress(float progressValue)
     {

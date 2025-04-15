@@ -26,8 +26,8 @@ public class ObjectSpawner : MonoBehaviour {
         public List<SpawnedObject> objectsTypes;
     }
 
-    [SerializeField] protected List<SpawnedObject> objectsToSpawn;
-    [SerializeField] protected GameObject boundingArea;
+    [SerializeField] public List<SpawnedObject> objectsToSpawn;
+    [SerializeField] public GameObject boundingArea;
     [SerializeField] public int spawnInterval = 1;
     [SerializeField, Min(0)] public int objectLimit = 200;
     [SerializeField] public int initialPopulation = 0;

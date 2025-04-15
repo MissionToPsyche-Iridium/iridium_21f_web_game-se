@@ -34,7 +34,6 @@ public class LeaderBoard : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
         InitializeLeaderBoard();
     }
 

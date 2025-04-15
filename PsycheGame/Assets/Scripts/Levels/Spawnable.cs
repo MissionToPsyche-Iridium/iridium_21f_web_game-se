@@ -14,7 +14,6 @@ public abstract class Spawnable : MonoBehaviour {
 
     private void FixedUpdate() {
         this.transform.position += transform.up * (Time.deltaTime * Velocity);
-
         float distance = Vector3.Distance(transform.position, BoundingArea.transform.position);
         if (distance > Spawner.DestroyRadius) {
             Destroy(this.gameObject);

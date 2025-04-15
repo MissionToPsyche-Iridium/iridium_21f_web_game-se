@@ -49,25 +49,19 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
 
             // Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
 
-            InputPrompt prompt = Instantiate(_promptPrefab, GameObject.Find("/MasterCanvas").transform).GetComponent<InputPrompt>();
-            prompt.SetPrompt("Enter text");
-            prompt.SetCallback((input) =>
+            InputPromptService.Create("What would you like to name your probe?", (input) =>
             {
-                Debug.Log(input);
-                bool saved = ContainerGameData.Instance.saveProbeDesign(input);
-                if (saved) {
-                    NotificationService.Notify("Successfully saved probe");
+                if (ContainerGameData.Instance.saveProbeDesign(input)) {
+                    NotificationService.Create("Successfully saved probe");
                 } 
                 else {
-                    NotificationService.Notify("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
+                    NotificationService.Create("Cannot save more than 10 designs. Navigate to the browser to delete a design.");
                 }
-                
             });
-           
         }
         else
         {
-            NotificationService.Notify("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
+            NotificationService.Create("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
         }
 
         debounce = false;
