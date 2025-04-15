@@ -45,16 +45,13 @@ public class ShipConfigLoader : MonoBehaviour {
     public static ShipConfig LoadBuilderConfig(string path, ShipConfig defaultShipConfig)
     {
         ShipConfig config = ScriptableObject.CreateInstance<ShipConfig>();
-        if (config == null)
-        {
-            Debug.LogError("CONFIG NULL");
-        }
         ProbeComponentList probeComponents = LoadBuilderSaveData(path);
 
-        if (probeComponents == null) {
+        //if (probeComponents == null) {
             return defaultShipConfig;
-        }
+        //}
 
+        /*
         int totalScanRange = 0,
             totalFuelCapcity = 0,
             totalSpeed = 0,
@@ -88,5 +85,6 @@ public class ShipConfigLoader : MonoBehaviour {
         config.scanConfig.distance = totalScanRange;
 
         return config;
+        */
     }
 }

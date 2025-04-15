@@ -1,9 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
 public class ShipMovement : MonoBehaviour {
     [SerializeField] private FuelBar fuelBarUI;
     [SerializeField] private GameObject boost;
+    [SerializeField] private GameObject thrustSprite;
 
     private bool isBoosting = false;
     private float targetSpeed; 
@@ -48,7 +48,6 @@ public class ShipMovement : MonoBehaviour {
         transform.rotation = Quaternion.identity;
     }
 
-
     public void Update() {
         float moveHorizontal = Input.GetAxis("Horizontal"); 
         float moveVertical = Input.GetAxis("Vertical");
@@ -68,6 +67,7 @@ public class ShipMovement : MonoBehaviour {
         
         if (fuel > 0f && movement != Vector3.zero)
         {
+            thrustSprite.SetActive(true);
             ShipManager.Fuel -= fuelConsumptionRate * Time.deltaTime;
             ShipManager.Fuel = Mathf.Max(ShipManager.Fuel, 0f);
             rb.velocity = movement * moveSpeed;
@@ -75,6 +75,9 @@ public class ShipMovement : MonoBehaviour {
             HandleBoostInput();
             UpdateSpeed();
             fuelBarUI.UpdateIndicator(fuel);
+        } else
+        {
+            thrustSprite.SetActive(false);
         }
     }
 
