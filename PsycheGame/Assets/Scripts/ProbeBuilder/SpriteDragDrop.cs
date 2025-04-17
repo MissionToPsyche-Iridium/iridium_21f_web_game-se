@@ -12,6 +12,9 @@ using UnityEngine;
 
     version 1.1 (Feb 14)
     :: updated the logic to apply different shader materials to the probe part when it is placed on the interior or exterior tile
+
+    version 1.2 (Apr 16)
+    :: review code and perform minor code cleanup.  No functional changes.
 */
 
 public class SpriteDragDrop : MonoBehaviour
@@ -90,11 +93,6 @@ public class SpriteDragDrop : MonoBehaviour
                         {
                             Debug.Log("set to [Original material]");
                             image.material = exteriorlMaterial;
-                        }
-
-                        if (gameObject.layer <= 9)
-                        {
-                            gameObject.layer = 10;
                         }
                     }
                     else
