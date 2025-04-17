@@ -15,8 +15,12 @@ public enum ProbeComponentAttribute
 
 public enum ProbeComponentType
 {
-    Standard,
-    Custom
+    Sensor,
+    Movement,
+    Power,
+    Communication,
+    Tools,
+    Other
 }
 
 public enum ProbeComponentMountType
