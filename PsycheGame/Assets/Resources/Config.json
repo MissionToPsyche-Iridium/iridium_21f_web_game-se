@@ -3,7 +3,7 @@
         {
             "Id": "PC1",
             "Name": "DSOC",
-            "Type": 1,
+            "Type": 3,
             "MountType": 2,
             "Description": "The Deep Space Optical Communication technology demonstration uses a near-infrared laser to transmit and receive high-bandwidth data.",
             "ScanningRange": 4,
@@ -18,7 +18,7 @@
         {
             "Id": "PC2",
             "Name": "Gamma-Ray and Neutron Spectrometer",
-            "Type": 1,
+            "Type": 0,
             "MountType": 2,
             "Description": "This instrument helps determine the chemical elements that make up the asteroid's surface material.",
             "ScanningRange": 7,
@@ -48,7 +48,7 @@
         {
             "Id": "PC4",
             "Name": "Multilayer Insulation",
-            "Type": 1,
+            "Type": 5,
             "MountType": 1,
             "Description": "This thermal material reduces heat loss by thermal radiation.",
             "ScanningRange": 0,
@@ -63,7 +63,7 @@
         {
             "Id": "PC5",
             "Name": "Multispectral Imager",
-            "Type": 1,
+            "Type": 0,
             "MountType": 2,
             "Description": "A pair of identical cameras equipped with filters and telescopic lenses to photograph the surface of the asteroid in different wavelengths of light.",
             "ScanningRange": 5,
@@ -93,7 +93,7 @@
         {
             "Id": "PC7",
             "Name": "Solar Panel",
-            "Type": 1,
+            "Type": 2,
             "MountType": 2,
             "Description": "This object absorbs the sun's rays as a source of energy for generating electricity and heating. The solar arrays power everything on board, including the science instruments.",
             "ScanningRange": 0,
@@ -108,7 +108,7 @@
         {
             "Id": "PC8",
             "Name": "Meteoroid Detector",
-            "Type": 1,
+            "Type": 0,
             "MountType": 1,
             "Description": "This sensor detects meteoroids before potential collision.",
             "ScanningRange": 5,
@@ -123,7 +123,7 @@
         {
             "Id": "PC9",
             "Name": "Magnetometer",
-            "Type": 1,
+            "Type": 0,
             "MountType": 2,
             "Description": "This instrument measures the magnetic field around the asteroid to search for evidence of an ancient magnetic field.",
             "ScanningRange": 6,
@@ -138,7 +138,7 @@
         {
             "Id": "PC10",
             "Name": "Battery",
-            "Type": 1,
+            "Type": 2,
             "MountType": 1,
             "Description": "A place to store the energy collected by your solar panels.",
             "ScanningRange": 0,
@@ -153,7 +153,7 @@
         {
             "Id": "PC11",
             "Name": "Repair Kit",
-            "Type": 1,
+            "Type": 4,
             "MountType": 1,
             "Description": "This kit repairs the damage from one collision.",
             "ScanningRange": 0,
@@ -168,7 +168,7 @@
         {
             "Id":"PC12",
             "Name": "Gravity Science Experiment",
-            "Type": 1,
+            "Type": 0,
             "MountType": 2,
             "Description": "This experiment uses the X-band radio telecommunications system to measure Psyche's gravity field to high precision.",
             "ScanningRange": 8,
@@ -183,7 +183,7 @@
           {
             "Id":"PC13",
             "Name": "Tether",
-            "Type": 1,
+            "Type": 4,
             "MountType": 2,
             "Description": "This instrument is used for collecting objects in space.",
             "ScanningRange": 5,
@@ -198,7 +198,7 @@
           {
             "Id":"PC14",
             "Name": "Drill",
-            "Type": 1,
+            "Type": 4,
             "MountType": 2,
             "Description": "This instrument is used for mining objects in space.",
             "ScanningRange": 0,
@@ -213,7 +213,7 @@
           {
             "Id":"PC15",
             "Name": "Gas Detector",
-            "Type": 1,
+            "Type": 0,
             "MountType": 2,
             "Description": "This sensor detects gas that can be collected.",
             "ScanningRange": 5,
