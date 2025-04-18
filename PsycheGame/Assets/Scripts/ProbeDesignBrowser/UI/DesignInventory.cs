@@ -49,7 +49,7 @@ public class DesignInventory : MonoBehaviour
         GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
-        //GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
+        GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
         } else {
             loadEmpty();
         }
@@ -105,4 +105,18 @@ public class DesignInventory : MonoBehaviour
     }
 
 
+    public string GetPartNames(string json) {
+        string names= "";
+
+       var parts = JsonUtilityWrapper.FromJson<string>(json);
+
+            foreach(var item in parts)
+            {
+                names += item;
+                // Debug.Log(parts["Name"]);
+                // Debug.Log(item["Name"]);
+
+            }
+        return names;
+    }
 }
