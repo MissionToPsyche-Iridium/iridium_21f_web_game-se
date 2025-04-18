@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
@@ -22,15 +23,8 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
     [SerializeField] private GameObject _draggingBox;
 
-    private enum FilterType
-    {
-        All,
-        Standard,
-        Custom
-    }
-
     private Inventory _inventory;
-    private FilterType _currentFilter;
+    private ProbeComponentType? _currentFilter;
     private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
 
     public void Start()
@@ -38,7 +32,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         _inventory = _player.GetComponent<Player>().Inventory;
         _inventory.AddObserver(this);
 
-        _currentFilter = FilterType.All;
+        _currentFilter = null;
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
@@ -108,7 +102,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
     private void Filter()
     {
-        if (_currentFilter == FilterType.All)
+        if (_currentFilter == null)
         {
             _filter.GetComponent<TextMeshProUGUI>().text = "All";
             foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
@@ -118,23 +112,10 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         }
         else
         {
-            ProbeComponentType type;
-            switch (_currentFilter)
-            {
-                case FilterType.Custom:
-                    type = ProbeComponentType.Custom;
-                    _filter.GetComponent<TextMeshProUGUI>().text = "Custom";
-                    break;
-
-                default:
-                    type = ProbeComponentType.Standard;
-                    _filter.GetComponent<TextMeshProUGUI>().text = "Standard";
-                    break;
-            }
-
+            _filter.GetComponent<TextMeshProUGUI>().text = _currentFilter.ToString();
             foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
             {
-                if (tuple.Item1.Type == type)
+                if (tuple.Item1.Type == _currentFilter)
                 {
                     tuple.Item2.SetActive(true);
                 }
@@ -148,13 +129,23 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
     public void PreviousFilter()
     {
-        _currentFilter = _currentFilter == FilterType.All ? FilterType.Custom : _currentFilter - 1;
+        IEnumerable<ProbeComponentType> types = Enum.GetValues(typeof(ProbeComponentType)).Cast<ProbeComponentType>();
+        _currentFilter = _currentFilter == null
+            ? types.Max()
+            : (_currentFilter == types.Min()
+                ? null
+                : _currentFilter - 1);
         Filter();
     }
 
     public void NextFilter()
     {
-        _currentFilter = _currentFilter == FilterType.Custom ? FilterType.All : _currentFilter + 1;
+        IEnumerable<ProbeComponentType> types = Enum.GetValues(typeof(ProbeComponentType)).Cast<ProbeComponentType>();
+        _currentFilter = _currentFilter == types.Max()
+            ? null
+            : (_currentFilter == null
+                ? types.Min()
+                : _currentFilter + 1);
         Filter();
     }
 

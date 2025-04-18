@@ -72,6 +72,18 @@ public class ContainerManager : MonoBehaviour
         volume = GameObject.Find("Box Volume").GetComponent<Volume>();
         updateColorScheme();
 
+        // get the audiosource object from the music game object on the scene
+        AudioSource audioSource = GameObject.Find("Music").GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            Debug.Log("AudioSource set on Music GameObject");
+            audioSource.volume = 0.5f;
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource not found on Music GameObject");
+        }
+
         chassisGrid = new (float x, float y)[width, height];
         gridData = new GridPositionData[width, height];
         for (int i = 0; i < width; i++)

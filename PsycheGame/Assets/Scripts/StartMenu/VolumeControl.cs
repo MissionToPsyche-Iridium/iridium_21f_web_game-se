@@ -10,6 +10,7 @@ public class VolumeControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AudioListener.volume = 0.5f;                    
         slider.value = AudioListener.volume;
     }
 

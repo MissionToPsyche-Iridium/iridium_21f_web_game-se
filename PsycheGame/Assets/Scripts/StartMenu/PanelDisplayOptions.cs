@@ -57,6 +57,7 @@ public class PanelDisplayOptions : MonoBehaviour, IPointerDownHandler
     {
         _swooshSound = Resources.Load<AudioClip>("Audio/laser-swoosh");
         _audioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource.volume = 0.5f;
     }
 
     public void OnPointerDown(PointerEventData eventData)
