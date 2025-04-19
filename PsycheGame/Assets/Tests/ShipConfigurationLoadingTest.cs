@@ -31,7 +31,7 @@ public class ShipConfigurationLoadingTest
         defaultShipConfig.shipMoveConfig.moveSpeed = 3;
         defaultShipConfig.shipMoveConfig.fuelConsumptionRate = 4;
         defaultShipConfig.shipMoveConfig.boostMultiplier = 5;
-        defaultShipConfig.shipMoveConfig.bostChangeRate = 6;
+        defaultShipConfig.shipMoveConfig.boostChangeRate = 6;
     }
 
     [TearDown]
@@ -78,6 +78,6 @@ public class ShipConfigurationLoadingTest
         Assert.AreEqual(config.shipMoveConfig.moveSpeed, 3);
         Assert.AreEqual(config.shipMoveConfig.fuelConsumptionRate, 4);
         Assert.AreEqual(config.shipMoveConfig.boostMultiplier, 5);
-        Assert.AreEqual(config.shipMoveConfig.bostChangeRate, 6);
+        Assert.AreEqual(config.shipMoveConfig.boostChangeRate, 6);
     }
 }

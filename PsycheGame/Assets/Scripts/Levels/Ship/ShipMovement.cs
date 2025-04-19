@@ -19,7 +19,7 @@ public class ShipMovement : MonoBehaviour {
         moveSpeed = config.moveSpeed;
         fuelConsumptionRate = config.fuelConsumptionRate;
         boostMultiplier = config.boostMultiplier;
-        boostSpeedChangeRate = config.bostChangeRate;
+        boostSpeedChangeRate = config.boostChangeRate;
     }
 
     void Start() {
