@@ -74,6 +74,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.SpawnArea = _spawnArea;
         buttonScript.TooltipPrefab = _tooltipPrefab;
         buttonScript.NotificationPrefab = _notificationPrefab;
+        buttonScript.MasterCanvas = transform.parent.gameObject;
         buttonScript.ForegroundCanvas = _foregroundCanvas;
 
         Image image = button.GetComponent<Image>();
