@@ -1,3 +1,4 @@
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -5,7 +6,20 @@ public class ShipConfigLoader : MonoBehaviour {
     public static readonly string DATA_FILE_NAME = "ContainerGameData.json";
     public static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
 
-    [SerializeField] private ShipConfig defaultShipConfig;
+    // reusing the scanned popup column here
+    private static Sprite onLoadPopupImage;
+
+    private void Start()
+    {
+        // TODO: rather than using a genric sprite popup we can load the actual probe component
+        // sprite using the json configuration and display it in the popup
+        //
+        // onLoadPopupImage = ShipManager.Ship.GetComponent<SpriteRenderer>().sprite;
+        // if (onLoadPopupImage == null)
+        // {
+        //    Debug.Log("SPRITE NULL");
+        // }
+    }
 
     private class ProbeComponentList {
         // NOTE: due to how JSON is deserialized the public variable name below
@@ -13,7 +27,7 @@ public class ShipConfigLoader : MonoBehaviour {
         public ProbeComponent[] components;
     }
 
-    private static ProbeComponentList LoadBuilderSaveData(string path)
+    private ProbeComponentList LoadBuilderSaveData(string path)
     {
         if (!File.Exists(path)) {
             Debug.LogError("ERROR: builder '.json' save data not found using default 'editor' variables for ship config");
@@ -24,34 +38,32 @@ public class ShipConfigLoader : MonoBehaviour {
         return JsonUtility.FromJson<ProbeComponentList>("{\"components\":" + fileText + "}");
     }
 
-    private static void DebugPrintProbeComponent(ProbeComponent comp)
+    private IEnumerator PopupUiAddComponents(ProbeComponentList comps)
     {
-        Debug.Log(
-            "Probe Component Found:\n" +
-            $"ID: {comp.Id}\n" +
-            $"Name: {comp.Name}\n" +
-            $"Description: {comp.Description}\n" +
-            $"Type: {comp.Type}\n" +
-            $"Scanning Range: {comp.ScanningRange}\n" +
-            $"Fuel Capacity: {comp.FuelCapacity}\n" +
-            $"Speed: {comp.Speed}\n" +
-            $"Health: {comp.Health}\n" +
-            $"Weight: {comp.Weight}\n" +
-            $"Credits: {comp.Credits:F2}\n" +
-            $"Grid Position: ({comp.GridPositionX}, {comp.GridPositionY})\n"
-        );
+        ScannedColumn popupUi = (ScannedColumn)FindObjectOfType(typeof(ScannedColumn));
+        popupUi.AddEntry(onLoadPopupImage, "Probe Components:", "", popupUi.GetHashCode());
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (ProbeComponent comp in comps.components)
+        {
+            var header = comp.Name;
+            var description = comp.Description;
+            var id = comp.GetHashCode();
+
+            popupUi.AddEntry(onLoadPopupImage, header, description, id);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
-    public static ShipConfig LoadBuilderConfig(string path, ShipConfig defaultShipConfig)
+    public ShipConfig LoadBuilderConfig(string path, ShipConfig defaultShipConfig)
     {
         ShipConfig config = ScriptableObject.CreateInstance<ShipConfig>();
         ProbeComponentList probeComponents = LoadBuilderSaveData(path);
 
-        //if (probeComponents == null) {
+        if (probeComponents == null) {
             return defaultShipConfig;
-        //}
+        }
 
-        /*
         int totalScanRange = 0,
             totalFuelCapcity = 0,
             totalSpeed = 0,
@@ -60,7 +72,6 @@ public class ShipConfigLoader : MonoBehaviour {
 
         foreach (ProbeComponent probeComponent in probeComponents.components)
         {
-            DebugPrintProbeComponent(probeComponent);
             totalScanRange += probeComponent.ScanningRange;
             totalFuelCapcity += probeComponent.FuelCapacity;
             totalSpeed += probeComponent.Speed;
@@ -83,8 +94,7 @@ public class ShipConfigLoader : MonoBehaviour {
         config.shipMoveConfig.health = totalHealth;
         config.shipMoveConfig.fuel = totalFuelCapcity;
         config.scanConfig.distance = totalScanRange;
-
+        StartCoroutine(PopupUiAddComponents(probeComponents));
         return config;
-        */
     }
 }

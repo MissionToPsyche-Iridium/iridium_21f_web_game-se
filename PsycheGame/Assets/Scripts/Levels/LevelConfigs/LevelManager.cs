@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject missionObjectivePanel;
     [SerializeField] private LoadingProgressBar loadingProgressBar;
     private LeaderBoard leaderBoard;
-    private MissionState missionState; 
+    private MissionState missionState;
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
     private bool isPaused = false;
@@ -55,6 +55,7 @@ public class LevelManager : MonoBehaviour
         // values. These spawners are renabled in 'LoadLevel'
         if (gasSpawner != null) gasSpawner.enabled = false;
         if (asteroidSpawner != null) asteroidSpawner.enabled = false;
+        this.gameObject.AddComponent<ShipConfigLoader>();
     }
 
     private void Start()
@@ -79,7 +80,9 @@ public class LevelManager : MonoBehaviour
         StartMissionTimer();
 
         // here we configure the ship based on the returned config
-        ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
+        ShipConfig config = this.gameObject
+            .GetComponent<ShipConfigLoader>()
+            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         if (config == null) {
             Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
                 "using default editor config to initalize ship parameters");

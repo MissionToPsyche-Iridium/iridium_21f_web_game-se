@@ -50,14 +50,16 @@ public class ShipConfigurationLoadingTest
     [Test]
     public void Json_ship_config_load_success()
     {
-        ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
+        ShipConfigLoader loader = new ShipConfigLoader();
+        ShipConfig config = loader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         Assert.NotNull(config);
     }
 
     [Test]
     public void Invaild_ship_config_path_load_default_config()
     {
-        ShipConfig config = ShipConfigLoader.LoadBuilderConfig("Invaild Path", defaultShipConfig);
+        ShipConfigLoader loader = new ShipConfigLoader();
+        ShipConfig config = loader.LoadBuilderConfig("Invaild Path", defaultShipConfig);
         LogAssert.Expect(LogType.Error, "ERROR: builder '.json' save data not found using default 'editor' variables for ship config");
 
         // Default editor config should have been loaded
