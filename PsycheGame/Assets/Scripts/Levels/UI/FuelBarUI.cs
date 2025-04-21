@@ -9,6 +9,7 @@ public class FuelBar : MonoBehaviour {
     [SerializeField] public TextMeshProUGUI textDisplay;
 
     public Image fuelBarImage = null;
+    private Coroutine flashCoroutine;
 
     private static readonly float FUEL_LOW_LEVEL = 25f;
     private static readonly float FUEL_MID_LEVEL = 50f;
@@ -16,11 +17,19 @@ public class FuelBar : MonoBehaviour {
 
     private void Start() {
         this.fuelBarImage = fuelBarColor.GetComponent<Image>();
+        UpdateIndicator(ShipManager.Fuel);
     }
 
     public void UpdateIndicator(float fuel) {
         fuelBar.value = fuel;
         textDisplay.text = $"{Mathf.FloorToInt(fuel)}";
+        
+        if (flashCoroutine != null)
+        {
+            StopCoroutine(flashCoroutine);
+            flashCoroutine = null;
+        }
+
         if (fuel < FUEL_LOW_LEVEL) {
             fuelBarImage.color = Color.red;
             StartCoroutine(FlashLowFuel());
@@ -37,7 +46,8 @@ public class FuelBar : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
             fuelBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
-        }   
+        }
+        UpdateIndicator(ShipManager.Fuel);   
     }
 
     private void Awake()

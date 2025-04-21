@@ -63,7 +63,9 @@ public class ShipManager : MonoBehaviour {
 
     public static void ResetShip()
     {
+        //Needs to reference config once that's functional
         health = 100f;
         fuel = 150f;
+        Debug.Log($"Ship Reset: Health = {health}, Fuel = {fuel}");
     }
 }
