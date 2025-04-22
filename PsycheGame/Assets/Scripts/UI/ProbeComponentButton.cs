@@ -10,11 +10,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class ProbeComponentButton : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public BuildManager BuildManager { get; set; }
     public ProbeComponent ProbeComponent { get; set; }
     public ProbeComponentInventory ProbeComponentInventory { get; set; }
+    public GameObject MasterCanvas { get; set; }
     public GameObject ForegroundCanvas { get; set; }
     public GameObject DraggingBox { get; set; }
     public GameObject InfoPanel { get; set; }
@@ -27,6 +28,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
     public GameObject TooltipPrefab { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
+    private Vector3 _dragOffset;
     private Material _boundMaterial;
     private Material _sparkMaterial;
     private RectTransform _dragPlane;
@@ -52,6 +54,8 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
             return;
         }
 
+        _dragOffset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, Camera.main.nearClipPlane));
+
         _dragIcon = new GameObject();
         _dragIcon.name = ProbeComponent.Name;
 
@@ -75,6 +79,7 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragPlane = canvasTransform as RectTransform;
 
         SpriteDragDrop spriteDragDrop = _dragIcon.AddComponent<SpriteDragDrop>();
+        spriteDragDrop.MasterCanvas = MasterCanvas;
         spriteDragDrop.BuildManager = BuildManager;
         spriteDragDrop.ProbeComponent = ProbeComponent;
         spriteDragDrop.DraggingBox = DraggingBox;
@@ -82,15 +87,14 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         _dragIcon.layer = 9;
         _dragIcon.tag = "ProbePart";
 
-        UpdateIconPosition(eventData);
+        UpdateIconPosition();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (_dragIcon != null)
         {
-            UpdateIconPosition(eventData);
-            Debug.Log(" <PCB> +++Dragging Probe Component: " + ProbeComponent.Name + "+++");
+            UpdateIconPosition();
         }
     }
 
@@ -150,15 +154,20 @@ public class ProbeComponentButton : MonoBehaviour, IBeginDragHandler, IDragHandl
         }
     }
 
-    public void UpdateIconPosition(PointerEventData eventData)
+    public void UpdateIconPosition()
     {
-        RectTransform iconTransform = _dragIcon.GetComponent<RectTransform>();
-        Vector3 mousePosition;
-        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(iconTransform, eventData.position, eventData.pressEventCamera, out mousePosition))
-        {
-            iconTransform.position = mousePosition;
-            iconTransform.rotation = _dragPlane.rotation;
-        }
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane)) + _dragOffset;
+
+        Vector3[] worldCorners = new Vector3[4];
+        (MasterCanvas.transform as RectTransform).GetWorldCorners(worldCorners);
+
+        RectTransform iconTransform = _dragIcon.transform as RectTransform;
+        iconTransform.position = new Vector3(
+            Mathf.Clamp(worldPos.x, worldCorners[0].x + iconTransform.rect.width / 2, worldCorners[2].x - iconTransform.rect.width / 2),
+            Mathf.Clamp(worldPos.y, worldCorners[0].y + iconTransform.rect.height / 2, worldCorners[2].y - iconTransform.rect.height / 2),
+            worldPos.z
+        );
     }
 
     public void OnPointerEnter(PointerEventData eventData)

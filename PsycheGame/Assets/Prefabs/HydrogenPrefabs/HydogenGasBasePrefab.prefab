@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1076874044657982297}
   m_Layer: 6
   m_Name: HydogenGasBasePrefab
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4846,6 +4846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gasColor: {r: 1, g: 1, b: 1, a: 1}
+  progressIncr: 0.1
   displayImage: {fileID: 2004507233, guid: 587e5f291dfa81c48ac02412cbc5c3d5, type: 3}
 --- !u!58 &1076874044657982297
 CircleCollider2D:

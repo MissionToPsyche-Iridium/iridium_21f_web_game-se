@@ -7,8 +7,8 @@ public class ShipMovement : MonoBehaviour {
 
     private bool isBoosting = false;
     private float targetSpeed; 
-    private float baseSpeed = 7.5f;
-    public float moveSpeed = 7.5f; 
+    private float baseSpeed = 15f;
+    public float moveSpeed = 15f; 
     public float fuelConsumptionRate = 1f;
     public float boostMultiplier = 2f;
     public float boostSpeedChangeRate = 4f;
@@ -16,10 +16,9 @@ public class ShipMovement : MonoBehaviour {
 
     public void initWithConfig(ShipConfig.ShipMovementConfig config)
     {
-        moveSpeed = config.moveSpeed;
-        fuelConsumptionRate = config.fuelConsumptionRate;
+        //Incoming ship config move speed is way too slow, fuel consumption isn't working either
         boostMultiplier = config.boostMultiplier;
-        boostSpeedChangeRate = config.bostChangeRate;
+        boostSpeedChangeRate = config.bostChangeRate; //Teague, there is a typo in boost that needs addressing in ShipConfig
     }
 
     void Start() {
@@ -64,7 +63,12 @@ public class ShipMovement : MonoBehaviour {
             LevelManager.Instance.RestartLevel();
         } 
 
-        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
+        Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f).normalized;
+
+        if (movement == Vector3.zero)
+        {
+            rb.angularVelocity *= 0.95f;
+        }
         
         if (fuel > 0f && movement != Vector3.zero)
         {
@@ -80,6 +84,7 @@ public class ShipMovement : MonoBehaviour {
 
     void RotateShip(Vector2 direction)
     {
+        rb.angularVelocity = 0f;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         rb.rotation = angle - 90f;
     }

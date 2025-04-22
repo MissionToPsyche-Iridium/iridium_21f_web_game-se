@@ -32,7 +32,6 @@ public class DrillController : MonoBehaviour {
 
     public void OnTriggerEnter2D(Collider2D other) {
         MineralCollection asteroid = other.GetComponent<MineralCollection>();
-        Debug.Log(asteroid);
         if (asteroid != null) {
             currentAsteroid = asteroid;
             Debug.Log($"Drill activated on: {currentAsteroid.name}");

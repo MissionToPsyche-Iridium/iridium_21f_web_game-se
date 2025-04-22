@@ -57,13 +57,15 @@ public class ShipManager : MonoBehaviour {
         scanner.initWithConfig(config.scanConfig);
         moveLogic.initWithConfig(config.shipMoveConfig);
 
-        fuel = config.shipMoveConfig.fuel;
+        fuel = 150f; //Fuel set with config is instantly at 2
         health = config.shipMoveConfig.health;
     }
 
     public static void ResetShip()
     {
+        //Needs to reference config once that's functional
         health = 100f;
         fuel = 150f;
+        Debug.Log($"Ship Reset: Health = {health}, Fuel = {fuel}");
     }
 }

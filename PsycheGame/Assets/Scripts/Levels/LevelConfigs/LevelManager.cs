@@ -195,6 +195,8 @@ public class LevelManager : MonoBehaviour
             else
             {
                 Debug.Log("All levels completed.");
+                SetLoadingState(false);
+                yield break;
             }
         }
         else
@@ -206,10 +208,12 @@ public class LevelManager : MonoBehaviour
         ShipConfig shipConfig = null;
         if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
+            Debug.Log("Applied ship configuration after reset.");
         } else {
             Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + currentLevelIndex + "\n"
                             + "Using default ship configuration with editor defaults");
         }
+        OnLevelLoaded?.Invoke(levels[currentLevelIndex]);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -239,7 +243,6 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         if (isLoading) return;
-        ShipManager.ResetShip();
         StopAllCoroutines();
         LoadLevel(false);
     }
@@ -268,18 +271,5 @@ public class LevelManager : MonoBehaviour
         int timeBonus = Mathf.RoundToInt(timeRatio * 200);
 
         return basePoints + timeBonus;
-    }
-
-    public void SetupForTest(ObjectSpawner gas, ObjectSpawner rareMetal, ObjectSpawner asteroid, 
-                         GameObject loading, TextMeshProUGUI loadText, LoadingProgressBar progressBar, 
-                         GameObject missionPanel)
-    {
-        gasSpawner = gas;
-        rareMetalSpawner = rareMetal;
-        asteroidSpawner = asteroid;
-        loadingScreen = loading;
-        loadingText = loadText;
-        loadingProgressBar = progressBar;
-        missionObjectivePanel = missionPanel;
     }
 }

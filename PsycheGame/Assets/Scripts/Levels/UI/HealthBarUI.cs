@@ -9,19 +9,26 @@ public class HealthBar : MonoBehaviour {
     [SerializeField] public TextMeshProUGUI textDisplay;
 
     public Image healthBarImage = null;
-
+    private Coroutine flashCoroutine; 
     private static readonly float HEALTH_LOW_LEVEL = 25f;
     private static readonly float HEALTH_MID_LEVEL = 50f;
     private static readonly float HEALTH_LOW_THRESHOLD = 20f;
 
     private void Start() {
         this.healthBarImage = healthBarColor.GetComponent<Image>();
+        UpdateIndicator();
     }
 
     public void UpdateIndicator() {
         float health = ShipManager.Health;
         healthBar.value = health;
         textDisplay.text = $"{health}";
+
+        if (flashCoroutine != null)
+        {
+            StopCoroutine(flashCoroutine);
+            flashCoroutine = null;
+        }
 
         if (health < HEALTH_LOW_LEVEL) {
             healthBarImage.color = Color.red;
@@ -39,7 +46,8 @@ public class HealthBar : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
             healthBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
-        }   
+        }
+        UpdateIndicator();   
     }
 
     private void Awake()
