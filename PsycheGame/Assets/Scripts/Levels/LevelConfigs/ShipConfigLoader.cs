@@ -6,9 +6,6 @@ public class ShipConfigLoader : MonoBehaviour {
     public static readonly string DATA_FILE_NAME = "ContainerGameData.json";
     public static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
 
-    // reusing the scanned popup column here
-    private static Sprite onLoadPopupImage;
-
     private void Start()
     {
         // TODO: rather than using a genric sprite popup we can load the actual probe component
@@ -41,7 +38,7 @@ public class ShipConfigLoader : MonoBehaviour {
     private IEnumerator PopupUiAddComponents(ProbeComponentList comps)
     {
         ScannedColumn popupUi = (ScannedColumn)FindObjectOfType(typeof(ScannedColumn));
-        popupUi.AddEntry(onLoadPopupImage, "Probe Components:", "", popupUi.GetHashCode());
+        popupUi.AddEntry(null, "Probe Components:", "", popupUi.GetHashCode());
         yield return new WaitForSeconds(0.5f);
 
         foreach (ProbeComponent comp in comps.components)
@@ -49,8 +46,9 @@ public class ShipConfigLoader : MonoBehaviour {
             var header = comp.Name;
             var description = comp.Description;
             var id = comp.GetHashCode();
+            var sprite = BuilderSpriteManager.GetComponentSprite(comp.Id);
 
-            popupUi.AddEntry(onLoadPopupImage, header, description, id);
+            popupUi.AddEntry(sprite, header, description, id);
             yield return new WaitForSeconds(0.5f);
         }
     }
