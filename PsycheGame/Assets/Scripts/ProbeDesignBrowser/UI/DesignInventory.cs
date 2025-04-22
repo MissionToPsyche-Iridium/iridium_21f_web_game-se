@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using Unity.Plastic.Newtonsoft.Json.Linq;
+using System.Linq;
 
 public class DesignInventory : MonoBehaviour
 {
@@ -26,6 +28,7 @@ public class DesignInventory : MonoBehaviour
         loadDesign(index);
     }
 
+    // for tests
     public void Start(List<ProbeDesign> test_designs) {
         Debug.Log("Loading list of designs");
         designs = test_designs;
@@ -49,7 +52,7 @@ public class DesignInventory : MonoBehaviour
         GameObject.Find("ThrusterStrengthText").GetComponentInChildren<TMPro.TMP_Text>().text = "Thruster Strength: " + design.totals.Speed;
         GameObject.Find("ScanningRangeText").GetComponentInChildren<TMPro.TMP_Text>().text = "Scanning Range: " + design.totals.ScanningRange.ToString();
         GameObject.Find("FuelCapacityText").GetComponentInChildren<TMPro.TMP_Text>().text = "Fuel Capacity: " + design.totals.FuelCapacity.ToString();
-        GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsJson;
+        GameObject.Find("DesignParts").GetComponentInChildren<TMPro.TMP_Text>().text = "Parts: " + design.partsNames;
         } else {
             loadEmpty();
         }
@@ -104,19 +107,4 @@ public class DesignInventory : MonoBehaviour
         return designs[index].partsJson;
     }
 
-
-    public string GetPartNames(string json) {
-        string names= "";
-
-       var parts = JsonUtilityWrapper.FromJson<string>(json);
-
-            foreach(var item in parts)
-            {
-                names += item;
-                // Debug.Log(parts["Name"]);
-                // Debug.Log(item["Name"]);
-
-            }
-        return names;
-    }
 }

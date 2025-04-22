@@ -60,9 +60,10 @@ public sealed class ContainerGameData
         if(probeDesigns.Count < 10) {
         Sprite sprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
         List<GameObject> parts = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetSpawnedProbeComponents(); //get current spawned parts
-        String partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
+        string partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
+        string partsNames = GetPartsNames(parts);
         ProbeAttributeTotals totals = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().CalculateAttributeTotals(); //saves attribute totals
-        ProbeDesign design = new ProbeDesign(sprite, name, partsJson, parts, totals);
+        ProbeDesign design = new ProbeDesign(sprite, name, partsJson, parts, totals, partsNames);
         probeDesigns.Add(design); //Adds current design to list of designs
         return true;
         } else {
@@ -77,6 +78,14 @@ public sealed class ContainerGameData
 
     public void deleteDesign(int index) {
         probeDesigns.RemoveAt(index);
+    }
+
+    public string GetPartsNames(List<GameObject> parts) {
+        string names = "";
+        foreach(GameObject part in parts) {
+            names += "[" + part.name + "] ";
+        }
+        return names;
     }
 
 }
