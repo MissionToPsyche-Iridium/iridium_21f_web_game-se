@@ -19,7 +19,7 @@ public enum ProbeComponentType
     Movement,
     Power,
     Communication,
-    Tools,
+    Tool,
     Other
 }
 
