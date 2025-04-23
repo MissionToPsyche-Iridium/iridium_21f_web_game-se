@@ -204,7 +204,7 @@ public class ContainerManager : MonoBehaviour
 		try {
 			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.LogError("Control Helper not found: " + e.Message);
+			//Debug.LogError("Control Helper not found: " + e.Message);
 			profile = colorProfile;
 		}
 
@@ -273,7 +273,7 @@ public class ContainerManager : MonoBehaviour
 			GameObject controlHelper = GameObject.Find("ControlHelper");
 			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.LogError("Control Helper not found - testing builder scene only - code:" + e.Message);
+			//Debug.LogError("Control Helper not found - testing builder scene only - code:" + e.Message);
 			colorProfile = 1;
 		}
 
