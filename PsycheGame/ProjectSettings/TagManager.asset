@@ -8,6 +8,11 @@ TagManager:
   - ProbePart
   - Inactive
   - Asteroid
+  - HUD
+  - Mineral
+  - Boundary
+  - Part
+  - Resource
   layers:
   - Default
   - TransparentFX
@@ -20,7 +25,7 @@ TagManager:
   - 
   - ProbePart
   - ProbePartInPosition
-  - 
+  - MiniMap
   - 
   - 
   - 

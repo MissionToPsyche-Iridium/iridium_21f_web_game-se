@@ -10,7 +10,6 @@ using System.Linq;
 
 public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 {
-    [SerializeField] private GameObject _player;
     [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _foregroundCanvas;
     [SerializeField] private GameObject _content;
@@ -23,20 +22,31 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
     [SerializeField] private GameObject _draggingBox;
 
-    private Inventory _inventory;
+    public Inventory Inventory { get; private set; }
+
     private ProbeComponentType? _currentFilter;
     private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
 
-    public void Start()
+    public void Awake()
     {
-        _inventory = _player.GetComponent<Player>().Inventory;
-        _inventory.AddObserver(this);
+        Inventory = new Inventory();
+        foreach (ProbeComponent probeComponent in Config.Get<ProbeComponent[]>("ProbeComponents"))
+        {
+            for (int i = 0; i < Config.Get<int>("#StartingInventory"); i++)
+            {
+                if (Config.Get<string>($"StartingInventory[{i}].ProbeComponentId").Equals(probeComponent.Id))
+                {
+                    Inventory.AddProbeComponent(probeComponent, Config.Get<int>($"StartingInventory[{i}].Quantity"));
+                }
+            }
+        }
+        Inventory.AddObserver(this);
 
         _currentFilter = null;
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
-        foreach (Tuple<ProbeComponent, int> tuple in _inventory.GetProbeComponentQuantities())
+        foreach (Tuple<ProbeComponent, int> tuple in Inventory.GetProbeComponentQuantities())
         {
             CreateButton(tuple.Item1, tuple.Item2);
         }
@@ -74,6 +84,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         buttonScript.SpawnArea = _spawnArea;
         buttonScript.TooltipPrefab = _tooltipPrefab;
         buttonScript.NotificationPrefab = _notificationPrefab;
+        buttonScript.MasterCanvas = transform.parent.gameObject;
         buttonScript.ForegroundCanvas = _foregroundCanvas;
 
         Image image = button.GetComponent<Image>();

@@ -27,7 +27,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject missionObjectivePanel;
     [SerializeField] private LoadingProgressBar loadingProgressBar;
     private LeaderBoard leaderBoard;
-    private MissionState missionState;
+    private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
     private bool isPaused = false;
@@ -55,7 +55,6 @@ public class LevelManager : MonoBehaviour
         // values. These spawners are renabled in 'LoadLevel'
         if (gasSpawner != null) gasSpawner.enabled = false;
         if (asteroidSpawner != null) asteroidSpawner.enabled = false;
-        this.gameObject.AddComponent<ShipConfigLoader>();
     }
 
     private void Start()
@@ -82,7 +81,7 @@ public class LevelManager : MonoBehaviour
         // here we configure the ship based on the returned config
         ShipConfig config = this.gameObject
             .GetComponent<ShipConfigLoader>()
-            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
+            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
         if (config == null) {
             Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
                 "using default editor config to initalize ship parameters");
@@ -198,6 +197,8 @@ public class LevelManager : MonoBehaviour
             else
             {
                 Debug.Log("All levels completed.");
+                SetLoadingState(false);
+                yield break;
             }
         }
         else
@@ -206,13 +207,17 @@ public class LevelManager : MonoBehaviour
         }
 
         ShipManager.ResetShip();
-        ShipConfig shipConfig = null;
+        ShipConfig shipConfig = this.gameObject
+            .GetComponent<ShipConfigLoader>()
+            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
+            Debug.Log("Applied ship configuration after reset.");
         } else {
             Debug.LogWarning("No ship configuration found for explorer level with 'levelIndex': " + currentLevelIndex + "\n"
                             + "Using default ship configuration with editor defaults");
         }
+        OnLevelLoaded?.Invoke(levels[currentLevelIndex]);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -242,7 +247,6 @@ public class LevelManager : MonoBehaviour
     public void RestartLevel()
     {
         if (isLoading) return;
-        ShipManager.ResetShip();
         StopAllCoroutines();
         LoadLevel(false);
     }
@@ -271,18 +275,5 @@ public class LevelManager : MonoBehaviour
         int timeBonus = Mathf.RoundToInt(timeRatio * 200);
 
         return basePoints + timeBonus;
-    }
-
-    public void SetupForTest(ObjectSpawner gas, ObjectSpawner rareMetal, ObjectSpawner asteroid, 
-                         GameObject loading, TextMeshProUGUI loadText, LoadingProgressBar progressBar, 
-                         GameObject missionPanel)
-    {
-        gasSpawner = gas;
-        rareMetalSpawner = rareMetal;
-        asteroidSpawner = asteroid;
-        loadingScreen = loading;
-        loadingText = loadText;
-        loadingProgressBar = progressBar;
-        missionObjectivePanel = missionPanel;
     }
 }

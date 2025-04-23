@@ -19,6 +19,7 @@ public class SpriteDragDrop : MonoBehaviour
     private ContainerManager containerManager;
     public BuildManager BuildManager;
     public ProbeComponent ProbeComponent;
+    public GameObject MasterCanvas;
     public GameObject DraggingBox;
     public GameObject NotificationPrefab;
     public bool Selected { get; private set; }
@@ -52,7 +53,7 @@ public class SpriteDragDrop : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        transform.position = MouseWorldPosition() + offset;
+        UpdatePosition();
     }
 
     private void OnMouseUp()
@@ -117,6 +118,22 @@ public class SpriteDragDrop : MonoBehaviour
         }
     }
 
+    public void UpdatePosition()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane)) + offset;
+
+        Vector3[] worldCorners = new Vector3[4];
+        (MasterCanvas.transform as RectTransform).GetWorldCorners(worldCorners);
+
+        RectTransform rectTransform = transform as RectTransform;
+        rectTransform.position = new Vector3(
+            Mathf.Clamp(worldPos.x, worldCorners[0].x + rectTransform.rect.width / 2, worldCorners[2].x - rectTransform.rect.width / 2),
+            Mathf.Clamp(worldPos.y, worldCorners[0].y + rectTransform.rect.height / 2, worldCorners[2].y - rectTransform.rect.height / 2),
+            worldPos.z
+        );
+    }
+
     public bool AttemptToRelease()
     {
         if (!containerManager.CanOccupyCell(CurrentCell.Item1, CurrentCell.Item2))
@@ -139,8 +156,8 @@ public class SpriteDragDrop : MonoBehaviour
 
     Vector3 MouseWorldPosition()
     {
-        var mouseScreenPos = Input.mousePosition;
-        return Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        Vector3 mousePos = Input.mousePosition;
+        return Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane));
     }
 }
 
