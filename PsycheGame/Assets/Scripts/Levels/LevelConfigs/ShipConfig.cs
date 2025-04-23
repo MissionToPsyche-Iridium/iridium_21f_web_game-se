@@ -43,7 +43,7 @@ public class ShipConfig : ScriptableObject
         public float moveSpeed;
         public float fuelConsumptionRate;
         public float boostMultiplier;
-        public float bostChangeRate;
+        public float boostChangeRate;
     }
 
     public TetherConfig tetherConfig = new TetherConfig();

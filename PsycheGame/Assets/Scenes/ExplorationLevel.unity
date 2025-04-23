@@ -813,7 +813,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &95383123
 Transform:
   m_ObjectHideFlags: 0
@@ -189720,8 +189720,8 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 1
-  m_YDamping: 1
+  m_XDamping: 3.5
+  m_YDamping: 3.5
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
@@ -189731,8 +189731,8 @@ MonoBehaviour:
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 0.8
-  m_SoftZoneHeight: 0.8
+  m_SoftZoneWidth: 0.65
+  m_SoftZoneHeight: 0.65
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
@@ -197589,6 +197589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fuelBarUI: {fileID: 1851209610}
   boost: {fileID: 1653014659}
+  thrustSprite: {fileID: 95383122}
   moveSpeed: 15
   fuelConsumptionRate: 1
   boostMultiplier: 2
