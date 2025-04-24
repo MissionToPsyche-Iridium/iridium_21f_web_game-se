@@ -6,17 +6,11 @@ public class ShipConfigLoader : MonoBehaviour {
     public static readonly string DATA_FILE_NAME = "ContainerGameData.json";
     public static readonly string DATA_PATH = Application.dataPath + Path.AltDirectorySeparatorChar + DATA_FILE_NAME;
 
-    private void Start()
-    {
-        // TODO: rather than using a genric sprite popup we can load the actual probe component
-        // sprite using the json configuration and display it in the popup
-        //
-        // onLoadPopupImage = ShipManager.Ship.GetComponent<SpriteRenderer>().sprite;
-        // if (onLoadPopupImage == null)
-        // {
-        //    Debug.Log("SPRITE NULL");
-        // }
-    }
+    // multiplier for fuel capacity since values transfered from the builder side of the game
+    // are typically lower than expected, only applied if incoming fuel value is lower than
+    // fuel capacity min
+    public static readonly int FUEL_CAPACITY_MULT = 5;
+    public static readonly int FUEL_CAPACITY_MIN = 50;
 
     private class ProbeComponentList {
         // NOTE: due to how JSON is deserialized the public variable name below
@@ -77,6 +71,11 @@ public class ShipConfigLoader : MonoBehaviour {
             totalWeight += probeComponent.Weight;
         }
 
+        if (totalFuelCapcity <= FUEL_CAPACITY_MIN)
+        {
+            totalFuelCapcity *= FUEL_CAPACITY_MULT;
+        }
+
         Debug.Log(
             "Ship config initialized with:\n"   +
             "  Scan Range:   " + totalScanRange   + "\n" +
@@ -91,6 +90,7 @@ public class ShipConfigLoader : MonoBehaviour {
         // how we want to computes these
         config.shipMoveConfig.health = totalHealth;
         config.shipMoveConfig.fuel = totalFuelCapcity;
+
         config.scanConfig.distance = totalScanRange;
         StartCoroutine(PopupUiAddComponents(probeComponents));
         return config;
