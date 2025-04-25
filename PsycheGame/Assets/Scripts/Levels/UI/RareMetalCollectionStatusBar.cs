@@ -9,7 +9,6 @@ public class RareMetalCollectionStatusBar : MonoBehaviour {
     MissionState missionState;
 
     public Image rareMetalCollectBarImage = null;
-    private string metalCollected = "";
     private float totalMined = 0;
     private float target;
 

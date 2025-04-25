@@ -16,7 +16,6 @@ public class ShipMovement : MonoBehaviour {
 
     public void initWithConfig(ShipConfig.ShipMovementConfig config)
     {
-        //Incoming ship config move speed is way too slow, fuel consumption isn't working either
         boostMultiplier = config.boostMultiplier;
         boostSpeedChangeRate = config.boostChangeRate;
     }
@@ -95,18 +94,12 @@ public class ShipMovement : MonoBehaviour {
 
     private void HandleBoostInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            isBoosting = true;
-            targetSpeed = baseSpeed * boostMultiplier; 
-            boost.SetActive(true); 
-        }
-        else if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isBoosting = false;
-            targetSpeed = baseSpeed; 
-            boost.SetActive(false);
-        }
+        bool isSpacePressed = Input.GetKeyDown(KeyCode.Space);
+        bool isSpaceReleased = Input.GetKeyUp(KeyCode.Space);
+
+        isBoosting = isSpacePressed || (isBoosting && !isSpaceReleased);
+        targetSpeed = isBoosting ? baseSpeed * boostMultiplier : baseSpeed;
+        boost.SetActive(isBoosting);
     }
 
     private void UpdateSpeed()
