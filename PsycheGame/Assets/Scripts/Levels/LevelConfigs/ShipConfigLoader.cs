@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -35,12 +36,35 @@ public class ShipConfigLoader : MonoBehaviour {
         popupUi.AddEntry(null, "Probe Components:", "", popupUi.GetHashCode());
         yield return new WaitForSeconds(0.5f);
 
+        Dictionary<string, int> compCounts = new Dictionary<string, int>();
+        Dictionary<string, bool> shown = new Dictionary<string, bool>();
+
+        // count the number of component duplicates to display a single popup
+        // ui showing the count rather than multiple for the same components
         foreach (ProbeComponent comp in comps.components)
         {
-            var header = comp.Name;
+            if (compCounts.ContainsKey(comp.Name))
+            {
+                compCounts[comp.Name]++;
+            }
+            else
+            {
+                compCounts[comp.Name] = 1;
+                shown[comp.Name] = false;
+            }
+        }
+
+        foreach (ProbeComponent comp in comps.components)
+        {
+            if (shown[comp.Name]) continue;
+
+            var count = compCounts[comp.Name];
+            var header = count > 1 ? (comp.Name + " x" + count) : comp.Name;
             var description = comp.Description;
             var id = comp.GetHashCode();
             var sprite = BuilderSpriteManager.GetComponentSprite(comp.Id);
+
+            shown[comp.Name] = true;
 
             popupUi.AddEntry(sprite, header, description, id);
             yield return new WaitForSeconds(0.5f);
