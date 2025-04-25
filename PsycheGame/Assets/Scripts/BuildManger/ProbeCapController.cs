@@ -18,7 +18,7 @@ using UnityEngine;
             public float moveSpeed;
             public float fuelConsumptionRate;
             public float boostMultiplier;
-            public float bostChangeRate;
+            public float boostChangeRate;
             Future features --> tether types (need sprite assets)
             Note: Probe flyer behaviors - yaw speed, move speed
         3. Create runner method that handles static classes calls to aggregate a generalized probe capabilities objec 

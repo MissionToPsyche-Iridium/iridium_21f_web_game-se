@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class PauseHandler : MonoBehaviour 
 {
     [SerializeField] public GameObject missionObjectivePanel; 
+    [SerializeField] public GameObject gameGuideModal;
+    [SerializeField] private Button helpButton;
     public static bool IsGamePaused { get; private set; } = false;
 
     private void Update()
@@ -70,5 +72,18 @@ public class PauseHandler : MonoBehaviour
         {
             Debug.LogError("BeginResumeText object not found under the MissionObjectiveModalPanel.");
         }
+    }
+
+    public void ToggleGameGuide()
+    {
+        if (gameGuideModal == null)
+        {
+            Debug.LogError("Cannot toggle GameGuideModal: GameGuideModal is not assigned.");
+            return;
+        }
+
+        bool isActive = gameGuideModal.activeSelf;
+        gameGuideModal.SetActive(!isActive);
+        Debug.Log($"Game guide modal {(isActive ? "hidden" : "shown")}");
     }
 }

@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tetherConfig:
     resolution: 40
-    launchSpeed: 10
-    probeObjectDistance: 30
-    straightLineSpeed: 30
-    startWaveSize: 50
-    progressionSpeed: 20
+    launchSpeed: 0.5
+    probeObjectDistance: 5
+    straightLineSpeed: 0.5
+    startWaveSize: 3
+    progressionSpeed: 10
   scanConfig:
     distance: 10
-    resolution: 40
-    arcAngle: 80
+    resolution: 100
+    arcAngle: 180
   shipMoveConfig:
     fuel: 100
     health: 10
-    moveSpeed: 30
+    moveSpeed: 15
     fuelConsumptionRate: 1
-    boostMultiplier: 5
+    boostMultiplier: 2
     bostChangeRate: 2

@@ -5,21 +5,23 @@ using UnityEngine;
 
 public class NotificationService
 {
-    private static GameObject _notificationPrefab = Resources.Load<GameObject>("UI/NotificationCanvas");
-    private static GameObject _masterCanvas = GameObject.Find("/MasterCanvas");
-
     private static Notification _currentNotification = null;
 
-    public static void Create(string message, Sprite image = null, Action acceptCallback = null)
+    public static Notification Create(string message, Sprite image = null, Action acceptCallback = null)
     {
         if (_currentNotification != null)
         {
             _currentNotification.Accept();
         }
 
-        _currentNotification = GameObject.Instantiate(_notificationPrefab, _masterCanvas.transform).GetComponent<Notification>();
+        Notification notification = GameObject.Instantiate(Resources.Load<GameObject>("UI/NotificationCanvas"), GameObject.Find("/MasterCanvas").transform).GetComponent<Notification>();
+        notification.SetMessage(message);
+        if (image != null)
+        {
+            notification.SetImage(image);
+        }
 
-        _currentNotification.SetAcceptCallback(() =>
+        notification.SetAcceptCallback(() =>
         {
             _currentNotification = null;
             if (acceptCallback != null)
@@ -28,10 +30,8 @@ public class NotificationService
             }
         });
 
-        _currentNotification.SetMessage(message);
-        if (image != null)
-        {
-            _currentNotification.SetImage(image);
-        }
+        _currentNotification = notification;
+
+        return notification;
     }
 }

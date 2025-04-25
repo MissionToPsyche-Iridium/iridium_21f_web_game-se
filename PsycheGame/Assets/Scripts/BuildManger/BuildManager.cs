@@ -19,7 +19,9 @@ public class BuildManager : MonoBehaviour
     private MaxProbeAttributeValues _maxProbeAttributeValues;
 
     [SerializeField]
-    private GameObject _player;
+    private ProbeComponentInventory _probeComponentInventory;
+    [SerializeField]
+    private AttributeTracker _attributeTracker;
 
     private Inventory _inventory;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
@@ -32,7 +34,7 @@ public class BuildManager : MonoBehaviour
         _maxProbeAttributeValues.Speed = Config.Get<int>("MaxAttributes.Speed");
         _maxProbeAttributeValues.ScanningRange = Config.Get<int>("MaxAttributes.ScanningRange");
 
-        _inventory = _player.GetComponent<Player>().Inventory;
+        _inventory = _probeComponentInventory.Inventory;
         _spawned = new List<Tuple<ProbeComponent, GameObject>>();
         _undone = new List<Tuple<ProbeComponent, GameObject>>();
     }
@@ -63,6 +65,7 @@ public class BuildManager : MonoBehaviour
     {
         _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
         _spawned.Add(probeComponentTuple);
+        _attributeTracker.UpdatePanel();
     }
 
     public void DespawnProbeComponent(GameObject probeComponent)
@@ -84,6 +87,7 @@ public class BuildManager : MonoBehaviour
                 break;
             }
         }
+        _attributeTracker.UpdatePanel();
     }
 
     public void Undo()

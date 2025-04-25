@@ -28,7 +28,6 @@ public class ProbeComponentButton : MonoBehaviour, IDragHandler, IBeginDragHandl
     public GameObject TooltipPrefab { get; set; }
     private ContainerManager _containerManager;
     private GameObject _dragIcon;
-    private Vector3 _dragOffset;
     private Material _boundMaterial;
     private Material _sparkMaterial;
     private RectTransform _dragPlane;
@@ -53,8 +52,6 @@ public class ProbeComponentButton : MonoBehaviour, IDragHandler, IBeginDragHandl
         {
             return;
         }
-
-        _dragOffset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, Camera.main.nearClipPlane));
 
         _dragIcon = new GameObject();
         _dragIcon.name = ProbeComponent.Name;
@@ -157,7 +154,7 @@ public class ProbeComponentButton : MonoBehaviour, IDragHandler, IBeginDragHandl
     public void UpdateIconPosition()
     {
         Vector3 mousePos = Input.mousePosition;
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane)) + _dragOffset;
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Camera.main.nearClipPlane));
 
         Vector3[] worldCorners = new Vector3[4];
         (MasterCanvas.transform as RectTransform).GetWorldCorners(worldCorners);

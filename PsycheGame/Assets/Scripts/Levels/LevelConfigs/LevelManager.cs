@@ -79,7 +79,9 @@ public class LevelManager : MonoBehaviour
         StartMissionTimer();
 
         // here we configure the ship based on the returned config
-        ShipConfig config = ShipConfigLoader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
+        ShipConfig config = this.gameObject
+            .GetComponent<ShipConfigLoader>()
+            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig); 
         if (config == null) {
             Debug.LogError("ERROR FAILED TO LOAD CONFIG\n" +
                 "using default editor config to initalize ship parameters");
@@ -205,7 +207,9 @@ public class LevelManager : MonoBehaviour
         }
 
         ShipManager.ResetShip();
-        ShipConfig shipConfig = null;
+        ShipConfig shipConfig = this.gameObject
+            .GetComponent<ShipConfigLoader>()
+            .LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         if (shipConfig != null) {
             ShipManager.SetShipConfig(shipConfig);
             Debug.Log("Applied ship configuration after reset.");

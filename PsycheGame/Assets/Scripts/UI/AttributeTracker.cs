@@ -141,7 +141,7 @@ public class AttributeTracker : MonoBehaviour
         UpdateChildAttributes();
     }
 
-    void Update()
+    public void UpdatePanel()
     {
         if (attributeColor == null || containerManager.GetAttribBarColor() != attributeColor)
         {

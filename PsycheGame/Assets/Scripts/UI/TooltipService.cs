@@ -18,12 +18,11 @@ public enum TooltipPivot
 
 public class TooltipService
 {
-    private static GameObject _tooltipPrefab = Resources.Load<GameObject>("UI/TooltipCanvas");
-    private static GameObject _masterCanvas = GameObject.Find("/MasterCanvas");
-
     public static Tooltip Create(string title, string description, Vector3 position, TooltipPivot pivot = TooltipPivot.Center)
     {
-        Tooltip tooltip = GameObject.Instantiate(_tooltipPrefab, _masterCanvas.transform).GetComponent<Tooltip>();
+        GameObject masterCanvas = GameObject.Find("/MasterCanvas");
+
+        Tooltip tooltip = GameObject.Instantiate(Resources.Load<GameObject>("UI/TooltipCanvas"), masterCanvas.transform).GetComponent<Tooltip>();
 
         tooltip.SetTitle(title);
         tooltip.SetDescription(description);
@@ -62,7 +61,7 @@ public class TooltipService
         }
 
         Vector3[] worldCorners = new Vector3[4];
-        (_masterCanvas.transform as RectTransform).GetWorldCorners(worldCorners);
+        (masterCanvas.transform as RectTransform).GetWorldCorners(worldCorners);
 
         tooltip.SetPosition(new Vector3(
             Mathf.Clamp(pivotedPosition.x, worldCorners[0].x + rect.width / 2, worldCorners[2].x - rect.width / 2),
