@@ -44,7 +44,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         _audioSource.PlayOneShot(_swooshSound, 1.0f);
 
 
-        if (_containerManager.IsReadyToSave())
+        if (!_containerManager.IsEmpty())
         {
 
             // Sprite probeSprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
@@ -61,7 +61,7 @@ public class SaveButton : MonoBehaviour, IPointerDownHandler
         }
         else
         {
-            NotificationService.Create("Could not save probe due to grid abnormalities (component spacing or lack of parts). Please fix and try again.");
+            NotificationService.Create("No probe to save. Try dragging some components from the inventory on the left.");
         }
 
         debounce = false;

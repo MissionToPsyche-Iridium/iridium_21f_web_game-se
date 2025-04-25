@@ -385,7 +385,12 @@ public class ContainerManager : MonoBehaviour
         return true;
     }
 
-    public bool IsReadyToSave()
+    public bool IsEmpty()
+    {
+        return totalOccupations == 0;
+    }
+
+    public bool AreAllNeigboring()
     {
         if (totalOccupations < 1)
         {

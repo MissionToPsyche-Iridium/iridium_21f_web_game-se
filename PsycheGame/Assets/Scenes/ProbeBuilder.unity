@@ -4751,7 +4751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175d40abe12da4b12965c84ea5670fd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InventoryCanvas: {fileID: 1184093142}
+  _inventoryCanvas: {fileID: 1184093142}
+  _attributePanel: {fileID: 1408648431}
 --- !u!1 &982051438
 GameObject:
   m_ObjectHideFlags: 0
