@@ -3,84 +3,111 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory
+public class Inventory<T>
 {
-    private InventoryContainer<ProbeComponent> _probeComponents;
-    private List<IInventoryObserver> _observers;
+    private List<Entry> _entries;
+    private List<IInventoryObserver<T>> _observers;
 
     public Inventory()
     {
-        _probeComponents = new InventoryContainer<ProbeComponent>();
-        _observers = new List<IInventoryObserver>();
+        _entries = new List<Entry>();
+        _observers = new List<IInventoryObserver<T>>();
     }
 
-    public List<Tuple<ProbeComponent, int>> GetProbeComponentQuantities()
+    public List<T> GetItems()
     {
-        List<Tuple<ProbeComponent, int>> probeComponents = new List<Tuple<ProbeComponent, int>>();
-        foreach (string id in _probeComponents.GetItemIds())
+        List<T> items = new List<T>();
+        foreach (Entry entry in _entries)
         {
-            probeComponents.Add(new Tuple<ProbeComponent, int>(_probeComponents.GetItem(id), _probeComponents.GetItemQuantity(id)));
+            items.Add(entry.Item);
         }
-        return probeComponents;
+        return items;
     }
 
-    public int GetProbeComponentQuantity(ProbeComponent probeComponent)
+    public int GetItemQuantity(T item)
     {
-        return _probeComponents.GetItemQuantity(probeComponent.Id);
-    }
-
-    public void AddProbeComponent(ProbeComponent probeComponent, int quantity)
-    {
-        string id = probeComponent.Id;
-        if (_probeComponents.GetItem(id) != null)
+        foreach (Entry entry in _entries)
         {
-            quantity += _probeComponents.GetItemQuantity(id);
-            _probeComponents.UpdateItemQuantity(id, quantity);
-        } else
-        {
-            _probeComponents.AddItem(id, probeComponent, quantity);
+            if (entry.Item.Equals(item))
+            {
+                return entry.Quantity;
+            }
         }
-
-        NotifyObservers(probeComponent, quantity);
+        return 0;
     }
 
-    public void AddProbeComponent(ProbeComponent probeComponent)
+    public void AddItem(T item, int startingQuantity = 1)
     {
-        AddProbeComponent(probeComponent, 1);
-    }
-
-    public void RemoveProbeComponent(ProbeComponent probeComponent)
-    {
-        string id = probeComponent.Id;
-        int quantity = _probeComponents.GetItemQuantity(id);
-        if (quantity > 1)
+        _entries.Add(new Entry(item, startingQuantity));
+        foreach (IInventoryObserver<T> observer in _observers)
         {
-            quantity--;
-            _probeComponents.UpdateItemQuantity(id, quantity);
-        } else
-        {
-            quantity = 0;
-            _probeComponents.RemoveItem(id);
-        }
-
-        NotifyObservers(probeComponent, quantity);
-    }
-
-    private void NotifyObservers(object item, int quantity)
-    {
-        foreach (IInventoryObserver observer in _observers)
-        {
-            observer.ItemUpdated(item, quantity);
+            observer.ItemAdded(item);
         }
     }
 
-    public void AddObserver(IInventoryObserver observer)
+    public void RemoveItem(T item)
+    {
+        for (int entryIndex = 0; entryIndex < _entries.Count; entryIndex++)
+        {
+            if (_entries[entryIndex].Item.Equals(item))
+            {
+                _entries.RemoveAt(entryIndex);
+                foreach (IInventoryObserver<T> observer in _observers)
+                {
+                    observer.ItemRemoved(item);
+                }
+
+                break;
+            }
+        }
+    }
+
+    public void SetItemQuantity(T item, int quantity)
+    {
+        foreach (Entry entry in _entries)
+        {
+            if (entry.Item.Equals(item))
+            {
+                entry.Quantity = quantity;
+                foreach (IInventoryObserver<T> observer in _observers)
+                {
+                    observer.ItemUpdated(item, quantity);
+                }
+
+                break;
+            }
+        }
+    }
+
+    public void IncrementItemQuantity(T item, int increment = 1)
+    {
+        SetItemQuantity(item, GetItemQuantity(item) + increment);
+    }
+
+    public void DecrementItemQuantity(T item, int decrement = 1)
+    {
+        SetItemQuantity(item, GetItemQuantity(item) - decrement);
+    }
+
+    public void AddObserver(IInventoryObserver<T> observer)
     {
         _observers.Add(observer);
     }
 
-    public void RemoveObserver(IInventoryObserver observer)
+    public void RemoveObserver(IInventoryObserver<T> observer)
     {
         _observers.Remove(observer);
+    }
+
+    private sealed class Entry
+    {
+        public T Item { get; private set; }
+        public int Quantity { get; set; }
+
+        public Entry(T item, int quantity)
+        {
+            Item = item;
+            Quantity = quantity;
+        }
     }
 }

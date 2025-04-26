@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IInventoryObserver
+public interface IInventoryObserver<T>
 {
-    public void ItemUpdated(object item, int quantity);
+    public void ItemAdded(T item);
+    public void ItemUpdated(T item, int newQuantity);
+    public void ItemRemoved(T item);
 }
