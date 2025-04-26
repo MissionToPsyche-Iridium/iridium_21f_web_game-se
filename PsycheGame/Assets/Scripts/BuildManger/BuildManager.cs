@@ -23,7 +23,7 @@ public class BuildManager : MonoBehaviour
     [SerializeField]
     private AttributeTracker _attributeTracker;
 
-    private Inventory _inventory;
+    private Inventory<ProbeComponent> _inventory;
     private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
 
     public void Start()
@@ -63,7 +63,7 @@ public class BuildManager : MonoBehaviour
 
     public void SpawnProbeComponent(Tuple<ProbeComponent, GameObject> probeComponentTuple)
     {
-        _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
+        _inventory.DecrementItemQuantity(probeComponentTuple.Item1);
         _spawned.Add(probeComponentTuple);
         _attributeTracker.UpdatePanel();
     }
@@ -82,7 +82,7 @@ public class BuildManager : MonoBehaviour
 
                 probeComponent.SetActive(false);
 
-                _inventory.AddProbeComponent(tuple.Item1);
+                _inventory.IncrementItemQuantity(tuple.Item1);
 
                 break;
             }
@@ -111,9 +111,9 @@ public class BuildManager : MonoBehaviour
         for (int i = _undone.Count - 1; i >= 0; i--)
         {
             Tuple<ProbeComponent, GameObject> probeComponentTuple = _undone[i];
-            if (_inventory.GetProbeComponentQuantity(probeComponentTuple.Item1) > 0 && probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToReoccupy())
+            if (_inventory.GetItemQuantity(probeComponentTuple.Item1) > 0 && probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToReoccupy())
             {
-                _inventory.RemoveProbeComponent(probeComponentTuple.Item1);
+                _inventory.DecrementItemQuantity(probeComponentTuple.Item1);
 
                 _undone.RemoveAt(i);
                 _spawned.Add(probeComponentTuple);
