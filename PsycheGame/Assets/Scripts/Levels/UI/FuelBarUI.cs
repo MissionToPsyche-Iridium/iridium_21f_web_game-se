@@ -41,13 +41,25 @@ public class FuelBar : MonoBehaviour {
     }
 
     private IEnumerator FlashLowFuel() {
-        while (ShipManager.Fuel < FUEL_LOW_THRESHOLD) {
+        while (ShipManager.Fuel < FUEL_LOW_THRESHOLD)
+        {
             fuelBarImage.color = Color.red;
             yield return new WaitForSeconds(0.5f);
             fuelBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }
-        UpdateIndicator(ShipManager.Fuel);   
+        if (ShipManager.Fuel < FUEL_LOW_LEVEL)
+        {
+            fuelBarImage.color = Color.red;
+        }
+        else if (ShipManager.Fuel < FUEL_MID_LEVEL)
+        {
+            fuelBarImage.color = Color.yellow;
+        }
+        else
+        {
+            fuelBarImage.color = Color.green;
+        }
     }
 
     private void Awake()
