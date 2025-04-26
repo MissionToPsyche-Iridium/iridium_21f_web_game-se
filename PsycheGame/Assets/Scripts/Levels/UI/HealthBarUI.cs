@@ -41,13 +41,25 @@ public class HealthBar : MonoBehaviour {
     }
 
     private IEnumerator FlashLowHealth() {
-        while (ShipManager.Health < HEALTH_LOW_THRESHOLD) {
+        while (ShipManager.Health < HEALTH_LOW_THRESHOLD)
+        {
             healthBarImage.color = Color.red;
             yield return new WaitForSeconds(0.5f);
             healthBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }
-        UpdateIndicator();   
+        if (ShipManager.Health < HEALTH_LOW_LEVEL)
+        {
+            healthBarImage.color = Color.red;
+        }
+        else if (ShipManager.Health < HEALTH_MID_LEVEL)
+        {
+            healthBarImage.color = Color.yellow;
+        }
+        else
+        {
+            healthBarImage.color = Color.green;
+        }
     }
 
     private void Awake()

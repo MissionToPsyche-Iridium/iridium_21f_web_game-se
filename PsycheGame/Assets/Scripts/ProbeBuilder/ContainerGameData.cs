@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using log4net.Util;
 using UnityEngine;
 using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.UI;
@@ -11,8 +12,8 @@ public sealed class ContainerGameData
     private static ContainerGameData instance = null;
     private static readonly object padlock = new object();
     private List<Tile> tiles = new List<Tile>();
-    private List<GameObject> spawnedParts; //TODO choose part type (GameObject, ProbeComponent, something else?)
-    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>(); //TODO send to DesignInventory class    
+    private List<GameObject> spawnedParts;
+    private List<ProbeDesign> probeDesigns = new List<ProbeDesign>();  
     private ContainerGameData() {}
 
     public static ContainerGameData Instance {
@@ -60,9 +61,10 @@ public sealed class ContainerGameData
         if(probeDesigns.Count < 10) {
         Sprite sprite = (new Snapshot(GameObject.Find("/MasterCanvas/SpawnArea").GetComponent<Canvas>())).Take();
         List<GameObject> parts = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().GetSpawnedProbeComponents(); //get current spawned parts
-        String partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
+        string partsJson = SaveData.WriteToFile(parts); //saves design's parts to json
+        string partsNames = GetPartsNames(parts);
         ProbeAttributeTotals totals = GameObject.Find("/MasterCanvas").GetComponent<BuildManager>().CalculateAttributeTotals(); //saves attribute totals
-        ProbeDesign design = new ProbeDesign(sprite, name, partsJson, parts, totals);
+        ProbeDesign design = new ProbeDesign(sprite, name, partsJson, parts, totals, partsNames);
         probeDesigns.Add(design); //Adds current design to list of designs
         return true;
         } else {
@@ -77,6 +79,16 @@ public sealed class ContainerGameData
 
     public void deleteDesign(int index) {
         probeDesigns.RemoveAt(index);
+    }
+
+    public string GetPartsNames(List<GameObject> parts) {
+        HashSet<string> namesSet = new HashSet<string>();
+        foreach(GameObject part in parts) {
+            //get distinct names
+            namesSet.Add(part.name);
+        }
+        string names = string.Join(", ", namesSet);;
+        return names;
     }
 
 }

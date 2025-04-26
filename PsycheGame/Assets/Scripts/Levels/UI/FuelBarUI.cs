@@ -21,7 +21,6 @@ public class FuelBar : MonoBehaviour {
     }
 
     public void UpdateIndicator(float fuel) {
-        Debug.Log("Fuel: " + fuel);
         fuelBar.value = fuel;
         textDisplay.text = $"{Mathf.FloorToInt(fuel)}";
 

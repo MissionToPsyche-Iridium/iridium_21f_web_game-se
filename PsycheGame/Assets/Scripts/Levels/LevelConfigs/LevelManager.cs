@@ -30,7 +30,6 @@ public class LevelManager : MonoBehaviour
     private MissionState missionState; 
     private float missionTimeRemaining = 180f;
     private bool isTimerRunning = false;
-    private bool isPaused = false;
     private MissionTimer missionTimer;
     public static bool isLoading = false;
     private int playerScore = 0;
@@ -75,7 +74,6 @@ public class LevelManager : MonoBehaviour
         isLoading = false;
         missionObjectivePanel.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;
         StartMissionTimer();
 
         // here we configure the ship based on the returned config
