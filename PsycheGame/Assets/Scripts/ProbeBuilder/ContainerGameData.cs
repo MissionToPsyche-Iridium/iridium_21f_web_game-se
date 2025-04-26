@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using log4net.Util;
 using UnityEngine;
 using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.UI;
@@ -81,10 +82,12 @@ public sealed class ContainerGameData
     }
 
     public string GetPartsNames(List<GameObject> parts) {
-        string names = "";
+        HashSet<string> namesSet = new HashSet<string>();
         foreach(GameObject part in parts) {
-            names += "[" + part.name + "] ";
+            //get distinct names
+            namesSet.Add(part.name);
         }
+        string names = string.Join(", ", namesSet);;
         return names;
     }
 
