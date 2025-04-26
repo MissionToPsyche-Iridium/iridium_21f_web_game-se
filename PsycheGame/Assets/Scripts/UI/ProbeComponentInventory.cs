@@ -8,7 +8,7 @@ using TMPro;
 using System.Runtime.CompilerServices;
 using System.Linq;
 
-public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
+public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeComponent>
 {
     [SerializeField] private Sprite[] _probeSprites;
     [SerializeField] private GameObject _foregroundCanvas;
@@ -22,21 +22,21 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
     [SerializeField] private GameObject _filter, _filterLeft, _filterRight;
     [SerializeField] private GameObject _draggingBox;
 
-    public Inventory Inventory { get; private set; }
+    public Inventory<ProbeComponent> Inventory { get; private set; }
 
     private ProbeComponentType? _currentFilter;
     private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
 
     public void Awake()
     {
-        Inventory = new Inventory();
+        Inventory = new Inventory<ProbeComponent>();
         foreach (ProbeComponent probeComponent in Config.Get<ProbeComponent[]>("ProbeComponents"))
         {
             for (int i = 0; i < Config.Get<int>("#StartingInventory"); i++)
             {
                 if (Config.Get<string>($"StartingInventory[{i}].ProbeComponentId").Equals(probeComponent.Id))
                 {
-                    Inventory.AddProbeComponent(probeComponent, Config.Get<int>($"StartingInventory[{i}].Quantity"));
+                    Inventory.AddItem(probeComponent, Config.Get<int>($"StartingInventory[{i}].Quantity"));
                 }
             }
         }
@@ -46,9 +46,9 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
 
         _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
 
-        foreach (Tuple<ProbeComponent, int> tuple in Inventory.GetProbeComponentQuantities())
+        foreach (ProbeComponent probeComponent in Inventory.GetItems())
         {
-            CreateButton(tuple.Item1, tuple.Item2);
+            CreateButton(probeComponent, Inventory.GetItemQuantity(probeComponent));
         }
     }
 
@@ -160,9 +160,13 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
         Filter();
     }
 
-    public void ItemUpdated(object item, int quantity)
+    public void ItemAdded(ProbeComponent probeComponent)
     {
-        ProbeComponent probeComponent = item as ProbeComponent;
+        CreateButton(probeComponent, Inventory.GetItemQuantity(probeComponent));
+    }
+
+    public void ItemUpdated(ProbeComponent probeComponent, int newQuantity)
+    {
         if (probeComponent != null)
         {
             foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
@@ -172,25 +176,34 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver
                     GameObject button = tuple.Item2.transform.GetChild(0).gameObject;
                     if (!button.tag.Equals("Inactive"))
                     {
-                        if (quantity < 1)
+                        if (newQuantity < 1)
                         {
                             button.tag = "Inactive";
                             button.GetComponent<Image>().color = new Color(255, 255, 255, 0.25f);
                         }
                     }
-                    else if (quantity > 0)
+                    else if (newQuantity > 0)
                     {
                         button.tag = "Untagged";
                         button.GetComponent<Image>().color = new Color(255, 255, 255, 1.0f);
                     }
 
-                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{quantity.ToString()}x";
-
-                    return;
+                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{newQuantity.ToString()}x";
                 }
             }
+        }
+    }
 
-            CreateButton(probeComponent, quantity);
+    public void ItemRemoved(ProbeComponent probeComponent)
+    {
+        for (int buttonIndex = 0; buttonIndex < _componentButtons.Count; buttonIndex++)
+        {
+            if (_componentButtons[buttonIndex].Item1.Equals(probeComponent))
+            {
+                Destroy(_componentButtons[buttonIndex].Item2);
+                _componentButtons.RemoveAt(buttonIndex);
+                break;
+            }
         }
     }
 }
