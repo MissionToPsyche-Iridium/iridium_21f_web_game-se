@@ -9,7 +9,7 @@ public class FuelBar : MonoBehaviour {
     [SerializeField] public TextMeshProUGUI textDisplay;
 
     public Image fuelBarImage = null;
-    private Coroutine flashCoroutine;
+    private Coroutine flashCoroutine = null;
 
     private static readonly float FUEL_LOW_LEVEL = 25f;
     private static readonly float FUEL_MID_LEVEL = 50f;
@@ -21,33 +21,37 @@ public class FuelBar : MonoBehaviour {
     }
 
     public void UpdateIndicator(float fuel) {
+        Debug.Log("Fuel: " + fuel);
         fuelBar.value = fuel;
         textDisplay.text = $"{Mathf.FloorToInt(fuel)}";
-        
-        if (flashCoroutine != null)
-        {
-            StopCoroutine(flashCoroutine);
-            flashCoroutine = null;
-        }
 
-        if (fuel < FUEL_LOW_LEVEL) {
-            fuelBarImage.color = Color.red;
-            StartCoroutine(FlashLowFuel());
-        } else if (fuel < FUEL_MID_LEVEL) {
+        if (fuel < FUEL_LOW_LEVEL)
+        {
+            if (flashCoroutine == null)
+            {
+                flashCoroutine = StartCoroutine(FlashLowFuel());
+            }
+        }
+        else if (fuel < FUEL_MID_LEVEL)
+        {
+            if (flashCoroutine != null) {  StopCoroutine(flashCoroutine); }
             fuelBarImage.color = Color.yellow;
-        } else {
+        }
+        else
+        {
+            if (flashCoroutine != null) {  StopCoroutine(flashCoroutine); }
             fuelBarImage.color = Color.green;
         }
     }
 
     private IEnumerator FlashLowFuel() {
-        while (ShipManager.Fuel < FUEL_LOW_THRESHOLD) {
+        while (true)
+        {
             fuelBarImage.color = Color.red;
             yield return new WaitForSeconds(0.5f);
             fuelBarImage.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }
-        UpdateIndicator(ShipManager.Fuel);   
     }
 
     private void Awake()

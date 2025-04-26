@@ -19,6 +19,7 @@ public class ShipMovement : MonoBehaviour {
         //Incoming ship config move speed is way too slow, fuel consumption isn't working either
         boostMultiplier = config.boostMultiplier;
         boostSpeedChangeRate = config.boostChangeRate;
+        fuelBarUI.UpdateIndicator(ShipManager.Fuel);
     }
 
     void Start() {
