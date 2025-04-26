@@ -40,7 +40,7 @@ public class DesignInventoryTests
 
     [Test]
     public void AddDesign() {
-        design = new ProbeDesign(null, "Test Design", "list of parts", new List<GameObject>(), new ProbeAttributeTotals());
+        design = new ProbeDesign(null, "Test Design", "list of parts", new List<GameObject>(), new ProbeAttributeTotals() ,"names");
         Assert.IsNotNull(design, "Design was not created.");
         designs.Add(design);
         Assert.AreEqual(designs.Count,1);
