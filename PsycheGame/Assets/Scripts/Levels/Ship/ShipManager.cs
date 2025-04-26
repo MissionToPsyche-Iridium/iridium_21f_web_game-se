@@ -53,13 +53,12 @@ public class ShipManager : MonoBehaviour {
 
     public static void SetShipConfig(ShipConfig config)
     {
+        health = config.shipMoveConfig.health;
+        fuel = config.shipMoveConfig.fuel;
+
         tetherLogic.initWithConfig(config.tetherConfig);
         scanner.initWithConfig(config.scanConfig);
         moveLogic.initWithConfig(config.shipMoveConfig);
-
-        //fuel = 150f; //Fuel set with config is instantly at 2
-        health = config.shipMoveConfig.health;
-        fuel = config.shipMoveConfig.fuel;
     }
 
     public static void ResetShip()
