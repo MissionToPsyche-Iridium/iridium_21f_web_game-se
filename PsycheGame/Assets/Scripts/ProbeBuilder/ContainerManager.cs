@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -72,7 +70,6 @@ public class ContainerManager : MonoBehaviour
         volume = GameObject.Find("Box Volume").GetComponent<Volume>();
         updateColorScheme();
 
-        // get the audiosource object from the music game object on the scene
         AudioSource audioSource = GameObject.Find("Music").GetComponent<AudioSource>();
         if (audioSource != null)
         {
@@ -207,7 +204,7 @@ public class ContainerManager : MonoBehaviour
 		try {
 			profile = GameObject.Find("ControlHelper").GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			// Debug.Log("Control Helper not found: " + e.Message);
+			//Debug.LogError("Control Helper not found: " + e.Message);
 			profile = colorProfile;
 		}
 
@@ -276,7 +273,7 @@ public class ContainerManager : MonoBehaviour
 			GameObject controlHelper = GameObject.Find("ControlHelper");
 			colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
 		} catch (Exception e) {
-			Debug.Log("Control Helper not found - testing builder scene only - code:" + e.Message);
+			//Debug.LogError("Control Helper not found - testing builder scene only - code:" + e.Message);
 			colorProfile = 1;
 		}
 

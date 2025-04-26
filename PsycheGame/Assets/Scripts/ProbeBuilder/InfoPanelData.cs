@@ -1,46 +1,103 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Serialization;
-using TMPro;
-using Unity.Collections;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 [Serializable]
-public class InfoPanelData: MonoBehaviour
+public class InfoPanelData : MonoBehaviour
 {
-    public TextAsset data;
-    public static PartsList jsonPartList = new PartsList();
-     
+    [SerializeField] private TextAsset data; // JSON file containing parts data
+    private Dictionary<string, string> partDescriptions; // Optimized for quick lookups
+
     private static InfoPanelData _instance;
 
-    void Start() {
-        // jsonPartList = JsonUtility.FromJson<PartsList>(data.text);
+    public static InfoPanelData Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                Debug.LogError("InfoPanelData instance is not initialized. Ensure the script is attached to a GameObject in the scene.");
+            }
+            return _instance;
+        }
     }
 
-    [System.Serializable]
-    public class Part {
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Debug.LogWarning("Multiple instances of InfoPanelData detected. Destroying duplicate.");
+            Destroy(gameObject);
+            return;
+        }
+
+        _instance = this;
+        InitializePartDescriptions();
+    }
+
+    private void InitializePartDescriptions()
+    {
+        partDescriptions = new Dictionary<string, string>();
+
+        if (data == null)
+        {
+            Debug.LogError("Data file is not assigned in InfoPanelData.");
+            return;
+        }
+
+        try
+        {
+            PartsList partsList = JsonUtility.FromJson<PartsList>(data.text);
+            if (partsList != null && partsList.part != null)
+            {
+                foreach (Part part in partsList.part)
+                {
+                    if (!partDescriptions.ContainsKey(part.name))
+                    {
+                        partDescriptions.Add(part.name, part.description);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Duplicate part name detected: {part.name}. Ignoring duplicate.");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to parse parts data. Ensure the JSON file is correctly formatted.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error parsing parts data: {ex.Message}");
+        }
+    }
+
+    public string GetDescription(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return "Invalid part name.";
+        }
+
+        if (partDescriptions.TryGetValue(name, out string description))
+        {
+            return description;
+        }
+
+        return "No description available.";
+    }
+
+    [Serializable]
+    public class Part
+    {
         public string name;
         public string description;
-       
     }
 
-    [System.Serializable]
-    public class PartsList {
+    [Serializable]
+    public class PartsList
+    {
         public Part[] part;
     }
-
-    public static String getDescription(String name) {
-        foreach(Part p in jsonPartList.part) {
-                if(String.Equals(p.name, name)) {
-                    return p.description;
-                }
-        }return "No description available.";
-    }
-
 }

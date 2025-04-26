@@ -1,11 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /*
     Probe Builder:: TileAltScheme.cs
-    
     Date: Jan 27, 2024
     Description: this script is a stereotype that implements the abstract class TileColorScheme.  It defines the alternate color scheme for the tiles.
 
@@ -23,14 +19,6 @@ public class TileAltScheme : TileColorScheme
         Intensity = 10;
         Tint = new Color(0.0f, 0.0f, 0.0f, 0.0f);
         AttribBarColor = new Color(0.8039f, 0.3137f, 0.0f, 0.0f);
-        
-        /* Legacy - retain until version release
-        BaseSceneColor = new Color(0.0f, 0.7f, 1.13f, 0.6f);
-        exposure = 0.65f;
-        Threshold = 0.995f;
-        Intensity = 12;
-        Tint = new Color(0.0f, 0.0f, 0.0f, 0.0f);
-        */
     }
 
     public override Color GetColor1()
