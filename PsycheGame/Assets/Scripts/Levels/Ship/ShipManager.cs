@@ -57,8 +57,9 @@ public class ShipManager : MonoBehaviour {
         scanner.initWithConfig(config.scanConfig);
         moveLogic.initWithConfig(config.shipMoveConfig);
 
-        fuel = 150f; //Fuel set with config is instantly at 2
+        //fuel = 150f; //Fuel set with config is instantly at 2
         health = config.shipMoveConfig.health;
+        fuel = config.shipMoveConfig.fuel;
     }
 
     public static void ResetShip()

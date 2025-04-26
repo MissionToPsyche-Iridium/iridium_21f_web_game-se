@@ -18,6 +18,7 @@ public class ShipMovement : MonoBehaviour {
     {
         boostMultiplier = config.boostMultiplier;
         boostSpeedChangeRate = config.boostChangeRate;
+        fuelBarUI.UpdateIndicator(ShipManager.Fuel);
     }
 
     void Start() {
