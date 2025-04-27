@@ -112,7 +112,7 @@ public class ProbeComponentButton : MonoBehaviour, IDragHandler, IBeginDragHandl
                 }
                 else if (canOccupy)
                 {
-                    BuildManager.SpawnProbeComponent(new Tuple<ProbeComponent, GameObject>(ProbeComponent, _dragIcon));
+                    BuildManager.SpawnProbeComponent(_dragIcon.GetComponent<SpriteDragDrop>());
 
                     _containerManager.AssignToGridPosition(cellPos.cellX, cellPos.cellY, _dragIcon);
 

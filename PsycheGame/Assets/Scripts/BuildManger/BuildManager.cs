@@ -24,7 +24,7 @@ public class BuildManager : MonoBehaviour
     private AttributeTracker _attributeTracker;
 
     private Inventory<ProbeComponent> _inventory;
-    private List<Tuple<ProbeComponent, GameObject>> _spawned, _undone;
+    private List<SpriteDragDrop> _spawned, _undone;
 
     public void Start()
     {
@@ -35,36 +35,36 @@ public class BuildManager : MonoBehaviour
         _maxProbeAttributeValues.ScanningRange = Config.Get<int>("MaxAttributes.ScanningRange");
 
         _inventory = _probeComponentInventory.Inventory;
-        _spawned = new List<Tuple<ProbeComponent, GameObject>>();
-        _undone = new List<Tuple<ProbeComponent, GameObject>>();
+        _spawned = new List<SpriteDragDrop>();
+        _undone = new List<SpriteDragDrop>();
     }
 
     public List<GameObject> GetSpawnedProbeComponents()
     {
         List<GameObject> probeComponents = new List<GameObject>();
-        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        foreach (SpriteDragDrop instance in _spawned)
         {
-            probeComponents.Add(tuple.Item2);
+            probeComponents.Add(instance.gameObject);
         }
         return probeComponents;
     }
 
     public ProbeComponent GetProbeComponentInfo(GameObject probeComponent)
     {
-        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        foreach (SpriteDragDrop instance in _spawned)
         {
-            if (tuple.Item2.Equals(probeComponent))
+            if (instance.gameObject.Equals(probeComponent))
             {
-                return tuple.Item1;
+                return instance.ProbeComponent;
             }
         }
         return null;
     }
 
-    public void SpawnProbeComponent(Tuple<ProbeComponent, GameObject> probeComponentTuple)
+    public void SpawnProbeComponent(SpriteDragDrop instance)
     {
-        _inventory.DecrementItemQuantity(probeComponentTuple.Item1);
-        _spawned.Add(probeComponentTuple);
+        _inventory.DecrementItemQuantity(instance.ProbeComponent);
+        _spawned.Add(instance);
         _attributeTracker.UpdatePanel();
     }
 
@@ -72,17 +72,17 @@ public class BuildManager : MonoBehaviour
     {
         for (int i = 0; i < _spawned.Count; i++)
         {
-            Tuple<ProbeComponent, GameObject> tuple = _spawned[i];
-            if (tuple.Item2.Equals(probeComponent))
+            SpriteDragDrop instance = _spawned[i];
+            if (instance.gameObject.Equals(probeComponent))
             {
-                probeComponent.GetComponent<SpriteDragDrop>().AttemptToRelease();
+                instance.AttemptToRelease();
 
                 _spawned.RemoveAt(i);
-                _undone.Add(tuple);
+                _undone.Add(instance);
 
                 probeComponent.SetActive(false);
 
-                _inventory.IncrementItemQuantity(tuple.Item1);
+                _inventory.IncrementItemQuantity(instance.ProbeComponent);
 
                 break;
             }
@@ -94,7 +94,7 @@ public class BuildManager : MonoBehaviour
     {
         if (_spawned.Count > 0)
         {
-            DespawnProbeComponent(_spawned[_spawned.Count - 1].Item2);
+            DespawnProbeComponent(_spawned[_spawned.Count - 1].gameObject);
         }
     }
 
@@ -110,15 +110,15 @@ public class BuildManager : MonoBehaviour
     {
         for (int i = _undone.Count - 1; i >= 0; i--)
         {
-            Tuple<ProbeComponent, GameObject> probeComponentTuple = _undone[i];
-            if (_inventory.GetItemQuantity(probeComponentTuple.Item1) > 0 && probeComponentTuple.Item2.GetComponent<SpriteDragDrop>().AttemptToReoccupy())
+            SpriteDragDrop instance = _undone[i];
+            if (_inventory.GetItemQuantity(instance.ProbeComponent) > 0 && instance.AttemptToReoccupy())
             {
-                _inventory.DecrementItemQuantity(probeComponentTuple.Item1);
+                _inventory.DecrementItemQuantity(instance.ProbeComponent);
 
                 _undone.RemoveAt(i);
-                _spawned.Add(probeComponentTuple);
+                _spawned.Add(instance);
 
-                probeComponentTuple.Item2.SetActive(true);
+                instance.gameObject.SetActive(true);
 
                 return;
             }
@@ -126,7 +126,7 @@ public class BuildManager : MonoBehaviour
             {
                 _undone.RemoveAt(i);
 
-                GameObject.Destroy(probeComponentTuple.Item2);
+                GameObject.Destroy(instance.gameObject);
             }
         }
     }
@@ -136,9 +136,9 @@ public class BuildManager : MonoBehaviour
         ProbeAttributeTotals totals = new ProbeAttributeTotals();
         foreach (ProbeComponentAttribute attribute in Enum.GetValues(typeof(ProbeComponentAttribute)))
         {
-            foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+            foreach (SpriteDragDrop instance in _spawned)
             {
-                totals.AddToAttributeTotal(attribute, tuple.Item1.GetAttributeValue(attribute));
+                totals.AddToAttributeTotal(attribute, instance.ProbeComponent.GetAttributeValue(attribute));
             }
             totals.SetAttributeTotal(attribute, Math.Min(totals.GetAttributeTotal(attribute), GetAttributeMaxValue(attribute)));
         }
@@ -153,9 +153,9 @@ public class BuildManager : MonoBehaviour
     public float GetAvailableCredits()
     {
         float creditsUsed = 0.0f;
-        foreach (Tuple<ProbeComponent, GameObject> tuple in _spawned)
+        foreach (SpriteDragDrop instance in _spawned)
         {
-            creditsUsed += tuple.Item1.Credits;
+            creditsUsed += instance.ProbeComponent.Credits;
         }
         return MaxCredits - creditsUsed;
     }

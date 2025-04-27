@@ -25,7 +25,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
     public Inventory<ProbeComponent> Inventory { get; private set; }
 
     private ProbeComponentType? _currentFilter;
-    private List<Tuple<ProbeComponent, GameObject>> _componentButtons;
+    private List<ProbeComponentButton> _componentButtons;
 
     public void Awake()
     {
@@ -44,24 +44,12 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
 
         _currentFilter = null;
 
-        _componentButtons = new List<Tuple<ProbeComponent, GameObject>>();
+        _componentButtons = new List<ProbeComponentButton>();
 
         foreach (ProbeComponent probeComponent in Inventory.GetItems())
         {
             CreateButton(probeComponent, Inventory.GetItemQuantity(probeComponent));
         }
-    }
-
-    public ProbeComponent GetProbeComponent(GameObject button)
-    {
-        foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
-        {
-            if (tuple.Item2.transform.GetChild(0).gameObject.Equals(button))
-            {
-                return tuple.Item1;
-            }
-        }
-        return null;
     }
 
     public void CreateButton(ProbeComponent probeComponent, int quantity)
@@ -108,7 +96,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
 
         probeComponentButton.transform.SetParent(_content.transform);
 
-        _componentButtons.Add(new Tuple<ProbeComponent, GameObject>(probeComponent, probeComponentButton));
+        _componentButtons.Add(buttonScript);
     }
 
     private void Filter()
@@ -116,23 +104,23 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
         if (_currentFilter == null)
         {
             _filter.GetComponent<TextMeshProUGUI>().text = "All";
-            foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+            foreach (ProbeComponentButton button in _componentButtons)
             {
-                tuple.Item2.SetActive(true);
+                button.transform.parent.gameObject.SetActive(true);
             }
         }
         else
         {
             _filter.GetComponent<TextMeshProUGUI>().text = _currentFilter.ToString();
-            foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+            foreach (ProbeComponentButton button in _componentButtons)
             {
-                if (tuple.Item1.Type == _currentFilter)
+                if (button.ProbeComponent.Type == _currentFilter)
                 {
-                    tuple.Item2.SetActive(true);
+                    button.transform.parent.gameObject.SetActive(true);
                 }
                 else
                 {
-                    tuple.Item2.SetActive(false);
+                    button.transform.parent.gameObject.SetActive(false);
                 }
             }
         }
@@ -169,12 +157,11 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
     {
         if (probeComponent != null)
         {
-            foreach (Tuple<ProbeComponent, GameObject> tuple in _componentButtons)
+            foreach (ProbeComponentButton button in _componentButtons)
             {
-                if (tuple.Item1.Equals(probeComponent))
+                if (button.ProbeComponent.Equals(probeComponent))
                 {
-                    GameObject button = tuple.Item2.transform.GetChild(0).gameObject;
-                    if (!button.tag.Equals("Inactive"))
+                    if (!button.gameObject.tag.Equals("Inactive"))
                     {
                         if (newQuantity < 1)
                         {
@@ -188,7 +175,7 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
                         button.GetComponent<Image>().color = new Color(255, 255, 255, 1.0f);
                     }
 
-                    tuple.Item2.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{newQuantity.ToString()}x";
+                    button.transform.parent.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = $"{newQuantity.ToString()}x";
                 }
             }
         }
@@ -198,9 +185,9 @@ public class ProbeComponentInventory : MonoBehaviour, IInventoryObserver<ProbeCo
     {
         for (int buttonIndex = 0; buttonIndex < _componentButtons.Count; buttonIndex++)
         {
-            if (_componentButtons[buttonIndex].Item1.Equals(probeComponent))
+            if (_componentButtons[buttonIndex].ProbeComponent.Equals(probeComponent))
             {
-                Destroy(_componentButtons[buttonIndex].Item2);
+                Destroy(_componentButtons[buttonIndex].transform.parent.gameObject);
                 _componentButtons.RemoveAt(buttonIndex);
                 break;
             }
