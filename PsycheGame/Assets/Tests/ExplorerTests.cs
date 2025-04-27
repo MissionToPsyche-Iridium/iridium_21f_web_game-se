@@ -16,8 +16,8 @@ public class ExplorerPlayModeTests
     public IEnumerator Setup()
     {
         Debug.Log("Load PlayMode Scene");
-        SceneManager.LoadScene("ExplorationPlayMode");
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "ExplorationPlayMode");
+        SceneManager.LoadScene("ExplorerPlayModeTests");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "ExplorerPlayModeTests");
 
         GameObject gameStateManager = GameObject.Find("GameStateManager");
         levelManager = gameStateManager.GetComponent<LevelManager>();
@@ -126,7 +126,8 @@ public class ExplorerPlayModeTests
 
         Vector3 drillPosition = drill.transform.position;
         Vector3 shipForward = ship.transform.up;
-        asteroidGO.transform.position = drillPosition + shipForward * 1f;
+        float drillTriggerRadius = (drill.GetComponent<Collider2D>() as CircleCollider2D)?.radius ?? 0.5f;
+        asteroidGO.transform.position = drillPosition + shipForward * (drillTriggerRadius * 0.5f);
         Debug.Log($"Asteroid moved to {asteroidGO.transform.position}");
 
         Collider2D asteroidCollider = asteroidGO.GetComponent<Collider2D>();
@@ -135,7 +136,7 @@ public class ExplorerPlayModeTests
         drill.ActivateLaser();
         Debug.Log("Drill activated");
 
-        yield return new WaitForSeconds(2.1f);
+        yield return new WaitForSeconds(3.1f);
 
         int finalMetalAmount = mineralCollection.metals[0].Amount;
         Debug.Log($"Final metal amount: {finalMetalAmount}");

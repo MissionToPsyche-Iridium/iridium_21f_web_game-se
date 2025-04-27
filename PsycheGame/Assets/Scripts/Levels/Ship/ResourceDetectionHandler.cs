@@ -48,9 +48,8 @@ public class ResourceDetector : MonoBehaviour
         if (closestResource != null)
         {
             Vector2 direction = closestResource.transform.position - transform.position;
-            float angle = Vector2.SignedAngle(transform.up, direction);
-            float displayAngle = angle < 0 ? angle + 360 : angle;
-            UpdateIndicator(displayAngle);
+            float angle = Vector2.SignedAngle(Vector2.right, direction);
+            UpdateIndicator(angle);
         }
         else
         {
@@ -61,7 +60,7 @@ public class ResourceDetector : MonoBehaviour
     private void UpdateIndicator(float angle)
     {
         resourceIndicator.gameObject.SetActive(true);
-        arrow.GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, angle + 90f);
+        arrow.GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void LateUpdate()

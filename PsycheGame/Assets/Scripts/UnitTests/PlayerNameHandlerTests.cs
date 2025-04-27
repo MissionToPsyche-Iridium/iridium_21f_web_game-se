@@ -100,7 +100,7 @@ public class PlayerNameHandlerTests
             ?.Invoke(playerNameHandler, null);
         playerNameField.text = "TestPlayer  ";
         
-        LogAssert.Expect(LogType.Error, "LevelManager.Instance is null. Cannot start game.");
+        LogAssert.Expect(LogType.Error, "Instance is null. Cannot start game.");
 
         playerNameHandler.GetType()
             .GetMethod("OnBeginButtonClicked", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)

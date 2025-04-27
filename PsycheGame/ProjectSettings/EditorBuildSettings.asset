@@ -27,9 +27,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ExplorationLevel.unity
     guid: d1f8fe2c49a0846bebea36169957472a
   - enabled: 0
-    path: Assets/Scenes/ExplorationPlayMode.unity
-    guid: 5adf8ffeda3714dd3b9084ead1c45086
-  - enabled: 0
     path: Assets/Scenes/LevelOne.unity
     guid: 9b4a8da4eeaae4d3f83269765849d360
+  - enabled: 1
+    path: Assets/ExplorerPlayModeTests.unity
+    guid: 42127bd08ffa04b1db7cf5c4bfe25919
   m_configObjects: {}
