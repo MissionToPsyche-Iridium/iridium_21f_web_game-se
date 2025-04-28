@@ -34,16 +34,14 @@ public class DrillController : MonoBehaviour {
         MineralCollection asteroid = other.GetComponent<MineralCollection>();
         if (asteroid != null) {
             currentAsteroid = asteroid;
-            Debug.Log($"Drill activated on: {currentAsteroid.name}");
         }
     }
 
 
-    protected void DeactivateLaser() {
+    public void DeactivateLaser() {
         laserEffect.SetActive(false);
         drillTimer = 0f;
         currentAsteroid = null;
-        Debug.Log("Laser deactivated.");
     }
     protected void DrillAsteroid() {
         drillTimer += Time.deltaTime;

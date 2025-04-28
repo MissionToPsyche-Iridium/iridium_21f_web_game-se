@@ -6,7 +6,7 @@ public class AlertNotification : MonoBehaviour
 {
     public GameObject alertPanel;           
     public float flashInterval = 0.5f;
-    private int nearbyAsteroids = 0;
+    public int nearbyAsteroids = 0;
     private Coroutine flashCoroutine;
 
     void Start()
@@ -32,7 +32,7 @@ public class AlertNotification : MonoBehaviour
         }
     }
 
-    private void UpdateWarningIndicator()
+    public void UpdateWarningIndicator()
     {
         if (nearbyAsteroids > 0)
         {

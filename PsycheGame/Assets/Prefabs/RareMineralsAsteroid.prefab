@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 227840903667996995}
   - component: {fileID: 203278589172174077}
   - component: {fileID: 6018018357191059708}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RareMineralsAsteroid
   m_TagString: Mineral
   m_Icon: {fileID: 0}

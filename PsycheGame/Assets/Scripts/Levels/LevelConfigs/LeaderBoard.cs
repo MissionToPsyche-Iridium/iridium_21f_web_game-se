@@ -43,7 +43,6 @@ public class LeaderBoard : MonoBehaviour
             filePath = Path.Combine(Application.persistentDataPath, "leaderboard.json");
         }
         leaderboardData = LoadLeaderboard();
-        Debug.Log($"Leaderboard file path: {filePath}");
     }
 
     public void SaveScore(int levelScore, int level)

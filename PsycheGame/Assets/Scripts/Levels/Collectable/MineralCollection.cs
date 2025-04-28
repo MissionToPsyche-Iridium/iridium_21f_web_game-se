@@ -114,7 +114,6 @@ public abstract class MineralCollection : Spawnable, ScannableObject {
                 int minedAmount = Random.Range(15, 26);
                 minedAmount = Mathf.Min(minedAmount, metal.Amount);
                 metal.Amount -= minedAmount;
-                Debug.Log("Mined amount " + minedAmount);
                 SpawnFragments(metal.Color, minedAmount);
                 UpdateMissionProgress(minedAmount, metal.Name);
 

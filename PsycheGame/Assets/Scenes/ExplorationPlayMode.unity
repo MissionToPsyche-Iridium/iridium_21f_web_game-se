@@ -190747,7 +190747,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -124.13, y: -114.82001}
+  m_AnchoredPosition: {x: -124.130005, y: -114.82001}
   m_SizeDelta: {x: 248.25, y: 234.07}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &736243663
@@ -193563,7 +193563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1479354858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194535,6 +194535,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionObjectivePanel: {fileID: 1957381144}
+  gameGuideModal: {fileID: 0}
+  helpButton: {fileID: 0}
 --- !u!114 &1585813336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194984,6 +194986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fuelBarUI: {fileID: 1851209610}
   boost: {fileID: 1653014659}
+  thrustSprite: {fileID: 0}
   moveSpeed: 15
   fuelConsumptionRate: 1
   boostMultiplier: 2
@@ -196912,7 +196915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceIndicator: {fileID: 1146451448}
-  triangle: {fileID: 143677200}
+  arrow: {fileID: 0}
 --- !u!58 &2031255866
 CircleCollider2D:
   m_ObjectHideFlags: 0

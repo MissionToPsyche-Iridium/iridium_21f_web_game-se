@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
-using System;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -147,9 +147,7 @@ public class LevelManager : MonoBehaviour
         }
 
         if (MissionState.Instance.IsMissionComplete)
-        {
-            Debug.Log("Level Complete - loading next level...");
-            
+        {            
             EndLevel(true);
         }
     }
@@ -194,9 +192,9 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("All levels completed.");
-                SetLoadingState(false);
-                yield break;
+                loadingText.text = "Congratulations! You've completed all levels!";
+                yield return new WaitForSeconds(1f);
+                SceneManager.LoadScene("MainMenu");
             }
         }
         else

@@ -71,6 +71,7 @@ public class PauseHandler : MonoBehaviour
         else
         {
             Debug.LogError("BeginResumeText object not found under the MissionObjectiveModalPanel.");
+            return;
         }
     }
 
