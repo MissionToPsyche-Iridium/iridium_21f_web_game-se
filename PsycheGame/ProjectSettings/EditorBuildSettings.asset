@@ -8,9 +8,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/UnityFreeAssets/PixelMan(pixelArtPlatfotmer)/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
-    path: Assets/MainMenu.unity
-    guid: 2da160b73d7954ba3a01bb7532bea646
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: c047ac4de6c40453ab6d8558fd129f81
@@ -26,10 +23,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ExplorationLevel.unity
     guid: d1f8fe2c49a0846bebea36169957472a
-  - enabled: 0
-    path: Assets/Scenes/LevelOne.unity
-    guid: 9b4a8da4eeaae4d3f83269765849d360
   - enabled: 1
     path: Assets/ExplorerPlayModeTests.unity
     guid: 42127bd08ffa04b1db7cf5c4bfe25919
+  - enabled: 1
+    path: Assets/MainMenuTest.unity
+    guid: 0359637ed286e4612baa742bba1a8782
+  - enabled: 1
+    path: Assets/SplashTest.unity
+    guid: df0f4371e1ca74d21a4a37ba83dfbfe1
   m_configObjects: {}

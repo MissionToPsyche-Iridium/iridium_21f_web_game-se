@@ -1,0 +1,11 @@
+{
+    "name": "MenuTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],     
+    "references": [
+        "Scripts",
+        "Unity.TextMeshPro"
+    ]
+}
