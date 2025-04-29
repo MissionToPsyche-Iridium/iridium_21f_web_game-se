@@ -77,6 +77,7 @@ public class ShipConfigLoader : MonoBehaviour {
         ProbeComponentList probeComponents = LoadBuilderSaveData(path);
 
         if (probeComponents == null) {
+            Debug.Log("returning default ship config");
             return defaultShipConfig;
         }
 

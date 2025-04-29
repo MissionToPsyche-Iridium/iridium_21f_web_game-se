@@ -50,7 +50,10 @@ public class ShipConfigurationLoadingTest
     [Test]
     public void Json_ship_config_load_success()
     {
-        ShipConfigLoader loader = new ShipConfigLoader();
+        // ignore error messages relating to ui components which
+        // have not been initialized in this test
+        LogAssert.ignoreFailingMessages = true;
+        ShipConfigLoader loader = new GameObject("Loader", typeof(ShipConfigLoader)).GetComponent<ShipConfigLoader>();
         ShipConfig config = loader.LoadBuilderConfig(ShipConfigLoader.DATA_PATH, defaultShipConfig);
         Assert.NotNull(config);
     }
