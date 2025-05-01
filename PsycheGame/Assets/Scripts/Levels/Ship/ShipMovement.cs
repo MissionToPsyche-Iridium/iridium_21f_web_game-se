@@ -66,7 +66,14 @@ public class ShipMovement : MonoBehaviour {
 
         if (movement == Vector3.zero)
         {
+            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, 5f * Time.deltaTime);
             rb.angularVelocity *= 0.95f;
+            thrustSprite.SetActive(false);
+            isBoosting = false; 
+            boost.SetActive(false);
+            targetSpeed = baseSpeed; 
+            UpdateSpeed();
+            fuelBarUI.UpdateIndicator(fuel);
         }
         
         if (fuel > 0f && movement != Vector3.zero)
