@@ -28,17 +28,6 @@ public class DesignInventory : MonoBehaviour
         loadDesign(index);
     }
 
-    // for tests
-    public void Start(List<ProbeDesign> test_designs) {
-        Debug.Log("Loading list of designs");
-        designs = test_designs;
-        Debug.Log("Loading design at index 0");
-        index = 0;
-        maxIndex = designs.Count;
-        uiDesignObject = Instantiate (Resources.Load("UI/Design") as GameObject);
-        loadDesign(index);
-    }
-
     public void loadDesign(int index) {
         if(maxIndex > 0){
         Debug.Log("Loading design at index: " + index);

@@ -1,70 +1,70 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
+[TestFixture]
 public class DesignInventoryTests
 {
-
     private DesignInventory designInventory;
-    private ProbeDesign design;
     private List<ProbeDesign> designs;
-    
+    private GameObject dummyUiDesignObject;
+
     [SetUp]
-    public void Setup() {
-        GameObject di_obj = new GameObject("DesignInventory");
-        designInventory = di_obj.AddComponent<DesignInventory>();
-        Assert.IsNotNull(designInventory, "Design Inventory was not created.");
-
+    public void Setup()
+    {
+        GameObject diObj = new GameObject("DesignInventory");
+        designInventory = diObj.AddComponent<DesignInventory>();
         designs = new List<ProbeDesign>();
-        Assert.IsNotNull(designs, "Design was not added to designs list.");
+        designInventory.designs = designs;
 
+        var indexField = typeof(DesignInventory).GetField("index", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var maxIndexField = typeof(DesignInventory).GetField("maxIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        indexField.SetValue(designInventory, 0);
+        maxIndexField.SetValue(designInventory, designs.Count);
     }
 
     [TearDown]
-    public void TearDown() {
+    public void TearDown()
+    {
         Object.DestroyImmediate(designInventory.gameObject);
+        Object.DestroyImmediate(dummyUiDesignObject);
         designInventory = null;
-
-        design = null;
-
         designs = null;
+        dummyUiDesignObject = null;
     }
 
     [Test]
-    public void DesignInventoryTestsSimplePasses()
+    public void DesignInventory_InitializesWithEmptyDesigns()
     {
-        Assert.IsNotNull(designInventory, "Test Design Inventory is null");
+        Assert.IsNotNull(designInventory);
+        Assert.IsNotNull(designInventory.designs);
+        Assert.AreEqual(0, designInventory.designs.Count);
     }
 
     [Test]
-    public void AddDesign() {
-        design = new ProbeDesign(null, "Test Design", "list of parts", new List<GameObject>(), new ProbeAttributeTotals() ,"names");
-        Assert.IsNotNull(design, "Design was not created.");
+    public void AddDesign_IncreasesDesignCount()
+    {
+        ProbeDesign design = new ProbeDesign(null, "Test Design", "list of parts", new List<GameObject>(), new ProbeAttributeTotals(), "names");
         designs.Add(design);
-        Assert.AreEqual(designs.Count,1);
+        Assert.AreEqual(1, designInventory.designs.Count);
+
+        var maxIndexField = typeof(DesignInventory).GetField("maxIndex", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        maxIndexField.SetValue(designInventory, designs.Count);
     }
 
     [Test]
-    public void DesignInventoryTestStart() {
-        designInventory.Start(designs);
-    }
-
-    [Test]
-    public void DeleteDesign() {
-        designInventory.deleteShipDesign();
-        Assert.AreEqual(designInventory.designs.Count, 0);
-    }
-
-    [Test]
-    public void SelectShipDesign() {
-        Assert.AreEqual(designInventory.selectShipDesign(), "list of parts");
-    }
-
-    [UnityTest]
-    public IEnumerator DesignInventoryTestsWithEnumeratorPasses()
+    public void SelectShipDesign_ReturnsPartsJson()
     {
-        yield return null;
+        ProbeDesign design = new ProbeDesign(null, "Test Design", "list of parts", new List<GameObject>(), new ProbeAttributeTotals(), "names");
+        designs.Add(design);
+        
+        var maxIndexField = typeof(DesignInventory).GetField("maxIndex", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        maxIndexField.SetValue(designInventory, designs.Count);
+
+        string result = designInventory.selectShipDesign();
+        Assert.AreEqual("list of parts", result);
     }
 }

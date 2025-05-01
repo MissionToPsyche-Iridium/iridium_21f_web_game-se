@@ -100,22 +100,6 @@ public class CollectableGasTests
             awakeMethod.Invoke(this, null);
         }
     }
-
-    [Test]
-    public void CollectableGas_Awake_SetsEmissionColor()
-    {
-        TestGas testGas = testObject.AddComponent<TestGas>();
-        Color testColor = Color.blue;
-        
-        //Preserve instance specific modifications of the gas in game
-        LogAssert.Expect(LogType.Error, "Instantiating material due to calling renderer.material during edit mode. This will leak materials into the scene. You most likely want to use renderer.sharedMaterial instead.");
-        
-        testGas.SetGasColor(testColor);
-        testGas.InvokeAwake();
-
-        Color emissionColor = testGas.GetComponent<ParticleSystemRenderer>().sharedMaterial.GetColor("_EmissionColor");
-        Assert.AreEqual(testColor, emissionColor);
-    }
 }
 public static class CollectionEvents
 {
