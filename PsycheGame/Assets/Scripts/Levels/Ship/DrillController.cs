@@ -34,6 +34,7 @@ public class DrillController : MonoBehaviour {
         MineralCollection asteroid = other.GetComponent<MineralCollection>();
         if (asteroid != null) {
             currentAsteroid = asteroid;
+            Debug.Log($"Asteroid detected: {asteroid.gameObject.name}");
         }
     }
 

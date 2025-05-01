@@ -53,26 +53,25 @@ private void OnBeginButtonClicked()
     {
         validationMessage.gameObject.SetActive(true);
         validationMessage.text = "Please enter a name.";
+        return;
+    }
+
+    PlayerPrefs.SetString(PlayerNameKey, playerName);
+    PlayerPrefs.Save();
+    
+    Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
+
+    playerNameObject.SetActive(false);
+    validationMessage.text = ""; 
+    validationMessage.gameObject.SetActive(false);
+
+    if (LevelManager.Instance != null)
+    {
+        LevelManager.Instance.StartGame();
     }
     else
     {
-        PlayerPrefs.SetString(PlayerNameKey, playerName);
-        PlayerPrefs.Save();
-        
-        Debug.Log("Starting game for " + PlayerPrefs.GetString(PlayerNameKey));
-
-        playerNameObject.SetActive(false);
-        validationMessage.text = ""; 
-        validationMessage.gameObject.SetActive(false);
-
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.StartGame();
-        }
-        else
-        {
-            Debug.LogError("Instance is null. Cannot start game.");
-        }
+        Debug.LogError("Instance is null. Cannot start game.");
     }
 }
 }
