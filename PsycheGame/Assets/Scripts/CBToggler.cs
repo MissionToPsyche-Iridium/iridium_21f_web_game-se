@@ -3,65 +3,74 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 /*
-    ColorBlind Mode Toggler :: CBToggler.cs
-    Description: This script toggles the colorblind mode on and off, changing the game's color scheme based on the toggle state.
 
-    Version History:
-    - v1.1 (Feb 11): Updated logic to work with different scenes (e.g., main menu or builder scene).
-    - v1.2 (Feb 17): Revised script to handle different scene use cases (splash/main and probe builder).
-    - v1.3 (Apr 22): Optimize the script by removing redundant code and improving readability.
+    ColorBlind Mode Toggler :: CBToggler.cs
+    Date: Jan, 2024
+    Description: this script provides the functionality to toggle the colorblind mode on and off. It changes the color scheme of the game
+    based on the toggle state.
+
+    version 1.1 (Feb 11)
+    :: updated logic to work with different scenes -- ex: either from main menu or applied directly in the builder scene
+
+    version 1.2 (Feb 17)
+    :: revised script to handle different scene use cases (splash/main and probe builder)
 */
 
 public class CBToggler : MonoBehaviour
 {
-    [SerializeField] private Toggle cbtToggle;
-    private ControlHelper controlHelper;
-    private ContainerManager containerManager;
-    private Scene currentScene;
-
-    private const string ControlHelperName = "ControlHelper";
-    private const string ContainerPanelName = "ContainerPanel";
+    public Toggle cbt_toggle;
+    public GameObject controlHelper;
+    Camera mainCamera;
+    private Scene scene;
 
     void Start()
     {
-        cbtToggle = cbtToggle != null ? cbtToggle : GetComponent<Toggle>();
-        controlHelper = GameObject.Find(ControlHelperName)?.GetComponent<ControlHelper>();
-        containerManager = GameObject.Find(ContainerPanelName)?.GetComponent<ContainerManager>();
-        currentScene = SceneManager.GetActiveScene();
+        cbt_toggle = GetComponent<Toggle>();
+        cbt_toggle.onValueChanged.AddListener(delegate {
+            ToggleValueChanged(cbt_toggle);
+        }); 
+        mainCamera = Camera.main;                   // keep to wake up the camera! - otherwise null exception
+        controlHelper = GameObject.Find("ControlHelper");        
 
-        if (cbtToggle != null)
-        {
-            cbtToggle.onValueChanged.AddListener(OnToggleValueChanged);
+        scene = SceneManager.GetActiveScene();
+        Debug.Log("CBT:: Active Scene is {" + scene.name + "}");
+
+        if (controlHelper != null) {
+            int colorProfile = controlHelper.GetComponent<ControlHelper>().GetColorProfile();
+            if (colorProfile == 2) {
+                cbt_toggle.isOn = true;
+                UpdateContainerIfNeeded(2);
+            } else {
+                cbt_toggle.isOn = false;
+                UpdateContainerIfNeeded(1);
+            }
+        } else {
+            Debug.Log("Control Helper not found - debug mode only");
         }
 
-        Debug.Log($"CBToggler: Active Scene is {currentScene.name}");
     }
 
-    private void OnToggleValueChanged(bool isOn)
+    void UpdateContainerIfNeeded(int colorProfile)
     {
-        int colorProfile = isOn ? 2 : 1;
-
-        if (controlHelper != null)
-        {
-            controlHelper.ChangeColorProfile(colorProfile);
+        scene = SceneManager.GetActiveScene();
+        if (scene.name == "ProbeBuilder") {
+            GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SetColorScheme(colorProfile);
         }
-        else
-        {
-            Debug.LogWarning("ControlHelper not found. Defaulting to debug mode.");
-        }
-
-        UpdateContainerColorScheme(colorProfile);
     }
-
-    private void UpdateContainerColorScheme(int colorProfile)
-    {
-        if (currentScene.name == "ProbeBuilder" && containerManager != null)
-        {
-            containerManager.SetColorScheme(colorProfile);
-        }
-        else if (containerManager == null)
-        {
-            Debug.LogWarning("ContainerManager not found. Unable to update color scheme.");
+    
+    void ToggleValueChanged(Toggle change) {
+        try {
+            controlHelper = GameObject.Find("ControlHelper");
+            if (change.isOn) {
+                controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(2);
+                UpdateContainerIfNeeded(2);
+            } else {
+                controlHelper.GetComponent<ControlHelper>().ChangeColorProfile(1);
+                UpdateContainerIfNeeded(1);
+            }
+        } catch (System.Exception e) {
+            Debug.Log("Control Helper not found - debug mode only - " + e.Message + " - suppressed");
+            GameObject.Find("ContainerPanel").GetComponent<ContainerManager>().SetColorScheme(change.isOn ? 2 : 1);
         }
     }
 }
